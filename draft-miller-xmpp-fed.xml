@@ -18,8 +18,20 @@
           <code>80202</code>
           <country>USA</country>
         </postal>
-        <phone>+1-303-308-3204</phone>
         <email>mamille2@cisco.com</email>
+      </address>
+    </author>
+    <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
+      <organization>Cisco Systems, Inc.</organization>
+      <address>
+        <postal>
+          <street>1899 Wyknoop Street, Suite 600</street>
+          <city>Denver</city>
+          <region>CO</region>
+          <code>80202</code>
+          <country>USA</country>
+        </postal>
+        <email>psaintan@cisco.com</email>
       </address>
     </author>
     <date month="May" day="17" year="2012"/>
@@ -34,6 +46,47 @@
   </front>
   <middle>
     <section title="Introduction" anchor="intro">
+      <t></t>
+    </section>
+    <section title="Problem Statement" anchor="problem">
+      <t></t>
+    </section>
+    <section title="Requirements" anchor="reqs">
+      <t></t>
+    </section>
+    <section title="Framework" anchor="framework">
+      <t></t>
+    </section>
+    <section title="Validation" anchor="valid">
+        <section title="PKI" anchor="valid-pki">
+          <t></t>
+        </section>
+        <section title="DANE" anchor="valid-dane">
+          <t></t>
+        </section>
+        <section title="HTTPS/.well-known/" anchor="valid-https">
+          <t></t>
+        </section>
+        <section title="Dialback Keys" anchor="valid-dbkeys">
+          <t></t>
+        </section>
+        <section title="Other" anchor="valid-other">
+          <t></t>
+        </section>
+    </section>
+    <section title="Assertions" anchor="assert">
+      <t></t>
+    </section>
+    <section title="Examples" anchor="examples">
+      <t></t>
+    </section>
+    <section title="Internationalization Considerations" anchor="i18n">
+      <t></t>
+    </section>
+    <section title="IANA Considerations" anchor="iana">
+      <t></t>
+    </section>
+    <section title="Security Considerations" anchor="security">
       <t></t>
     </section>
   </middle>
