@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<?rfc compact="yes"?>
+<?rfc strict="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc toc="yes"?>
+<?rfc tocdepth="4"?>
+<rfc category="std" docName="draft-miller-xmpp-dane-00" ipr="trust200902">
+  <front>
+    <title abbrev="XMPP DANE">Use of DANE for XMPP</title>
+    <author initials="M." surname="Miller" fullname="Matthew Miller">
+      <organization>Cisco Systems, Inc.</organization>
+      <address>
+        <postal>
+          <street>1899 Wyknoop Street, Suite 600</street>
+          <city>Denver</city>
+          <region>CO</region>
+          <code>80202</code>
+          <country>USA</country>
+        </postal>
+        <email>mamille2@cisco.com</email>
+      </address>
+    </author>
+    <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
+      <organization>Cisco Systems, Inc.</organization>
+      <address>
+        <postal>
+          <street>1899 Wyknoop Street, Suite 600</street>
+          <city>Denver</city>
+          <region>CO</region>
+          <code>80202</code>
+          <country>USA</country>
+        </postal>
+        <email>psaintan@cisco.com</email>
+      </address>
+    </author>
+    <date month="May" day="17" year="2012"/>
+    <area>Applications</area>
+    <keyword>Internet-Draft</keyword>
+    <keyword>XMPP</keyword>
+    <keyword>Extensible Messaging and Presence Protocol</keyword>
+    <keyword>Jabber</keyword>
+    <abstract>
+      <t></t>
+    </abstract>
+  </front>
+  <middle>
+    <section title="Introduction" anchor="intro">
+      <t></t>
+    </section>
+    <section title="Requirements" anchor="reqs">
+      <t></t>
+    </section>
+    <section title="Examples" anchor="examples">
+      <t></t>
+    </section>
+    <section title="Internationalization Considerations" anchor="i18n">
+      <t></t>
+    </section>
+    <section title="IANA Considerations" anchor="iana">
+      <t></t>
+    </section>
+    <section title="Security Considerations" anchor="security">
+      <t></t>
+    </section>
+  </middle>
+  <back>
+    <references title="Normative References">
+      <reference anchor="KEYWORDS">
+        <front>
+          <title abbrev="RFC Key Words">Key words for use in RFCs to Indicate Requirement Levels</title>
+          <author initials="S." surname="Bradner" fullname="Scott Bradner">
+            <organization>Harvard University</organization>
+            <address>
+              <postal>
+                <street>1350 Mass.  Ave.</street>
+                <street>Cambridge</street>
+                <street>MA 02138</street>
+              </postal>
+              <phone>- +1 617 495 3864</phone>
+              <email>-</email>
+            </address>
+          </author>
+          <date month="March" year="1997"/>
+          <area>General</area>
+          <keyword>keyword</keyword>
+          <abstract>
+            <t>In many standards track documents several words are used to signify the requirements in the specification.  These words are often capitalized.  This document defines these words as they should be interpreted in IETF documents.  Authors who follow these guidelines should incorporate this phrase near the beginning of their document: 
+              <list><t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119.</t></list>
+            </t>
+            <t>Note that the force of these words is modified by the requirement level of the document in which they are used.</t>
+          </abstract>
+        </front>
+        <seriesInfo name="BCP" value="14"/>
+        <seriesInfo name="RFC" value="2119"/>
+      </reference>
+      <reference anchor="PKIX">
+        <front>
+          <title>Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile</title>
+          <author initials="D." surname="Cooper" fullname="D. Cooper">
+            <organization/>
+          </author>
+          <author initials="S." surname="Santesson" fullname="S. Santesson">
+            <organization/>
+          </author>
+          <author initials="S." surname="Farrell" fullname="S. Farrell">
+            <organization/>
+          </author>
+          <author initials="S." surname="Boeyen" fullname="S. Boeyen">
+            <organization/>
+          </author>
+          <author initials="R." surname="Housley" fullname="R. Housley">
+            <organization/>
+          </author>
+          <author initials="W." surname="Polk" fullname="W. Polk">
+            <organization/>
+          </author>
+          <date year="2008" month="May"/>
+          <abstract>
+            <t>This memo profiles the X.509 v3 certificate and X.509 v2 certificate revocation list (CRL) for use in the Internet.  An overview of this approach and model is provided as an introduction.  The X.509 v3 certificate format is described in detail, with additional information regarding the format and semantics of Internet name forms.  Standard certificate extensions are described and two Internet-specific extensions are defined.  A set of required certificate extensions is specified.  The X.509 v2 CRL format is described in detail along with standard and Internet-specific extensions.  An algorithm for X.509 certification path validation is described.  An ASN.1 module and examples are provided in the appendices. [STANDARDS TRACK]</t>
+          </abstract>
+        </front>
+        <seriesInfo name="RFC" value="5280"/>
+        <format type="TXT" octets="352580" target="ftp://ftp.isi.edu/in-notes/rfc5280.txt"/>
+      </reference>
+      <reference anchor="SECTERMS">
+        <front>
+          <title>Internet Security Glossary, Version 2</title>
+          <author initials="R." surname="Shirey" fullname="R. Shirey">
+            <organization/>
+          </author>
+          <date year="2007" month="August"/>
+          <abstract>
+            <t>This Glossary provides definitions, abbreviations, and explanations of terminology for information system security.  The 334 pages of entries offer recommendations to improve the comprehensibility of written material that is generated in the Internet Standards Process (RFC 2026).  The recommendations follow the principles that such writing should (a) use the same term or definition whenever the same concept is mentioned; (b) use terms in their plainest, dictionary sense; (c) use terms that are already well-established in open publications; and (d) avoid terms that either favor a particular vendor or favor a particular technology or mechanism over other, competing techniques that already exist or could be developed.  This memo provides information for the Internet community.</t>
+          </abstract>
+        </front>
+        <seriesInfo name="RFC" value="4949"/>
+        <format type="TXT" octets="867626" target="ftp://ftp.isi.edu/in-notes/rfc4949.txt"/>
+      </reference>
+      <reference anchor="X509-ALGO">
+        <front>
+          <title>Public-Key Cryptography Standards (PKCS) #1: RSA Cryptography Specifications Version 2.1</title>
+          <author initials="J." surname="Jonsson" fullname="J. Jonsson">
+            <organization/>
+          </author>
+          <author initials="B." surname="Kaliski" fullname="B. Kaliski">
+            <organization/>
+          </author>
+          <date year="2003" month="February"/>
+          <abstract>
+            <t>This memo represents a republication of PKCS #1 v2.1 from RSA Laboratories' Public-Key Cryptography Standards (PKCS) series, and change control is retained within the PKCS process.  The body of this document is taken directly from the PKCS #1 v2.1 document, with certain corrections made during the publication process.  This memo provides information for the Internet community.</t>
+          </abstract>
+        </front>
+        <seriesInfo name="RFC" value="3447"/>
+        <format type="TXT" octets="143173" target="ftp://ftp.isi.edu/in-notes/rfc3447.txt"/>
+      </reference>
+    </references>
+    <references title="Informative References">
+      <reference anchor="RFC6120">
+        <front>
+          <title>Extensible Messaging and Presence Protocol (XMPP): Core</title>
+          <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
+            <organization>Cisco</organization>
+            <address>
+              <email>psaintan@cisco.com</email>
+            </address>
+          </author>
+          <date month="March" year="2011"/>
+        </front>
+        <seriesInfo name="RFC" value="6121"/>
+        <format type="TXT"  target="http://tools.ietf.org/rfc/rfc6121.txt"/>
+      </reference>
+    </references>
+  </back>
+</rfc>
