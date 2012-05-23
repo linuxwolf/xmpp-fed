@@ -7,7 +7,7 @@
 <?rfc tocdepth="4"?>
 <rfc category="std" docName="draft-miller-xmpp-dane-00" ipr="trust200902">
   <front>
-    <title abbrev="XMPP DANE">Use of DANE for XMPP</title>
+    <title abbrev="XMPP SD">Secure Delegation in XMPP</title>
     <author initials="M." surname="Miller" fullname="Matthew Miller">
       <organization>Cisco Systems, Inc.</organization>
       <address>
@@ -167,8 +167,8 @@
           </author>
           <date month="March" year="2011"/>
         </front>
-        <seriesInfo name="RFC" value="6121"/>
-        <format type="TXT"  target="http://tools.ietf.org/rfc/rfc6121.txt"/>
+        <seriesInfo name="RFC" value="6120"/>
+        <format type="TXT"  target="http://tools.ietf.org/rfc/rfc6120.txt"/>
       </reference>
     </references>
   </back>
