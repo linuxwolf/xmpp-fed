@@ -56,7 +56,7 @@
     <section title="Requirements" anchor="reqs">
       <t>Any secure delegation model MUST meet the following:
         <list style="symbols">
-          <t>MUST NOT rely solely on exchanges within an XMPP stream.<vspace blankLines="1"/></t>
+          <t>MUST NOT rely solely on exchanges within an untrusted XMPP stream.<vspace blankLines="1"/></t>
         </list>
       </t>
     </section>
