@@ -41,27 +41,51 @@
     <keyword>Extensible Messaging and Presence Protocol</keyword>
     <keyword>Jabber</keyword>
     <abstract>
-      <t></t>
+      <t>This document defines a model for delegating an XMPP service for a domain to a different host in a secure manner.</t>
     </abstract>
   </front>
   <middle>
     <section title="Introduction" anchor="intro">
-      <t></t>
+      <t>In <xref target="RFC6120"/>, the domain of a server is asserted via the 'from' and 'to' attributes in the &lt;stream:stream&gt;, and the TLS certificate offered is required to match this name. However, this presents problems if the domain is delegated to a different host, which might also be the delegate for a number of other domains. Such servers are rarely able to present a certificate that matches the origin domain.</t>
+      <t>The outcome of secure delegation is to provide additional or alternative names that validate the TLS certificate offered.</t>
+    </section>
+    <section title="Terminology" anchor="terms">
+      <t>This document inherits terminology defined in <xref target="RFC4033"/>, <xref target="RFC6120"/>, and <xref target="RFC6125"/>.</t>
+      <t>The capitalized key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="KEYWORDS"/>.</t>
     </section>
     <section title="Requirements" anchor="reqs">
-      <t></t>
+      <t>Any secure delegation model MUST meet the following:
+        <list style="symbols">
+          <t>MUST NOT rely solely on exchanges within an XMPP stream.<vspace blankLines="1"/></t>
+        </list>
+      </t>
     </section>
-    <section title="Using DNS" anchor="delegate-dns">
-      <t></t>
+    <section title="DNS-based Delegation" anchor="delegate-dns">
+      <t>DNSSEC can provide a secure delegation model for a domain to its hosting service.</t>
+      <t>To use DNS for secure delegation, the following conditions MUST be met:
+        <list style="symbols">
+          <t>The "SRV" records for the domain MUST validate secure according to <xref target="RFC4033"/>.<vspace blankLines="1"/></t>
+          <t>The address records ("A" or "AAAA") for the host MUST validate secure according to <xref target="RFC4033"/>.<vspace blankLines="1"/></t>
+        </list>
+      </t>
+      <section title="Use of DANE" anchor="delegate-dns-dane">
+        <t>The <xref target="DANE"/> protocol can be used to validate the TLS certificate offered by the server.  In addition to the conditions above, the following conditions MUST be met:
+          <list style="numbers">
+            <t>The "SRV" and relevant address records MUST validate secure as above.<vspace blankLines="1"/></t>
+            <t>The "TLSA" record MUST be located either at the host and port of the target server (e.g. "_5222._tcp.shakespeare.lit"), or at the host of the target server (e.g. "shakespeare.lit").</t>
+            <t>The "TLSA" record MUST validate secure according to <xref target="RFC4033"/>.</t>
+          </list>
+        </t>
+      </section>
     </section>
     <section title="Internationalization Considerations" anchor="i18n">
-      <t></t>
+      <t>TBD</t>
     </section>
     <section title="IANA Considerations" anchor="iana">
-      <t></t>
+      <t>TBD</t>
     </section>
     <section title="Security Considerations" anchor="security">
-      <t></t>
+      <t>TBD</t>
     </section>
   </middle>
   <back>
@@ -156,6 +180,44 @@
       </reference>
     </references>
     <references title="Informative References">
+      <reference anchor="RFC4033">
+        <front>
+          <title>DNS Security Introduction and Requirements</title>
+          <author initials="R." surname="Arends" fullname="Roy Arends">
+            <organization>Telematica Instituut</organization>
+            <address>
+              <email>roy.arends@telin.nl</email>
+            </address>
+          </author>
+          <author initials="R." surname="Austein" fullname="Rob Austein">
+            <organization>Internet Systems Consortium</organization>
+            <address>
+              <email>sra@isc.org</email>
+            </address>
+          </author>
+          <author initials="M." surname="Larson" fullname="Matt Larson">
+            <organization>VeriSign, Inc.</organization>
+            <address>
+              <email>mlarson@verisign.com</email>
+            </address>
+          </author>
+          <author initials="D." surname="Massey" fullname="Dan Massey">
+            <organization>Colorado State University</organization>
+            <address>
+              <email>massey@cs.colostate.edu</email>
+            </address>
+          </author>
+          <author initials="S." surname="Rose" fullname="Scott Rose">
+            <organization>National Institute for Standards and Technology</organization>
+            <address>
+              <email>scott.rose@nist.gov</email>
+            </address>
+          </author>
+          <date month="May" year="2005"/>
+        </front>
+        <seriesInfo name="RFC" value="4033"/>
+        <format type="TXT" target="http://tools.ietf.org/rfc/rfc4033.txt"/>
+      </reference>
       <reference anchor="RFC6120">
         <front>
           <title>Extensible Messaging and Presence Protocol (XMPP): Core</title>
@@ -169,6 +231,46 @@
         </front>
         <seriesInfo name="RFC" value="6120"/>
         <format type="TXT"  target="http://tools.ietf.org/rfc/rfc6120.txt"/>
+      </reference>
+      <reference anchor="RFC6125">
+        <front>
+          <title>Representation and Verification of Domain-Based Application Service Identity within Internet Public Key Infrastructure Using X.509 (PKIX) Certificates in the Context of Transport Layer Security (TLS)</title>
+          <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
+            <organization>Cisco</organization>
+            <address>
+              <email>psaintan@cisco.com</email>
+            </address>
+          </author>
+          <author initials="J." surname="Hodges" fullname="Jeff Hodges">
+            <organization>PayPal</organization>
+            <address>
+              <email>jeff.hodges@paypal.com</email>
+            </address>
+          </author>
+          <date month="March" year="2011"/>
+        </front>
+        <seriesInfo name="RFC" value="6125"/>
+        <format type="TXT" target="http://tools.ietf.org/rfc/rfc6125.txt"/>
+      </reference>
+      <reference anchor="DANE">
+        <front>
+          <title>The DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol: TLSA</title>
+          <author initials="P." surname="Hoffman" fullname="Paul Hoffman">
+            <organization>VPN Consortium</organization>
+            <address>
+              <email>paul.hoffman@vpnc.org</email>
+            </address>
+          </author>
+          <author initials="J." surname="Schlyter" fullname="Jakob Schlyter">
+            <organization>Kirei AB</organization>
+            <address>
+              <email>jakob@kirei.se</email>
+            </address>
+          </author>
+          <date month="May" year="2012"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-dane-protocol-21"/>
+        <format type="TXT" target="http://tools.ietf.org/html/draft-ietf-dane-protocol-21.txt"/>
       </reference>
     </references>
   </back>
