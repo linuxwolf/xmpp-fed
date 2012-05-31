@@ -57,7 +57,7 @@
     <section title="Framework" anchor="framework">
       <t></t>
     </section>
-    <section title="Validation" anchor="valid">
+    <section title="Validation Prooftypes" anchor="valid">
         <section title="PKI" anchor="valid-pki">
           <t></t>
         </section>
@@ -65,7 +65,15 @@
           <t></t>
         </section>
         <section title="HTTPS/.well-known/" anchor="valid-https">
-          <t></t>
+          <t>This prooftype relies on the existing trust for HTTPS to provide a delegation path from a source domain to a target host.</t>
+          <t>
+            <list style="numbers">
+              <t>The initiating entity performs an HTTPS GET to the path "/.well-known/tls/&lt;service&gt;.&lt;protocol&gt;.&lt;source-domain&gt;" to the source domain (e.g. "https://im.example.com/.well-known/tls/_xmpp-client._tcp.im.example.com")</t>
+              <t>The source domain HTTPS service SHOULD respond with a 302 Moved; the 'Location' header MUST specify an HTTPS URL that directs to the target host, and the path MUST be identical to the path of the original request (e.g. "Location: https://hosting.example.com/.well-known/tls/_xmpp-client._tcp.im.example.com")</t>
+              <t>The initiating entity performs an HTTPS GET to the redirected URL specified in the 'Location' header</t>
+              <t>The target host HTTPS service MUST respond with a success status code, with the message body set to the PEM-encoded certificate to expect.</t>
+            </list>
+          </t>
         </section>
         <section title="Dialback Keys" anchor="valid-dbkeys">
           <t></t>
