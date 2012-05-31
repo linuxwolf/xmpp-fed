@@ -7,7 +7,7 @@
 <?rfc tocdepth="4"?>
 <rfc category="std" docName="draft-miller-xmpp-dns-prooftype-00" ipr="trust200902">
   <front>
-    <title abbrev="XMPP SD">Using DNS as a Prooftype for XMPP Delegation</title>
+    <title abbrev="XMPP SD">Using DNSSEC as a Prooftype for XMPP Delegation</title>
     <author initials="M." surname="Miller" fullname="Matthew Miller">
       <organization>Cisco Systems, Inc.</organization>
       <address>
@@ -40,6 +40,8 @@
     <keyword>XMPP</keyword>
     <keyword>Extensible Messaging and Presence Protocol</keyword>
     <keyword>Jabber</keyword>
+    <keyword>DNSSEC</keyword>
+    <keyword>DANE</keyword>
     <abstract>
       <t>This document defines a model for securely delegating an XMPP service for a domain to a host associated with a different domain.</t>
     </abstract>
@@ -54,29 +56,31 @@
       <t>The capitalized key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>.</t>
     </section>
     <section title="Requirements" anchor="reqs">
-      <t>Any secure delegation model MUST meet the following:
+      <t>The following conditions MUST be met:
         <list style="symbols">
-          <t>MUST NOT rely solely on exchanges within an untrusted XMPP stream.<vspace blankLines="1"/></t>
-        </list>
-      </t>
-    </section>
-    <section title="DNS-based Delegation" anchor="delegate-dns">
-      <t>DNSSEC can provide a secure delegation model for a domain to its hosting service.</t>
-      <t>To use DNS for secure delegation, the following conditions MUST be met:
-        <list style="symbols">
-          <t>The "SRV" records for the domain MUST validate secure according to <xref target="RFC4033"/>.<vspace blankLines="1"/></t>
+          <t>The "SRV" records for the source domain MUST validate secure according to <xref target="RFC4033"/>.<vspace blankLines="1"/></t>
           <t>The address records ("A" or "AAAA") for the host MUST validate secure according to <xref target="RFC4033"/>.<vspace blankLines="1"/></t>
         </list>
       </t>
-      <section title="Use of DANE" anchor="delegate-dns-dane">
-        <t>The <xref target="DANE"/> protocol can be used to validate the TLS certificate offered by the server.  In addition to the conditions above, the following conditions MUST be met:
-          <list style="numbers">
-            <t>The "SRV" and relevant address records MUST validate secure as above.<vspace blankLines="1"/></t>
-            <t>The "TLSA" record MUST be located either at the host and port of the target server (e.g. "_5222._tcp.shakespeare.lit"), or at the host of the target server (e.g. "shakespeare.lit").</t>
-            <t>The "TLSA" record MUST validate secure according to <xref target="RFC4033"/>.</t>
-          </list>
-        </t>
-      </section>
+    </section>
+    <section title="Protocol" anchor="protocol">
+      <t>An inititating entity that wishes to use this prooftype performs the following:
+        <list style="numbers">
+          <t>Query for any "SRV" records for the source domain (e.g. "im.example.com").<vspace blankLines="1"/></t>
+          <t>Validate the answer is provably secure; if the answer is not secure, is bogus, or is secure but negative (no records), the delegation is not secure.<vspace blankLines="1"/></t>
+          <t>For each target host from the "SRV" answer (e.g. "hosting.example.net"), query for the "A" and/or "AAAA" records, as appropriate.<vspace blankLines="1"/></t>
+          <t>Validate the answers are provably secure; if any answer is not secure, is bogus, or is secure but negative (no records), a connection to that target host SHOULD NOT be considered for secure delegation from the source domain.<vspace blankLines="1"/></t>
+        </list>
+      </t>
+    </section>
+    <section title="Use of DANE" anchor="delegate-dns-dane">
+      <t>The <xref target="DANE"/> protocol can be used to validate the TLS certificate offered by the server.  In addition to the conditions above, the following conditions MUST be met:
+        <list style="numbers">
+          <t>The "SRV" and relevant address records MUST validate secure as above.<vspace blankLines="1"/></t>
+          <t>The "TLSA" record MUST be located either at the host and port of the target server (e.g. "_5222._tcp.hosting.example.net"), or at the host of the target server (e.g. "shakespeare.lit").</t>
+          <t>The "TLSA" record MUST validate secure according to <xref target="RFC4033"/>.</t>
+        </list>
+      </t>
     </section>
     <section title="Internationalization Considerations" anchor="i18n">
       <t>TBD</t>
