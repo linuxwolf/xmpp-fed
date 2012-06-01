@@ -69,7 +69,7 @@
         <list style="numbers">
           <t>Query for any "SRV" resource records for the source domain (e.g. "_xmpp-client._tcp.im.example.com").<vspace blankLines="1"/></t>
           <t>Validate the answer is provably secure; if the answer is not secure, is bogus, or is secure but negative (no records), the delegation is not secure.<vspace blankLines="1"/></t>
-          <t>For each target host from the "SRV" answer (e.g. "hosting.example.net"), query for the "A" and/or "AAAA" resource records, as appropriate.<vspace blankLines="1"/></t>s
+          <t>For each target host from the "SRV" answer (e.g. "hosting.example.net"), query for the "A" and/or "AAAA" resource records, as appropriate.<vspace blankLines="1"/></t>
           <t>Validate the answers are provably secure; if any answer is not secure, is bogus, or is secure but negative (no records), a connection to that target host SHOULD NOT be considered for secure delegation from the source domain.<vspace blankLines="1"/></t>
         </list>
       </t>
@@ -83,6 +83,7 @@
             <t>SHOULD use the target host and port (e.g. "_5222._tcp.hosting.example.net").<vspace blankLines="1"/></t>
             <t>MAY use the target host without port (e.g. "hosting.example.net") if no "TLSA" resource records exist for the specific service<vspace blankLines="1"/></t>
             <t>MUST NOT use the source domain (e.g. "im.example.com" or "_5222._tcp.im.example.com")<vspace blankLines="1"/></t>
+          </list>
         </t>
       </section>
       <section title="No Delegation" anchor="dane-none">
