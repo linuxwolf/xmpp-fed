@@ -53,6 +53,7 @@
     </section>
     <section title="Terminology" anchor="terms">
       <t>This document inherits terminology defined in <xref target="RFC4033"/>, <xref target="RFC6120"/>, and <xref target="RFC6125"/>.</t>
+      <t>This document is applicable to connections made from an XMPP client to an XMPP server ("_xmpp-client._tcp") or between XMPP servers ("_xmpp-server._tcp"). To simplify discussion, this document uses "_xmpp-client._tcp" to refer to both cases, unless otherwise indicated.</t>
       <t>The capitalized key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>.</t>
     </section>
     <section title="Requirements" anchor="reqs">
@@ -64,23 +65,37 @@
       </t>
     </section>
     <section title="Protocol" anchor="protocol">
-      <t>An inititating entity that wishes to use this prooftype performs the following:
+      <t>An initiating entity that wishes to use this prooftype performs the following:
         <list style="numbers">
-          <t>Query for any "SRV" records for the source domain (e.g. "im.example.com").<vspace blankLines="1"/></t>
+          <t>Query for any "SRV" resource records for the source domain (e.g. "_xmpp-client._tcp.im.example.com").<vspace blankLines="1"/></t>
           <t>Validate the answer is provably secure; if the answer is not secure, is bogus, or is secure but negative (no records), the delegation is not secure.<vspace blankLines="1"/></t>
-          <t>For each target host from the "SRV" answer (e.g. "hosting.example.net"), query for the "A" and/or "AAAA" records, as appropriate.<vspace blankLines="1"/></t>
+          <t>For each target host from the "SRV" answer (e.g. "hosting.example.net"), query for the "A" and/or "AAAA" resource records, as appropriate.<vspace blankLines="1"/></t>s
           <t>Validate the answers are provably secure; if any answer is not secure, is bogus, or is secure but negative (no records), a connection to that target host SHOULD NOT be considered for secure delegation from the source domain.<vspace blankLines="1"/></t>
         </list>
       </t>
+      <t>If the outcome is a provably secure delegation from the source domain to the target host, the initiating entity SHOULD consider the target name when verifying the TLS certificate via <xref target="RFC6125"/>.</t>
     </section>
-    <section title="Use of DANE" anchor="delegate-dns-dane">
-      <t>The <xref target="DANE"/> protocol can be used to validate the TLS certificate offered by the server.  In addition to the conditions above, the following conditions MUST be met:
-        <list style="numbers">
-          <t>The "SRV" and relevant address records MUST validate secure as above.<vspace blankLines="1"/></t>
-          <t>The "TLSA" record MUST be located either at the host and port of the target server (e.g. "_5222._tcp.hosting.example.net"), or at the host of the target server (e.g. "shakespeare.lit").</t>
-          <t>The "TLSA" record MUST validate secure according to <xref target="RFC4033"/>.</t>
-        </list>
-      </t>
+    <section title="Use of DANE" anchor="dane">
+      <t>The use of <xref target="DANE"/> for TLS certificate validation depends on if a source domain is securely delegated to a target host.</t>
+      <section title="Secure Delegation" anchor="dane-secure">
+        <t>If the delegation of a source domain to a target host is secure as above, then the following conditions apply:
+          <list style="numbers">
+            <t>SHOULD use the target host and port (e.g. "_5222._tcp.hosting.example.net").<vspace blankLines="1"/></t>
+            <t>MAY use the target host without port (e.g. "hosting.example.net") if no "TLSA" resource records exist for the specific service<vspace blankLines="1"/></t>
+            <t>MUST NOT use the source domain (e.g. "im.example.com" or "_5222._tcp.im.example.com")<vspace blankLines="1"/></t>
+        </t>
+      </section>
+      <section title="No Delegation" anchor="dane-none">
+        <t>If there is no delegation (the source domain and the target host are identical, e.g. "im.example.com"), then the following conditions apply:
+          <list style="numbers">
+            <t>SHOULD use the source domain and standard port (e.g. "_5222._tcp.im.example.com").<vspace blankLines="1"/></t>
+            <t>MAY use the source domain with port or protocol (e.g. "im.example.com") if no "TLSA" resource records exist for the specific service<vspace blankLines="1"/></t>
+          </list>
+        </t>
+      </section>
+      <section title="Insecure Delegation" anchor="dane-insecure">
+        <t>If the delegation of a source domain to a target host is not proved secure, then <xref target="DANE"/> MUST NOT be used for TLS certificate validation.</t>
+      </section>
     </section>
     <section title="Internationalization Considerations" anchor="i18n">
       <t>TBD</t>
