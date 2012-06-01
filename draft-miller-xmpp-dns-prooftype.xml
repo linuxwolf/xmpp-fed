@@ -7,7 +7,7 @@
 <?rfc tocdepth="4"?>
 <rfc category="std" docName="draft-miller-xmpp-dns-prooftype-00" ipr="trust200902">
   <front>
-    <title abbrev="XMPP SD">Using DNSSEC as a Prooftype for XMPP Delegation</title>
+    <title abbrev="XMPP SD">Using DNSSEC and DANE as a Prooftype for XMPP Delegation</title>
     <author initials="M." surname="Miller" fullname="Matthew Miller">
       <organization>Cisco Systems, Inc.</organization>
       <address>
@@ -64,7 +64,7 @@
         </list>
       </t>
     </section>
-    <section title="Protocol" anchor="protocol">
+    <section title="Use of DNSSEC" anchor="protocol">
       <t>An initiating entity that wishes to use this prooftype performs the following:
         <list style="numbers">
           <t>Query for any "SRV" resource records for the source domain (e.g. "_xmpp-client._tcp.im.example.com").<vspace blankLines="1"/></t>
@@ -76,7 +76,7 @@
       <t>If the outcome is a provably secure delegation from the source domain to the target host, the initiating entity SHOULD consider the target name when verifying the TLS certificate via <xref target="RFC6125"/>.</t>
     </section>
     <section title="Use of DANE" anchor="dane">
-      <t>The use of <xref target="DANE"/> for TLS certificate validation depends on if a source domain is securely delegated to a target host.</t>
+      <t>The use of <xref target="DANE"/> for TLS certificate validation depends on if a source domain is securely delegated to a target host, there is no delegation to a separate target host, or if the delegation is not secure.</t>
       <section title="Secure Delegation" anchor="dane-secure">
         <t>If the delegation of a source domain to a target host is secure as above, then the following conditions apply:
           <list style="numbers">
