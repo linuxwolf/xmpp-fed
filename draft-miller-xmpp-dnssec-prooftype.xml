@@ -7,7 +7,7 @@
 <?rfc tocdepth="4"?>
 <rfc category="std" docName="draft-miller-xmpp-dnssec-prooftype-00" ipr="trust200902">
   <front>
-    <title abbrev="XMPP SD">Using DNSSEC and DANE as a Prooftype for XMPP Delegation</title>
+    <title abbrev="XMPP Secure Delegation">Using DNSSEC and DANE as a Prooftype for XMPP Delegation</title>
     <author initials="M." surname="Miller" fullname="Matthew Miller">
       <organization>Cisco Systems, Inc.</organization>
       <address>
@@ -34,7 +34,7 @@
         <email>psaintan@cisco.com</email>
       </address>
     </author>
-    <date month="May" day="30" year="2012"/>
+    <date month="June" day="4" year="2012"/>
     <area>RAI</area>
     <keyword>Internet-Draft</keyword>
     <keyword>XMPP</keyword>
@@ -52,64 +52,104 @@
       <t>Absent the use of DNS Security <xref target='RFC4033'/>, delegation via SRV does not provide a strong basis for checking the derived domain rather than the source domain.  This document describes how the use of DNSSEC with SRV results in more secure delegation, such that the originating XMPP server can legitimately check the derived domain rather than the source domain.</t>
     </section>
     <section title="Terminology" anchor="terms">
-      <t>This document inherits terminology defined in <xref target="RFC4033"/>, <xref target="RFC6120"/>, and <xref target="RFC6125"/>.</t>
-      <t>This document is applicable to connections made from an XMPP client to an XMPP server ("_xmpp-client._tcp") or between XMPP servers ("_xmpp-server._tcp"). To simplify discussion, this document uses "_xmpp-client._tcp" to refer to both cases, unless otherwise indicated.</t>
-      <t>The capitalized key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>.</t>
-    </section>
-    <section title="Requirements" anchor="reqs">
-      <t>The following conditions MUST be met:
-        <list style="symbols">
-          <t>The "SRV" records for the source domain MUST validate secure according to <xref target="RFC4033"/>.<vspace blankLines="1"/></t>
-          <t>The address records ("A" or "AAAA") for the host MUST validate secure according to <xref target="RFC4033"/>.<vspace blankLines="1"/></t>
-        </list>
-      </t>
+      <t>This document inherits XMPP-related terminology from <xref target="RFC6120"/>, DNS-related terminology from <xref target='RFC1034'/>, <xref target='RFC1035'/>, <xref target='RFC2782'/> and <xref target="RFC4033"/>, and security-related terminology from <xref target='RFC4949'/> and <xref target='RFC5280'/>.  The terms "source domain" and "derived domain" are used as defined in the "CertID" specification <xref target="RFC6125"/>.</t>
+      <t>This document is applicable to connections made from an XMPP client to an XMPP server ("_xmpp-client._tcp") or between XMPP servers ("_xmpp-server._tcp").  In both cases, the originating entity acts as a TLS client and the receiving entity acts as a TLS server.  Therefore, to simplify discussion this document uses "_xmpp-client._tcp" to describe to both cases, unless otherwise indicated.</t>
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119'/>.</t>
     </section>
     <section title="Use of DNSSEC" anchor="protocol">
-      <t>An initiating entity that wishes to use this prooftype performs the following:
+      <t>An XMPP initiating entity (TLS client) that wishes to use this prooftype performs the following actions:
         <list style="numbers">
-          <t>Query for any "SRV" resource records for the source domain (e.g. "_xmpp-client._tcp.im.example.com").<vspace blankLines="1"/></t>
-          <t>Validate the answer is provably secure; if the answer is not secure, is bogus, or is secure but negative (no records), the delegation is not secure.<vspace blankLines="1"/></t>
-          <t>For each target host from the "SRV" answer (e.g. "hosting.example.net"), query for the "A" and/or "AAAA" resource records, as appropriate.<vspace blankLines="1"/></t>
-          <t>Validate the answers are provably secure; if any answer is not secure, is bogus, or is secure but negative (no records), a connection to that target host SHOULD NOT be considered for secure delegation from the source domain.<vspace blankLines="1"/></t>
+          <t>Query for the appropriate SRV resource record for the source domain (e.g. "_xmpp-client._tcp.im.example.com").<vspace blankLines="1"/></t>
+          <t>If there is no SRV resource record, pursue the fallback methods described in <xref target='RFC6120'/>.<vspace blankLines='1'/></t>
+          <t>If there is an SRV resource record, validate that the SRV record answer is provably secure according to <xref target='RFC4033'/>; if the answer is not secure, is bogus, or is secure but negative (no records), then the delegation is not secure and the TLS client MUST verify the certificate against the source domain as described in <xref target='RFC6120'/>.<vspace blankLines="1"/></t>
+          <t>If there is an SRV record, for each derived domain from the SRV record answer (e.g. "hosting.example.net"), query for the "A" and/or "AAAA" resource records as described in <xref target='RFC6120'/>.<vspace blankLines="1"/></t>
+          <t>For each derived domain, validate that the address record answers are provably secure according to <xref target='RFC4033'/><vspace blankLines='1'/></t>
+          <t>If any answer is not secure, is bogus, or is secure but negative (no records), then the TLS client MUST NOT consider a connection to that derived domain as securely delegated from the source domain; when verifying the certificate, the TLS client MUST do so against the source domain as described in <xref target='RFC6120'/>.<vspace blankLines="1"/></t>
+          <t>For each address record answer that is a provably secure, the TLS client SHOULD consider a connection to that derived domain as securely delegated; when verifying the certificate (as described in <xref target="RFC6125"/>), the TLS client SHOULD do so against the derived domain but MAY also verify the certificate against the source domain.</t>
         </list>
       </t>
-      <t>If the outcome is a provably secure delegation from the source domain to the target host, the initiating entity SHOULD consider the target name when verifying the TLS certificate via <xref target="RFC6125"/>.</t>
     </section>
     <section title="Use of DANE" anchor="dane">
-      <t>The use of <xref target="DANE"/> for TLS certificate validation depends on if a source domain is securely delegated to a target host, there is no delegation to a separate target host, or if the delegation is not secure.</t>
-      <section title="Secure Delegation" anchor="dane-secure">
-        <t>If the delegation of a source domain to a target host is secure as above, then the following conditions apply:
-          <list style="numbers">
-            <t>SHOULD use the target host and port (e.g. "_5222._tcp.hosting.example.net").<vspace blankLines="1"/></t>
-            <t>MAY use the target host without port (e.g. "hosting.example.net") if no "TLSA" resource records exist for the specific service<vspace blankLines="1"/></t>
-            <t>MUST NOT use the source domain (e.g. "im.example.com" or "_5222._tcp.im.example.com")<vspace blankLines="1"/></t>
-          </list>
-        </t>
-      </section>
+      <t>Whether it is appropriate to use <xref target="DANE"/> for TLS certificate verification depends on the delegation status of the source domain, as described in the following sections.</t>
       <section title="No Delegation" anchor="dane-none">
-        <t>If there is no delegation (the source domain and the target host are identical, e.g. "im.example.com"), then the following conditions apply:
-          <list style="numbers">
-            <t>SHOULD use the source domain and standard port (e.g. "_5222._tcp.im.example.com").<vspace blankLines="1"/></t>
-            <t>MAY use the source domain with port or protocol (e.g. "im.example.com") if no "TLSA" resource records exist for the specific service<vspace blankLines="1"/></t>
-          </list>
-        </t>
+        <t>If the source domain has not been delegated to a derived domain, i.e., if the source domain and the derived domain are identical (e.g., "im.example.com"), then the TLS client MAY query for a TLSA resource record as described in <xref target='DANE'/>, where the prepared domain name MUST contain the source domain and a port of 5222 for client-to-server streams or 5269 for server-to-server streams (e.g. "_5222._tcp.im.example.com").</t>
+        <t>In this case, the TLS client MUST perform certificate verification against the source domain as described in <xref target='RFC6120'/>.</t>
       </section>
       <section title="Insecure Delegation" anchor="dane-insecure">
-        <t>If the delegation of a source domain to a target host is not proved secure, then <xref target="DANE"/> MUST NOT be used for TLS certificate validation.</t>
+        <t>If the delegation of a source domain to a derived domain is not proved secure, then the TLS client MUST NOT make a TLSA record query as described in <xref target="DANE"/> and the TLS client MUST perform certificate verification against the source domain as described in <xref target='RFC6120'/>.</t>
+      </section>
+      <section title="Secure Delegation" anchor="dane-secure">
+        <t>If the source domain has been delegated to a derived domain in a secure manner as described under <xref target='protocol'/>, then the TLS client SHOULD query for a TLSA resource record as described in <xref target='DANE'/>, where the prepared domain name MUST contain the derived domain and a port of 5222 for client-to-server streams or 5269 for server-to-server streams (e.g. "_5222._tcp.hosting.example.net").</t>
+        <t>If no TLSA resource records exist for the specified service, then the TLA client MUST perform certificate verification against the source domain as described in <xref target='RFC6120'/>.</t>
+        <t>If TLSA resource records exist for the specified service, then the TLS client MUST perform certificate verification against the derived domain, using the information from the TLSA answer as the basis for verification as described in <xref target='DANE'/>.</t>
       </section>
     </section>
     <section title="Internationalization Considerations" anchor="i18n">
-      <t>TBD</t>
-    </section>
-    <section title="IANA Considerations" anchor="iana">
-      <t>TBD</t>
+      <t>If the SRV, A/AAAA, and TLSA record queries are for an internationalized domain name, then they need to use the A-label form as defined in <xref target='RFC5890'/>.</t>
     </section>
     <section title="Security Considerations" anchor="security">
-      <t>TBD</t>
+      <t>This document supplements but does not supersede the security considerations provided in <xref target='RFC4033'/>, <xref target='RFC6120'/>, <xref target='RFC6125'/>, and <xref target='DANE'/>.</t>
+    </section>
+    <section title="IANA Considerations" anchor="iana">
+      <t>This document has no actions for the IANA.</t>
     </section>
   </middle>
   <back>
     <references title="Normative References">
+      <reference anchor="DANE">
+        <front>
+          <title>The DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol: TLSA</title>
+          <author initials="P." surname="Hoffman" fullname="Paul Hoffman">
+            <organization>VPN Consortium</organization>
+            <address>
+              <email>paul.hoffman@vpnc.org</email>
+            </address>
+          </author>
+          <author initials="J." surname="Schlyter" fullname="Jakob Schlyter">
+            <organization>Kirei AB</organization>
+            <address>
+              <email>jakob@kirei.se</email>
+            </address>
+          </author>
+          <date month="May" year="2012"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-dane-protocol-21"/>
+        <format type="TXT" target="http://tools.ietf.org/html/draft-ietf-dane-protocol-21.txt"/>
+      </reference>
+      <reference anchor='RFC1034'>
+        <front>
+          <title abbrev='Domain Concepts and Facilities'>Domain names - concepts and facilities</title>
+          <author initials='P.' surname='Mockapetris' fullname='P. Mockapetris'>
+            <organization>Information Sciences Institute (ISI)</organization>
+          </author>
+          <date year='1987' day='1' month='November' />
+        </front>
+        <seriesInfo name='STD' value='13' />
+        <seriesInfo name='RFC' value='1034' />
+        <format type='TXT' octets='129180' target='http://www.rfc-editor.org/rfc/rfc1034.txt' />
+      </reference>
+      <reference anchor='RFC1035'>
+        <front>
+          <title abbrev='Domain Implementation and Specification'>Domain names - implementation and specification</title>
+          <author initials='P.' surname='Mockapetris' fullname='P. Mockapetris'>
+            <organization>USC/ISI</organization>
+            <address>
+              <postal>
+                <street>4676 Admiralty Way</street>
+                <city>Marina del Rey</city>
+                <region>CA</region>
+                <code>90291</code>
+                <country>US</country>
+              </postal>
+              <phone>+1 213 822 1511</phone>
+            </address>
+          </author>
+          <date year='1987' day='1' month='November' />
+        </front>
+        <seriesInfo name='STD' value='13' />
+        <seriesInfo name='RFC' value='1035' />
+        <format type='TXT' octets='125626' target='http://www.rfc-editor.org/rfc/rfc1035.txt' />
+      </reference>
       <reference anchor="RFC2119">
         <front>
           <title abbrev="RFC Key Words">Key words for use in RFCs to Indicate Requirement Levels</title>
@@ -190,23 +230,6 @@
         </front>
         <seriesInfo name='RFC' value='2782' />
         <format type='TXT' octets='24013' target='http://www.rfc-editor.org/rfc/rfc2782.txt' />
-      </reference>
-      <reference anchor="RFC3447">
-        <front>
-          <title>Public-Key Cryptography Standards (PKCS) #1: RSA Cryptography Specifications Version 2.1</title>
-          <author initials="J." surname="Jonsson" fullname="J. Jonsson">
-            <organization/>
-          </author>
-          <author initials="B." surname="Kaliski" fullname="B. Kaliski">
-            <organization/>
-          </author>
-          <date year="2003" month="February"/>
-          <abstract>
-            <t>This memo represents a republication of PKCS #1 v2.1 from RSA Laboratories' Public-Key Cryptography Standards (PKCS) series, and change control is retained within the PKCS process.  The body of this document is taken directly from the PKCS #1 v2.1 document, with certain corrections made during the publication process.  This memo provides information for the Internet community.</t>
-          </abstract>
-        </front>
-        <seriesInfo name="RFC" value="3447"/>
-        <format type="TXT" octets="143173" target="ftp://ftp.isi.edu/in-notes/rfc3447.txt"/>
       </reference>
       <reference anchor="RFC4033">
         <front>
@@ -289,6 +312,20 @@
         <seriesInfo name="RFC" value="5280"/>
         <format type="TXT" octets="352580" target="ftp://ftp.isi.edu/in-notes/rfc5280.txt"/>
       </reference>
+      <reference anchor='RFC5890'>
+        <front>
+          <title>Internationalized Domain Names for Applications (IDNA): Definitions and Document Framework</title>
+          <author initials='J.' surname='Klensin' fullname='J. Klensin'>
+            <organization />
+          </author>
+          <date year='2010' month='August' />
+          <abstract>
+            <t>This document is one of a collection that, together, describe the protocol and usage context for a revision of Internationalized Domain Names for Applications (IDNA), superseding the earlier version.  It describes the document collection and provides definitions and other material that are common to the set. [STANDARDS-TRACK]</t>
+          </abstract>
+        </front>
+        <seriesInfo name='RFC' value='5890' />
+        <format type='TXT' octets='54245' target='http://www.rfc-editor.org/rfc/rfc5890.txt' />
+      </reference>
       <reference anchor="RFC6120">
         <front>
           <title>Extensible Messaging and Presence Protocol (XMPP): Core</title>
@@ -322,28 +359,6 @@
         </front>
         <seriesInfo name="RFC" value="6125"/>
         <format type="TXT" target="http://tools.ietf.org/rfc/rfc6125.txt"/>
-      </reference>
-    </references>
-    <references title="Informative References">
-      <reference anchor="DANE">
-        <front>
-          <title>The DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol: TLSA</title>
-          <author initials="P." surname="Hoffman" fullname="Paul Hoffman">
-            <organization>VPN Consortium</organization>
-            <address>
-              <email>paul.hoffman@vpnc.org</email>
-            </address>
-          </author>
-          <author initials="J." surname="Schlyter" fullname="Jakob Schlyter">
-            <organization>Kirei AB</organization>
-            <address>
-              <email>jakob@kirei.se</email>
-            </address>
-          </author>
-          <date month="May" year="2012"/>
-        </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-dane-protocol-21"/>
-        <format type="TXT" target="http://tools.ietf.org/html/draft-ietf-dane-protocol-21.txt"/>
       </reference>
     </references>
   </back>
