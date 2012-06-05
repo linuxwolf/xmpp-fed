@@ -48,35 +48,38 @@
   </front>
   <middle>
     <section title="Introduction" anchor="intro">
-      <t>In the core XMPP specification <xref target="RFC6120"/>, the domain to which an originating server wants to connect is asserted via the 'to' attribute of the &lt;stream:stream&gt; header, and the TLS certificate offered by the receiving server is required to match this source domain (e.g., "im.example.com").  However, this model can cause problems if the source domain is delegated (via DNS SRV records <xref target='RFC2782'/>) to a host associated with a different domain that is derived via SRV (e.g., "hosting.example.net"), since the derived domain might also be the delegate for a number of other source domains and, for operational and security reasons, a hosting server is rarely able to present a certificate that matches the source domain.</t>
-      <t>Absent the use of DNS Security <xref target='RFC4033'/>, delegation via SRV does not provide a strong basis for checking the derived domain rather than the source domain.  This document describes how the use of DNSSEC with SRV results in more secure delegation, such that the originating XMPP server can legitimately check the derived domain rather than the source domain.</t>
+      <t>In the core XMPP specification <xref target="RFC6120"/>, the domain to which an XMPP initiating entity wants to connect is asserted via the 'to' attribute of the &lt;stream:stream&gt; header, and the TLS certificate offered by the receiving server is required to match this source domain (e.g., "im.example.com").  However, this model can cause problems if the source domain is delegated (via DNS SRV records <xref target='RFC2782'/>) to a host associated with a different domain that is derived via SRV (e.g., "hosting.example.net"), since the derived domain might also be the delegate for a number of other source domains and, for operational and security reasons, a hosting server is rarely able to present a certificate that matches the source domain.</t>
+      <t>Absent the use of DNS Security <xref target='RFC4033'/>, delegation via SRV does not provide a strong basis for checking the derived domain rather than the source domain.  This document describes how the use of DNSSEC with SRV results in more secure delegation, such that the initiating XMPP server can legitimately check the derived domain rather than the source domain.</t>
     </section>
     <section title="Terminology" anchor="terms">
       <t>This document inherits XMPP-related terminology from <xref target="RFC6120"/>, DNS-related terminology from <xref target='RFC1034'/>, <xref target='RFC1035'/>, <xref target='RFC2782'/> and <xref target="RFC4033"/>, and security-related terminology from <xref target='RFC4949'/> and <xref target='RFC5280'/>.  The terms "source domain" and "derived domain" are used as defined in the "CertID" specification <xref target="RFC6125"/>.</t>
-      <t>This document is applicable to connections made from an XMPP client to an XMPP server ("_xmpp-client._tcp") or between XMPP servers ("_xmpp-server._tcp").  In both cases, the originating entity acts as a TLS client and the receiving entity acts as a TLS server.  Therefore, to simplify discussion this document uses "_xmpp-client._tcp" to describe to both cases, unless otherwise indicated.</t>
+      <t>This document is applicable to connections made from an XMPP client to an XMPP server ("_xmpp-client._tcp") or between XMPP servers ("_xmpp-server._tcp").  In both cases, the XMPP initiating entity acts as a TLS client and the XMPP receiving entity acts as a TLS server.  Therefore, to simplify discussion this document uses "_xmpp-client._tcp" to describe to both cases, unless otherwise indicated.</t>
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119'/>.</t>
+    </section>
+    <section title="Requirements" anchor="reqs">
+      <t>An XMPP initiating entity (TLS client) that wishes to use this prooftype MUST do so before exchanging stanzas addressed to the source domain. In general, this means the prooftype MUST be completed before the XMPP stream is restarted following STARTTLS negotiation (as specified in <xref target="RFC6120"/>). However, connections between XMPP servers MAY also use this prooftype to verify delegations of additional source domains onto an existing connection, such as multiplexing via <xref target="XEP-0220"/>.</t>
     </section>
     <section title="Use of DNSSEC" anchor="protocol">
       <t>An XMPP initiating entity (TLS client) that wishes to use this prooftype performs the following actions:
         <list style="numbers">
           <t>Query for the appropriate SRV resource record for the source domain (e.g. "_xmpp-client._tcp.im.example.com").<vspace blankLines="1"/></t>
           <t>If there is no SRV resource record, pursue the fallback methods described in <xref target='RFC6120'/>.<vspace blankLines='1'/></t>
-          <t>If there is an SRV resource record, validate that the SRV record answer is provably secure according to <xref target='RFC4033'/>; if the answer is not secure or is bogus, then delegation to the derived domain (as indicated by the "target host" field) is not secure and the TLS client MUST verify the certificate against the source domain as described in <xref target='RFC6120'/>.<vspace blankLines="1"/></t>
+          <t>If there is an SRV resource record, validate that the SRV record answer is secure according to <xref target='RFC4033'/>; if the answer is insecure or bogus, then delegation to the derived domain (as indicated by the "target host" field) is insecure and the TLS client MUST verify the certificate against the source domain as described in <xref target='RFC6120'/>.<vspace blankLines="1"/></t>
           <t>If there is an SRV record, for each derived domain from the SRV record answer (e.g. "hosting.example.net"), query for the "A" and/or "AAAA" resource records as described in <xref target='RFC6120'/>.<vspace blankLines="1"/></t>
           <t>For each derived domain, validate that the address record answers are provably secure according to <xref target='RFC4033'/><vspace blankLines='1'/></t>
-          <t>If any answer is not secure or is bogus, then the TLS client MUST NOT consider a connection to that derived domain as securely delegated from the source domain; when verifying the certificate, the TLS client MUST do so against the source domain as described in <xref target='RFC6120'/>.<vspace blankLines="1"/></t>
+          <t>If any answer is insecure or bogus, then the TLS client MUST NOT consider a connection to that derived domain as securely delegated from the source domain; when verifying the certificate, the TLS client MUST do so against the source domain as described in <xref target='RFC6120'/>.<vspace blankLines="1"/></t>
           <t>For each address record answer that is a provably secure, the TLS client SHOULD consider a connection to that derived domain as securely delegated; when verifying the certificate (as described in <xref target="RFC6125"/>), the TLS client SHOULD do so against the derived domain but MAY also verify the certificate against the source domain.</t>
         </list>
       </t>
     </section>
     <section title="Use of DANE" anchor="dane">
-      <t>Whether it is appropriate to use <xref target="DANE"/> for TLS certificate verification depends on the delegation status of the source domain, as described in the following sections.</t>
+      <t><xref target="DANE"/> provides additional tools to verify the keys used in TLS connections. Whether it is appropriate to use <xref target="DANE"/> for TLS certificate verification depends on the delegation status of the source domain, as described in the following sections.</t>
       <section title="No Delegation" anchor="dane-none">
         <t>If the source domain has not been delegated to a derived domain, i.e., if the source domain and the derived domain are identical (e.g., "im.example.com"), then the TLS client MAY query for a TLSA resource record as described in <xref target='DANE'/>, where the prepared domain name MUST contain the source domain and a port of 5222 for client-to-server streams  (e.g. "_5222._tcp.im.example.com") or 5269 for server-to-server streams (e.g. "_5269._tcp.im.example.com").</t>
         <t>In this case, the TLS client MUST perform certificate verification against the source domain as described in <xref target='RFC6120'/>.</t>
       </section>
       <section title="Insecure Delegation" anchor="dane-insecure">
-        <t>If the delegation of a source domain to a derived domain is not proved secure, then the TLS client MUST NOT make a TLSA record query as described in <xref target="DANE"/> and the TLS client MUST perform certificate verification against the source domain as described in <xref target='RFC6120'/>.</t>
+        <t>If the delegation of a source domain to a derived domain is not secure, then the TLS client MUST NOT make a TLSA record query to the derived domain as described in <xref target="DANE"/>. Instead, the TLS client MUST perform certificate verification against the source domain as described in <xref target='RFC6120'/>, and MAY make a TLSA query against the source domain.</t>
       </section>
       <section title="Secure Delegation" anchor="dane-secure">
         <t>If the source domain has been delegated to a derived domain in a secure manner as described under <xref target='protocol'/>, then the TLS client SHOULD query for a TLSA resource record as described in <xref target='DANE'/>, where the prepared domain name MUST contain the derived domain and a port of 5222 for client-to-server streams or 5269 for server-to-server streams (e.g. "_5222._tcp.hosting.example.net").</t>
@@ -362,6 +365,30 @@
         </front>
         <seriesInfo name="RFC" value="6125"/>
         <format type="TXT" target="http://tools.ietf.org/rfc/rfc6125.txt"/>
+      </reference>
+      <reference anchor="XEP-0220">
+        <front>
+          <title>Server Dialback</title>
+          <author initials="J" surname="Miller" fullname="Jeremie Miller">
+            <address>
+              <email>jer@jabber.org</email>
+            </address>
+          </author>
+          <author initials="P" surname="Saint-Andre" fullname="Peter Saint-Andre">
+            <organization>Cisco</organization>
+            <address>
+              <email>psaintan@cisco.com</email>
+            </address>
+          </author>
+          <author initials="P" surname="Hancke" fullname="Philipp Hancke">
+            <address>
+              <email>fippo@goodadvice.pages.de</email>
+            </address>
+          </author>
+          <date month="August" year="2011"/>
+        </front>
+        <seriesInfo name="XSF XEP" value="0220"/>
+        <format type="HTML" target="http://xmpp.org/extensions/xep-0220.html#appendix-authorinfo"/>
       </reference>
     </references>
   </back>
