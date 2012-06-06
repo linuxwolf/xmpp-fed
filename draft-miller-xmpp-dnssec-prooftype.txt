@@ -4,7 +4,7 @@
 Network Working Group                                          M. Miller
 Internet-Draft                                            P. Saint-Andre
 Intended status: Standards Track                     Cisco Systems, Inc.
-Expires: December 13, 2012                                  June 4, 2012
+Expires: December 13, 2012                                  June 6, 2012
 
         Using DNSSEC and DANE as a Prooftype for XMPP Delegation
                  draft-miller-xmpp-dnssec-prooftype-00
