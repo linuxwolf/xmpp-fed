@@ -7,12 +7,12 @@
 <?rfc tocdepth="4"?>
 <rfc category="std" docName="draft-miller-xmpp-fed-00" ipr="trust200902">
   <front>
-    <title abbrev="XMPP FED">Federation of XMPP</title>
+    <title abbrev="XMPP Federation">Interdomain Federation in the Extensible Messaging and Presence Protocol (XMPP)</title>
     <author initials="M." surname="Miller" fullname="Matthew Miller">
       <organization>Cisco Systems, Inc.</organization>
       <address>
         <postal>
-          <street>1899 Wyknoop Street, Suite 600</street>
+          <street>1899 Wynkoop Street, Suite 600</street>
           <city>Denver</city>
           <region>CO</region>
           <code>80202</code>
@@ -25,7 +25,7 @@
       <organization>Cisco Systems, Inc.</organization>
       <address>
         <postal>
-          <street>1899 Wyknoop Street, Suite 600</street>
+          <street>1899 Wynkoop Street, Suite 600</street>
           <city>Denver</city>
           <region>CO</region>
           <code>80202</code>
@@ -34,19 +34,20 @@
         <email>psaintan@cisco.com</email>
       </address>
     </author>
-    <date month="May" day="17" year="2012"/>
+    <date month="June" day="6" year="2012"/>
     <area>RAI</area>
     <keyword>Internet-Draft</keyword>
     <keyword>XMPP</keyword>
     <keyword>Extensible Messaging and Presence Protocol</keyword>
     <keyword>Jabber</keyword>
+    <keyword>federation</keyword>
     <abstract>
       <t></t>
     </abstract>
   </front>
   <middle>
     <section title="Introduction" anchor="intro">
-      <t></t>
+      <t>Because the Extensible Messaging and Presence Protocol (XMPP) is built upon a distributed client-server architecture <xref target='RFC6120'/>, it has long included methods for establishing connections among servers on the network.  In XMPP, these server-to-server connections typically do not require pre-arranged peering agreements and thus are negotiated on an ad-hoc or as-needed basis.  Furthermore, to the extent that servers "trust" each other, such trust is established based on information obtained from the Domain Name System (DNS), the Public Key Infrastructure (PKI), or similar sources.  Since XMPP servers are associated with DNS domain names (or, less commonly, IP addresses), server-to-server connectivity is referred to as interdomain federation.  This document describes a model for interdomain federation and modernizes some federation methods to reflect progress in several underlying technologies, especially DNS Security <xref target='RFC4033'/>.</t>
     </section>
     <section title="Problem Statement" anchor="problem">
       <t></t>
