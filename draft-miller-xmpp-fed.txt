@@ -50,15 +50,15 @@ Table of Contents
    3.  Problem Statement  . . . . . . . . . . . . . . . . . . . . . .  2
    4.  Requirements . . . . . . . . . . . . . . . . . . . . . . . . .  2
    5.  Framework  . . . . . . . . . . . . . . . . . . . . . . . . . .  2
-   6.  Validation Prooftypes  . . . . . . . . . . . . . . . . . . . .  2
-     6.1.  PKI  . . . . . . . . . . . . . . . . . . . . . . . . . . .  2
-     6.2.  DANE . . . . . . . . . . . . . . . . . . . . . . . . . . .  2
+   6.  Validation Prooftypes  . . . . . . . . . . . . . . . . . . . .  3
+     6.1.  PKI  . . . . . . . . . . . . . . . . . . . . . . . . . . .  3
+     6.2.  DANE . . . . . . . . . . . . . . . . . . . . . . . . . . .  3
 
 Miller & Saint-Andre              std                           [Page 1]
 
 Internet-Draft              XMPP Federation                    June 2012
 
-     6.3.  HTTPS/.well-known/ . . . . . . . . . . . . . . . . . . . .  2
+     6.3.  HTTPS/.well-known/ . . . . . . . . . . . . . . . . . . . .  3
      6.4.  Dialback Keys  . . . . . . . . . . . . . . . . . . . . . .  3
      6.5.  Other  . . . . . . . . . . . . . . . . . . . . . . . . . .  3
    7.  Assertions . . . . . . . . . . . . . . . . . . . . . . . . . .  3
@@ -102,9 +102,23 @@ Internet-Draft              XMPP Federation                    June 2012
 
 3.  Problem Statement
 
+   According to [RFC6120], an identity in the TLS certificate MUST match
+   the source domain to established a trusted connection.  However, it
+   is operationally not feasible for an XMPP service provider hosting
+   multiple domains to hold onto certificates that meet this criteria.
+   This has led to a considerable suspension of disbelief by XMPP
+   clients (unconditionally accepting the certificate offered) and
+   almost a complete lack of secure connections between XMPP servers.
+
 4.  Requirements
 
 5.  Framework
+
+
+Miller & Saint-Andre              std                           [Page 2]
+
+Internet-Draft              XMPP Federation                    June 2012
+
 
 6.  Validation Prooftypes
 
@@ -113,12 +127,6 @@ Internet-Draft              XMPP Federation                    June 2012
 6.2.  DANE
 
 6.3.  HTTPS/.well-known/
-
-
-Miller & Saint-Andre              std                           [Page 2]
-
-Internet-Draft              XMPP Federation                    June 2012
-
 
    This prooftype relies on the existing trust for HTTPS to provide a
    delegation path from a source domain to a target host.
@@ -168,18 +176,17 @@ Internet-Draft              XMPP Federation                    June 2012
               specifying the location of services (DNS SRV)", RFC 2782,
               February 2000.
 
+Miller & Saint-Andre              std                           [Page 3]
+
+Internet-Draft              XMPP Federation                    June 2012
+
+
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D. and S.
               Rose, "DNS Security Introduction and Requirements", RFC
               4033, May 2005.
 
    [RFC4949]  Shirey, R., "Internet Security Glossary, Version 2", RFC
               4949, August 2007.
-
-
-Miller & Saint-Andre              std                           [Page 3]
-
-Internet-Draft              XMPP Federation                    June 2012
-
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R. and W. Polk, "Internet X.509 Public Key
@@ -217,13 +224,6 @@ Authors' Addresses
    USA
    
    Email: psaintan@cisco.com
-
-
-
-
-
-
-
 
 
 

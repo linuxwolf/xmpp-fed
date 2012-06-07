@@ -54,7 +54,7 @@
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119'/>.</t>
     </section>
     <section title="Problem Statement" anchor="problem">
-      <t></t>
+      <t>According to <xref target="RFC6120"/>, an identity in the TLS certificate MUST match the source domain to established a trusted connection.  However, it is operationally not feasible for an XMPP service provider hosting multiple domains to hold onto certificates that meet this criteria.  This has led to a considerable suspension of disbelief by XMPP clients (unconditionally accepting the certificate offered) and almost a complete lack of secure connections between XMPP servers.</t>
     </section>
     <section title="Requirements" anchor="reqs">
       <t></t>
