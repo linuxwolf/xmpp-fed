@@ -11,8 +11,9 @@ Expires: December 13, 2012                                  June 6, 2012
 
 Abstract
 
-   This document defines a model for securely delegating an XMPP service
-   for a domain to a host associated with a different domain.
+   This document specifies how to use DNSSEC and DANE to securely
+   delegate an XMPP service identified by a domain to a host associated
+   with a different domain.
 
 Status of this Memo
 
@@ -49,20 +50,20 @@ Table of Contents
 
    1.  Introduction . . . . . . . . . . . . . . . . . . . . . . . . .  2
    2.  Terminology  . . . . . . . . . . . . . . . . . . . . . . . . .  2
-   3.  Requirements . . . . . . . . . . . . . . . . . . . . . . . . .  2
+   3.  Requirements . . . . . . . . . . . . . . . . . . . . . . . . .  3
    4.  Use of DNSSEC  . . . . . . . . . . . . . . . . . . . . . . . .  3
    5.  Use of DANE  . . . . . . . . . . . . . . . . . . . . . . . . .  3
-     5.1.  No Delegation  . . . . . . . . . . . . . . . . . . . . . .  3
 
 Miller & Saint-Andre              std                           [Page 1]
 
 Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
 
+     5.1.  No Delegation  . . . . . . . . . . . . . . . . . . . . . .  4
      5.2.  Insecure Delegation  . . . . . . . . . . . . . . . . . . .  4
      5.3.  Secure Delegation  . . . . . . . . . . . . . . . . . . . .  4
      5.4.  TLSA Certificate Usage 3 Considerations  . . . . . . . . .  4
    6.  Internationalization Considerations  . . . . . . . . . . . . .  4
-   7.  Security Considerations  . . . . . . . . . . . . . . . . . . .  4
+   7.  Security Considerations  . . . . . . . . . . . . . . . . . . .  5
    8.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . .  5
    9.  References . . . . . . . . . . . . . . . . . . . . . . . . . .  5
    Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . .  6
@@ -106,9 +107,8 @@ Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
    "OPTIONAL" in this document are to be interpreted as described in
-   [RFC2119].
 
-3.  Requirements
+
 
 
 
@@ -119,6 +119,9 @@ Miller & Saint-Andre              std                           [Page 2]
 
 Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
 
+   [RFC2119].
+
+3.  Requirements
 
    An XMPP initiating entity (TLS client) that wishes to use this
    prooftype MUST do so before exchanging stanzas addressed to the
@@ -169,17 +172,21 @@ Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
 
 5.  Use of DANE
 
+
+
+
+
+Miller & Saint-Andre              std                           [Page 3]
+
+Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
+
+
    [DANE] provides additional tools to verify the keys used in TLS
    connections.  Whether it is appropriate to use [DANE] for TLS
    certificate verification depends on the delegation status of the
    source domain, as described in the following sections.
 
 5.1.  No Delegation
-
-Miller & Saint-Andre              std                           [Page 3]
-
-Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
-
 
    If the source domain has not been delegated to a derived domain,
    i.e., if the source domain and the derived domain are identical
@@ -230,17 +237,16 @@ Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
 
 6.  Internationalization Considerations
 
+Miller & Saint-Andre              std                           [Page 4]
+
+Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
+
+
    If the SRV, A/AAAA, and TLSA record queries are for an
    internationalized domain name, then they need to use the A-label form
    as defined in [RFC5890].
 
 7.  Security Considerations
-
-
-Miller & Saint-Andre              std                           [Page 4]
-
-Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
-
 
    This document supplements but does not supersede the security
    considerations provided in [RFC4033], [RFC6120], [RFC6125], and
@@ -289,6 +295,14 @@ Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
    [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
               Protocol (XMPP): Core", RFC 6120, March 2011.
 
+
+
+
+Miller & Saint-Andre              std                           [Page 5]
+
+Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
+
+
    [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
               Verification of Domain-Based Application Service Identity
               within Internet Public Key Infrastructure Using X.509
@@ -296,12 +310,6 @@ Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
               Security (TLS)", RFC 6125, March 2011.
 
    [XEP-0220]
-
-
-Miller & Saint-Andre              std                           [Page 5]
-
-Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
-
               Miller, J, Saint-Andre, P and P Hancke, "Server Dialback",
               XSF XEP 0220, August 2011.
 
@@ -323,14 +331,6 @@ Authors' Addresses
    USA
    
    Email: psaintan@cisco.com
-
-
-
-
-
-
-
-
 
 
 
