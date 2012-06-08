@@ -75,7 +75,7 @@
       </t>
     </section>
     <section title="Use of DANE" anchor="dane">
-      <t><xref target="DANE"/> provides additional tools to verify the keys used in TLS connections.A TLS client MAY use <xref target="DANE"/> for TLS certificate verification; its use depends on the delegation status of the source domain, as described in the following sections.</t>
+      <t><xref target="DANE"/> provides additional tools to verify the keys used in TLS connections.  A TLS client MAY use <xref target="DANE"/> for TLS certificate verification; its use depends on the delegation status of the source domain, as described in the following sections.</t>
       <section title="No Service Records" anchor="dane-none">
         <t>If no SRV records are found for the source domain, then the TLS client MUST query for a TLSA resource record as described in <xref target='DANE'/>, where the prepared domain name MUST contain the source domain and the IANA-registered port 5222 for client-to-server streams  (e.g. "_5222._tcp.im.example.com") or the IANA-registered port 5269 for server-to-server streams (e.g. "_5269._tcp.im.example.com").</t>
         <t>In this case, the TLS client MUST perform certificate verification against the source domain as described in <xref target='RFC6120'/>.</t>

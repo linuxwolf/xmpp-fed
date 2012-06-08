@@ -202,7 +202,7 @@ Internet-Draft            XMPP DNSSEC Prooftype                June 2012
 5.  Use of DANE
 
    [DANE] provides additional tools to verify the keys used in TLS
-   connections.A TLS client MAY use [DANE] for TLS certificate
+   connections.  A TLS client MAY use [DANE] for TLS certificate
    verification; its use depends on the delegation status of the source
    domain, as described in the following sections.
 
