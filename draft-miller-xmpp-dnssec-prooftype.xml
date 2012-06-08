@@ -64,11 +64,11 @@
         <list style="numbers">
           <t>Query for the appropriate SRV resource record for the source domain (e.g. "_xmpp-client._tcp.im.example.com").<vspace blankLines="1"/></t>
           <t>If there is no SRV resource record, pursue the fallback methods described in <xref target='RFC6120'/>.<vspace blankLines='1'/></t>
-          <t>If there is an SRV resource record, validate that the SRV record answer is secure according to <xref target='RFC4033'/>; if the answer is insecure or bogus, then delegation to the derived domain (as indicated by the "target host" field) is insecure and the TLS client MUST verify the certificate against the source domain as described in <xref target='RFC6120'/>.<vspace blankLines="1"/></t>
+          <t>If there is an SRV resource record, validate that the SRV record answer is secure according to <xref target='RFC4033'/>.  If the answer is insecure, then delegation to the derived domain (as indicated by the "target host" field) is insecure and the TLS client MUST verify the certificate against the source domain as described in <xref target='RFC6120'/>; if the answer is bogus, the TLS client MUST abort.<vspace blankLines="1"/></t>
           <!--
           <t>If there is an SRV record, for each derived domain from the SRV record answer (e.g. "hosting.example.net"), query for the "A" and/or "AAAA" resource records as described in <xref target='RFC6120'/>.<vspace blankLines="1"/></t>
           <t>For each derived domain, validate that the address record answers are secure according to <xref target='RFC4033'/><vspace blankLines='1'/></t>
-          <t>If any answer is insecure or bogus, then the TLS client MUST NOT consider a connection to that derived domain as securely delegated from the source domain; when verifying the certificate, the TLS client MUST do so against the source domain as described in <xref target='RFC6120'/>.<vspace blankLines="1"/></t>
+          <t>If any answer is insecure, then the TLS client MUST NOT consider a connection to that derived domain as securely delegated from the source domain; when verifying the certificate, the TLS client MUST do so against the source domain as described in <xref target='RFC6120'/>.<vspace blankLines="1"/></t>
           -->
           <t>The TLS client SHOULD consider a connection to that derived domain as securely delegated; when verifying the certificate (as described in <xref target="RFC6125"/>), the TLS client MUST allow the derived domain or the source domain.</t>
         </list>
