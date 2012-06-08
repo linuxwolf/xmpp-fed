@@ -5,7 +5,7 @@
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="4"?>
-<rfc category="std" docName="draft-miller-xmpp-dnssec-prooftype-00" ipr="trust200902">
+<rfc category="std" docName="draft-miller-xmpp-dnssec-prooftype-01" ipr="trust200902">
   <front>
     <title abbrev="XMPP DNSSEC Prooftype">Using DNSSEC and DANE as a Prooftype for XMPP Delegation</title>
     <author initials="M." surname="Miller" fullname="Matthew Miller">
@@ -34,7 +34,7 @@
         <email>psaintan@cisco.com</email>
       </address>
     </author>
-    <date month="June" day="6" year="2012"/>
+    <date month="June" day="8" year="2012"/>
     <area>RAI</area>
     <keyword>Internet-Draft</keyword>
     <keyword>XMPP</keyword>
@@ -49,7 +49,7 @@
   <middle>
     <section title="Introduction" anchor="intro">
       <t>In the core XMPP specification <xref target="RFC6120"/>, the domain to which an XMPP initiating entity wants to connect is asserted via the 'to' attribute of the &lt;stream:stream&gt; header, and the TLS certificate offered by the receiving server is required to match this source domain (e.g., "im.example.com").  However, this model can cause problems if the source domain is delegated (via DNS SRV records <xref target='RFC2782'/>) to a host associated with a different domain that is derived via SRV (e.g., "hosting.example.net"), since the derived domain might also be the delegate for a number of other source domains and, for operational and security reasons, a hosting server is rarely able to present a certificate that matches the source domain.</t>
-      <t>Absent the use of DNS Security <xref target='RFC4033'/>, delegation via SRV does not provide a strong basis for checking the derived domain rather than the source domain.  This document describes how the use of DNSSEC with SRV results in more secure delegation, such that the initiating XMPP server can legitimately check the derived domain rather than the source domain.</t>
+      <t>Absent the use of DNS Security <xref target='RFC4033'/>, delegation via SRV does not provide a strong basis for checking the derived domain rather than the source domain.  This document describes how the use of DNSSEC with SRV results in more secure delegation, such that the initiating XMPP server can legitimately check the derived domain rather than the source domain.  This document also describes how to utilize <xref target="DANE"/> to verify TLS certificates of domains, delegated or otherwise.</t>
     </section>
     <section title="Terminology" anchor="terms">
       <t>This document inherits XMPP-related terminology from <xref target="RFC6120"/>, DNS-related terminology from <xref target='RFC1034'/>, <xref target='RFC1035'/>, <xref target='RFC2782'/> and <xref target="RFC4033"/>, and security-related terminology from <xref target='RFC4949'/> and <xref target='RFC5280'/>.  The terms "source domain" and "derived domain" are used as defined in the "CertID" specification <xref target="RFC6125"/>.</t>
