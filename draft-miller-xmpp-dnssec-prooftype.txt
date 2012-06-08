@@ -4,7 +4,8 @@
 Network Working Group                                          M. Miller
 Internet-Draft                                            P. Saint-Andre
 Intended status: Standards Track                     Cisco Systems, Inc.
-Expires: December 13, 2012                                  June 6, 2012
+Expires: December 8, 2012                                   June 6, 2012
+
 
         Using DNSSEC and DANE as a Prooftype for XMPP Delegation
                  draft-miller-xmpp-dnssec-prooftype-00
@@ -30,7 +31,7 @@ Status of this Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 13, 2012.
+   This Internet-Draft will expire on December 8, 2012.
 
 Copyright Notice
 
@@ -38,35 +39,79 @@ Copyright Notice
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
-   Provisions Relating to IETF Documents (http://trustee.ietf.org/
-   license-info) in effect on the date of publication of this document.
-   Please review these documents carefully, as they describe your rights
-   and restrictions with respect to this document.  Code Components
-   extracted from this document must include Simplified BSD License text
-   as described in Section 4.e of the Trust Legal Provisions and are
-   provided without warranty as described in the Simplified BSD License.
+   Provisions Relating to IETF Documents
+   (http://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+
+
+
+
+Miller & Saint-Andre    Expires December 8, 2012                [Page 1]
+
+Internet-Draft            XMPP DNSSEC Prooftype                June 2012
+
 
 Table of Contents
 
-   1.  Introduction . . . . . . . . . . . . . . . . . . . . . . . . .  2
-   2.  Terminology  . . . . . . . . . . . . . . . . . . . . . . . . .  2
-   3.  Requirements . . . . . . . . . . . . . . . . . . . . . . . . .  3
-   4.  Use of DNSSEC  . . . . . . . . . . . . . . . . . . . . . . . .  3
-   5.  Use of DANE  . . . . . . . . . . . . . . . . . . . . . . . . .  3
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . . . 3
+   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+   3.  Requirements  . . . . . . . . . . . . . . . . . . . . . . . . . 3
+   4.  Use of DNSSEC . . . . . . . . . . . . . . . . . . . . . . . . . 4
+   5.  Use of DANE . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+     5.1.  No Service Records  . . . . . . . . . . . . . . . . . . . . 4
+     5.2.  Insecure Delegation . . . . . . . . . . . . . . . . . . . . 5
+     5.3.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . 5
+   6.  Internationalization Considerations . . . . . . . . . . . . . . 5
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . . . 5
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 5
+   9.  Normative References  . . . . . . . . . . . . . . . . . . . . . 6
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . . . 7
 
-Miller & Saint-Andre              std                           [Page 1]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre    Expires December 8, 2012                [Page 2]
 
-Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
+Internet-Draft            XMPP DNSSEC Prooftype                June 2012
 
-     5.1.  No Delegation  . . . . . . . . . . . . . . . . . . . . . .  4
-     5.2.  Insecure Delegation  . . . . . . . . . . . . . . . . . . .  4
-     5.3.  Secure Delegation  . . . . . . . . . . . . . . . . . . . .  4
-     5.4.  TLSA Certificate Usage 3 Considerations  . . . . . . . . .  4
-   6.  Internationalization Considerations  . . . . . . . . . . . . .  4
-   7.  Security Considerations  . . . . . . . . . . . . . . . . . . .  5
-   8.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . .  5
-   9.  References . . . . . . . . . . . . . . . . . . . . . . . . . .  5
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . .  6
 
 1.  Introduction
 
@@ -89,6 +134,7 @@ Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
    XMPP server can legitimately check the derived domain rather than the
    source domain.
 
+
 2.  Terminology
 
    This document inherits XMPP-related terminology from [RFC6120], DNS-
@@ -107,38 +153,35 @@ Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
    "OPTIONAL" in this document are to be interpreted as described in
-
-
-
-
-
-
-
-
-Miller & Saint-Andre              std                           [Page 2]
-
-Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
-
    [RFC2119].
+
 
 3.  Requirements
 
    An XMPP initiating entity (TLS client) that wishes to use this
    prooftype MUST do so before exchanging stanzas addressed to the
    source domain.  In general, this means the prooftype MUST be
+
+
+
+Miller & Saint-Andre    Expires December 8, 2012                [Page 3]
+
+Internet-Draft            XMPP DNSSEC Prooftype                June 2012
+
+
    completed before the XMPP stream is restarted following STARTTLS
-   negotiation (as specified in [RFC6120]). However, connections between
-   XMPP servers MAY also use this prooftype to verify delegations of
-   additional source domains onto an existing connection, such as
-   multiplexing via [XEP-0220].
+   negotiation (as specified in [RFC6120]).  However, connections
+   between XMPP servers MAY also use this prooftype to verify
+   delegations of additional source domains onto an existing connection,
+   such as multiplexing via [XEP-0220].
+
 
 4.  Use of DNSSEC
 
    An XMPP initiating entity (TLS client) that wishes to use this
    prooftype performs the following actions:
-
    1.  Query for the appropriate SRV resource record for the source
-       domain (e.g.  "_xmpp-client._tcp.im.example.com").
+       domain (e.g. "_xmpp-client._tcp.im.example.com").
 
    2.  If there is no SRV resource record, pursue the fallback methods
        described in [RFC6120].
@@ -150,54 +193,37 @@ Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
        client MUST verify the certificate against the source domain as
        described in [RFC6120].
 
-   4.  If there is an SRV record, for each derived domain from the SRV
-       record answer (e.g.  "hosting.example.net"), query for the "A"
-       and/or "AAAA" resource records as described in [RFC6120].
+   4.  The TLS client SHOULD consider a connection to that derived
+       domain as securely delegated; when verifying the certificate (as
+       described in [RFC6125]), the TLS client MUST allow the derived
+       domain or the source domain.
 
-   5.  For each derived domain, validate that the address record answers
-       are provably secure according to [RFC4033]
-
-   6.  If any answer is insecure or bogus, then the TLS client MUST NOT
-       consider a connection to that derived domain as securely
-       delegated from the source domain; when verifying the certificate,
-       the TLS client MUST do so against the source domain as described
-       in [RFC6120].
-
-   7.  For each address record answer that is a provably secure, the TLS
-       client SHOULD consider a connection to that derived domain as
-       securely delegated; when verifying the certificate (as described
-       in [RFC6125]), the TLS client SHOULD do so against the derived
-       domain but MAY also verify the certificate against the source
-       domain.
 
 5.  Use of DANE
 
-
-
-
-
-Miller & Saint-Andre              std                           [Page 3]
-
-Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
-
-
    [DANE] provides additional tools to verify the keys used in TLS
-   connections.  Whether it is appropriate to use [DANE] for TLS
-   certificate verification depends on the delegation status of the
-   source domain, as described in the following sections.
+   connections.A TLS client MAY use [DANE] for TLS certificate
+   verification; its use depends on the delegation status of the source
+   domain, as described in the following sections.
 
-5.1.  No Delegation
+5.1.  No Service Records
 
-   If the source domain has not been delegated to a derived domain,
-   i.e., if the source domain and the derived domain are identical
-   (e.g., "im.example.com"), then the TLS client MAY query for a TLSA
-   resource record as described in [DANE], where the prepared domain
-   name MUST contain the source domain and a port of 5222 for client-to-
-   server streams  (e.g.  "_5222._tcp.im.example.com") or 5269 for
-   server-to-server streams (e.g.  "_5269._tcp.im.example.com").
+   If no SRV records are found for the source domain, then the TLS
+   client MUST query for a TLSA resource record as described in [DANE],
+   where the prepared domain name MUST contain the source domain and the
+   IANA-registered port 5222 for client-to-server streams (e.g.
+   "_5222._tcp.im.example.com") or the IANA-registered port 5269 for
+   server-to-server streams (e.g. "_5269._tcp.im.example.com").
 
    In this case, the TLS client MUST perform certificate verification
    against the source domain as described in [RFC6120].
+
+
+
+Miller & Saint-Andre    Expires December 8, 2012                [Page 4]
+
+Internet-Draft            XMPP DNSSEC Prooftype                June 2012
+
 
 5.2.  Insecure Delegation
 
@@ -205,46 +231,34 @@ Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
    secure, then the TLS client MUST NOT make a TLSA record query to the
    derived domain as described in [DANE].  Instead, the TLS client MUST
    perform certificate verification against the source domain as
-   described in [RFC6120], and MAY make a TLSA query against the source
-   domain.
+   described in [RFC6120], and MUST NOT use [DANE].
 
 5.3.  Secure Delegation
 
    If the source domain has been delegated to a derived domain in a
-   secure manner as described under [protocol], then the TLS client
-   SHOULD query for a TLSA resource record as described in [DANE], where
-   the prepared domain name MUST contain the derived domain and a port
-   of 5222 for client-to-server streams or 5269 for server-to-server
-   streams (e.g.  "_5222._tcp.hosting.example.net").
+   secure manner as described under Section 4, then the TLS client MUST
+   query for a TLSA resource record as described in [DANE], where the
+   prepared domain name MUST contain the derived domain and a port
+   obtained from the SRV record (e.g. or "_5555._tcp/
+   hosting.example.net" for an SRV record such as "_xmpp-
+   client._tcp.im.example.com IN TLSA 1 1 5555 hosting.example.net").
 
    If no TLSA resource records exist for the specified service, then the
-   TLA client MUST perform certificate verification against the source
-   domain as described in [RFC6120].
+   TLA client MUST perform certificate verification as described in
+   Section 4.
 
    If TLSA resource records exist for the specified service, then the
    TLS client MUST perform certificate verification against the derived
    domain, using the information from the TLSA answer as the basis for
    verification as described in [DANE].
 
-5.4.  TLSA Certificate Usage 3 Considerations
-
-   If a TLSA resource record specifies certificate usage 3 (also known
-   as "domain-issued certificate"), verification MUST NOT consider the
-   source or derived domain.  Instead, the target certificate MUST match
-   the TLSA record, as specified in [DANE].  If matched, the TLS
-   connection MUST considered valid for the source domain regardless of
-   the target certificate's information.
 
 6.  Internationalization Considerations
-
-Miller & Saint-Andre              std                           [Page 4]
-
-Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
-
 
    If the SRV, A/AAAA, and TLSA record queries are for an
    internationalized domain name, then they need to use the A-label form
    as defined in [RFC5890].
+
 
 7.  Security Considerations
 
@@ -252,16 +266,27 @@ Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
    considerations provided in [RFC4033], [RFC6120], [RFC6125], and
    [DANE].
 
+
 8.  IANA Considerations
 
    This document has no actions for the IANA.
 
-9.  References
+
+
+
+
+
+Miller & Saint-Andre    Expires December 8, 2012                [Page 5]
+
+Internet-Draft            XMPP DNSSEC Prooftype                June 2012
+
+
+9.  Normative References
 
    [DANE]     Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
               of Named Entities (DANE) Transport Layer Security (TLS)
-              Protocol: TLSA", Internet-Draft draft-ietf-dane-
-              protocol-21, May 2012.
+              Protocol: TLSA", draft-ietf-dane-protocol-21 (work in
+              progress), May 2012.
 
    [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
               STD 13, RFC 1034, November 1987.
@@ -272,19 +297,19 @@ Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
 
-   [RFC2782]  Gulbrandsen, A., Vixie, P. and L. Esibov, "A DNS RR for
+   [RFC2782]  Gulbrandsen, A., Vixie, P., and L. Esibov, "A DNS RR for
               specifying the location of services (DNS SRV)", RFC 2782,
               February 2000.
 
-   [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D. and S.
-              Rose, "DNS Security Introduction and Requirements", RFC
-              4033, May 2005.
+   [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
+              Rose, "DNS Security Introduction and Requirements",
+              RFC 4033, May 2005.
 
-   [RFC4949]  Shirey, R., "Internet Security Glossary, Version 2", RFC
-              4949, August 2007.
+   [RFC4949]  Shirey, R., "Internet Security Glossary, Version 2",
+              RFC 4949, August 2007.
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
-              Housley, R. and W. Polk, "Internet X.509 Public Key
+              Housley, R., and W. Polk, "Internet X.509 Public Key
               Infrastructure Certificate and Certificate Revocation List
               (CRL) Profile", RFC 5280, May 2008.
 
@@ -295,14 +320,6 @@ Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
    [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
               Protocol (XMPP): Core", RFC 6120, March 2011.
 
-
-
-
-Miller & Saint-Andre              std                           [Page 5]
-
-Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
-
-
    [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
               Verification of Domain-Based Application Service Identity
               within Internet Public Key Infrastructure Using X.509
@@ -310,26 +327,33 @@ Internet-Draft           XMPP DNSSEC Prooftype                 June 2012
               Security (TLS)", RFC 6125, March 2011.
 
    [XEP-0220]
-              Miller, J, Saint-Andre, P and P Hancke, "Server Dialback",
-              XSF XEP 0220, August 2011.
+              Miller, J., Saint-Andre, P., and P. Hancke, "Server
+              Dialback", XSF XEP 0220, August 2011.
+
+
+
+Miller & Saint-Andre    Expires December 8, 2012                [Page 6]
+
+Internet-Draft            XMPP DNSSEC Prooftype                June 2012
+
 
 Authors' Addresses
 
    Matthew Miller
    Cisco Systems, Inc.
    1899 Wynkoop Street, Suite 600
-   Denver, CO 80202
+   Denver, CO  80202
    USA
-   
+
    Email: mamille2@cisco.com
 
 
    Peter Saint-Andre
    Cisco Systems, Inc.
    1899 Wynkoop Street, Suite 600
-   Denver, CO 80202
+   Denver, CO  80202
    USA
-   
+
    Email: psaintan@cisco.com
 
 
@@ -359,4 +383,10 @@ Authors' Addresses
 
 
 
-Miller & Saint-Andre              std                           [Page 6]
+
+
+
+
+
+Miller & Saint-Andre    Expires December 8, 2012                [Page 7]
+
