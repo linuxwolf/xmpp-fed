@@ -7,7 +7,7 @@
 <?rfc tocdepth="4"?>
 <rfc category="std" docName="draft-miller-xmpp-dna-00" ipr="trust200902">
   <front>
-    <title abbrev="XMPP DNA">Domain Name Association (DNA) in the Extensible Messaging and Presence Protocol (XMPP)</title>
+    <title abbrev="XMPP DNA">Domain Name Associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP)</title>
     <author initials="M." surname="Miller" fullname="Matthew Miller">
       <organization>Cisco Systems, Inc.</organization>
       <address>
@@ -54,41 +54,72 @@
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119'/>.</t>
     </section>
     <section title="Problem Statement" anchor="problem">
+      <!--
       <t>According to <xref target="RFC6120"/>, an identity in the TLS certificate MUST match the source domain to established a trusted connection.  However, it is operationally not feasible for an XMPP service provider hosting multiple domains to hold onto certificates that meet this criteria.  This has led to a considerable suspension of disbelief by XMPP clients (unconditionally accepting the certificate offered) and almost a complete lack of secure connections between XMPP servers.</t>
+      -->
+      <t>How did we get here?</t>
+      <t>What do we have today?</t>
+      <t>Why does it matter? (virtual hosting, delegation)</t>
     </section>
     <section title="Requirements" anchor="reqs">
       <t></t>
     </section>
     <section title="Framework" anchor="framework">
-      <t></t>
+      <t>concept of "prooftype"</t>
+      <t>concept of "assertion"?</t>
+      <t>concept of "delegation"?</t>
+      <t>what's in a recipe</t>
     </section>
-    <section title="Validation Prooftypes" anchor="valid">
-        <section title="PKI" anchor="valid-pki">
-          <t></t>
-        </section>
-        <section title="DANE" anchor="valid-dane">
-          <t></t>
-        </section>
-        <section title="HTTPS/.well-known/" anchor="valid-https">
-          <t>This prooftype relies on the existing trust for HTTPS to provide a delegation path from a source domain to a target host.</t>
-          <t>
-            <list style="numbers">
-              <t>The initiating entity performs an HTTPS GET to the path "/.well-known/tls/&lt;service&gt;.&lt;protocol&gt;.&lt;source-domain&gt;" to the source domain (e.g. "https://im.example.com/.well-known/tls/_xmpp-client._tcp.im.example.com")</t>
-              <t>The source domain HTTPS service SHOULD respond with a 302 Moved; the 'Location' header MUST specify an HTTPS URL that directs to the target host, and the path MUST be identical to the path of the original request (e.g. "Location: https://hosting.example.com/.well-known/tls/_xmpp-client._tcp.im.example.com")</t>
-              <t>The initiating entity performs an HTTPS GET to the redirected URL specified in the 'Location' header</t>
-              <t>The target host HTTPS service MUST respond with a success status code, with the message body set to the PEM-encoded certificate to expect.</t>
-            </list>
-          </t>
-        </section>
-        <section title="Dialback Keys" anchor="valid-dbkeys">
-          <t></t>
-        </section>
-        <section title="Other" anchor="valid-other">
-          <t></t>
-        </section>
+    <section title="Prooftypes" anchor="prooftypes">
+      <t>(or: how to obtain verification credentials)</t>
+      <section title="PKI" anchor="prooftype-pki">
+        <t></t>
+      </section>
+      <section title="DANE" anchor="prooftype-dane">
+        <t></t>
+      </section>
+      <section title="HTTPS/.well-known" anchor="prooftype-https">
+        <t>This prooftype relies on the existing trust for HTTPS to provide a delegation path from a source domain to a target host.</t>
+        <t>
+          <list style="numbers">
+            <t>The initiating entity performs an HTTPS GET to the path "/.well-known/tls/_&lt;service&gt;._&gt;protocol&gt;&gt;source domain&gt;" to the source domain (e.g. "https://im.example.com/.well-known/.tls/_xmpp-server._tcp.im.example.com")</t>
+            <t>If the source domain HTTPS server has a certificate for the requested path, it MUST respond with a success status code, with the message body as the PEM-encoded certificate to expect.<vspace blankLines="1"/></t>
+          </list>
+        </t>
+      </section>
+      <!--
+      <section title="Dialback Keys" anchor="prooftype-dbkeys">
+        <t></t>
+      </section>
+      -->
     </section>
-    <section title="Assertions" anchor="assert">
+    <section title="Delegation Methods" anchor="delegate">
       <t></t>
+      <section title="DNSSEC" anchor="delegate-dnssec">
+        <t></t>
+      </section>
+      <section title="HTTPS Redirect" anchor="delegate-https">
+        <t>
+          <list style="numbers">
+            <t>The initiating entity performs an HTTPS GET to the path "/.well-known/tls/&lt;service&gt;.&lt;protocol&gt;.&lt;source-domain&gt;" to the source domain (e.g. "https://im.example.com/.well-known/tls/_xmpp-server._tcp.im.example.com")<vspace blankLines="1"/></t>
+            <t>If the source domain HTTPS server has delegated to a derived domain, it MUST respond with a 302 Moved; the 'Location' header MUST specify an HTTPS URL, where the hostname and port is the derived domain HTTPS server, and the path MUST match the pattern "_&lt;service&gt;._&lt;protocol&gt;.&lt;derived domain&gt;" (e.g. "Location: https://hosting.example.com/.well-known/tls/_xmpp-server._tcp.hosting.example.net")<vspace blankLines="1"/></t>
+            <t>The initiating entity performs an HTTPS GET to the URL specified in the 'Location' header.<vspace blankLines="1"/></t>
+            <t>If the derived domain HTTPS server has a certificate MUST respond with a success status code, with the message body set to the PEM-encoded certificate to expect.<vspace blankLines="1"/></t>
+          </list>
+        </t>
+      </section>
+    </section>
+    <section title="Assertion Mechanisms" anchor="assert">
+      <t></t>
+      <section title="TLS" anchor="assert-tls">
+        <t></t>
+      </section>
+      <section title="SASL" anchor="assert-sasl">
+        <t></t>
+      </section>
+      <section title="&lt;db:result&gt;" anchor="assert-dbresult">
+        <t></t>
+      </section>
     </section>
     <section title="Examples" anchor="examples">
       <t></t>

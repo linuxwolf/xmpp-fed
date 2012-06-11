@@ -7,7 +7,7 @@ Intended status: Standards Track                     Cisco Systems, Inc.
 Expires: December 8, 2012                                   June 6, 2012
 
 
- Domain Name Association (DNA) in the Extensible Messaging and Presence
+Domain Name Associations (DNA) in the Extensible Messaging and Presence
                             Protocol (XMPP)
                         draft-miller-xmpp-dna-00
 
@@ -64,23 +64,23 @@ Table of Contents
    3.  Problem Statement . . . . . . . . . . . . . . . . . . . . . . . 3
    4.  Requirements  . . . . . . . . . . . . . . . . . . . . . . . . . 3
    5.  Framework . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
-   6.  Validation Prooftypes . . . . . . . . . . . . . . . . . . . . . 4
+   6.  Prooftypes  . . . . . . . . . . . . . . . . . . . . . . . . . . 4
      6.1.  PKI . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
      6.2.  DANE  . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
-     6.3.  HTTPS/.well-known/  . . . . . . . . . . . . . . . . . . . . 4
-     6.4.  Dialback Keys . . . . . . . . . . . . . . . . . . . . . . . 4
-     6.5.  Other . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
-   7.  Assertions  . . . . . . . . . . . . . . . . . . . . . . . . . . 4
-   8.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
-   9.  Internationalization Considerations . . . . . . . . . . . . . . 4
-   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 4
-   11. Security Considerations . . . . . . . . . . . . . . . . . . . . 5
-   12. Normative References  . . . . . . . . . . . . . . . . . . . . . 5
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . . . 5
-
-
-
-
+     6.3.  HTTPS/.well-known . . . . . . . . . . . . . . . . . . . . . 4
+   7.  Delegation Methods  . . . . . . . . . . . . . . . . . . . . . . 4
+     7.1.  DNSSEC  . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+     7.2.  HTTPS Redirect  . . . . . . . . . . . . . . . . . . . . . . 4
+   8.  Assertion Mechanisms  . . . . . . . . . . . . . . . . . . . . . 5
+     8.1.  TLS . . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+     8.2.  SASL  . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+     8.3.  <db:result> . . . . . . . . . . . . . . . . . . . . . . . . 5
+   9.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
+   10. Internationalization Considerations . . . . . . . . . . . . . . 5
+   11. IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 5
+   12. Security Considerations . . . . . . . . . . . . . . . . . . . . 5
+   13. Normative References  . . . . . . . . . . . . . . . . . . . . . 5
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . . . 6
 
 
 
@@ -148,16 +148,16 @@ Internet-Draft                  XMPP DNA                       June 2012
 
 3.  Problem Statement
 
-   According to [RFC6120], an identity in the TLS certificate MUST match
-   the source domain to established a trusted connection.  However, it
-   is operationally not feasible for an XMPP service provider hosting
-   multiple domains to hold onto certificates that meet this criteria.
-   This has led to a considerable suspension of disbelief by XMPP
-   clients (unconditionally accepting the certificate offered) and
-   almost a complete lack of secure connections between XMPP servers.
+   How did we get here?
+
+   What do we have today?
+
+   Why does it matter? (virtual hosting, delegation)
 
 
 4.  Requirements
+
+
 
 
 
@@ -171,52 +171,52 @@ Internet-Draft                  XMPP DNA                       June 2012
 
 5.  Framework
 
+   concept of "prooftype"
 
-6.  Validation Prooftypes
+   concept of "assertion"?
+
+   concept of "delegation"?
+
+   what's in a recipe
+
+
+6.  Prooftypes
+
+   (or: how to obtain verification credentials)
 
 6.1.  PKI
 
 6.2.  DANE
 
-6.3.  HTTPS/.well-known/
+6.3.  HTTPS/.well-known
 
    This prooftype relies on the existing trust for HTTPS to provide a
    delegation path from a source domain to a target host.
 
    1.  The initiating entity performs an HTTPS GET to the path "/.well-
+       known/tls/_<service>._>protocol>>source domain>" to the source
+       domain (e.g. "https://im.example.com/.well-known/.tls/
+       _xmpp-server._tcp.im.example.com")
+   2.  If the source domain HTTPS server has a certificate for the
+       requested path, it MUST respond with a success status code, with
+       the message body as the PEM-encoded certificate to expect.
+
+
+
+7.  Delegation Methods
+
+7.1.  DNSSEC
+
+7.2.  HTTPS Redirect
+
+   1.  The initiating entity performs an HTTPS GET to the path "/.well-
        known/tls/<service>.<protocol>.<source-domain>" to the source
        domain (e.g. "https://im.example.com/.well-known/tls/
-       _xmpp-client._tcp.im.example.com")
-   2.  The source domain HTTPS service SHOULD respond with a 302 Moved;
-       the 'Location' header MUST specify an HTTPS URL that directs to
-       the target host, and the path MUST be identical to the path of
-       the original request (e.g.  "Location: https://
-       hosting.example.com/.well-known/tls/
-       _xmpp-client._tcp.im.example.com")
-   3.  The initiating entity performs an HTTPS GET to the redirected URL
-       specified in the 'Location' header
-   4.  The target host HTTPS service MUST respond with a success status
-       code, with the message body set to the PEM-encoded certificate to
-       expect.
+       _xmpp-server._tcp.im.example.com")
 
-6.4.  Dialback Keys
-
-6.5.  Other
-
-
-7.  Assertions
-
-
-8.  Examples
-
-
-9.  Internationalization Considerations
-
-
-10.  IANA Considerations
-
-
-
+   2.  If the source domain HTTPS server has delegated to a derived
+       domain, it MUST respond with a 302 Moved; the 'Location' header
+       MUST specify an HTTPS URL, where the hostname and port is the
 
 
 
@@ -225,10 +225,42 @@ Miller & Saint-Andre    Expires December 8, 2012                [Page 4]
 Internet-Draft                  XMPP DNA                       June 2012
 
 
-11.  Security Considerations
+       derived domain HTTPS server, and the path MUST match the pattern
+       "_<service>._<protocol>.<derived domain>" (e.g.  "Location: https
+       ://hosting.example.com/.well-known/tls/
+       _xmpp-server._tcp.hosting.example.net")
+
+   3.  The initiating entity performs an HTTPS GET to the URL specified
+       in the 'Location' header.
+
+   4.  If the derived domain HTTPS server has a certificate MUST respond
+       with a success status code, with the message body set to the PEM-
+       encoded certificate to expect.
 
 
-12.  Normative References
+
+8.  Assertion Mechanisms
+
+8.1.  TLS
+
+8.2.  SASL
+
+8.3.  <db:result>
+
+
+9.  Examples
+
+
+10.  Internationalization Considerations
+
+
+11.  IANA Considerations
+
+
+12.  Security Considerations
+
+
+13.  Normative References
 
    [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
               STD 13, RFC 1034, November 1987.
@@ -241,6 +273,14 @@ Internet-Draft                  XMPP DNA                       June 2012
 
    [RFC2782]  Gulbrandsen, A., Vixie, P., and L. Esibov, "A DNS RR for
               specifying the location of services (DNS SRV)", RFC 2782,
+
+
+
+Miller & Saint-Andre    Expires December 8, 2012                [Page 5]
+
+Internet-Draft                  XMPP DNA                       June 2012
+
+
               February 2000.
 
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
@@ -269,18 +309,6 @@ Internet-Draft                  XMPP DNA                       June 2012
               Dialback", XSF XEP 0220, August 2011.
 
 
-
-
-
-
-
-
-
-Miller & Saint-Andre    Expires December 8, 2012                [Page 5]
-
-Internet-Draft                  XMPP DNA                       June 2012
-
-
 Authors' Addresses
 
    Matthew Miller
@@ -299,34 +327,6 @@ Authors' Addresses
    USA
 
    Email: psaintan@cisco.com
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
