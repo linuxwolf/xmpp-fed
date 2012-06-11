@@ -4,13 +4,15 @@
 Network Working Group                                          M. Miller
 Internet-Draft                                            P. Saint-Andre
 Intended status: Standards Track                     Cisco Systems, Inc.
-Expires: December 13, 2012                                  June 6, 2012
+Expires: December 8, 2012                                   June 6, 2012
 
-Interdomain Federation in the Extensible Messaging and Presence Protocol
-                                 (XMPP)
-                        draft-miller-xmpp-fed-00
+
+ Domain Name Association (DNA) in the Extensible Messaging and Presence
+                            Protocol (XMPP)
+                        draft-miller-xmpp-dna-00
 
 Abstract
+
 
 Status of this Memo
 
@@ -27,7 +29,7 @@ Status of this Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 13, 2012.
+   This Internet-Draft will expire on December 8, 2012.
 
 Copyright Notice
 
@@ -35,39 +37,81 @@ Copyright Notice
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
-   Provisions Relating to IETF Documents (http://trustee.ietf.org/
-   license-info) in effect on the date of publication of this document.
-   Please review these documents carefully, as they describe your rights
-   and restrictions with respect to this document.  Code Components
-   extracted from this document must include Simplified BSD License text
-   as described in Section 4.e of the Trust Legal Provisions and are
-   provided without warranty as described in the Simplified BSD License.
+   Provisions Relating to IETF Documents
+   (http://trustee.ietf.org/license-info) in effect on the date of
+   publication of this document.  Please review these documents
+   carefully, as they describe your rights and restrictions with respect
+   to this document.  Code Components extracted from this document must
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+
+
+
+
+
+
+Miller & Saint-Andre    Expires December 8, 2012                [Page 1]
+
+Internet-Draft                  XMPP DNA                       June 2012
+
 
 Table of Contents
 
-   1.  Introduction . . . . . . . . . . . . . . . . . . . . . . . . .  2
-   2.  Terminology  . . . . . . . . . . . . . . . . . . . . . . . . .  2
-   3.  Problem Statement  . . . . . . . . . . . . . . . . . . . . . .  2
-   4.  Requirements . . . . . . . . . . . . . . . . . . . . . . . . .  2
-   5.  Framework  . . . . . . . . . . . . . . . . . . . . . . . . . .  2
-   6.  Validation Prooftypes  . . . . . . . . . . . . . . . . . . . .  3
-     6.1.  PKI  . . . . . . . . . . . . . . . . . . . . . . . . . . .  3
-     6.2.  DANE . . . . . . . . . . . . . . . . . . . . . . . . . . .  3
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . . . 3
+   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . . . 3
+   3.  Problem Statement . . . . . . . . . . . . . . . . . . . . . . . 3
+   4.  Requirements  . . . . . . . . . . . . . . . . . . . . . . . . . 3
+   5.  Framework . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+   6.  Validation Prooftypes . . . . . . . . . . . . . . . . . . . . . 4
+     6.1.  PKI . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+     6.2.  DANE  . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+     6.3.  HTTPS/.well-known/  . . . . . . . . . . . . . . . . . . . . 4
+     6.4.  Dialback Keys . . . . . . . . . . . . . . . . . . . . . . . 4
+     6.5.  Other . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+   7.  Assertions  . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+   8.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+   9.  Internationalization Considerations . . . . . . . . . . . . . . 4
+   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 4
+   11. Security Considerations . . . . . . . . . . . . . . . . . . . . 5
+   12. Normative References  . . . . . . . . . . . . . . . . . . . . . 5
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . . . 5
 
-Miller & Saint-Andre              std                           [Page 1]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre    Expires December 8, 2012                [Page 2]
 
-Internet-Draft              XMPP Federation                    June 2012
+Internet-Draft                  XMPP DNA                       June 2012
 
-     6.3.  HTTPS/.well-known/ . . . . . . . . . . . . . . . . . . . .  3
-     6.4.  Dialback Keys  . . . . . . . . . . . . . . . . . . . . . .  3
-     6.5.  Other  . . . . . . . . . . . . . . . . . . . . . . . . . .  3
-   7.  Assertions . . . . . . . . . . . . . . . . . . . . . . . . . .  3
-   8.  Examples . . . . . . . . . . . . . . . . . . . . . . . . . . .  3
-   9.  Internationalization Considerations  . . . . . . . . . . . . .  3
-   10. IANA Considerations  . . . . . . . . . . . . . . . . . . . . .  3
-   11. Security Considerations  . . . . . . . . . . . . . . . . . . .  3
-   12. References . . . . . . . . . . . . . . . . . . . . . . . . . .  3
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . .  4
 
 1.  Introduction
 
@@ -87,6 +131,7 @@ Internet-Draft              XMPP Federation                    June 2012
    reflect progress in several underlying technologies, especially DNS
    Security [RFC4033].
 
+
 2.  Terminology
 
    This document inherits XMPP-related terminology from [RFC6120] and
@@ -100,6 +145,7 @@ Internet-Draft              XMPP Federation                    June 2012
    "OPTIONAL" in this document are to be interpreted as described in
    [RFC2119].
 
+
 3.  Problem Statement
 
    According to [RFC6120], an identity in the TLS certificate MUST match
@@ -110,14 +156,20 @@ Internet-Draft              XMPP Federation                    June 2012
    clients (unconditionally accepting the certificate offered) and
    almost a complete lack of secure connections between XMPP servers.
 
+
 4.  Requirements
 
-5.  Framework
 
 
-Miller & Saint-Andre              std                           [Page 2]
+
+
+
+Miller & Saint-Andre    Expires December 8, 2012                [Page 3]
 
-Internet-Draft              XMPP Federation                    June 2012
+Internet-Draft                  XMPP DNA                       June 2012
+
+
+5.  Framework
 
 
 6.  Validation Prooftypes
@@ -133,14 +185,14 @@ Internet-Draft              XMPP Federation                    June 2012
 
    1.  The initiating entity performs an HTTPS GET to the path "/.well-
        known/tls/<service>.<protocol>.<source-domain>" to the source
-       domain (e.g.  "https://im.example.com/.well-known/tls/_xmpp-
-       client._tcp.im.example.com")
+       domain (e.g. "https://im.example.com/.well-known/tls/
+       _xmpp-client._tcp.im.example.com")
    2.  The source domain HTTPS service SHOULD respond with a 302 Moved;
        the 'Location' header MUST specify an HTTPS URL that directs to
        the target host, and the path MUST be identical to the path of
        the original request (e.g.  "Location: https://
-       hosting.example.com/.well-known/tls/_xmpp-
-       client._tcp.im.example.com")
+       hosting.example.com/.well-known/tls/
+       _xmpp-client._tcp.im.example.com")
    3.  The initiating entity performs an HTTPS GET to the redirected URL
        specified in the 'Location' header
    4.  The target host HTTPS service MUST respond with a success status
@@ -151,17 +203,32 @@ Internet-Draft              XMPP Federation                    June 2012
 
 6.5.  Other
 
+
 7.  Assertions
+
 
 8.  Examples
 
+
 9.  Internationalization Considerations
+
 
 10.  IANA Considerations
 
+
+
+
+
+
+Miller & Saint-Andre    Expires December 8, 2012                [Page 4]
+
+Internet-Draft                  XMPP DNA                       June 2012
+
+
 11.  Security Considerations
 
-12.  References
+
+12.  Normative References
 
    [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
               STD 13, RFC 1034, November 1987.
@@ -172,24 +239,19 @@ Internet-Draft              XMPP Federation                    June 2012
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
 
-   [RFC2782]  Gulbrandsen, A., Vixie, P. and L. Esibov, "A DNS RR for
+   [RFC2782]  Gulbrandsen, A., Vixie, P., and L. Esibov, "A DNS RR for
               specifying the location of services (DNS SRV)", RFC 2782,
               February 2000.
 
-Miller & Saint-Andre              std                           [Page 3]
-
-Internet-Draft              XMPP Federation                    June 2012
+   [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
+              Rose, "DNS Security Introduction and Requirements",
+              RFC 4033, May 2005.
 
-
-   [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D. and S.
-              Rose, "DNS Security Introduction and Requirements", RFC
-              4033, May 2005.
-
-   [RFC4949]  Shirey, R., "Internet Security Glossary, Version 2", RFC
-              4949, August 2007.
+   [RFC4949]  Shirey, R., "Internet Security Glossary, Version 2",
+              RFC 4949, August 2007.
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
-              Housley, R. and W. Polk, "Internet X.509 Public Key
+              Housley, R., and W. Polk, "Internet X.509 Public Key
               Infrastructure Certificate and Certificate Revocation List
               (CRL) Profile", RFC 5280, May 2008.
 
@@ -203,26 +265,39 @@ Internet-Draft              XMPP Federation                    June 2012
               Security (TLS)", RFC 6125, March 2011.
 
    [XEP-0220]
-              Miller, J, Saint-Andre, P and P Hancke, "Server Dialback",
-              XSF XEP 0220, August 2011.
+              Miller, J., Saint-Andre, P., and P. Hancke, "Server
+              Dialback", XSF XEP 0220, August 2011.
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre    Expires December 8, 2012                [Page 5]
+
+Internet-Draft                  XMPP DNA                       June 2012
+
 
 Authors' Addresses
 
    Matthew Miller
    Cisco Systems, Inc.
    1899 Wynkoop Street, Suite 600
-   Denver, CO 80202
+   Denver, CO  80202
    USA
-   
+
    Email: mamille2@cisco.com
 
 
    Peter Saint-Andre
    Cisco Systems, Inc.
    1899 Wynkoop Street, Suite 600
-   Denver, CO 80202
+   Denver, CO  80202
    USA
-   
+
    Email: psaintan@cisco.com
 
 
@@ -237,4 +312,25 @@ Authors' Addresses
 
 
 
-Miller & Saint-Andre              std                           [Page 4]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre    Expires December 8, 2012                [Page 6]
+

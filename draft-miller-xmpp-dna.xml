@@ -5,9 +5,9 @@
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="4"?>
-<rfc category="std" docName="draft-miller-xmpp-fed-00" ipr="trust200902">
+<rfc category="std" docName="draft-miller-xmpp-dna-00" ipr="trust200902">
   <front>
-    <title abbrev="XMPP Federation">Interdomain Federation in the Extensible Messaging and Presence Protocol (XMPP)</title>
+    <title abbrev="XMPP DNA">Domain Name Association (DNA) in the Extensible Messaging and Presence Protocol (XMPP)</title>
     <author initials="M." surname="Miller" fullname="Matthew Miller">
       <organization>Cisco Systems, Inc.</organization>
       <address>
