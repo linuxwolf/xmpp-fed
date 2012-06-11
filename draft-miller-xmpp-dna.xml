@@ -59,6 +59,7 @@
       -->
       <t>How did we get here?</t>
       <t>What do we have today?</t>
+      <t>What's missing?</t>
       <t>Why does it matter? (virtual hosting, delegation)</t>
     </section>
     <section title="Requirements" anchor="reqs">
@@ -71,19 +72,50 @@
       <t>what's in a recipe</t>
     </section>
     <section title="Prooftypes" anchor="prooftypes">
-      <t>(or: how to obtain verification credentials)</t>
+      <t>(OR: "how to obtain verification credentials")</t>
       <section title="PKI" anchor="prooftype-pki">
-        <t></t>
+        <t>This prooftype is the rules from <xref target="RFC6120"/> for verification credentials; the TLS certificate offered MUST match the expected identity (i.e. the source domain), and is verified using existing PKI technologies.</t>
       </section>
       <section title="DANE" anchor="prooftype-dane">
-        <t></t>
+        <t>This prooftype relies on secure DNS and <xref target="DANE"/> to obtain the verification credentials.</t>
       </section>
       <section title="HTTPS/.well-known" anchor="prooftype-https">
         <t>This prooftype relies on the existing trust for HTTPS to provide a delegation path from a source domain to a target host.</t>
         <t>
           <list style="numbers">
-            <t>The initiating entity performs an HTTPS GET to the path "/.well-known/tls/_&lt;service&gt;._&gt;protocol&gt;&gt;source domain&gt;" to the source domain (e.g. "https://im.example.com/.well-known/.tls/_xmpp-server._tcp.im.example.com")</t>
-            <t>If the source domain HTTPS server has a certificate for the requested path, it MUST respond with a success status code, with the message body as the PEM-encoded certificate to expect.<vspace blankLines="1"/></t>
+            <t>The initiating entity performs an HTTPS GET to the path "/.well-known/tls/_&lt;service&gt;._tcp&gt;source domain&gt;.cert" to the source domain; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections:
+              <figure>
+                <artwork><![CDATA[
+GET /.well-known/_xmpp-server._tcp.im.example.com.cer HTTP/1.1
+Host: im.example.com
+                ]]></artwork>
+              </figure>
+            <vspace blankLines="1"/></t>
+            <t>If the source domain HTTPS server has a certificate for the requested path, it MUST respond with a success status code, with the message body as the PEM-encoded certificate to expect:
+              <figure>
+                <artwork><![CDATA[
+HTTP/1.1 200 OK
+Content-Type: application/pkix-cert
+Content-Length: 839
+
+-----BEGIN CERTIFICATE-----
+MIICPTCCAaYCCQDDVeBaBmWC/jANBgkqhkiG9w0BAQUFADBjMQswCQYDVQQGEwJV
+UzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbnZlcjEXMBUGA1UEChMO
+aW0uZXhhbXBsZS5jb20xFzAVBgNVBAMTDmltLmV4YW1wbGUuY29tMB4XDTEyMDYx
+MTIxNTQ0NFoXDTIyMDYwOTIxNTQ0NFowYzELMAkGA1UEBhMCVVMxETAPBgNVBAgT
+CENvbG9yYWRvMQ8wDQYDVQQHEwZEZW52ZXIxFzAVBgNVBAoTDmltLmV4YW1wbGUu
+Y29tMRcwFQYDVQQDEw5pbS5leGFtcGxlLmNvbTCBnzANBgkqhkiG9w0BAQEFAAOB
+jQAwgYkCgYEA4hoKhi/B07eQH+1NB9gWiNFDT//AbTHQOEC0AOr4Gh/o9PUp7kD0
+gklU4uv7rSAhAyCe4WaOiQ/HShzEryGfHiZmWht0BaYmj19iuPWRecZOXWqKZji9
+NtAxn9l3kdon/YLJcrPGyNTGK66+ggNaqy8LkQQpI4rff60yHHZ/0XkCAwEAATAN
+BgkqhkiG9w0BAQUFAAOBgQDcwiu30bSMlykWYz+tTDSlQ3wLSVB9RsR8jXmJvMo7
+y7icXwg54a9M3xipjZtrfAhYM5I5iqUTQPki6s26n9SQpRm5bonEFDA3WGwrwma3
+5biP9+NSBWzSaDF8AztwFNKXXl6/U6hWwG05G/NdeS11gpww9NUDraJgVoDpRK04
+tg==
+-----END CERTIFICATE-----
+                ]]></artwork>
+              </figure>
+            <vspace blankLines="1"/></t>
           </list>
         </t>
       </section>
@@ -101,10 +133,56 @@
       <section title="HTTPS Redirect" anchor="delegate-https">
         <t>
           <list style="numbers">
-            <t>The initiating entity performs an HTTPS GET to the path "/.well-known/tls/&lt;service&gt;.&lt;protocol&gt;.&lt;source-domain&gt;" to the source domain (e.g. "https://im.example.com/.well-known/tls/_xmpp-server._tcp.im.example.com")<vspace blankLines="1"/></t>
-            <t>If the source domain HTTPS server has delegated to a derived domain, it MUST respond with a 302 Moved; the 'Location' header MUST specify an HTTPS URL, where the hostname and port is the derived domain HTTPS server, and the path MUST match the pattern "_&lt;service&gt;._&lt;protocol&gt;.&lt;derived domain&gt;" (e.g. "Location: https://hosting.example.com/.well-known/tls/_xmpp-server._tcp.hosting.example.net")<vspace blankLines="1"/></t>
-            <t>The initiating entity performs an HTTPS GET to the URL specified in the 'Location' header.<vspace blankLines="1"/></t>
-            <t>If the derived domain HTTPS server has a certificate MUST respond with a success status code, with the message body set to the PEM-encoded certificate to expect.<vspace blankLines="1"/></t>
+            <t>The initiating entity performs an HTTPS GET to the path "/.well-known/tls/_&lt;service&gt;._tcp&gt;source domain&gt;.cert" to the source domain; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections:
+              <figure>
+                <artwork><![CDATA[
+GET /.well-known/_xmpp-server._tcp.im.example.com.cer HTTP/1.1
+Host: im.example.com
+                ]]></artwork>
+              </figure>
+            <vspace blankLines="1"/></t>
+            <t>If the source domain HTTPS server has delegated to a derived domain, it MUST respond with a 302 Moved; the 'Location' header MUST specify an HTTPS URL, where the hostname and port is the derived domain HTTPS server, and the path MUST match the pattern "_&lt;service&gt;._tcp.&lt;derived domain&gt;.cer"; where "_&lt;service&gt;" MUST be identical to the "_&lt;service&gt;" portion of the original request (line breaks added for readability):
+              <figure>
+                <artwork><![CDATA[
+HTTP/1.1 302 Found
+Location: https://hosting.example.com/.well-known
+          /tls/_xmpp-server._tcp.hosting.example.net.cer
+                ]]></artwork>
+              </figure>
+            <vspace blankLines="1"/></t>
+            <t>The initiating entity performs an HTTPS GET to the URL specified in the 'Location' header:
+              <figure>
+                <artwork><![CDATA[
+GET /.well-known/_xmpp-server._tcp.hosting.example.cer HTTP/1.1
+Host: hosting.example.net
+                ]]></artwork>
+              </figure>
+            <vspace blankLines="1"/></t>
+            <t>If the derived domain HTTPS server has a certificate MUST respond with a success status code, it MUST respond with a success status code, with the message body as the PEM-encoded certificate to expect:
+              <figure>
+                <artwork><![CDATA[
+HTTP/1.1 200 OK
+Content-Type: application/pkix-cert
+Content-Length: 863
+
+-----BEGIN CERTIFICATE-----
+MIICUTCCAboCCQCtNQRNu3194zANBgkqhkiG9w0BAQUFADBtMQswCQYDVQQGEwJV
+UzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbnZlcjEcMBoGA1UEChMT
+aG9zdGluZy5leGFtcGxlLm5ldDEcMBoGA1UEAxMTaG9zdGluZy5leGFtcGxlLm5l
+dDAeFw0xMjA2MTEyMTQ1MjZaFw0yMjA2MDkyMTQ1MjZaMG0xCzAJBgNVBAYTAlVT
+MREwDwYDVQQIEwhDb2xvcmFkbzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQKExNo
+b3N0aW5nLmV4YW1wbGUubmV0MRwwGgYDVQQDExNob3N0aW5nLmV4YW1wbGUubmV0
+MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDi46kMWnCfg0DTrlcTc6AQUci5
+Lu1f2RKRWPEhz8qyt/CO0N5VpxKQMlGp6TApQzFdAfxCUA3rniYFpMq4Hemw2S74
+v1LRoWvROKviKRzunDP3EhPXf6GbgnHRlfBx4yvZtcR1BMnkxgJtbTAJu4/wTRXY
+RE5FKk3xT4IBXTIQFwIDAQABMA0GCSqGSIb3DQEBBQUAA4GBAAvRohCXSfSnHXjv
+84beqmFSYKcZvhVymgxQfhB2ZLNFQvfTO3Qsp/MR0hRRXrJ25n86t49EEXicjC0r
+EdmWaIhdDFhw7hva2byYziww7fJuelD0tpL9nfF5uOIMp3JYyXCBn/FKJhi9HMR1
+d8avm8gJ5Iu7L96qosWzL3epHYW7
+-----END CERTIFICATE-----
+                ]]></artwork>
+              </figure>
+            <vspace blankLines="1"/></t>
           </list>
         </t>
       </section>
@@ -136,6 +214,26 @@
   </middle>
   <back>
     <references title="Normative References">
+      <reference anchor="DANE">
+        <front>
+          <title>The DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol: TLSA</title>
+          <author initials="P." surname="Hoffman" fullname="Paul Hoffman">
+            <organization>VPN Consortium</organization>
+            <address>
+              <email>paul.hoffman@vpnc.org</email>
+            </address>
+          </author>
+          <author initials="J." surname="Schlyter" fullname="Jakob Schlyter">
+            <organization>Kirei AB</organization>
+            <address>
+              <email>jakob@kirei.se</email>
+            </address>
+          </author>
+          <date month="May" year="2012"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-dane-protocol-21"/>
+        <format type="TXT" target="http://tools.ietf.org/html/draft-ietf-dane-protocol-21.txt"/>
+      </reference>
       <reference anchor='RFC1034'>
         <front>
           <title abbrev='Domain Concepts and Facilities'>Domain names - concepts and facilities</title>
