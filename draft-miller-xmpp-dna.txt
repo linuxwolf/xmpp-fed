@@ -287,7 +287,7 @@ Internet-Draft                  XMPP DNA                       June 2012
    3.  The initiating entity performs an HTTPS GET to the URL specified
        in the 'Location' header:
 
-   GET /.well-known/_xmpp-server._tcp.hosting.example.cer HTTP/1.1
+   GET /.well-known/tls/_xmpp-server._tcp.hosting.example.cer HTTP/1.1
    Host: hosting.example.net
 
 
