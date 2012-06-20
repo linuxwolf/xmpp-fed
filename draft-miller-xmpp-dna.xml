@@ -8,19 +8,6 @@
 <rfc category="std" docName="draft-miller-xmpp-dna-00" ipr="trust200902">
   <front>
     <title abbrev="XMPP DNA">Domain Name Associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP)</title>
-    <author initials="M." surname="Miller" fullname="Matthew Miller">
-      <organization>Cisco Systems, Inc.</organization>
-      <address>
-        <postal>
-          <street>1899 Wynkoop Street, Suite 600</street>
-          <city>Denver</city>
-          <region>CO</region>
-          <code>80202</code>
-          <country>USA</country>
-        </postal>
-        <email>mamille2@cisco.com</email>
-      </address>
-    </author>
     <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
       <organization>Cisco Systems, Inc.</organization>
       <address>
@@ -34,7 +21,20 @@
         <email>psaintan@cisco.com</email>
       </address>
     </author>
-    <date month="June" day="6" year="2012"/>
+    <author initials="M." surname="Miller" fullname="Matthew Miller">
+      <organization>Cisco Systems, Inc.</organization>
+      <address>
+        <postal>
+          <street>1899 Wynkoop Street, Suite 600</street>
+          <city>Denver</city>
+          <region>CO</region>
+          <code>80202</code>
+          <country>USA</country>
+        </postal>
+        <email>mamille2@cisco.com</email>
+      </address>
+    </author>
+    <date month="June" day="20" year="2012"/>
     <area>RAI</area>
     <keyword>Internet-Draft</keyword>
     <keyword>XMPP</keyword>
@@ -47,20 +47,17 @@
   </front>
   <middle>
     <section title="Introduction" anchor="intro">
-      <t>Because the Extensible Messaging and Presence Protocol (XMPP) is built upon a distributed client-server architecture <xref target='RFC6120'/>, it has long included methods for establishing connections among servers on the network.  In XMPP, these server-to-server connections typically do not require pre-arranged peering agreements and thus are negotiated on an ad-hoc or as-needed basis.  Furthermore, to the extent that servers "trust" each other, such trust is established based on information obtained from the Domain Name System (DNS), the Public Key Infrastructure (PKI), or similar sources.  Since XMPP servers are associated with DNS domain names (or, less commonly, IP addresses), server-to-server connectivity is referred to as interdomain federation.  This document describes a model for interdomain federation and modernizes some federation methods to reflect progress in several underlying technologies, especially DNS Security <xref target='RFC4033'/>.</t>
+      <t>Because the Extensible Messaging and Presence Protocol (XMPP) is built upon a distributed client-server architecture <xref target='RFC6120'/>, it has long included methods for establishing connections among servers on the network.  In XMPP, these server-to-server connections typically do not require pre-arranged peering agreements and thus are negotiated on an ad-hoc or as-needed basis.  Furthermore, to the extent that servers "trust" each other, such trust is established based on information obtained from the Domain Name System (DNS), the Public Key Infrastructure (PKI), or similar sources.  Since XMPP servers are typically associated with DNS domain names (or, less commonly, IP addresses), server-to-server connectivity is referred to as interdomain federation.  This document describes a model for interdomain federation and modernizes some federation methods (e.g., Server Dialback <xref target='XEP-0220'/>) to reflect progress in several underlying technologies, especially DNS Security <xref target='RFC4033'/>.</t>
     </section>
     <section title="Terminology" anchor="terms">
       <t>This document inherits XMPP-related terminology from <xref target="RFC6120"/> and <xref target='XEP-0220'/>, DNS-related terminology from <xref target='RFC1034'/>, <xref target='RFC1035'/>, <xref target='RFC2782'/> and <xref target="RFC4033"/>, and security-related terminology from <xref target='RFC4949'/> and <xref target='RFC5280'/>.  The terms "source domain" and "derived domain" are used as defined in the "CertID" specification <xref target="RFC6125"/>.</t>
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119'/>.</t>
     </section>
     <section title="Problem Statement" anchor="problem">
-      <!--
-      <t>According to <xref target="RFC6120"/>, an identity in the TLS certificate MUST match the source domain to established a trusted connection.  However, it is operationally not feasible for an XMPP service provider hosting multiple domains to hold onto certificates that meet this criteria.  This has led to a considerable suspension of disbelief by XMPP clients (unconditionally accepting the certificate offered) and almost a complete lack of secure connections between XMPP servers.</t>
-      -->
-      <t>How did we get here?</t>
-      <t>What do we have today?</t>
-      <t>What's missing?</t>
-      <t>Why does it matter? (virtual hosting, delegation)</t>
+      <t>When the Jabber.org open-source community developed the precursor to XMPP in 1999, it defined methods for interdomain federation but no mechanisms for authenticating or checking the identity of peer servers.  We could describe this as "permissive federation", which is clearly suboptimal given the strong potential for domain spoofing.  In the year 2000, the community remedied the problem to some extent by defining a technology called Server Dialback (first documented in <xref target='RFC3920'/>).  Although Server Dialback does not provide a strong mechanism for identity checking without the use of DNSSEC, it does provide DNS-based verification and thus has effectively prevented most instances of domain spoofing on the XMPP network since late 2000.  Also, because Server Dialback does not necessarily involve the use of server certificates, it does not necessarily result in an encrypted stream and thus we refer to it as a technology for "verified federation".</t>
+      <t>In 2002-2004, the IETF's XMPP Working Group hardened the original Jabber.org protocols by adding Transport Layer Security (TLS) and Simple Authentication and Security Layer (SASL), thus creating the possibility of what we might call "authenticated federation" when two peer servers present PKIX certificates during negotiation of a server-to-server stream.  Unfortunately, authenticated federation has not been widely deployed; one of the primary reasons is that it is feasible (although not always easy) for single-domain servers to obtain the proper certificates, but much more difficult (or practically impossible) for large XMPP hosting provider to do so.  The primary challenge here is operational: it is highly unlikely that an organization (say, example.com) wishing to delegate its XMPP service (say, im.example.com) to a hosting provider (say, hosting.example.net) will hand over its private key to the hosting provider.  Even if that were feasible, further operational challenges (e.g., maintaining large numbers of certificates for hosted domains, and configuring XMPP software to present the correct certificate based on the 'to' address of the initial stream header) have also discouraged deployment of authenticated federation in such environments.</t>
+      <t>Furthermore, the prevalence of delegation to hosting providers leads to one additional shortcoming, caused by the use of DNS SRV records <xref target='RFC2782'/> in XMPP: if DNSSEC is not used, the act of delegation is inherently insecure.  However, no existing documentation explains how to use DNSSEC for secure delegation, so clients and servers both take a "leap of faith" when using an SRV record to connect to, say, hosting.example.net when seeking to connect to, say, im.example.com.</t>
+      <t>Thus the state of play on the XMPP network at this time is that authenticated federation is uncommon and secure delegation is unheard of.  Because encryption of server-to-server streams is desirable and because delegation needs to be secure if it can be trusted at all by peer servers and by end-user clients, the current situation is clearly sub-optimal.  This document defines some ways to overcome these problems and therefore improve the state of security on the XMPP network.</t>
     </section>
     <section title="Requirements" anchor="reqs">
       <t></t>
@@ -205,10 +202,10 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
     <section title="Internationalization Considerations" anchor="i18n">
       <t></t>
     </section>
-    <section title="IANA Considerations" anchor="iana">
+    <section title="Security Considerations" anchor="security">
       <t></t>
     </section>
-    <section title="Security Considerations" anchor="security">
+    <section title="IANA Considerations" anchor="iana">
       <t></t>
     </section>
   </middle>
@@ -488,6 +485,40 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         <seriesInfo name="XSF XEP" value="0220"/>
         <format type="HTML" target="http://xmpp.org/extensions/xep-0220.html#appendix-authorinfo"/>
       </reference>
+    </references>
+
+    <references title="Informative References">
+
+<reference anchor='RFC3920'>
+<front>
+<title abbrev='XMPP Core'>Extensible Messaging and Presence Protocol (XMPP): Core</title>
+<author initials='P.' surname='Saint-Andre' fullname='Peter Saint-Andre' role='editor'>
+<organization>Jabber Software Foundation</organization>
+<address>
+<email>stpeter@jabber.org</email></address></author>
+<date year='2004' month='October' />
+<area>Applications</area>
+<workgroup>XMPP Working Group</workgroup>
+<keyword>RFC</keyword>
+<keyword>Request for Comments</keyword>
+<keyword>I-D</keyword>
+<keyword>Internet-Draft</keyword>
+<keyword>XMPP</keyword>
+<keyword>Extensible Messaging and Presence Protocol</keyword>
+<keyword>Jabber</keyword>
+<keyword>IM</keyword>
+<keyword>Instant Messaging</keyword>
+<keyword>Presence</keyword>
+<keyword>XML</keyword>
+<keyword>Extensible Markup Language</keyword>
+<abstract>
+<t>This memo defines the core features of the Extensible Messaging and Presence Protocol (XMPP), a protocol for streaming Extensible Markup Language (XML) elements in order to exchange structured information in close to real time between any two network endpoints.  While XMPP provides a generalized, extensible framework for exchanging XML data, it is used mainly for the purpose of building instant messaging and presence applications that meet the requirements of RFC 2779.</t></abstract></front>
+<seriesInfo name='RFC' value='3920' />
+<format type='TXT' octets='194313' target='http://www.rfc-editor.org/rfc/rfc3920.txt' />
+<format type='HTML' octets='279912' target='http://xml.resource.org/public/rfc/html/rfc3920.html' />
+<format type='XML' octets='234610' target='http://xml.resource.org/public/rfc/xml/rfc3920.xml' />
+</reference>
+
     </references>
   </back>
 </rfc>
