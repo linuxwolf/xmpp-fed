@@ -34,7 +34,7 @@
         <email>mamille2@cisco.com</email>
       </address>
     </author>
-    <date month="June" day="20" year="2012"/>
+    <date month="June" day="21" year="2012"/>
     <area>RAI</area>
     <keyword>Internet-Draft</keyword>
     <keyword>XMPP</keyword>
@@ -68,9 +68,10 @@
       <t>In essence, we need to establish an association between a domain and an XML stream: is the XMPP server to which a client or peer server connects "allowed" to accept stanzas for or send stanzas from a given domain?  If so, we say that there is a verified domain name association ("DNA") for the stream.</t>
       <t>For TLS in general, the TLS client has some expectations about the identity of the TLS server (in the language of the "CertID" specification <xref target='RFC6125'/>, the TLS client has a "reference identity"), and then checks some material presented by the TLS server (the "presented identity" within the server certificate) to verify that its expectations have been met.  In XMPP, Server Dialback follows a similar model, except that the verification material takes the form of a token instead of a certificate.  The DNS-Based Authentication of Named Entities protocol <xref target='DANE'/>, at least in some of its modes, adds another kind of verification material: not the presented identity within a PKIX certificate, but a complete certificate or fingerprint thereof.  And other kinds of verification material could be envisioned (e.g., OpenPGP keys or OAuth tokens), although they are not considered here.</t>
       <t>No matter what kind of verification material is used, an XMPP client or server that wishes to verify a domain name association needs a way to obtain the verification material it will refer to when establishing the association.  For instance, when an server presents a PKIX certificate during TLS negotiation, the connecting client or server has traditionally obtained its verification material out of band or via configuration from a certification authority (i.e., in the form of a root certificate contained in a certificate bundle).  In the Server Dialback protocol, the verification material is a token that is obtained over XMPP itself.  In DANE, the verification material is obtained from the Domain Name System.  In the dot-well-known method described below, the verification material is obtained over secure HTTP.  And other methods for obtaining verification material could be envisioned (e.g., IPsec), although they are not considered here.</t>
-      <t>Furthermore, given the relationship between XMPP and the DNS (XMPP services are usually identified by domain name, not IP address), it is important to make it clear whether a given verification method can be used only with secure DNS or also with insecure DNS.</t>
+      <t>The matching rules for checking the verification material will depend on the nature of the verification material; for example, <xref target='RFC6120'/> defines a profile of the rules from the "CertID" specification <xref target='RFC6125'/>, Server Dialback <xref target='XEP-0220'/> performs a character-for-character comparison of tokens, DANE might compare the SubjectPublicKeyInfo data or the full certificate, and so on.</t>
+      <t>Finally, given the relationship between XMPP and the DNS (XMPP services are usually identified by domain name, not IP address), it is important to make it clear whether a given verification method can be used only with secure DNS or also with insecure DNS.</t>
       <t>Putting these pieces together, we define a DNA prooftype as follows.</t>
-      <t><list style='hanging'><t hangText='prooftype:'>A mechanism for proving an association between a domain name and an XML stream, where the mechanism defines the verification material to be used, how the verification material is obtained, and whether the mechanism depends on Secure DNS.</t></list></t>
+      <t><list style='hanging'><t hangText='prooftype:'>A mechanism for proving an association between a domain name and an XML stream, where the mechanism defines (1) the verification material to be used, (2) the matching rules for comparing the reference version and presented version of the material, (3) how the verification material is obtained, and (4) whether the mechanism depends on Secure DNS.</t></list></t>
       <t>The following sections define several prooftypes that are used, or could be used, in XMPP.</t>
       <t>Note: So far, our definition of a prooftype does not include the exact protocol mechanism that is used to assert a domain name; this is explained further under <xref target='assertions'/>.</t>
     </section>
@@ -78,14 +79,16 @@
     <section title="Prooftypes" anchor="prooftypes">
 
       <section title="PKI" anchor="prooftype-pki">
-        <t>This prooftype is the rules from <xref target="RFC6120"/> for verification credentials; the TLS certificate offered MUST match the expected identity (i.e. the source domain), and is verified using existing PKI technologies.</t>
+        <t>The PKI prooftype is a DNA proof that follows the rules from <xref target="RFC6120"/>: that is, the verification materials consist of a PKIX certificate that is checked according to a profile of the matching rules from <xref target='RFC6125'/>, the client's verification materials are obtained out of band in the form of a trusted root, and secure DNS is not necessary.</t>
       </section>
 
       <section title="DANE" anchor="prooftype-dane">
-        <t>This prooftype relies on secure DNS and <xref target="DANE"/> to obtain the verification credentials.</t>
+        <t>In the DANE prooftype, the verification materials consist of a PKIX certificate that is compared as an exact match or a hash of either the SubjectPublicKeyInfo or the full certificate, and the verification materials are obtained via secure DNS.</t>
       </section>
-      <section title="HTTPS/.well-known" anchor="prooftype-https">
-        <t>This prooftype relies on the existing trust for HTTPS to provide a delegation path from a source domain to a target host.</t>
+
+      <section title="POSH" anchor="prooftype-posh">
+        <t>POSH stands for PKIX Over Secure HTTP: the verification material is a PKIX certificate, it is obtained by retrieving it over HTTPS at a well-known URI <xref target='RFC5785'/> (see below), the certificate is checked according to the rules from <xref target='RFC6120'/> and <xref target='RFC6125'/>, and secure DNS is not necessary since the HTTPS retrieval mechanism relies on the chain of trust from the public key infrastructure.</t>
+        <t>The process for retrieving a PKIX certificate over secure HTTP is as follows.</t>
         <t>
           <list style="numbers">
             <t>The initiating entity performs an HTTPS GET to the path "/.well-known/tls/_&lt;service&gt;._tcp&gt;source domain&gt;.cert" to the source domain; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections:
@@ -124,24 +127,29 @@ tg==
           </list>
         </t>
       </section>
-      <!--
+
       <section title="Dialback Keys" anchor="prooftype-dbkeys">
-        <t></t>
+        <t>The Dialback Keys prooftype formalizes the existing Server Dialback: the verification material is a token obtained over XMPP and verified by the authoritative server for a given domain; secure DNS is needed in order to place significant trust in such tokens.</t>
       </section>
-      -->
+
     </section>
 
     <section title="Assertion Mechanisms" anchor="assertions">
+
       <t></t>
+
       <section title="TLS" anchor="assertions-tls">
         <t></t>
       </section>
+
       <section title="SASL" anchor="assertions-sasl">
         <t></t>
       </section>
+
       <section title="&lt;db:result&gt;" anchor="assertions-dbresult">
         <t></t>
       </section>
+
     </section>
 
     <section title="Delegation Methods" anchor="delegation">
@@ -224,8 +232,11 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
     </section>
 
   </middle>
+
   <back>
+
     <references title="Normative References">
+
       <reference anchor="DANE">
         <front>
           <title>The DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol: TLSA</title>
@@ -246,6 +257,7 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         <seriesInfo name="Internet-Draft" value="draft-ietf-dane-protocol-21"/>
         <format type="TXT" target="http://tools.ietf.org/html/draft-ietf-dane-protocol-21.txt"/>
       </reference>
+
       <reference anchor='RFC1034'>
         <front>
           <title abbrev='Domain Concepts and Facilities'>Domain names - concepts and facilities</title>
@@ -280,6 +292,7 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         <seriesInfo name='RFC' value='1035' />
         <format type='TXT' octets='125626' target='http://www.rfc-editor.org/rfc/rfc1035.txt' />
       </reference>
+
       <reference anchor="RFC2119">
         <front>
           <title abbrev="RFC Key Words">Key words for use in RFCs to Indicate Requirement Levels</title>
@@ -308,6 +321,7 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         <seriesInfo name="BCP" value="14"/>
         <seriesInfo name="RFC" value="2119"/>
       </reference>
+
       <reference anchor='RFC2782'>
         <front>
           <title abbrev='DNS SRV RR'>A DNS RR for specifying the location of services (DNS SRV)</title>
@@ -361,6 +375,7 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         <seriesInfo name='RFC' value='2782' />
         <format type='TXT' octets='24013' target='http://www.rfc-editor.org/rfc/rfc2782.txt' />
       </reference>
+
       <reference anchor="RFC4033">
         <front>
           <title>DNS Security Introduction and Requirements</title>
@@ -399,6 +414,7 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         <seriesInfo name="RFC" value="4033"/>
         <format type="TXT" target="http://tools.ietf.org/rfc/rfc4033.txt"/>
       </reference>
+
       <reference anchor="RFC4949">
         <front>
           <title>Internet Security Glossary, Version 2</title>
@@ -413,6 +429,7 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         <seriesInfo name="RFC" value="4949"/>
         <format type="TXT" octets="867626" target="ftp://ftp.isi.edu/in-notes/rfc4949.txt"/>
       </reference>
+
       <reference anchor="RFC5280">
         <front>
           <title>Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile</title>
@@ -442,6 +459,21 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         <seriesInfo name="RFC" value="5280"/>
         <format type="TXT" octets="352580" target="ftp://ftp.isi.edu/in-notes/rfc5280.txt"/>
       </reference>
+
+<reference anchor='RFC5785'>
+<front>
+<title>Defining Well-Known Uniform Resource Identifiers (URIs)</title>
+<author initials='M.' surname='Nottingham' fullname='M. Nottingham'>
+<organization /></author>
+<author initials='E.' surname='Hammer-Lahav' fullname='E. Hammer-Lahav'>
+<organization /></author>
+<date year='2010' month='April' />
+<abstract>
+<t>This memo defines a path prefix for "well-known locations", "/.well-known/", in selected Uniform Resource Identifier (URI) schemes. [STANDARDS-TRACK]</t></abstract></front>
+<seriesInfo name='RFC' value='5785' />
+<format type='TXT' octets='13779' target='http://www.rfc-editor.org/rfc/rfc5785.txt' />
+</reference>
+
       <reference anchor="RFC6120">
         <front>
           <title>Extensible Messaging and Presence Protocol (XMPP): Core</title>
@@ -456,6 +488,7 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         <seriesInfo name="RFC" value="6120"/>
         <format type="TXT"  target="http://tools.ietf.org/rfc/rfc6120.txt"/>
       </reference>
+
       <reference anchor="RFC6125">
         <front>
           <title>Representation and Verification of Domain-Based Application Service Identity within Internet Public Key Infrastructure Using X.509 (PKIX) Certificates in the Context of Transport Layer Security (TLS)</title>
@@ -476,6 +509,7 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         <seriesInfo name="RFC" value="6125"/>
         <format type="TXT" target="http://tools.ietf.org/rfc/rfc6125.txt"/>
       </reference>
+
       <reference anchor="XEP-0220">
         <front>
           <title>Server Dialback</title>
@@ -500,6 +534,7 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         <seriesInfo name="XSF XEP" value="0220"/>
         <format type="HTML" target="http://xmpp.org/extensions/xep-0220.html#appendix-authorinfo"/>
       </reference>
+
     </references>
 
     <references title="Informative References">
@@ -532,20 +567,6 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
 <format type='TXT' octets='194313' target='http://www.rfc-editor.org/rfc/rfc3920.txt' />
 <format type='HTML' octets='279912' target='http://xml.resource.org/public/rfc/html/rfc3920.html' />
 <format type='XML' octets='234610' target='http://xml.resource.org/public/rfc/xml/rfc3920.xml' />
-</reference>
-
-<reference anchor='RFC5785'>
-<front>
-<title>Defining Well-Known Uniform Resource Identifiers (URIs)</title>
-<author initials='M.' surname='Nottingham' fullname='M. Nottingham'>
-<organization /></author>
-<author initials='E.' surname='Hammer-Lahav' fullname='E. Hammer-Lahav'>
-<organization /></author>
-<date year='2010' month='April' />
-<abstract>
-<t>This memo defines a path prefix for "well-known locations", "/.well-known/", in selected Uniform Resource Identifier (URI) schemes. [STANDARDS-TRACK]</t></abstract></front>
-<seriesInfo name='RFC' value='5785' />
-<format type='TXT' octets='13779' target='http://www.rfc-editor.org/rfc/rfc5785.txt' />
 </reference>
 
 <reference anchor="XEP-0238">
