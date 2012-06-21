@@ -136,28 +136,49 @@ tg==
 
     <section title="Assertion Mechanisms" anchor="assertions">
 
-      <t></t>
+      <t>An assertion is a server's statement that an XML stream is to be associated with the asserted domain.</t>
 
       <section title="TLS" anchor="assertions-tls">
-        <t></t>
+        <t>During TLS negotiation, an XMPP server acting as a TLS sever sends its certificate to the connecting client or peer server acting as a TLS client.  This certificate is interpreted as an assertion of the server's identity.</t>
       </section>
 
       <section title="SASL" anchor="assertions-sasl">
-        <t></t>
+        <t>During SASL negotiation after TLS negotiation, a client or server can include an authorization identity; such an authzid is an assertion of identity.</t>
       </section>
 
       <section title="&lt;db:result&gt;" anchor="assertions-dbresult">
-        <t></t>
+        <t>When two servers use the Server Dialback protocol <xref target='XEP-0220'/>, the originating server asserts its identity by sending a &lt;db:result/&gt; element to the receiving server, where the 'from' attribute specifies the domain name being asserted by the originating server.  Although historically the &lt;db:result/&gt; element has also contained a dialback key as XML character data, the &lt;db:result/&gt; element can also be used without dialback keys as a mere assertion.  This usage is sometimes colloquially called "dialback without dialback".</t>
+      </section>
+
+      <section title="A Note about Stream Attributes" anchor="assertions-attributes">
+        <t>XML streams include 'to' and 'from' attributes.  However, these are not assertions of identity, and are merely early indications of the identity that a client or server will later assert during TLS negotiation, SASL negotiation, or Server Dialback negotiation.</t>
       </section>
 
     </section>
 
     <section title="Delegation Methods" anchor="delegation">
-      <t></t>
+
+      <t>Although domain name associations are closely tied to delegation in some scenarios, delegation is irrelevant when the source domain is exactly the same as the hostname of the XMPP service, as is often the case with single-domain services.  This section defines two methods for secure delegation.</t>
+
       <section title="DNSSEC" anchor="delegate-dnssec">
-        <t></t>
+        <t>Traditionally, XMPP services have used DNS SRV records <xref target='RFC2782'/> for delegation purposes; however, delegation via SRV is insecure absent the use of DNSSEC.  An XMPP client or server that wishes to use DNSSEC in determining if a domain is securely delegated performs the following actions:</t>
+        <t>
+          <list style="numbers">
+            <t>Query for the appropriate SRV resource record for the source domain (e.g. "_xmpp-client._tcp.im.example.com").<vspace blankLines="1"/></t>
+            <t>If there is no SRV resource record, pursue the fallback methods described in <xref target='RFC6120'/>.<vspace blankLines='1'/></t>
+            <t>If there is an SRV resource record, validate that the SRV record answer is secure according to <xref target='RFC4033'/>.  If the answer is insecure, then delegation to the derived domain(s), as indicated by the "target host" field, is insecure and the TLS client MUST treat only the source domain as a reference identifier during certificate verification, as described in <xref target='RFC6120'/>; if the answer is bogus, the TLS client MUST abort.<vspace blankLines="1"/></t>
+            <!--
+            <t>If there is an SRV record, for each derived domain from the SRV record answer (e.g. "hosting.example.net"), query for the "A" and/or "AAAA" resource records as described in <xref target='RFC6120'/>.<vspace blankLines="1"/></t>
+            <t>For each derived domain, validate that the address record answers are secure according to <xref target='RFC4033'/><vspace blankLines='1'/></t>
+            <t>If any answer is insecure, then the TLS client MUST NOT consider a connection to that derived domain as securely delegated from the source domain; when verifying the certificate, the TLS client MUST do so against the source domain as described in <xref target='RFC6120'/>.<vspace blankLines="1"/></t>
+            -->
+            <t>If the answer is secure, the TLS client SHOULD consider any derived domain(s) in the answer as securely delegated; during certificate verification, the TLS client MUST treat both the source domain and the derived domain to which it has connected as reference identifiers.</t>
+          </list>
+        </t>
       </section>
+
       <section title="HTTPS Redirect" anchor="delegate-https">
+        <t>Here we defined an alternative method for secure delegation for use with PKIX Over Secure HTTP (POSH).  An XMPP client or server that wishes to use HTTPS redirects in determining if a domain is securely delegated performs the following actions:</t>
         <t>
           <list style="numbers">
             <t>The initiating entity performs an HTTPS GET to the path "/.well-known/tls/_&lt;service&gt;._tcp&gt;source domain&gt;.cert" to the source domain; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections:
