@@ -350,7 +350,7 @@ Internet-Draft                  XMPP DNA                       June 2012
    follows.
 
    1.  The initiating entity performs an HTTPS GET to the path "/.well-
-       known/tls/_<service>._tcp>source domain>.cert" to the source
+       known/tls/_<service>._tcp<source domain>.cer" to the source
        domain; where "_<service>" MUST be either "_xmpp-client" for XMPP
        client-to-server connections or "_xmpp-server" for XMPP server-
        to-server connections:
@@ -493,7 +493,7 @@ Internet-Draft                  XMPP DNA                       June 2012
    delegated performs the following actions:
 
    1.  The initiating entity performs an HTTPS GET to the path "/.well-
-       known/tls/_<service>._tcp>source-domain>.cert" at the source
+       known/tls/_<service>._tcp<source-domain>.cer" at the source
        domain; where "_<service>" MUST be either "_xmpp-client" for XMPP
        client-to-server connections or "_xmpp-server" for XMPP server-
        to-server connections.  Here is an example:
