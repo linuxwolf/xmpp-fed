@@ -34,7 +34,7 @@
         <email>mamille2@cisco.com</email>
       </address>
     </author>
-    <date month="June" day="21" year="2012"/>
+    <date month="June" day="25" year="2012"/>
     <area>RAI</area>
     <keyword>Internet-Draft</keyword>
     <keyword>XMPP</keyword>
@@ -83,49 +83,11 @@
       </section>
 
       <section title="DANE" anchor="prooftype-dane">
-        <t>In the DANE prooftype, the verification materials consist of a PKIX certificate that is compared as an exact match or a hash of either the SubjectPublicKeyInfo or the full certificate, and the verification materials are obtained via secure DNS.</t>
+        <t>In the DANE prooftype, the verification materials consist of a PKIX certificate that is compared as an exact match or a hash of either the SubjectPublicKeyInfo or the full certificate, and the verification materials are obtained via secure DNS.  See the XMPP-DANE spec for complete discussion and examples.</t>
       </section>
 
       <section title="POSH" anchor="prooftype-posh">
-        <t>POSH stands for PKIX Over Secure HTTP: the verification material is a PKIX certificate, it is obtained by retrieving it over HTTPS at a well-known URI <xref target='RFC5785'/> (see below), the certificate is checked according to the rules from <xref target='RFC6120'/> and <xref target='RFC6125'/>, and secure DNS is not necessary since the HTTPS retrieval mechanism relies on the chain of trust from the public key infrastructure.</t>
-        <t>The process for retrieving a PKIX certificate over secure HTTP is as follows.</t>
-        <t>
-          <list style="numbers">
-            <t>The initiating entity performs an HTTPS GET to the path "/.well-known/tls/_&lt;service&gt;._tcp&lt;source domain&gt;.cer" to the source domain; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections:
-              <figure>
-                <artwork><![CDATA[
-GET /.well-known/_xmpp-server._tcp.im.example.com.cer HTTP/1.1
-Host: im.example.com
-                ]]></artwork>
-              </figure>
-            <vspace blankLines="1"/></t>
-            <t>If the source domain HTTPS server has a certificate for the requested path, it MUST respond with a success status code, with the message body as the PEM-encoded certificate to expect:
-              <figure>
-                <artwork><![CDATA[
-HTTP/1.1 200 OK
-Content-Type: application/pkix-cert
-Content-Length: 839
-
------BEGIN CERTIFICATE-----
-MIICPTCCAaYCCQDDVeBaBmWC/jANBgkqhkiG9w0BAQUFADBjMQswCQYDVQQGEwJV
-UzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbnZlcjEXMBUGA1UEChMO
-aW0uZXhhbXBsZS5jb20xFzAVBgNVBAMTDmltLmV4YW1wbGUuY29tMB4XDTEyMDYx
-MTIxNTQ0NFoXDTIyMDYwOTIxNTQ0NFowYzELMAkGA1UEBhMCVVMxETAPBgNVBAgT
-CENvbG9yYWRvMQ8wDQYDVQQHEwZEZW52ZXIxFzAVBgNVBAoTDmltLmV4YW1wbGUu
-Y29tMRcwFQYDVQQDEw5pbS5leGFtcGxlLmNvbTCBnzANBgkqhkiG9w0BAQEFAAOB
-jQAwgYkCgYEA4hoKhi/B07eQH+1NB9gWiNFDT//AbTHQOEC0AOr4Gh/o9PUp7kD0
-gklU4uv7rSAhAyCe4WaOiQ/HShzEryGfHiZmWht0BaYmj19iuPWRecZOXWqKZji9
-NtAxn9l3kdon/YLJcrPGyNTGK66+ggNaqy8LkQQpI4rff60yHHZ/0XkCAwEAATAN
-BgkqhkiG9w0BAQUFAAOBgQDcwiu30bSMlykWYz+tTDSlQ3wLSVB9RsR8jXmJvMo7
-y7icXwg54a9M3xipjZtrfAhYM5I5iqUTQPki6s26n9SQpRm5bonEFDA3WGwrwma3
-5biP9+NSBWzSaDF8AztwFNKXXl6/U6hWwG05G/NdeS11gpww9NUDraJgVoDpRK04
-tg==
------END CERTIFICATE-----
-                ]]></artwork>
-              </figure>
-            <vspace blankLines="1"/></t>
-          </list>
-        </t>
+        <t>POSH stands for PKIX Over Secure HTTP: the verification material is a PKIX certificate, it is obtained by retrieving it over HTTPS at a well-known URI <xref target='RFC5785'/> (see below), the certificate is checked according to the rules from <xref target='RFC6120'/> and <xref target='RFC6125'/>, and secure DNS is not necessary since the HTTPS retrieval mechanism relies on the chain of trust from the public key infrastructure.  See the XMPP-POSH spec for complete discussion and examples.</t>
       </section>
 
       <section title="Dialback Keys" anchor="prooftype-dbkeys">
@@ -158,95 +120,11 @@ tg==
     </section>
 
     <section title="Delegation Methods" anchor="delegation">
-
-      <t>Although domain name associations are closely tied to delegation in some scenarios, delegation is irrelevant when the source domain is exactly the same as the hostname of the XMPP service, as is often the case with single-domain services.  This section defines two methods for secure delegation.</t>
-
-      <section title="DNSSEC" anchor="delegate-dnssec">
-        <t>Traditionally, XMPP services have used DNS SRV records <xref target='RFC2782'/> for delegation purposes; however, delegation via SRV is insecure absent the use of DNSSEC.  An XMPP client or server that wishes to use DNSSEC in determining if a domain is securely delegated performs the following actions:</t>
-        <t>
-          <list style="numbers">
-            <t>Query for the appropriate SRV resource record for the source domain (e.g. "_xmpp-client._tcp.im.example.com").<vspace blankLines="1"/></t>
-            <t>If there is no SRV resource record, pursue the fallback methods described in <xref target='RFC6120'/>.<vspace blankLines='1'/></t>
-            <t>If there is an SRV resource record, validate that the SRV record answer is secure according to <xref target='RFC4033'/>.  If the answer is insecure, then delegation to the derived domain(s), as indicated by the "target host" field, is insecure and the TLS client MUST treat only the source domain as a reference identifier during certificate verification, as described in <xref target='RFC6120'/>; if the answer is bogus, the TLS client MUST abort.<vspace blankLines="1"/></t>
-            <!--
-            <t>If there is an SRV record, for each derived domain from the SRV record answer (e.g. "hosting.example.net"), query for the "A" and/or "AAAA" resource records as described in <xref target='RFC6120'/>.<vspace blankLines="1"/></t>
-            <t>For each derived domain, validate that the address record answers are secure according to <xref target='RFC4033'/><vspace blankLines='1'/></t>
-            <t>If any answer is insecure, then the TLS client MUST NOT consider a connection to that derived domain as securely delegated from the source domain; when verifying the certificate, the TLS client MUST do so against the source domain as described in <xref target='RFC6120'/>.<vspace blankLines="1"/></t>
-            -->
-            <t>If the answer is secure, the TLS client SHOULD consider any derived domain(s) in the answer as securely delegated; during certificate verification, the TLS client MUST treat both the source domain and the derived domain to which it has connected as reference identifiers.</t>
-          </list>
-        </t>
-      </section>
-
-      <section title="HTTPS Redirect" anchor="delegate-https">
-        <t>Here we define an alternative method of secure delegation for use with PKIX Over Secure HTTP (POSH).  An XMPP client or server that wishes to use HTTPS redirects in determining if a domain is securely delegated performs the following actions:</t>
-        <t>
-          <list style="numbers">
-            <t>The initiating entity performs an HTTPS GET to the path "/.well-known/tls/_&lt;service&gt;._tcp&lt;source-domain&gt;.cer" at the source domain; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections.  Here is an example:
-              <figure>
-                <artwork><![CDATA[
-GET /.well-known/_xmpp-server._tcp.im.example.com.cer HTTP/1.1
-Host: im.example.com
-                ]]></artwork>
-              </figure>
-            <vspace blankLines="1"/></t>
-            <t>If the source domain HTTPS server has delegated to a derived domain, it MUST respond with a 302 Moved; the 'Location' header MUST specify an HTTPS URL, where the hostname and port is the derived domain HTTPS server, and the path MUST match the pattern "_&lt;service&gt;._tcp.&lt;derived domain&gt;.cer"; where "_&lt;service&gt;" MUST be identical to the "_&lt;service&gt;" portion of the original request (line breaks added for readability):
-              <figure>
-                <artwork><![CDATA[
-HTTP/1.1 302 Found
-Location: https://hosting.example.com/.well-known
-          /tls/_xmpp-server._tcp.hosting.example.net.cer
-                ]]></artwork>
-              </figure>
-            <vspace blankLines="1"/></t>
-            <t>The initiating entity performs an HTTPS GET to the URL specified in the 'Location' header:
-              <figure>
-                <artwork><![CDATA[
-GET /.well-known/tls/_xmpp-server._tcp.hosting.example.cer HTTP/1.1
-Host: hosting.example.net
-                ]]></artwork>
-              </figure>
-            <vspace blankLines="1"/></t>
-            <t>If the derived domain HTTPS server has a certificate, it MUST respond with a success status code, with the message body as the PEM-encoded certificate to expect:
-              <figure>
-                <artwork><![CDATA[
-HTTP/1.1 200 OK
-Content-Type: application/pkix-cert
-Content-Length: 863
-
------BEGIN CERTIFICATE-----
-MIICUTCCAboCCQCtNQRNu3194zANBgkqhkiG9w0BAQUFADBtMQswCQYDVQQGEwJV
-UzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbnZlcjEcMBoGA1UEChMT
-aG9zdGluZy5leGFtcGxlLm5ldDEcMBoGA1UEAxMTaG9zdGluZy5leGFtcGxlLm5l
-dDAeFw0xMjA2MTEyMTQ1MjZaFw0yMjA2MDkyMTQ1MjZaMG0xCzAJBgNVBAYTAlVT
-MREwDwYDVQQIEwhDb2xvcmFkbzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQKExNo
-b3N0aW5nLmV4YW1wbGUubmV0MRwwGgYDVQQDExNob3N0aW5nLmV4YW1wbGUubmV0
-MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDi46kMWnCfg0DTrlcTc6AQUci5
-Lu1f2RKRWPEhz8qyt/CO0N5VpxKQMlGp6TApQzFdAfxCUA3rniYFpMq4Hemw2S74
-v1LRoWvROKviKRzunDP3EhPXf6GbgnHRlfBx4yvZtcR1BMnkxgJtbTAJu4/wTRXY
-RE5FKk3xT4IBXTIQFwIDAQABMA0GCSqGSIb3DQEBBQUAA4GBAAvRohCXSfSnHXjv
-84beqmFSYKcZvhVymgxQfhB2ZLNFQvfTO3Qsp/MR0hRRXrJ25n86t49EEXicjC0r
-EdmWaIhdDFhw7hva2byYziww7fJuelD0tpL9nfF5uOIMp3JYyXCBn/FKJhi9HMR1
-d8avm8gJ5Iu7L96qosWzL3epHYW7
------END CERTIFICATE-----
-                ]]></artwork>
-              </figure>
-            <vspace blankLines="1"/></t>
-          </list>
-        </t>
-      </section>
-    </section>
-
-    <section title="Examples" anchor="examples">
-      <t>To follow.</t>
-    </section>
-
-    <section title="Internationalization Considerations" anchor="i18n">
-      <t>If the SRV, A/AAAA, and TLSA record queries are for an internationalized domain name, then they need to use the A-label form as defined in <xref target='RFC5890'/>.</t>
+      <t>Although domain name associations are closely tied to delegation in some scenarios, delegation is irrelevant when the source domain is exactly the same as the hostname of the XMPP service, as is often the case with single-domain services.  There are two methods for secure delegation: DNSSEC (see the XMPP-DANE spec) and HTTPS Redirect (see the XMPP-POSH spec).</t>
     </section>
 
     <section title="Security Considerations" anchor="security">
-      <t>This document supplements but does not supersede the security considerations provided in <xref target='RFC4033'/>, <xref target='RFC6120'/>, <xref target='RFC6125'/>, and <xref target='DANE'/>.</t>
+      <t>This document supplements but does not supersede the security considerations provided in <xref target='RFC6120'/> and <xref target='RFC6125'/>.</t>
     </section>
 
     <section title="IANA Considerations" anchor="iana">
@@ -494,18 +372,6 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
 <t>This memo defines a path prefix for "well-known locations", "/.well-known/", in selected Uniform Resource Identifier (URI) schemes. [STANDARDS-TRACK]</t></abstract></front>
 <seriesInfo name='RFC' value='5785' />
 <format type='TXT' octets='13779' target='http://www.rfc-editor.org/rfc/rfc5785.txt' />
-</reference>
-
-<reference anchor='RFC5890'>
-<front>
-<title>Internationalized Domain Names for Applications (IDNA): Definitions and Document Framework</title>
-<author initials='J.' surname='Klensin' fullname='J. Klensin'>
-<organization /></author>
-<date year='2010' month='August' />
-<abstract>
-<t>This document is one of a collection that, together, describe the protocol and usage context for a revision of Internationalized Domain Names for Applications (IDNA), superseding the earlier version.  It describes the document collection and provides definitions and other material that are common to the set. [STANDARDS-TRACK]</t></abstract></front>
-<seriesInfo name='RFC' value='5890' />
-<format type='TXT' octets='54245' target='http://www.rfc-editor.org/rfc/rfc5890.txt' />
 </reference>
 
       <reference anchor="RFC6120">
