@@ -91,7 +91,7 @@
         <t>The process for retrieving a PKIX certificate over secure HTTP is as follows.</t>
         <t>
           <list style="numbers">
-            <t>The initiating entity performs an HTTPS GET to the path "/.well-known/tls/_&lt;service&gt;._tcp&gt;source domain&gt;.cert" to the source domain; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections:
+            <t>The initiating entity performs an HTTPS GET to the path "/.well-known/tls/_&lt;service&gt;._tcp&lt;source domain&gt;.cer" to the source domain; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections:
               <figure>
                 <artwork><![CDATA[
 GET /.well-known/_xmpp-server._tcp.im.example.com.cer HTTP/1.1
@@ -182,7 +182,7 @@ tg==
         <t>Here we define an alternative method of secure delegation for use with PKIX Over Secure HTTP (POSH).  An XMPP client or server that wishes to use HTTPS redirects in determining if a domain is securely delegated performs the following actions:</t>
         <t>
           <list style="numbers">
-            <t>The initiating entity performs an HTTPS GET to the path "/.well-known/tls/_&lt;service&gt;._tcp&gt;source-domain&gt;.cert" at the source domain; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections.  Here is an example:
+            <t>The initiating entity performs an HTTPS GET to the path "/.well-known/tls/_&lt;service&gt;._tcp&lt;source-domain&gt;.cer" at the source domain; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections.  Here is an example:
               <figure>
                 <artwork><![CDATA[
 GET /.well-known/_xmpp-server._tcp.im.example.com.cer HTTP/1.1
