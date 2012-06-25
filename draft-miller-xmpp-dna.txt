@@ -1,10 +1,10 @@
 
 
 
-Network Working Group                                          M. Miller
-Internet-Draft                                            P. Saint-Andre
+Network Working Group                                     P. Saint-Andre
+Internet-Draft                                                 M. Miller
 Intended status: Standards Track                     Cisco Systems, Inc.
-Expires: December 8, 2012                                   June 6, 2012
+Expires: December 23, 2012                                 June 21, 2012
 
 
 Domain Name Associations (DNA) in the Extensible Messaging and Presence
@@ -29,7 +29,7 @@ Status of this Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 8, 2012.
+   This Internet-Draft will expire on December 23, 2012.
 
 Copyright Notice
 
@@ -52,35 +52,38 @@ Copyright Notice
 
 
 
-Miller & Saint-Andre    Expires December 8, 2012                [Page 1]
+Saint-Andre & Miller    Expires December 23, 2012               [Page 1]
 
 Internet-Draft                  XMPP DNA                       June 2012
 
 
 Table of Contents
 
-   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . . . 3
-   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . . . 3
-   3.  Problem Statement . . . . . . . . . . . . . . . . . . . . . . . 3
-   4.  Requirements  . . . . . . . . . . . . . . . . . . . . . . . . . 3
-   5.  Framework . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
-   6.  Prooftypes  . . . . . . . . . . . . . . . . . . . . . . . . . . 4
-     6.1.  PKI . . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
-     6.2.  DANE  . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
-     6.3.  HTTPS/.well-known . . . . . . . . . . . . . . . . . . . . . 4
-   7.  Delegation Methods  . . . . . . . . . . . . . . . . . . . . . . 5
-     7.1.  DNSSEC  . . . . . . . . . . . . . . . . . . . . . . . . . . 5
-     7.2.  HTTPS Redirect  . . . . . . . . . . . . . . . . . . . . . . 5
-   8.  Assertion Mechanisms  . . . . . . . . . . . . . . . . . . . . . 6
-     8.1.  TLS . . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
-     8.2.  SASL  . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
-     8.3.  <db:result> . . . . . . . . . . . . . . . . . . . . . . . . 6
-   9.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . . . 7
-   10. Internationalization Considerations . . . . . . . . . . . . . . 7
-   11. IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 7
-   12. Security Considerations . . . . . . . . . . . . . . . . . . . . 7
-   13. Normative References  . . . . . . . . . . . . . . . . . . . . . 7
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . . . 8
+   1.  Introduction . . . . . . . . . . . . . . . . . . . . . . . . .  3
+   2.  Terminology  . . . . . . . . . . . . . . . . . . . . . . . . .  3
+   3.  Problem Statement  . . . . . . . . . . . . . . . . . . . . . .  3
+   4.  Framework  . . . . . . . . . . . . . . . . . . . . . . . . . .  5
+   5.  Prooftypes . . . . . . . . . . . . . . . . . . . . . . . . . .  6
+     5.1.  PKI  . . . . . . . . . . . . . . . . . . . . . . . . . . .  6
+     5.2.  DANE . . . . . . . . . . . . . . . . . . . . . . . . . . .  6
+     5.3.  POSH . . . . . . . . . . . . . . . . . . . . . . . . . . .  7
+     5.4.  Dialback Keys  . . . . . . . . . . . . . . . . . . . . . .  8
+   6.  Assertion Mechanisms . . . . . . . . . . . . . . . . . . . . .  8
+     6.1.  TLS  . . . . . . . . . . . . . . . . . . . . . . . . . . .  8
+     6.2.  SASL . . . . . . . . . . . . . . . . . . . . . . . . . . .  8
+     6.3.  <db:result>  . . . . . . . . . . . . . . . . . . . . . . .  8
+     6.4.  A Note about Stream Attributes . . . . . . . . . . . . . .  8
+   7.  Delegation Methods . . . . . . . . . . . . . . . . . . . . . .  9
+     7.1.  DNSSEC . . . . . . . . . . . . . . . . . . . . . . . . . .  9
+     7.2.  HTTPS Redirect . . . . . . . . . . . . . . . . . . . . . .  9
+   8.  Examples . . . . . . . . . . . . . . . . . . . . . . . . . . . 11
+   9.  Internationalization Considerations  . . . . . . . . . . . . . 11
+   10. Security Considerations  . . . . . . . . . . . . . . . . . . . 11
+   11. IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 11
+   12. References . . . . . . . . . . . . . . . . . . . . . . . . . . 11
+     12.1. Normative References . . . . . . . . . . . . . . . . . . . 11
+     12.2. Informative References . . . . . . . . . . . . . . . . . . 12
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 12
 
 
 
@@ -105,10 +108,7 @@ Table of Contents
 
 
 
-
-
-
-Miller & Saint-Andre    Expires December 8, 2012                [Page 2]
+Saint-Andre & Miller    Expires December 23, 2012               [Page 2]
 
 Internet-Draft                  XMPP DNA                       June 2012
 
@@ -124,12 +124,14 @@ Internet-Draft                  XMPP DNA                       June 2012
    extent that servers "trust" each other, such trust is established
    based on information obtained from the Domain Name System (DNS), the
    Public Key Infrastructure (PKI), or similar sources.  Since XMPP
-   servers are associated with DNS domain names (or, less commonly, IP
-   addresses), server-to-server connectivity is referred to as
-   interdomain federation.  This document describes a model for
-   interdomain federation and modernizes some federation methods to
-   reflect progress in several underlying technologies, especially DNS
-   Security [RFC4033].
+   servers are typically affiliated with DNS domain names, server-to-
+   server connectivity is referred to as interdomain federation.  This
+   document describes a model for interdomain federation and modernizes
+   some federation methods (e.g., Server Dialback [XEP-0220]) to reflect
+   progress in several underlying technologies, especially DNS Security
+   [RFC4033].  It also generalizes aspects of this model from server-to-
+   server streams to also include client-to-server streams, since in
+   both cases a server is expected to prove its identity.
 
 
 2.  Terminology
@@ -137,8 +139,12 @@ Internet-Draft                  XMPP DNA                       June 2012
    This document inherits XMPP-related terminology from [RFC6120] and
    [XEP-0220], DNS-related terminology from [RFC1034], [RFC1035],
    [RFC2782] and [RFC4033], and security-related terminology from
-   [RFC4949] and [RFC5280].  The terms "source domain" and "derived
-   domain" are used as defined in the "CertID" specification [RFC6125].
+   [RFC4949] and [RFC5280].  The terms "source domain", "derived
+   domain", "reference identity", and "presented identity" are used as
+   defined in the "CertID" specification [RFC6125].  The terms
+   "permissive federation" and "verified federation" are derived from
+   [XEP-0238], although we substitute the term "authenticated
+   federation" for the term "trusted federation" from that document.
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -148,58 +154,200 @@ Internet-Draft                  XMPP DNA                       June 2012
 
 3.  Problem Statement
 
-   How did we get here?
-
-   What do we have today?
-
-   What's missing?
-
-   Why does it matter? (virtual hosting, delegation)
-
-
-4.  Requirements
+   In XMPP, each party to a stream expects the other party to provide
+   some proof of its identity.  For example, in client-to-server streams
+   the server expects the client to present some credentials (such as a
+   username and password or a client certificate), and ideally the
+   client also expects the server to provide a certificate that
+   identifies the domain(s) of the server.  The same is true of server-
+   to-server streams.
 
 
 
-
-
-
-Miller & Saint-Andre    Expires December 8, 2012                [Page 3]
+Saint-Andre & Miller    Expires December 23, 2012               [Page 3]
 
 Internet-Draft                  XMPP DNA                       June 2012
 
 
-5.  Framework
+   When the Jabber.org open-source community developed the precursor to
+   XMPP in 1999, it defined methods for interdomain federation but no
+   mechanisms for authenticating or checking the identity of peer
+   servers.  We could describe this as "permissive federation", which is
+   clearly suboptimal given the strong potential for domain spoofing.
+   In the year 2000, the community filled the gap to some extent by
+   defining a technology called Server Dialback (first documented in
+   [RFC3920] and since moved to [XEP-0220]).  Although Server Dialback
+   does not provide a strong mechanism for identity checking without the
+   use of DNSSEC, it does provide DNS-based verification and thus has
+   effectively prevented most instances of domain spoofing on the XMPP
+   network since late 2000.  Also, because Server Dialback typically
+   does not involve the use of server certificates, it does not result
+   in an encrypted stream; thus we refer to it as a technology for
+   "verified federation".
 
-   concept of "prooftype"
+   In 2002-2004, the IETF's XMPP Working Group hardened the original
+   Jabber.org protocols by adding Transport Layer Security (TLS) and
+   Simple Authentication and Security Layer (SASL), thus making it
+   possible for two servers to engage in "authenticated federation"
+   (i.e., when two peer servers present PKIX certificates during
+   negotiation of a server-to-server stream).  Unfortunately,
+   authenticated federation has not been widely deployed; one of the
+   primary reasons is that it is feasible (although not always easy) for
+   single-domain servers to obtain the proper certificates, but much
+   more difficult (or practically impossible) for large XMPP hosting
+   providers to do so.  The primary challenge here is operational: it is
+   highly unlikely that an organization (say, example.com) wishing to
+   delegate its XMPP service (say, im.example.com) to a hosting provider
+   (say, hosting.example.net) will hand over its private key to the
+   hosting provider.  Even if that were feasible, further operational
+   challenges (e.g., maintaining large numbers of certificates for
+   hosted domains, and configuring XMPP software to present the correct
+   certificate based on the 'to' address of the initial stream header)
+   have also discouraged deployment of authenticated federation in
+   virtual hosting environments, which happen to be quite common on the
+   XMPP network.
 
-   concept of "assertion"?
+   Furthermore, the prevalence of delegation to hosting providers leads
+   to one additional shortcoming, caused by the use of DNS SRV records
+   [RFC2782] in XMPP: if DNSSEC is not used, the act of delegation is
+   inherently insecure.  Unfortunately, no existing documentation
+   explains how to use DNSSEC for secure delegation, with the result
+   that clients and servers often take a "leap of faith" if using an SRV
+   record to determine that when communicating with, say, im.example.com
+   they actually need to connect to, say, hosting.example.net.
 
-   concept of "delegation"?
-
-   what's in a recipe
+   Thus at present authenticated federation is uncommon on the XMPP
 
 
-6.  Prooftypes
 
-   (OR: "how to obtain verification credentials")
+Saint-Andre & Miller    Expires December 23, 2012               [Page 4]
+
+Internet-Draft                  XMPP DNA                       June 2012
 
-6.1.  PKI
 
-   This prooftype is the rules from [RFC6120] for verification
-   credentials; the TLS certificate offered MUST match the expected
-   identity (i.e. the source domain), and is verified using existing PKI
-   technologies.
+   network and secure delegation is unheard of.  Because encryption of
+   server-to-server streams is desirable and because delegation needs to
+   be secure if it can be trusted at all by peer servers and end-user
+   clients, the current situation is clearly sub-optimal.  This document
+   defines some ways to overcome these problems and therefore improve
+   the security of the XMPP network.
 
-6.2.  DANE
 
-   This prooftype relies on secure DNS and [DANE] to obtain the
-   verification credentials.
+4.  Framework
 
-6.3.  HTTPS/.well-known
+   In essence, we need to establish an association between a domain and
+   an XML stream: is the XMPP server to which a client or peer server
+   connects "allowed" to accept stanzas for or send stanzas from a given
+   domain?  If so, we say that there is a domain name association
+   ("DNA") for the stream.
 
-   This prooftype relies on the existing trust for HTTPS to provide a
-   delegation path from a source domain to a target host.
+   For TLS in general, the TLS client has some expectations about the
+   identity of the TLS server (in the language of the "CertID"
+   specification [RFC6125], the TLS client has a "reference identity"),
+   and then checks some material presented by the TLS server (the
+   "presented identity" within the server certificate) to verify that
+   its expectations have been met.  In XMPP, Server Dialback follows a
+   similar model, except that the verification material takes the form
+   of a token instead of a certificate.  The DNS-Based Authentication of
+   Named Entities protocol [DANE], at least in some of its modes, adds
+   another kind of verification material: not the presented identity
+   within a PKIX certificate, but a complete certificate or hash
+   thereof.  And other kinds of verification material could be
+   envisioned (e.g., OpenPGP keys, Kerberos tickets, and OAuth tokens),
+   although they are not considered here.
+
+   No matter what kind of verification material is used, an XMPP client
+   or server that wishes to verify a domain name association needs a way
+   to obtain the verification material it will refer to when
+   establishing the association.  For instance, when an server presents
+   a PKIX certificate during TLS negotiation, the connecting client or
+   peer server has traditionally obtained its verification material out
+   of band or via configuration from a certification authority (i.e., in
+   the form of a root certificate contained in a certificate bundle).
+   In the Server Dialback protocol, the verification material is a token
+   that is obtained over XMPP itself.  In DANE, the verification
+   material is obtained from the Domain Name System.  In the PKIX Over
+   Secure HTTP ("POSH") method described under Section 5.3, the
+   verification material is obtained over secure HTTP.  And other
+   methods for obtaining verification material could be envisioned
+   (e.g., IPsec), although they are not considered here.
+
+   Furthermore, the matching rules for checking the verification
+
+
+
+Saint-Andre & Miller    Expires December 23, 2012               [Page 5]
+
+Internet-Draft                  XMPP DNA                       June 2012
+
+
+   material will depend on the nature of that material; for example,
+   [RFC6120] defines a profile of the rules from the "CertID"
+   specification [RFC6125], Server Dialback [XEP-0220] typically
+   performs a character-for-character comparison of tokens, DANE might
+   compare the SubjectPublicKeyInfo data or the full certificate, and so
+   on.
+
+   Finally, given the relationship between XMPP and the DNS (XMPP
+   services are usually identified by domain name, not IP address), it
+   is important to make it clear whether a given verification method can
+   be used only with secure DNS or also with insecure DNS.
+
+   Putting these pieces together, we define a DNA prooftype as follows.
+
+   prooftype:  A mechanism for proving an association between a domain
+      name and an XML stream, where the mechanism defines (1) the
+      verification material to be used, (2) the matching rules for
+      comparing the reference version and presented version of the
+      material, (3) how the verification material is obtained, and (4)
+      whether the mechanism depends on Secure DNS.
+
+   The following sections define several prooftypes that are used, or
+   could be used, in XMPP.
+
+   Note: So far, our definition of a prooftype does not include the
+   exact protocol mechanism that is used to assert a domain name; this
+   is explained further under Section 6.
+
+
+5.  Prooftypes
+
+5.1.  PKI
+
+   The PKI prooftype is a DNA proof that follows the rules from
+   [RFC6120]: that is, the verification materials consist of a PKIX
+   certificate that is checked according to a profile of the matching
+   rules from [RFC6125], the client's verification materials are
+   obtained out of band in the form of a trusted root, and secure DNS is
+   not necessary.
+
+5.2.  DANE
+
+   In the DANE prooftype, the verification materials consist of a PKIX
+   certificate that is compared as an exact match or a hash of either
+   the SubjectPublicKeyInfo or the full certificate, and the
+   verification materials are obtained via secure DNS.
+
+
+
+
+
+Saint-Andre & Miller    Expires December 23, 2012               [Page 6]
+
+Internet-Draft                  XMPP DNA                       June 2012
+
+
+5.3.  POSH
+
+   POSH stands for PKIX Over Secure HTTP: the verification material is a
+   PKIX certificate, it is obtained by retrieving it over HTTPS at a
+   well-known URI [RFC5785] (see below), the certificate is checked
+   according to the rules from [RFC6120] and [RFC6125], and secure DNS
+   is not necessary since the HTTPS retrieval mechanism relies on the
+   chain of trust from the public key infrastructure.
+
+   The process for retrieving a PKIX certificate over secure HTTP is as
+   follows.
 
    1.  The initiating entity performs an HTTPS GET to the path "/.well-
        known/tls/_<service>._tcp>source domain>.cert" to the source
@@ -214,16 +362,6 @@ Internet-Draft                  XMPP DNA                       June 2012
    2.  If the source domain HTTPS server has a certificate for the
        requested path, it MUST respond with a success status code, with
        the message body as the PEM-encoded certificate to expect:
-
-
-
-
-
-
-Miller & Saint-Andre    Expires December 8, 2012                [Page 4]
-
-Internet-Draft                  XMPP DNA                       June 2012
-
 
    HTTP/1.1 200 OK
    Content-Type: application/pkix-cert
@@ -247,17 +385,125 @@ Internet-Draft                  XMPP DNA                       June 2012
 
 
 
+
+
+
+Saint-Andre & Miller    Expires December 23, 2012               [Page 7]
+
+Internet-Draft                  XMPP DNA                       June 2012
+
+
+5.4.  Dialback Keys
+
+   The Dialback Keys prooftype formalizes the existing Server Dialback:
+   the verification material is a token obtained over XMPP and verified
+   by the authoritative server for a given domain; secure DNS is needed
+   in order to place significant trust in such tokens, although it is
+   known that at the time of this writing many domains use Dialback Keys
+   even in the absence of secure DNS.
+
+
+6.  Assertion Mechanisms
+
+   An assertion is a server's statement that an XML stream is to be
+   associated with the asserted domain.
+
+6.1.  TLS
+
+   During TLS negotiation, an XMPP server acting as a TLS sever sends
+   its certificate to the connecting client or peer server acting as a
+   TLS client.  This certificate is interpreted as an assertion of the
+   server's identity.
+
+6.2.  SASL
+
+   During SASL negotiation after TLS negotiation, a client or server can
+   include an authorization identity; such an authzid is an assertion of
+   identity.
+
+6.3.  <db:result>
+
+   When two servers use the Server Dialback protocol [XEP-0220], the
+   originating server asserts its identity by sending a <db:result/>
+   element to the receiving server, where the 'from' attribute specifies
+   the domain name being asserted by the originating server.
+
+   Note: Although historically the <db:result/> element has contained a
+   dialback key as XML character data, the <db:result/> element can also
+   be used without dialback keys as a mere assertion; this usage is
+   sometimes colloquially referred to as "dialback without dialback".
+
+6.4.  A Note about Stream Attributes
+
+   XML streams include 'to' and 'from' attributes.  However, these are
+   not assertions of identity, and are merely early indications of the
+   identity that a client or server will later assert during TLS
+   negotiation, SASL negotiation, or Server Dialback negotiation.
+
+
+
+
+
+Saint-Andre & Miller    Expires December 23, 2012               [Page 8]
+
+Internet-Draft                  XMPP DNA                       June 2012
+
+
 7.  Delegation Methods
+
+   Although domain name associations are closely tied to delegation in
+   some scenarios, delegation is irrelevant when the source domain is
+   exactly the same as the hostname of the XMPP service, as is often the
+   case with single-domain services.  This section defines two methods
+   for secure delegation.
 
 7.1.  DNSSEC
 
+   Traditionally, XMPP services have used DNS SRV records [RFC2782] for
+   delegation purposes; however, delegation via SRV is insecure absent
+   the use of DNSSEC.  An XMPP client or server that wishes to use
+   DNSSEC in determining if a domain is securely delegated performs the
+   following actions:
+
+   1.  Query for the appropriate SRV resource record for the source
+       domain (e.g. "_xmpp-client._tcp.im.example.com").
+
+   2.  If there is no SRV resource record, pursue the fallback methods
+       described in [RFC6120].
+
+   3.  If there is an SRV resource record, validate that the SRV record
+       answer is secure according to [RFC4033].  If the answer is
+       insecure, then delegation to the derived domain(s), as indicated
+       by the "target host" field, is insecure and the TLS client MUST
+       treat only the source domain as a reference identifier during
+       certificate verification, as described in [RFC6120]; if the
+       answer is bogus, the TLS client MUST abort.
+
+   4.  If the answer is secure, the TLS client SHOULD consider any
+       derived domain(s) in the answer as securely delegated; during
+       certificate verification, the TLS client MUST treat both the
+       source domain and the derived domain to which it has connected as
+       reference identifiers.
+
 7.2.  HTTPS Redirect
 
+   Here we define an alternative method of secure delegation for use
+   with PKIX Over Secure HTTP (POSH).  An XMPP client or server that
+   wishes to use HTTPS redirects in determining if a domain is securely
+   delegated performs the following actions:
+
    1.  The initiating entity performs an HTTPS GET to the path "/.well-
-       known/tls/_<service>._tcp>source domain>.cert" to the source
+       known/tls/_<service>._tcp>source-domain>.cert" at the source
        domain; where "_<service>" MUST be either "_xmpp-client" for XMPP
        client-to-server connections or "_xmpp-server" for XMPP server-
-       to-server connections:
+       to-server connections.  Here is an example:
+
+
+
+Saint-Andre & Miller    Expires December 23, 2012               [Page 9]
+
+Internet-Draft                  XMPP DNA                       June 2012
+
 
    GET /.well-known/_xmpp-server._tcp.im.example.com.cer HTTP/1.1
    Host: im.example.com
@@ -273,14 +519,6 @@ Internet-Draft                  XMPP DNA                       June 2012
 
    HTTP/1.1 302 Found
    Location: https://hosting.example.com/.well-known
-
-
-
-Miller & Saint-Andre    Expires December 8, 2012                [Page 5]
-
-Internet-Draft                  XMPP DNA                       June 2012
-
-
              /tls/_xmpp-server._tcp.hosting.example.net.cer
 
 
@@ -291,10 +529,9 @@ Internet-Draft                  XMPP DNA                       June 2012
    Host: hosting.example.net
 
 
-   4.  If the derived domain HTTPS server has a certificate MUST respond
-       with a success status code, it MUST respond with a success status
-       code, with the message body as the PEM-encoded certificate to
-       expect:
+   4.  If the derived domain HTTPS server has a certificate, it MUST
+       respond with a success status code, with the message body as the
+       PEM-encoded certificate to expect:
 
    HTTP/1.1 200 OK
    Content-Type: application/pkix-cert
@@ -318,38 +555,39 @@ Internet-Draft                  XMPP DNA                       June 2012
 
 
 
-8.  Assertion Mechanisms
 
-8.1.  TLS
-
-8.2.  SASL
-
-8.3.  <db:result>
-
-
-
-
-
-
-
-Miller & Saint-Andre    Expires December 8, 2012                [Page 6]
+Saint-Andre & Miller    Expires December 23, 2012              [Page 10]
 
 Internet-Draft                  XMPP DNA                       June 2012
 
 
-9.  Examples
+8.  Examples
+
+   To follow.
 
 
-10.  Internationalization Considerations
+9.  Internationalization Considerations
+
+   If the SRV, A/AAAA, and TLSA record queries are for an
+   internationalized domain name, then they need to use the A-label form
+   as defined in [RFC5890].
+
+
+10.  Security Considerations
+
+   This document supplements but does not supersede the security
+   considerations provided in [RFC4033], [RFC6120], [RFC6125], and
+   [DANE].
 
 
 11.  IANA Considerations
 
+   This document has no actions for the IANA.
 
-12.  Security Considerations
 
+12.  References
 
-13.  Normative References
+12.1.  Normative References
 
    [DANE]     Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
               of Named Entities (DANE) Transport Layer Security (TLS)
@@ -371,6 +609,14 @@ Internet-Draft                  XMPP DNA                       June 2012
 
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "DNS Security Introduction and Requirements",
+
+
+
+Saint-Andre & Miller    Expires December 23, 2012              [Page 11]
+
+Internet-Draft                  XMPP DNA                       June 2012
+
+
               RFC 4033, May 2005.
 
    [RFC4949]  Shirey, R., "Internet Security Glossary, Version 2",
@@ -381,18 +627,18 @@ Internet-Draft                  XMPP DNA                       June 2012
               Infrastructure Certificate and Certificate Revocation List
               (CRL) Profile", RFC 5280, May 2008.
 
+   [RFC5785]  Nottingham, M. and E. Hammer-Lahav, "Defining Well-Known
+              Uniform Resource Identifiers (URIs)", RFC 5785,
+              April 2010.
+
+   [RFC5890]  Klensin, J., "Internationalized Domain Names for
+              Applications (IDNA): Definitions and Document Framework",
+              RFC 5890, August 2010.
+
    [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
               Protocol (XMPP): Core", RFC 6120, March 2011.
 
    [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
-
-
-
-Miller & Saint-Andre    Expires December 8, 2012                [Page 7]
-
-Internet-Draft                  XMPP DNA                       June 2012
-
-
               Verification of Domain-Based Application Service Identity
               within Internet Public Key Infrastructure Using X.509
               (PKIX) Certificates in the Context of Transport Layer
@@ -402,17 +648,32 @@ Internet-Draft                  XMPP DNA                       June 2012
               Miller, J., Saint-Andre, P., and P. Hancke, "Server
               Dialback", XSF XEP 0220, August 2011.
 
+12.2.  Informative References
+
+   [RFC3920]  Saint-Andre, P., Ed., "Extensible Messaging and Presence
+              Protocol (XMPP): Core", RFC 3920, October 2004.
+
+   [XEP-0238]
+              Saint-Andre, P., "XMPP Protocol Flows for Inter-Domain
+              Federation", XSF XEP 0238, March 2008.
+
+
+
+
+
+
+
+
+
+
+
+
+Saint-Andre & Miller    Expires December 23, 2012              [Page 12]
+
+Internet-Draft                  XMPP DNA                       June 2012
+
 
 Authors' Addresses
-
-   Matthew Miller
-   Cisco Systems, Inc.
-   1899 Wynkoop Street, Suite 600
-   Denver, CO  80202
-   USA
-
-   Email: mamille2@cisco.com
-
 
    Peter Saint-Andre
    Cisco Systems, Inc.
@@ -423,6 +684,13 @@ Authors' Addresses
    Email: psaintan@cisco.com
 
 
+   Matthew Miller
+   Cisco Systems, Inc.
+   1899 Wynkoop Street, Suite 600
+   Denver, CO  80202
+   USA
+
+   Email: mamille2@cisco.com
 
 
 
@@ -444,5 +712,17 @@ Authors' Addresses
 
 
 
-Miller & Saint-Andre    Expires December 8, 2012                [Page 8]
+
+
+
+
+
+
+
+
+
+
+
+
+Saint-Andre & Miller    Expires December 23, 2012              [Page 13]
 
