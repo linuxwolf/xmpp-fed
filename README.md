@@ -14,7 +14,7 @@ Determining Trust
 There are multiple approaches to determining trust for a (TLS) connection:
 
 * DANE < http://tools.ietf.org/html/draft-ietf-dane-protocol-20 >
-* HTTPS/.well-known location, containing the certificate to validate
+* POSH (defined herein), using HTTPS and PKIX
 * PKIX < http://tools.ietf.org/html/rfc6125 >
 
 Delegation/Piggybacking
