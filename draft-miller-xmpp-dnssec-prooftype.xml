@@ -7,7 +7,7 @@
 <?rfc tocdepth="4"?>
 <rfc category="std" docName="draft-miller-xmpp-dnssec-prooftype-02" ipr="trust200902">
   <front>
-    <title abbrev="XMPP DNSSEC Prooftype">Using DNSSEC and DANE as a Prooftype for XMPP Delegation</title>
+    <title abbrev="XMPP DANE Prooftype">Using DNS Security Extensions (DNSSEC) and DNS-based Authentication of Named Entities (DANE) as a Prooftype for XMPP Domain Name Associations</title>
     <author initials="M." surname="Miller" fullname="Matthew Miller">
       <organization>Cisco Systems, Inc.</organization>
       <address>
@@ -34,7 +34,7 @@
         <email>psaintan@cisco.com</email>
       </address>
     </author>
-    <date month="June" day="8" year="2012"/>
+    <date month="June" day="27" year="2012"/>
     <area>RAI</area>
     <keyword>Internet-Draft</keyword>
     <keyword>XMPP</keyword>
@@ -59,7 +59,7 @@
     <section title="Requirements" anchor="reqs">
       <t>An XMPP initiating entity (TLS client) that wishes to use this prooftype MUST do so before exchanging stanzas addressed to the source domain.  In general, this means that the proof MUST be completed before the XMPP stream is restarted following STARTTLS negotiation (as specified in <xref target="RFC6120"/>).  However, connections between XMPP servers MAY also use this prooftype to verify the addition of new source domains onto an existing connection, such as multiplexing or "piggybacking" via <xref target="XEP-0220"/>.</t>
     </section>
-    <section title="Use of DNSSEC" anchor="protocol">
+    <section title="Secure Delegation" anchor="delegation">
       <t>An XMPP initiating entity (TLS client) that wishes to use this prooftype performs the following actions:</t>
       <t>
         <list style="numbers">
@@ -75,22 +75,22 @@
         </list>
       </t>
     </section>
-    <section title="Use of DANE" anchor="dane">
+    <section title="Prooftype" anchor="prooftype">
       <t><xref target="DANE"/> provides additional tools to verify the keys used in TLS connections.  A TLS client MAY use <xref target="DANE"/> for TLS certificate verification; its use depends on the delegation status of the source domain, as described in the following sections.</t>
-      <section title="No Service Records" anchor="dane-none">
+      <section title="No Service Records" anchor="prooftype-none">
         <t>If no SRV records are found for the source domain, then the TLS client MUST query for a TLSA resource record as described in <xref target='DANE'/>, where the prepared domain name MUST contain the source domain and the IANA-registered port 5222 for client-to-server streams  (e.g. "_5222._tcp.im.example.com") or the IANA-registered port 5269 for server-to-server streams (e.g. "_5269._tcp.im.example.com").</t>
         <t>In this case, the TLS client MUST treat only the source domain as its reference identifier during certificate verification, as described in <xref target='RFC6120'/>.</t>
       </section>
-      <section title="Insecure Delegation" anchor="dane-insecure">
+      <section title="Insecure Delegation" anchor="prooftype-insecure">
         <t>If the delegation of a source domain to a derived domain is not secure, then the TLS client MUST NOT make a TLSA record query to the derived domain as described in <xref target="DANE"/>.  Instead, the TLS client MUST treat only the source domain as its reference identifier during certificate verification, as described in <xref target='RFC6120'/>, and MUST NOT use <xref target="DANE"/>.</t>
       </section>
-      <section title="Secure Delegation" anchor="dane-secure">
-        <t>If the source domain has been delegated to a derived domain in a secure manner as described under <xref target='protocol'/>, then the TLS client MUST query for a TLSA resource record as described in <xref target='DANE'/>, where the prepared domain name MUST contain the derived domain and a port obtained from the SRV answer (e.g., "_5555._tcp/hosting.example.net" for an SRV record such as "_xmpp-client._tcp.im.example.com IN TLSA 1 1 5555 hosting.example.net").</t>
-        <t>If no TLSA resource records exist for the specified service, then the TLS client MUST perform certificate verification as described under <xref target='protocol'/>.</t>
+      <section title="Secure Delegation" anchor="prooftype-secure">
+        <t>If the source domain has been delegated to a derived domain in a secure manner as described under <xref target='delegation'/>, then the TLS client MUST query for a TLSA resource record as described in <xref target='DANE'/>, where the prepared domain name MUST contain the derived domain and a port obtained from the SRV answer (e.g., "_5555._tcp/hosting.example.net" for an SRV record such as "_xmpp-client._tcp.im.example.com IN TLSA 1 1 5555 hosting.example.net").</t>
+        <t>If no TLSA resource records exist for the specified service, then the TLS client MUST perform certificate verification as described under <xref target='delegation'/>.</t>
         <t>If TLSA resource records exist for the specified service, then the TLS client MUST treat the derived domain(s) as its reference identifier during certificate verification, using the information from the TLSA answer as the basis for verification as described in <xref target='DANE'/>.</t>
       </section>
       <!--
-      <section title="TLSA Certificate Usage 3 Considerations" anchor="dane-usage-3">
+      <section title="TLSA Certificate Usage 3 Considerations" anchor="prooftype-usage-3">
         <t>If a TLSA resource record specifies certificate usage 3 (also known as "domain-issued certificate"), verification MUST NOT consider the source or derived domain. Instead, the target certificate MUST match the TLSA record, as specified in <xref target="DANE"/>. If matched, the TLS connection MUST considered valid for the source domain regardless of the target certificate's information.</t>
       </section>
       -->

@@ -4,10 +4,11 @@
 Network Working Group                                          M. Miller
 Internet-Draft                                            P. Saint-Andre
 Intended status: Standards Track                     Cisco Systems, Inc.
-Expires: December 10, 2012                                  June 8, 2012
+Expires: December 29, 2012                                 June 27, 2012
 
 
-        Using DNSSEC and DANE as a Prooftype for XMPP Delegation
+ Using DNS Security Extensions (DNSSEC) and DNS-based Authentication of
+ Named Entities (DANE) as a Prooftype for XMPP Domain Name Associations
                  draft-miller-xmpp-dnssec-prooftype-02
 
 Abstract
@@ -31,7 +32,7 @@ Status of this Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 10, 2012.
+   This Internet-Draft will expire on December 29, 2012.
 
 Copyright Notice
 
@@ -51,10 +52,9 @@ Copyright Notice
 
 
 
-
-Miller & Saint-Andre    Expires December 10, 2012               [Page 1]
+Miller & Saint-Andre    Expires December 29, 2012               [Page 1]
 
-Internet-Draft            XMPP DNSSEC Prooftype                June 2012
+Internet-Draft             XMPP DANE Prooftype                 June 2012
 
 
 Table of Contents
@@ -62,8 +62,8 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . . . 3
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . . . 3
    3.  Requirements  . . . . . . . . . . . . . . . . . . . . . . . . . 4
-   4.  Use of DNSSEC . . . . . . . . . . . . . . . . . . . . . . . . . 4
-   5.  Use of DANE . . . . . . . . . . . . . . . . . . . . . . . . . . 4
+   4.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . . . 4
+   5.  Prooftype . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
      5.1.  No Service Records  . . . . . . . . . . . . . . . . . . . . 5
      5.2.  Insecure Delegation . . . . . . . . . . . . . . . . . . . . 5
      5.3.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . 5
@@ -108,9 +108,9 @@ Table of Contents
 
 
 
-Miller & Saint-Andre    Expires December 10, 2012               [Page 2]
+Miller & Saint-Andre    Expires December 29, 2012               [Page 2]
 
-Internet-Draft            XMPP DNSSEC Prooftype                June 2012
+Internet-Draft             XMPP DANE Prooftype                 June 2012
 
 
 1.  Introduction
@@ -164,9 +164,9 @@ Internet-Draft            XMPP DNSSEC Prooftype                June 2012
 
 
 
-Miller & Saint-Andre    Expires December 10, 2012               [Page 3]
+Miller & Saint-Andre    Expires December 29, 2012               [Page 3]
 
-Internet-Draft            XMPP DNSSEC Prooftype                June 2012
+Internet-Draft             XMPP DANE Prooftype                 June 2012
 
 
 3.  Requirements
@@ -181,7 +181,7 @@ Internet-Draft            XMPP DNSSEC Prooftype                June 2012
    multiplexing or "piggybacking" via [XEP-0220].
 
 
-4.  Use of DNSSEC
+4.  Secure Delegation
 
    An XMPP initiating entity (TLS client) that wishes to use this
    prooftype performs the following actions:
@@ -207,7 +207,7 @@ Internet-Draft            XMPP DNSSEC Prooftype                June 2012
        reference identifiers.
 
 
-5.  Use of DANE
+5.  Prooftype
 
    [DANE] provides additional tools to verify the keys used in TLS
    connections.  A TLS client MAY use [DANE] for TLS certificate
@@ -220,9 +220,9 @@ Internet-Draft            XMPP DNSSEC Prooftype                June 2012
 
 
 
-Miller & Saint-Andre    Expires December 10, 2012               [Page 4]
+Miller & Saint-Andre    Expires December 29, 2012               [Page 4]
 
-Internet-Draft            XMPP DNSSEC Prooftype                June 2012
+Internet-Draft             XMPP DANE Prooftype                 June 2012
 
 
 5.1.  No Service Records
@@ -276,9 +276,9 @@ Internet-Draft            XMPP DNSSEC Prooftype                June 2012
 
 
 
-Miller & Saint-Andre    Expires December 10, 2012               [Page 5]
+Miller & Saint-Andre    Expires December 29, 2012               [Page 5]
 
-Internet-Draft            XMPP DNSSEC Prooftype                June 2012
+Internet-Draft             XMPP DANE Prooftype                 June 2012
 
 
 7.  Security Considerations
@@ -332,9 +332,9 @@ Internet-Draft            XMPP DNSSEC Prooftype                June 2012
 
 
 
-Miller & Saint-Andre    Expires December 10, 2012               [Page 6]
+Miller & Saint-Andre    Expires December 29, 2012               [Page 6]
 
-Internet-Draft            XMPP DNSSEC Prooftype                June 2012
+Internet-Draft             XMPP DANE Prooftype                 June 2012
 
 
    [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
@@ -388,5 +388,5 @@ Authors' Addresses
 
 
 
-Miller & Saint-Andre    Expires December 10, 2012               [Page 7]
+Miller & Saint-Andre    Expires December 29, 2012               [Page 7]
 
