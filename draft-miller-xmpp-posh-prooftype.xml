@@ -42,35 +42,29 @@
     <keyword>Jabber</keyword>
     <keyword>federation</keyword>
     <abstract>
-      <t></t>
+      <t/>
     </abstract>
   </front>
   <middle>
-
     <section title="Introduction" anchor="intro">
       <t>The XMPP-DNA specification defines a framework for secure delegation and authenticated domain name associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP).  This document defines one prooftype for DNA, using PKIX certificates obtained over secure HTTP ("POSH").</t>
     </section>
-
     <section title="Terminology" anchor="terms">
-      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119'/>.</t>
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>.</t>
     </section>
-
     <section title="Prooftype" anchor="prooftype">
-      <t>POSH stands for PKIX Over Secure HTTP: the verification material is a PKIX certificate <xref target='RFC5280'/>, it is obtained by retrieving it over HTTPS <xref target='RFC2818'/> at a well-known URI <xref target='RFC5785'/> (see below), the certificate is checked according to the rules from <xref target='RFC6120'/> and <xref target='RFC6125'/>, and secure DNS is not necessary since the HTTPS retrieval mechanism relies on the chain of trust from the public key infrastructure.</t>
+      <t>POSH stands for PKIX Over Secure HTTP: the verification material is a PKIX certificate <xref target="RFC5280"/>, it is obtained by retrieving it over HTTPS <xref target="RFC2818"/> at a well-known URI <xref target="RFC5785"/> (see below), the certificate is checked according to the rules from <xref target="RFC6120"/> and <xref target="RFC6125"/>, and secure DNS is not necessary since the HTTPS retrieval mechanism relies on the chain of trust from the public key infrastructure.</t>
       <t>The process for retrieving a PKIX certificate over secure HTTP is as follows.</t>
       <t>
         <list style="numbers">
           <t>The initiating entity performs an HTTPS GET to the path "/.well-known/tls/_&lt;service&gt;._tcp&lt;source domain&gt;.cer" to the source domain; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections:
-            <figure>
-              <artwork><![CDATA[
+            <figure><artwork><![CDATA[
 T /.well-known/_xmpp-server._tcp.im.example.com.cer HTTP/1.1
 st: im.example.com
-              ]]></artwork>
-            </figure>
+              ]]></artwork></figure>
           <vspace blankLines="1"/></t>
           <t>If the source domain HTTPS server has a certificate for the requested path, it MUST respond with a success status code, with the message body as the PEM-encoded certificate to expect:
-            <figure>
-              <artwork><![CDATA[
+            <figure><artwork><![CDATA[
 HTTP/1.1 200 OK
 Content-Type: application/pkix-cert
 Content-Length: 839
@@ -90,46 +84,36 @@ y7icXwg54a9M3xipjZtrfAhYM5I5iqUTQPki6s26n9SQpRm5bonEFDA3WGwrwma3
 5biP9+NSBWzSaDF8AztwFNKXXl6/U6hWwG05G/NdeS11gpww9NUDraJgVoDpRK04
 tg==
 -----END CERTIFICATE-----
-              ]]></artwork>
-            </figure>
+              ]]></artwork></figure>
           <vspace blankLines="1"/></t>
         </list>
       </t>
     </section>
-
     <section title="Secure Delegation" anchor="delegation">
-
       <t>When PKIX Over Secure HTTP (POSH) is the DNA prooftype, it is possible to use HTTPS redirects in determining if a domain is securely delegated performs the following actions:</t>
       <t>
         <list style="numbers">
           <t>The initiating entity performs an HTTPS GET to the path "/.well-known/tls/_&lt;service&gt;._tcp&lt;source-domain&gt;.cer" at the source domain; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections.  Here is an example:
-            <figure>
-              <artwork><![CDATA[
+            <figure><artwork><![CDATA[
 GET /.well-known/_xmpp-server._tcp.im.example.com.cer HTTP/1.1
 Host: im.example.com
-              ]]></artwork>
-            </figure>
+              ]]></artwork></figure>
           <vspace blankLines="1"/></t>
           <t>If the source domain HTTPS server has delegated to a derived domain, it MUST respond with a 302 Moved; the 'Location' header MUST specify an HTTPS URL, where the hostname and port is the derived domain HTTPS server, and the path MUST match the pattern "_&lt;service&gt;._tcp.&lt;derived domain&gt;.cer"; where "_&lt;service&gt;" MUST be identical to the "_&lt;service&gt;" portion of the original request (line breaks added for readability):
-            <figure>
-              <artwork><![CDATA[
+            <figure><artwork><![CDATA[
 HTTP/1.1 302 Found
 Location: https://hosting.example.com/.well-known
           /tls/_xmpp-server._tcp.hosting.example.net.cer
-              ]]></artwork>
-            </figure>
+              ]]></artwork></figure>
           <vspace blankLines="1"/></t>
           <t>The initiating entity performs an HTTPS GET to the URL specified in the 'Location' header:
-            <figure>
-              <artwork><![CDATA[
+            <figure><artwork><![CDATA[
 GET /.well-known/tls/_xmpp-server._tcp.hosting.example.cer HTTP/1.1
 Host: hosting.example.net
-              ]]></artwork>
-            </figure>
+              ]]></artwork></figure>
           <vspace blankLines="1"/></t>
           <t>If the derived domain HTTPS server has a certificate, it MUST respond with a success status code, with the message body as the PEM-encoded certificate to expect:
-            <figure>
-              <artwork><![CDATA[
+            <figure><artwork><![CDATA[
 HTTP/1.1 200 OK
 Content-Type: application/pkix-cert
 Content-Length: 863
@@ -149,31 +133,23 @@ RE5FKk3xT4IBXTIQFwIDAQABMA0GCSqGSIb3DQEBBQUAA4GBAAvRohCXSfSnHXjv
 EdmWaIhdDFhw7hva2byYziww7fJuelD0tpL9nfF5uOIMp3JYyXCBn/FKJhi9HMR1
 d8avm8gJ5Iu7L96qosWzL3epHYW7
 -----END CERTIFICATE-----
-              ]]></artwork>
-            </figure>
+              ]]></artwork></figure>
           <vspace blankLines="1"/></t>
         </list>
       </t>
     </section>
-
     <section title="Examples" anchor="examples">
       <t>To follow.</t>
     </section>
-
     <section title="Security Considerations" anchor="security">
-      <t>This document supplements but does not supersede the security considerations provided in <xref target='RFC2616'/>, <xref target='RFC2818'/>, <xref target='RFC6120'/>, <xref target='RFC6125'/>.</t>
+      <t>This document supplements but does not supersede the security considerations provided in <xref target="RFC2616"/>, <xref target="RFC2818"/>, <xref target="RFC6120"/>, <xref target="RFC6125"/>.</t>
     </section>
-
     <section title="IANA Considerations" anchor="iana">
       <t>This document has no actions for the IANA.</t>
     </section>
-
   </middle>
-
   <back>
-
     <references title="Normative References">
-
       <reference anchor="RFC2119">
         <front>
           <title abbrev="RFC Key Words">Key words for use in RFCs to Indicate Requirement Levels</title>
@@ -202,85 +178,105 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         <seriesInfo name="BCP" value="14"/>
         <seriesInfo name="RFC" value="2119"/>
       </reference>
-
-<reference anchor='RFC2616'>
-<front>
-<title abbrev='HTTP/1.1'>Hypertext Transfer Protocol -- HTTP/1.1</title>
-<author initials='R.' surname='Fielding' fullname='Roy T. Fielding'>
-<organization abbrev='UC Irvine'>Department of Information and Computer Science</organization>
-<address>
-<postal>
-<street>University of California, Irvine</street>
-<city>Irvine</city>
-<region>CA</region>
-<code>92697-3425</code></postal>
-<facsimile>+1(949)824-1715</facsimile>
-<email>fielding@ics.uci.edu</email></address></author>
-<author initials='J.' surname='Gettys' fullname='James Gettys'>
-<organization abbrev='Compaq/W3C'>World Wide Web Consortium</organization>
-<address>
-<postal>
-<street>MIT Laboratory for Computer Science, NE43-356</street>
-<street>545 Technology Square</street>
-<city>Cambridge</city>
-<region>MA</region>
-<code>02139</code></postal>
-<facsimile>+1(617)258-8682</facsimile>
-<email>jg@w3.org</email></address></author>
-<author initials='J.' surname='Mogul' fullname='Jeffrey C. Mogul'>
-<organization abbrev='Compaq'>Compaq Computer Corporation</organization>
-<address>
-<postal>
-<street>Western Research Laboratory</street>
-<street>250 University Avenue</street>
-<city>Palo Alto</city>
-<region>CA</region>
-<code>94305</code></postal>
-<email>mogul@wrl.dec.com</email></address></author>
-<author initials='H.' surname='Frystyk' fullname='Henrik Frystyk Nielsen'>
-<organization abbrev='W3C/MIT'>World Wide Web Consortium</organization>
-<address>
-<postal>
-<street>MIT Laboratory for Computer Science, NE43-356</street>
-<street>545 Technology Square</street>
-<city>Cambridge</city>
-<region>MA</region>
-<code>02139</code></postal>
-<facsimile>+1(617)258-8682</facsimile>
-<email>frystyk@w3.org</email></address></author>
-<author initials='L.' surname='Masinter' fullname='Larry Masinter'>
-<organization abbrev='Xerox'>Xerox Corporation</organization>
-<address>
-<postal>
-<street>MIT Laboratory for Computer Science, NE43-356</street>
-<street>3333 Coyote Hill Road</street>
-<city>Palo Alto</city>
-<region>CA</region>
-<code>94034</code></postal>
-<email>masinter@parc.xerox.com</email></address></author>
-<author initials='P.' surname='Leach' fullname='Paul J. Leach'>
-<organization abbrev='Microsoft'>Microsoft Corporation</organization>
-<address>
-<postal>
-<street>1 Microsoft Way</street>
-<city>Redmond</city>
-<region>WA</region>
-<code>98052</code></postal>
-<email>paulle@microsoft.com</email></address></author>
-<author initials='T.' surname='Berners-Lee' fullname='Tim Berners-Lee'>
-<organization abbrev='W3C/MIT'>World Wide Web Consortium</organization>
-<address>
-<postal>
-<street>MIT Laboratory for Computer Science, NE43-356</street>
-<street>545 Technology Square</street>
-<city>Cambridge</city>
-<region>MA</region>
-<code>02139</code></postal>
-<facsimile>+1(617)258-8682</facsimile>
-<email>timbl@w3.org</email></address></author>
-<date year='1999' month='June' />
-<abstract>
-<t>
+      <reference anchor="RFC2616">
+        <front>
+          <title abbrev="HTTP/1.1">Hypertext Transfer Protocol -- HTTP/1.1</title>
+          <author initials="R." surname="Fielding" fullname="Roy T. Fielding">
+            <organization abbrev="UC Irvine">Department of Information and Computer Science</organization>
+            <address>
+              <postal>
+                <street>University of California, Irvine</street>
+                <city>Irvine</city>
+                <region>CA</region>
+                <code>92697-3425</code>
+              </postal>
+              <facsimile>+1(949)824-1715</facsimile>
+              <email>fielding@ics.uci.edu</email>
+            </address>
+          </author>
+          <author initials="J." surname="Gettys" fullname="James Gettys">
+            <organization abbrev="Compaq/W3C">World Wide Web Consortium</organization>
+            <address>
+              <postal>
+                <street>MIT Laboratory for Computer Science, NE43-356</street>
+                <street>545 Technology Square</street>
+                <city>Cambridge</city>
+                <region>MA</region>
+                <code>02139</code>
+              </postal>
+              <facsimile>+1(617)258-8682</facsimile>
+              <email>jg@w3.org</email>
+            </address>
+          </author>
+          <author initials="J." surname="Mogul" fullname="Jeffrey C. Mogul">
+            <organization abbrev="Compaq">Compaq Computer Corporation</organization>
+            <address>
+              <postal>
+                <street>Western Research Laboratory</street>
+                <street>250 University Avenue</street>
+                <city>Palo Alto</city>
+                <region>CA</region>
+                <code>94305</code>
+              </postal>
+              <email>mogul@wrl.dec.com</email>
+            </address>
+          </author>
+          <author initials="H." surname="Frystyk" fullname="Henrik Frystyk Nielsen">
+            <organization abbrev="W3C/MIT">World Wide Web Consortium</organization>
+            <address>
+              <postal>
+                <street>MIT Laboratory for Computer Science, NE43-356</street>
+                <street>545 Technology Square</street>
+                <city>Cambridge</city>
+                <region>MA</region>
+                <code>02139</code>
+              </postal>
+              <facsimile>+1(617)258-8682</facsimile>
+              <email>frystyk@w3.org</email>
+            </address>
+          </author>
+          <author initials="L." surname="Masinter" fullname="Larry Masinter">
+            <organization abbrev="Xerox">Xerox Corporation</organization>
+            <address>
+              <postal>
+                <street>MIT Laboratory for Computer Science, NE43-356</street>
+                <street>3333 Coyote Hill Road</street>
+                <city>Palo Alto</city>
+                <region>CA</region>
+                <code>94034</code>
+              </postal>
+              <email>masinter@parc.xerox.com</email>
+            </address>
+          </author>
+          <author initials="P." surname="Leach" fullname="Paul J. Leach">
+            <organization abbrev="Microsoft">Microsoft Corporation</organization>
+            <address>
+              <postal>
+                <street>1 Microsoft Way</street>
+                <city>Redmond</city>
+                <region>WA</region>
+                <code>98052</code>
+              </postal>
+              <email>paulle@microsoft.com</email>
+            </address>
+          </author>
+          <author initials="T." surname="Berners-Lee" fullname="Tim Berners-Lee">
+            <organization abbrev="W3C/MIT">World Wide Web Consortium</organization>
+            <address>
+              <postal>
+                <street>MIT Laboratory for Computer Science, NE43-356</street>
+                <street>545 Technology Square</street>
+                <city>Cambridge</city>
+                <region>MA</region>
+                <code>02139</code>
+              </postal>
+              <facsimile>+1(617)258-8682</facsimile>
+              <email>timbl@w3.org</email>
+            </address>
+          </author>
+          <date year="1999" month="June"/>
+          <abstract>
+            <t>
    The Hypertext Transfer Protocol (HTTP) is an application-level
    protocol for distributed, collaborative, hypermedia information
    systems. It is a generic, stateless, protocol which can be used for
@@ -290,31 +286,34 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
    the typing and negotiation of data representation, allowing systems
    to be built independently of the data being transferred.
 </t>
-<t>
+            <t>
    HTTP has been in use by the World-Wide Web global information
    initiative since 1990. This specification defines the protocol
    referred to as "HTTP/1.1", and is an update to RFC 2068 .
-</t></abstract></front>
-<seriesInfo name='RFC' value='2616' />
-<format type='TXT' octets='422317' target='http://www.rfc-editor.org/rfc/rfc2616.txt' />
-<format type='PS' octets='5529857' target='http://www.rfc-editor.org/rfc/rfc2616.ps' />
-<format type='PDF' octets='550558' target='http://www.rfc-editor.org/rfc/rfc2616.pdf' />
-<format type='HTML' octets='636125' target='http://xml.resource.org/public/rfc/html/rfc2616.html' />
-<format type='XML' octets='493420' target='http://xml.resource.org/public/rfc/xml/rfc2616.xml' />
-</reference>
-
-<reference anchor='RFC2818'>
-<front>
-<title>HTTP Over TLS</title>
-<author initials='E.' surname='Rescorla' fullname='E. Rescorla'>
-<organization /></author>
-<date year='2000' month='May' />
-<abstract>
-<t>This memo describes how to use Transport Layer Security (TLS) to secure Hypertext Transfer Protocol (HTTP) connections over the Internet.  This memo provides information for the Internet community.</t></abstract></front>
-<seriesInfo name='RFC' value='2818' />
-<format type='TXT' octets='15170' target='http://www.rfc-editor.org/rfc/rfc2818.txt' />
-</reference>
-
+</t>
+          </abstract>
+        </front>
+        <seriesInfo name="RFC" value="2616"/>
+        <format type="TXT" octets="422317" target="http://www.rfc-editor.org/rfc/rfc2616.txt"/>
+        <format type="PS" octets="5529857" target="http://www.rfc-editor.org/rfc/rfc2616.ps"/>
+        <format type="PDF" octets="550558" target="http://www.rfc-editor.org/rfc/rfc2616.pdf"/>
+        <format type="HTML" octets="636125" target="http://xml.resource.org/public/rfc/html/rfc2616.html"/>
+        <format type="XML" octets="493420" target="http://xml.resource.org/public/rfc/xml/rfc2616.xml"/>
+      </reference>
+      <reference anchor="RFC2818">
+        <front>
+          <title>HTTP Over TLS</title>
+          <author initials="E." surname="Rescorla" fullname="E. Rescorla">
+            <organization/>
+          </author>
+          <date year="2000" month="May"/>
+          <abstract>
+            <t>This memo describes how to use Transport Layer Security (TLS) to secure Hypertext Transfer Protocol (HTTP) connections over the Internet.  This memo provides information for the Internet community.</t>
+          </abstract>
+        </front>
+        <seriesInfo name="RFC" value="2818"/>
+        <format type="TXT" octets="15170" target="http://www.rfc-editor.org/rfc/rfc2818.txt"/>
+      </reference>
       <reference anchor="RFC5280">
         <front>
           <title>Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile</title>
@@ -344,21 +343,23 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         <seriesInfo name="RFC" value="5280"/>
         <format type="TXT" octets="352580" target="ftp://ftp.isi.edu/in-notes/rfc5280.txt"/>
       </reference>
-
-<reference anchor='RFC5785'>
-<front>
-<title>Defining Well-Known Uniform Resource Identifiers (URIs)</title>
-<author initials='M.' surname='Nottingham' fullname='M. Nottingham'>
-<organization /></author>
-<author initials='E.' surname='Hammer-Lahav' fullname='E. Hammer-Lahav'>
-<organization /></author>
-<date year='2010' month='April' />
-<abstract>
-<t>This memo defines a path prefix for "well-known locations", "/.well-known/", in selected Uniform Resource Identifier (URI) schemes. [STANDARDS-TRACK]</t></abstract></front>
-<seriesInfo name='RFC' value='5785' />
-<format type='TXT' octets='13779' target='http://www.rfc-editor.org/rfc/rfc5785.txt' />
-</reference>
-
+      <reference anchor="RFC5785">
+        <front>
+          <title>Defining Well-Known Uniform Resource Identifiers (URIs)</title>
+          <author initials="M." surname="Nottingham" fullname="M. Nottingham">
+            <organization/>
+          </author>
+          <author initials="E." surname="Hammer-Lahav" fullname="E. Hammer-Lahav">
+            <organization/>
+          </author>
+          <date year="2010" month="April"/>
+          <abstract>
+            <t>This memo defines a path prefix for "well-known locations", "/.well-known/", in selected Uniform Resource Identifier (URI) schemes. [STANDARDS-TRACK]</t>
+          </abstract>
+        </front>
+        <seriesInfo name="RFC" value="5785"/>
+        <format type="TXT" octets="13779" target="http://www.rfc-editor.org/rfc/rfc5785.txt"/>
+      </reference>
       <reference anchor="RFC6120">
         <front>
           <title>Extensible Messaging and Presence Protocol (XMPP): Core</title>
@@ -371,9 +372,8 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
           <date month="March" year="2011"/>
         </front>
         <seriesInfo name="RFC" value="6120"/>
-        <format type="TXT"  target="http://tools.ietf.org/rfc/rfc6120.txt"/>
+        <format type="TXT" target="http://tools.ietf.org/rfc/rfc6120.txt"/>
       </reference>
-
       <reference anchor="RFC6125">
         <front>
           <title>Representation and Verification of Domain-Based Application Service Identity within Internet Public Key Infrastructure Using X.509 (PKIX) Certificates in the Context of Transport Layer Security (TLS)</title>
@@ -394,8 +394,6 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         <seriesInfo name="RFC" value="6125"/>
         <format type="TXT" target="http://tools.ietf.org/rfc/rfc6125.txt"/>
       </reference>
-
     </references>
-
   </back>
 </rfc>
