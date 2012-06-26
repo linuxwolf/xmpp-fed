@@ -59,8 +59,8 @@
         <list style="numbers">
           <t>The initiating entity performs an HTTPS GET to the path "/.well-known/tls/_&lt;service&gt;._tcp&lt;source domain&gt;.cer" to the source domain; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections:
             <figure><artwork><![CDATA[
-T /.well-known/_xmpp-server._tcp.im.example.com.cer HTTP/1.1
-st: im.example.com
+HTTP GET /.well-known/_xmpp-server._tcp.im.example.com.cer HTTP/1.1
+Host: im.example.com
               ]]></artwork></figure>
           <vspace blankLines="1"/></t>
           <t>If the source domain HTTPS server has a certificate for the requested path, it MUST respond with a success status code, with the message body as the PEM-encoded certificate to expect:
@@ -90,7 +90,7 @@ tg==
       </t>
     </section>
     <section title="Secure Delegation" anchor="delegation">
-      <t>When PKIX Over Secure HTTP (POSH) is the DNA prooftype, it is possible to use HTTPS redirects in determining if a domain is securely delegated performs the following actions:</t>
+      <t>When PKIX Over Secure HTTP (POSH) is the DNA prooftype, it is possible to use HTTPS redirects in determining if a domain is securely delegated, as follows:</t>
       <t>
         <list style="numbers">
           <t>The initiating entity performs an HTTPS GET to the path "/.well-known/tls/_&lt;service&gt;._tcp&lt;source-domain&gt;.cer" at the source domain; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections.  Here is an example:
