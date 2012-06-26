@@ -124,8 +124,8 @@
           </author>
           <date month="May" year="2012"/>
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-dane-protocol-21"/>
-        <format type="TXT" target="http://tools.ietf.org/html/draft-ietf-dane-protocol-21.txt"/>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-dane-protocol-23"/>
+        <format type="TXT" target="http://tools.ietf.org/html/draft-ietf-dane-protocol-23.txt"/>
       </reference>
       <reference anchor='RFC1034'>
         <front>

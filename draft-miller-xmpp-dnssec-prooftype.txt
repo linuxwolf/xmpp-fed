@@ -297,7 +297,7 @@ Internet-Draft             XMPP DANE Prooftype                 June 2012
 
    [DANE]     Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
               of Named Entities (DANE) Transport Layer Security (TLS)
-              Protocol: TLSA", draft-ietf-dane-protocol-21 (work in
+              Protocol: TLSA", draft-ietf-dane-protocol-23 (work in
               progress), May 2012.
 
    [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
