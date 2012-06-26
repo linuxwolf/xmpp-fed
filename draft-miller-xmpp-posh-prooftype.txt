@@ -4,7 +4,7 @@
 Network Working Group                                          M. Miller
 Internet-Draft                                            P. Saint-Andre
 Intended status: Standards Track                     Cisco Systems, Inc.
-Expires: December 27, 2012                                 June 25, 2012
+Expires: December 29, 2012                                 June 27, 2012
 
 
  Using PKIX over Secure HTTP (POSH) as a Prooftype for XMPP Domain Name
@@ -13,6 +13,8 @@ Expires: December 27, 2012                                 June 25, 2012
 
 Abstract
 
+   This document defines a XMPP DNA prooftype and delegation method,
+   PKIX over Secure HTTP (POSH)
 
 Status of this Memo
 
@@ -29,7 +31,7 @@ Status of this Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 27, 2012.
+   This Internet-Draft will expire on December 29, 2012.
 
 Copyright Notice
 
@@ -50,9 +52,7 @@ Copyright Notice
 
 
 
-
-
-Miller & Saint-Andre    Expires December 27, 2012               [Page 1]
+Miller & Saint-Andre    Expires December 29, 2012               [Page 1]
 
 Internet-Draft             XMPP POSH Prooftype                 June 2012
 
@@ -108,18 +108,18 @@ Table of Contents
 
 
 
-Miller & Saint-Andre    Expires December 27, 2012               [Page 2]
+Miller & Saint-Andre    Expires December 29, 2012               [Page 2]
 
 Internet-Draft             XMPP POSH Prooftype                 June 2012
 
 
 1.  Introduction
 
-   The XMPP-DNA specification defines a framework for secure delegation
-   and authenticated domain name associations (DNA) in the Extensible
-   Messaging and Presence Protocol (XMPP).  This document defines one
-   prooftype for DNA, using PKIX certificates obtained over secure HTTP
-   ("POSH").
+   The [XMPP-DNA] specification defines a framework for secure
+   delegation and authenticated domain name associations (DNA) in the
+   Extensible Messaging and Presence Protocol (XMPP).  This document
+   defines one prooftype for DNA, using PKIX certificates obtained over
+   secure HTTP ("POSH").
 
 
 2.  Terminology
@@ -149,8 +149,8 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
        client-to-server connections or "_xmpp-server" for XMPP server-
        to-server connections:
 
-   T /.well-known/_xmpp-server._tcp.im.example.com.cer HTTP/1.1
-   st: im.example.com
+   HTTP GET /.well-known/_xmpp-server._tcp.im.example.com.cer HTTP/1.1
+   Host: im.example.com
 
 
    2.  If the source domain HTTPS server has a certificate for the
@@ -164,7 +164,7 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
 
 
 
-Miller & Saint-Andre    Expires December 27, 2012               [Page 3]
+Miller & Saint-Andre    Expires December 29, 2012               [Page 3]
 
 Internet-Draft             XMPP POSH Prooftype                 June 2012
 
@@ -195,7 +195,7 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
 
    When PKIX Over Secure HTTP (POSH) is the DNA prooftype, it is
    possible to use HTTPS redirects in determining if a domain is
-   securely delegated performs the following actions:
+   securely delegated, as follows:
 
    1.  The initiating entity performs an HTTPS GET to the path "/.well-
        known/tls/_<service>._tcp<source-domain>.cer" at the source
@@ -220,7 +220,7 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
 
 
 
-Miller & Saint-Andre    Expires December 27, 2012               [Page 4]
+Miller & Saint-Andre    Expires December 29, 2012               [Page 4]
 
 Internet-Draft             XMPP POSH Prooftype                 June 2012
 
@@ -276,14 +276,14 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
 
 
 
-Miller & Saint-Andre    Expires December 27, 2012               [Page 5]
+Miller & Saint-Andre    Expires December 29, 2012               [Page 5]
 
 Internet-Draft             XMPP POSH Prooftype                 June 2012
 
 
 7.  IANA Considerations
 
-   This document has no actions for the IANA.
+   To follow.
 
 
 8.  Normative References
@@ -315,6 +315,27 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
               (PKIX) Certificates in the Context of Transport Layer
               Security (TLS)", RFC 6125, March 2011.
 
+   [XMPP-DNA]
+              Saint-Andre, P. and M. Miller, "Domain Name Associations
+              (DNA) in the Extensible Messaging and Presence Protocol
+              (XMPP)", draft-saintandre-xmpp-dna-00 (work in progress),
+              June 2012.
+
+
+
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre    Expires December 29, 2012               [Page 6]
+
+Internet-Draft             XMPP POSH Prooftype                 June 2012
+
 
 Authors' Addresses
 
@@ -325,16 +346,6 @@ Authors' Addresses
    USA
 
    Email: mamille2@cisco.com
-
-
-
-
-
-
-
-Miller & Saint-Andre    Expires December 27, 2012               [Page 6]
-
-Internet-Draft             XMPP POSH Prooftype                 June 2012
 
 
    Peter Saint-Andre
@@ -377,16 +388,5 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-Miller & Saint-Andre    Expires December 27, 2012               [Page 7]
+Miller & Saint-Andre    Expires December 29, 2012               [Page 7]
 

@@ -34,7 +34,7 @@
         <email>psaintan@cisco.com</email>
       </address>
     </author>
-    <date month="June" day="25" year="2012"/>
+    <date month="June" day="27" year="2012"/>
     <area>RAI</area>
     <keyword>Internet-Draft</keyword>
     <keyword>XMPP</keyword>
@@ -42,12 +42,12 @@
     <keyword>Jabber</keyword>
     <keyword>federation</keyword>
     <abstract>
-      <t/>
+      <t>This document defines a XMPP DNA prooftype and delegation method, PKIX over Secure HTTP (POSH)</t>
     </abstract>
   </front>
   <middle>
     <section title="Introduction" anchor="intro">
-      <t>The XMPP-DNA specification defines a framework for secure delegation and authenticated domain name associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP).  This document defines one prooftype for DNA, using PKIX certificates obtained over secure HTTP ("POSH").</t>
+      <t>The <xref target='XMPP-DNA'/> specification defines a framework for secure delegation and authenticated domain name associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP).  This document defines one prooftype for DNA, using PKIX certificates obtained over secure HTTP ("POSH").</t>
     </section>
     <section title="Terminology" anchor="terms">
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>.</t>
@@ -145,7 +145,7 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
       <t>This document supplements but does not supersede the security considerations provided in <xref target="RFC2616"/>, <xref target="RFC2818"/>, <xref target="RFC6120"/>, <xref target="RFC6125"/>.</t>
     </section>
     <section title="IANA Considerations" anchor="iana">
-      <t>This document has no actions for the IANA.</t>
+      <t>To follow.</t>
     </section>
   </middle>
   <back>
@@ -393,6 +393,26 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         </front>
         <seriesInfo name="RFC" value="6125"/>
         <format type="TXT" target="http://tools.ietf.org/rfc/rfc6125.txt"/>
+      </reference>
+      <reference anchor="XMPP-DNA">
+        <front>
+          <title>Domain Name Associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP)</title>
+          <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
+            <organization>Cisco</organization>
+            <address>
+              <email>psaintan@cisco.com</email>
+            </address>
+          </author>
+          <author initials="M." surname="Miller" fullname="Matthew Miller">
+            <organization>Cisco</organization>
+            <address>
+              <email>mamille2@cisco.com</email>
+            </address>
+          </author>
+          <date month="June" year="2012"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-saintandre-xmpp-dna-00"/>
+        <format type="TXT" target="http://tools.ietf.org/html/draft-sainandre-xmpp-dna-00.txt"/>
       </reference>
     </references>
   </back>
