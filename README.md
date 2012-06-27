@@ -8,18 +8,26 @@ The approach is two-fold:
 * Determine trust
 * Delegation and piggybacking
 
-Determining Trust
-=================
+Prooftype
+=========
 
-There are multiple approaches to determining trust for a (TLS) connection:
+There are multiple approaches to verifying the domain associated with a (TLS) connection:
 
-* DANE < http://tools.ietf.org/html/draft-ietf-dane-protocol-20 >
+* DANE < http://tools.ietf.org/html/draft-ietf-dane-protocol-23 >
 * POSH (defined herein), using HTTPS and PKIX
 * PKIX < http://tools.ietf.org/html/rfc6125 >
 
-Delegation/Piggybacking
-=======================
+Delegation
+==========
 
-In XMPP, every connection has an identity associated with it in at least one direction.  This is asserted in the <stream:stream> root element; the "from" attribute asserts the sending entity, and "to" asserts the receiving entity.
+Delegation is where one domain (e.g. "im.example.com") is actually hosted at another domain ("hosting.example.net").  There are multiple approaches to secure delegation:
 
-To assert additional identities an existing server-to-server connection, the dialback protocol is be used.
+* DNSSEC < http://tools.ietf.org/html/rfc4033 >
+* HTTPS redirect of POSH (defined herein)
+
+Assertions
+==========
+
+In XMPP, every connection has an identity associated with it in at least one direction.  This is indicated in the &lt;stream:stream&gt; root element; the "from" attribute for the sending entity, and "to" for the receiving entity.
+
+The actual assertion is made from the certificate offered during TLS negotation (client-to-server or server-to-server), or via dialback &lt;db:result/&gt; for server-to-server.
