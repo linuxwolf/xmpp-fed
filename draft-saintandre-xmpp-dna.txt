@@ -13,6 +13,13 @@ Domain Name Associations (DNA) in the Extensible Messaging and Presence
 
 Abstract
 
+   This document defines a framework for improving the security of the
+   Extensible Messaging and Presence Protocol (XMPP) in two respects.
+   First, it introduces the concept of a prooftype for establishing a
+   strong association between a domain name and an XML stream.  Second,
+   it provides guidelines for securely delegating a source domain to a
+   derived domain, which is especially important in virtual hosting
+   environments.
 
 Status of this Memo
 
@@ -42,13 +49,6 @@ Copyright Notice
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
-   include Simplified BSD License text as described in Section 4.e of
-   the Trust Legal Provisions and are provided without warranty as
-   described in the Simplified BSD License.
-
-
-
-
 
 
 
@@ -57,34 +57,34 @@ Saint-Andre & Miller    Expires December 29, 2012               [Page 1]
 Internet-Draft                  XMPP DNA                       June 2012
 
 
+   include Simplified BSD License text as described in Section 4.e of
+   the Trust Legal Provisions and are provided without warranty as
+   described in the Simplified BSD License.
+
+
 Table of Contents
 
    1.  Introduction . . . . . . . . . . . . . . . . . . . . . . . . .  3
    2.  Terminology  . . . . . . . . . . . . . . . . . . . . . . . . .  3
-   3.  Problem Statement  . . . . . . . . . . . . . . . . . . . . . .  3
+   3.  Problem Statement  . . . . . . . . . . . . . . . . . . . . . .  4
    4.  Framework  . . . . . . . . . . . . . . . . . . . . . . . . . .  5
-   5.  Prooftypes . . . . . . . . . . . . . . . . . . . . . . . . . .  6
-     5.1.  PKI  . . . . . . . . . . . . . . . . . . . . . . . . . . .  6
+   5.  Prooftypes . . . . . . . . . . . . . . . . . . . . . . . . . .  7
+     5.1.  PKI  . . . . . . . . . . . . . . . . . . . . . . . . . . .  7
      5.2.  DANE . . . . . . . . . . . . . . . . . . . . . . . . . . .  7
      5.3.  POSH . . . . . . . . . . . . . . . . . . . . . . . . . . .  7
      5.4.  Dialback Keys  . . . . . . . . . . . . . . . . . . . . . .  7
-   6.  Assertion Mechanisms . . . . . . . . . . . . . . . . . . . . .  7
-     6.1.  TLS  . . . . . . . . . . . . . . . . . . . . . . . . . . .  7
+   6.  Assertion Mechanisms . . . . . . . . . . . . . . . . . . . . .  8
+     6.1.  TLS  . . . . . . . . . . . . . . . . . . . . . . . . . . .  8
      6.2.  SASL . . . . . . . . . . . . . . . . . . . . . . . . . . .  8
      6.3.  <db:result>  . . . . . . . . . . . . . . . . . . . . . . .  8
      6.4.  A Note about Stream Attributes . . . . . . . . . . . . . .  8
    7.  Delegation Methods . . . . . . . . . . . . . . . . . . . . . .  8
-   8.  Security Considerations  . . . . . . . . . . . . . . . . . . .  8
-   9.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . .  8
+   8.  Security Considerations  . . . . . . . . . . . . . . . . . . .  9
+   9.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . .  9
    10. References . . . . . . . . . . . . . . . . . . . . . . . . . .  9
      10.1. Normative References . . . . . . . . . . . . . . . . . . .  9
      10.2. Informative References . . . . . . . . . . . . . . . . . . 10
    Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 10
-
-
-
-
-
 
 
 
@@ -115,25 +115,37 @@ Internet-Draft                  XMPP DNA                       June 2012
 
 1.  Introduction
 
-   Because the Extensible Messaging and Presence Protocol (XMPP) is
-   built upon a distributed client-server architecture [RFC6120], it has
-   long included methods for establishing connections among servers on
-   the network.  In XMPP, these server-to-server connections typically
-   do not require pre-arranged peering agreements and thus are
-   negotiated on an ad-hoc or as-needed basis.  Furthermore, to the
-   extent that servers "trust" each other, such trust is established
-   based on information obtained from the Domain Name System (DNS), the
-   Public Key Infrastructure (PKI), or similar sources.  Since XMPP
-   servers are typically identified with DNS domain names, server-to-
-   server connectivity is referred to as "interdomain federation".  This
-   document describes a model for interdomain federation and modernizes
-   some federation methods (e.g., Server Dialback [XEP-0220]) to reflect
-   progress in several underlying technologies, especially DNS Security
-   [RFC4033].  It also generalizes aspects of this model from server-to-
-   server streams to also include client-to-server streams, since in
-   both cases a server is expected to "prove its identity", i.e., show
-   why a given XML stream that it services deserves to be associated
-   with a given domain name.
+   This document defines a framework for improving the security of the
+   Extensible Messaging and Presence Protocol (XMPP) in two respects.
+   First, it introduces the concept of a prooftype for establishing a
+   strong association between a domain name and an XML stream (i.e., a
+   domain name association or "DNA").  Second, it provides guidelines
+   for securely delegating a source domain to a derived domain, which is
+   especially important in virtual hosting environments.
+
+   The need to establish a strong association between a domain name and
+   an XML stream arises in both client-to-server and server-to-server
+   communication using XMPP, because XMPP servers are typically
+   identified by domain names.  However, a client or peer server needs
+   to verify the identity of a server to which it connects.  To date,
+   such verification has been established based on information obtained
+   from the Domain Name System (DNS), the Public Key Infrastructure
+   (PKI), or similar sources.  This document generalizes the model
+   currently in use so that additional prooftypes can be defined, and
+   also provides a basis for modernizing some prooftypes (e.g., Server
+   Dialback [XEP-0220]) to reflect progress in several underlying
+   technologies, especially DNS Security [RFC4033].
+
+   The process for resolving the domain name of an XMPP service into the
+   IP address at which an XML stream will be negotiated (defined in
+   [RFC6120]) can involve delegation of a source domain (say,
+   im.example.com) to a derived domain (say, hosting.example.net).  If
+   such delegation is not done in a secure manner, then the domain name
+   association cannot be authenticated.  Therefore, this document also
+   provides guidelines for defining secure delegation methods.
+
+   This document does not define any DNA prooftypes or secure delegation
+   methods; such technologies are defined in companion documents.
 
 
 2.  Terminology
@@ -149,6 +161,14 @@ Internet-Draft                  XMPP DNA                       June 2012
    term "authenticated federation" for the term "trusted federation"
    from that document.
 
+
+
+
+Saint-Andre & Miller    Expires December 29, 2012               [Page 3]
+
+Internet-Draft                  XMPP DNA                       June 2012
+
+
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
    "OPTIONAL" in this document are to be interpreted as described in
@@ -161,14 +181,6 @@ Internet-Draft                  XMPP DNA                       June 2012
    some proof of its identity.  For example, in client-to-server streams
    the server expects the client to present some credentials (such as a
    username and password or a client certificate), and ideally the
-
-
-
-Saint-Andre & Miller    Expires December 29, 2012               [Page 3]
-
-Internet-Draft                  XMPP DNA                       June 2012
-
-
    client also expects the server to provide a certificate that
    identifies the domain(s) of the server.  Similar considerations hold
    true for server-to-server streams, also called "interdomain
@@ -205,6 +217,14 @@ Internet-Draft                  XMPP DNA                       June 2012
    deployed because verified federation is perceived as "good enough");
    one of the primary reasons is that it is feasible (although not
    always easy) for single-domain servers to obtain the proper
+
+
+
+Saint-Andre & Miller    Expires December 29, 2012               [Page 4]
+
+Internet-Draft                  XMPP DNA                       June 2012
+
+
    certificates, but much more difficult (or practically impossible) for
    large XMPP hosting providers to do so.  The primary challenge here is
    operational: it is highly unlikely that an organization (say,
@@ -217,13 +237,6 @@ Internet-Draft                  XMPP DNA                       June 2012
    of the initial stream header) have also discouraged deployment of
    authenticated federation in virtual hosting environments, which
    happen to be a common deployment scenario.
-
-
-
-Saint-Andre & Miller    Expires December 29, 2012               [Page 4]
-
-Internet-Draft                  XMPP DNA                       June 2012
-
 
    Furthermore, the prevalence of delegation to hosting providers leads
    to one additional shortcoming, caused by the use of DNS SRV records
@@ -260,6 +273,14 @@ Internet-Draft                  XMPP DNA                       June 2012
    its expectations have been met.  In XMPP, Server Dialback follows a
    similar model, except that the verification material takes the form
    of a token instead of a certificate.  The DNS-Based Authentication of
+
+
+
+Saint-Andre & Miller    Expires December 29, 2012               [Page 5]
+
+Internet-Draft                  XMPP DNA                       June 2012
+
+
    Named Entities protocol [DANE], at least in some of its modes, adds
    another kind of verification material: not the presented identity
    within a PKIX certificate, but a complete certificate or hash
@@ -273,14 +294,6 @@ Internet-Draft                  XMPP DNA                       June 2012
    establishing the association.  For instance, when a server presents a
    PKIX certificate during TLS negotiation, the connecting client or
    peer server has traditionally obtained its verification material out
-
-
-
-Saint-Andre & Miller    Expires December 29, 2012               [Page 5]
-
-Internet-Draft                  XMPP DNA                       June 2012
-
-
    of band or via configuration from a certification authority (i.e., in
    the form of a root certificate contained in a certificate bundle).
    In the Server Dialback protocol, the verification material is a token
@@ -316,6 +329,14 @@ Internet-Draft                  XMPP DNA                       June 2012
 
    The following sections outline several prooftypes that are used, or
    could be used, in XMPP; detailed definitions are provided in separate
+
+
+
+Saint-Andre & Miller    Expires December 29, 2012               [Page 6]
+
+Internet-Draft                  XMPP DNA                       June 2012
+
+
    specifications.
 
    Note: So far, our definition of a prooftype does not include the
@@ -329,14 +350,6 @@ Internet-Draft                  XMPP DNA                       June 2012
 
    The PKI prooftype is a DNA proof that follows the rules from
    [RFC6120]: that is, the verification materials consist of a PKIX
-
-
-
-Saint-Andre & Miller    Expires December 29, 2012               [Page 6]
-
-Internet-Draft                  XMPP DNA                       June 2012
-
-
    certificate that is checked according to a profile of the matching
    rules from [RFC6125], the client's verification materials are
    obtained out of band in the form of a trusted root, and secure DNS is
@@ -372,6 +385,14 @@ Internet-Draft                  XMPP DNA                       June 2012
    absence of secure DNS.
 
 
+
+
+
+Saint-Andre & Miller    Expires December 29, 2012               [Page 7]
+
+Internet-Draft                  XMPP DNA                       June 2012
+
+
 6.  Assertion Mechanisms
 
    An assertion is a server's statement that an XML stream is to be
@@ -383,15 +404,6 @@ Internet-Draft                  XMPP DNA                       June 2012
    its certificate to the connecting client or peer server acting as a
    TLS client.  This certificate is interpreted as an assertion of the
    server's identity.
-
-
-
-
-
-Saint-Andre & Miller    Expires December 29, 2012               [Page 7]
-
-Internet-Draft                  XMPP DNA                       June 2012
-
 
 6.2.  SASL
 
@@ -429,6 +441,14 @@ Internet-Draft                  XMPP DNA                       June 2012
    the [XMPP-POSH] spec).
 
 
+
+
+
+Saint-Andre & Miller    Expires December 29, 2012               [Page 8]
+
+Internet-Draft                  XMPP DNA                       June 2012
+
+
 8.  Security Considerations
 
    This document supplements but does not supersede the security
@@ -441,13 +461,6 @@ Internet-Draft                  XMPP DNA                       June 2012
 
 
 10.  References
-
-
-
-Saint-Andre & Miller    Expires December 29, 2012               [Page 8]
-
-Internet-Draft                  XMPP DNA                       June 2012
-
 
 10.1.  Normative References
 
@@ -466,7 +479,7 @@ Internet-Draft                  XMPP DNA                       June 2012
    [XMPP-POSH]
               Miller, M. and P. Saint-Andre, "Using PKIX over Secure
               HTTP (POSH) as a Prooftype for XMPP Domain Name
-              Associations", draft-miller-xmpp-posh-prooftype-02 (work
+              Associations", draft-miller-xmpp-posh-prooftype-00 (work
               in progress), June 2012.
 
    [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
@@ -484,6 +497,14 @@ Internet-Draft                  XMPP DNA                       June 2012
 
    [RFC3365]  Schiller, J., "Strong Security Requirements for Internet
               Engineering Task Force Standard Protocols", BCP 61,
+
+
+
+Saint-Andre & Miller    Expires December 29, 2012               [Page 9]
+
+Internet-Draft                  XMPP DNA                       June 2012
+
+
               RFC 3365, August 2002.
 
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
@@ -497,13 +518,6 @@ Internet-Draft                  XMPP DNA                       June 2012
               Housley, R., and W. Polk, "Internet X.509 Public Key
               Infrastructure Certificate and Certificate Revocation List
               (CRL) Profile", RFC 5280, May 2008.
-
-
-
-Saint-Andre & Miller    Expires December 29, 2012               [Page 9]
-
-Internet-Draft                  XMPP DNA                       June 2012
-
 
    [RFC5785]  Nottingham, M. and E. Hammer-Lahav, "Defining Well-Known
               Uniform Resource Identifiers (URIs)", RFC 5785,
@@ -532,6 +546,21 @@ Internet-Draft                  XMPP DNA                       June 2012
               Federation", XSF XEP 0238, March 2008.
 
 
+
+
+
+
+
+
+
+
+
+
+Saint-Andre & Miller    Expires December 29, 2012              [Page 10]
+
+Internet-Draft                  XMPP DNA                       June 2012
+
+
 Authors' Addresses
 
    Peter Saint-Andre
@@ -556,5 +585,32 @@ Authors' Addresses
 
 
 
-Saint-Andre & Miller    Expires December 29, 2012              [Page 10]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Saint-Andre & Miller    Expires December 29, 2012              [Page 11]
 

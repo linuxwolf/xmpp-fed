@@ -13,9 +13,11 @@ Expires: December 29, 2012                                 June 27, 2012
 
 Abstract
 
-   This document specifies how to use DNSSEC and DANE to securely
-   delegate an XMPP service identified by a domain to a host associated
-   with a different domain.
+   This document defines a prooftype that uses DNS-based Authentication
+   of Named Entities (DANE) for associating a domain name with an XML
+   stream in the Extensible Messaging and Presence Protocol (XMPP).  It
+   also defines a method that uses DNS Security (DNSSEC) for securely
+   delegating a source domain to a derived domain in XMPP.
 
 Status of this Memo
 
@@ -47,8 +49,6 @@ Copyright Notice
    to this document.  Code Components extracted from this document must
    include Simplified BSD License text as described in Section 4.e of
    the Trust Legal Provisions and are provided without warranty as
-   described in the Simplified BSD License.
-
 
 
 
@@ -57,24 +57,24 @@ Miller & Saint-Andre    Expires December 29, 2012               [Page 1]
 Internet-Draft             XMPP DANE Prooftype                 June 2012
 
 
+   described in the Simplified BSD License.
+
+
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . . . 3
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . . . 3
-   3.  Requirements  . . . . . . . . . . . . . . . . . . . . . . . . . 4
+   3.  Requirements  . . . . . . . . . . . . . . . . . . . . . . . . . 3
    4.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . . . 4
    5.  Prooftype . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
-     5.1.  No Service Records  . . . . . . . . . . . . . . . . . . . . 5
+     5.1.  No Service Records  . . . . . . . . . . . . . . . . . . . . 4
      5.2.  Insecure Delegation . . . . . . . . . . . . . . . . . . . . 5
      5.3.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . 5
    6.  Internationalization Considerations . . . . . . . . . . . . . . 5
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . . . 6
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 6
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . . . 5
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 5
    9.  Normative References  . . . . . . . . . . . . . . . . . . . . . 6
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . . . 7
-
-
-
 
 
 
@@ -115,29 +115,18 @@ Internet-Draft             XMPP DANE Prooftype                 June 2012
 
 1.  Introduction
 
-   In the core XMPP specification [RFC6120], the domain to which an XMPP
-   initiating entity wishes to connect -- i.e., its "reference
-   identifier" [RFC6125] -- is asserted via the 'to' attribute of the
-   <stream:stream> header, and the domain(s) contained in the TLS
-   certificate offered by the receiving server -- i.e., its "presented
-   identifier" [RFC6125] -- is required to match this source domain
-   (e.g., "im.example.com").  However, this model can cause problems if
-   the source domain is delegated to a host associated with a different
-   domain that is derived by means of a DNS SRV lookup [RFC2782] on the
-   source domain, since the derived domain (e.g., "hosting.example.net")
-   might also be the delegate for a number of other source domains.
-   Furthermore, for operational and security reasons a hosting provider
-   is rarely able to present a certificate that matches the source
-   domain.
-
-   Absent the use of DNS Security [RFC4033], delegation via SRV does not
-   provide a strong basis for treating a derived domain as a reference
-   identifier during certificate verification.  This document describes
-   how the use of DNSSEC with SRV can result in more secure delegation,
-   such that the initiating XMPP server can legitimately treat a derived
-   domain as a reference identifier.  This document also describes how
-   to use [DANE] to verify TLS certificates containing source domains or
-   derived domains.
+   The [XMPP-DNA] specification defines a framework for secure
+   delegation and authenticated domain name associations (DNA) in the
+   Extensible Messaging and Presence Protocol (XMPP).  This document
+   defines a a secure delegation method that uses DNS Security (DNSSEC)
+   [RFC4033] in conjuction with the standard DNS SRV records [RFC2782]
+   employed in domain name resolution in XMPP, with the result that a
+   client or peer server that inititates an XMPP stream can legitimately
+   treat a derived domain as a reference identifier during stream
+   negotiation.  This document also defines a prooftype for DNA that
+   uses DNS-based Authentication of Named Entities [DANE] to verify TLS
+   certificates containing source domains or derived domains during
+   stream negotiation.
 
 
 2.  Terminology
@@ -162,13 +151,6 @@ Internet-Draft             XMPP DANE Prooftype                 June 2012
    [RFC2119].
 
 
-
-
-Miller & Saint-Andre    Expires December 29, 2012               [Page 3]
-
-Internet-Draft             XMPP DANE Prooftype                 June 2012
-
-
 3.  Requirements
 
    An XMPP initiating entity (TLS client) that wishes to use this
@@ -179,6 +161,12 @@ Internet-Draft             XMPP DANE Prooftype                 June 2012
    between XMPP servers MAY also use this prooftype to verify the
    addition of new source domains onto an existing connection, such as
    multiplexing or "piggybacking" via [XEP-0220].
+
+
+
+Miller & Saint-Andre    Expires December 29, 2012               [Page 3]
+
+Internet-Draft             XMPP DANE Prooftype                 June 2012
 
 
 4.  Secure Delegation
@@ -214,17 +202,6 @@ Internet-Draft             XMPP DANE Prooftype                 June 2012
    verification; its use depends on the delegation status of the source
    domain, as described in the following sections.
 
-
-
-
-
-
-
-Miller & Saint-Andre    Expires December 29, 2012               [Page 4]
-
-Internet-Draft             XMPP DANE Prooftype                 June 2012
-
-
 5.1.  No Service Records
 
    If no SRV records are found for the source domain, then the TLS
@@ -237,6 +214,16 @@ Internet-Draft             XMPP DANE Prooftype                 June 2012
    In this case, the TLS client MUST treat only the source domain as its
    reference identifier during certificate verification, as described in
    [RFC6120].
+
+
+
+
+
+
+Miller & Saint-Andre    Expires December 29, 2012               [Page 4]
+
+Internet-Draft             XMPP DANE Prooftype                 June 2012
+
 
 5.2.  Insecure Delegation
 
@@ -275,12 +262,6 @@ Internet-Draft             XMPP DANE Prooftype                 June 2012
    as defined in [RFC5890].
 
 
-
-Miller & Saint-Andre    Expires December 29, 2012               [Page 5]
-
-Internet-Draft             XMPP DANE Prooftype                 June 2012
-
-
 7.  Security Considerations
 
    This document supplements but does not supersede the security
@@ -291,6 +272,13 @@ Internet-Draft             XMPP DANE Prooftype                 June 2012
 8.  IANA Considerations
 
    This document has no actions for the IANA.
+
+
+
+
+Miller & Saint-Andre    Expires December 29, 2012               [Page 5]
+
+Internet-Draft             XMPP DANE Prooftype                 June 2012
 
 
 9.  Normative References
@@ -329,14 +317,6 @@ Internet-Draft             XMPP DANE Prooftype                 June 2012
               Applications (IDNA): Definitions and Document Framework",
               RFC 5890, August 2010.
 
-
-
-
-Miller & Saint-Andre    Expires December 29, 2012               [Page 6]
-
-Internet-Draft             XMPP DANE Prooftype                 June 2012
-
-
    [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
               Protocol (XMPP): Core", RFC 6120, March 2011.
 
@@ -349,6 +329,19 @@ Internet-Draft             XMPP DANE Prooftype                 June 2012
    [XEP-0220]
               Miller, J., Saint-Andre, P., and P. Hancke, "Server
               Dialback", XSF XEP 0220, August 2011.
+
+
+
+Miller & Saint-Andre    Expires December 29, 2012               [Page 6]
+
+Internet-Draft             XMPP DANE Prooftype                 June 2012
+
+
+   [XMPP-DNA]
+              Saint-Andre, P. and M. Miller, "Domain Name Associations
+              (DNA) in the Extensible Messaging and Presence Protocol
+              (XMPP)", draft-saintandre-xmpp-dna-00 (work in progress),
+              June 2012.
 
 
 Authors' Addresses
@@ -369,6 +362,13 @@ Authors' Addresses
    USA
 
    Email: psaintan@cisco.com
+
+
+
+
+
+
+
 
 
 
