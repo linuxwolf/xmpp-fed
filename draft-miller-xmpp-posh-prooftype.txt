@@ -63,14 +63,14 @@ Table of Contents
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . . . 3
    3.  Prooftype . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
    4.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . . . 4
-   5.  Caching Results . . . . . . . . . . . . . . . . . . . . . . . . 5
+   5.  Caching Results . . . . . . . . . . . . . . . . . . . . . . . . 6
    6.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
    7.  Security Considerations . . . . . . . . . . . . . . . . . . . . 6
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 6
-   9.  Normative References  . . . . . . . . . . . . . . . . . . . . . 6
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . . . 7
-
-
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . . . 7
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . . . 7
+     9.2.  Informative References  . . . . . . . . . . . . . . . . . . 7
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . . . 8
 
 
 
@@ -121,8 +121,33 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
    defines one prooftype for DNA, using PKIX certificates obtained over
    secure HTTP ("POSH").
 
+   The rationale for POSH is driven by current operational realities.
+   It is effectively impossible for a hosting service to provide and
+   maintain PKIX certificates [RFC5280] that include the appropriate
+   [RFC6125] identifiers for each hosted domain.  While technologies
+   that provide a path to secure delegation (such as DNS Security
+   [RFC4033] and [DANE]) are not widely deployed, particularly for
+   domains not rooted through the most common top-level domains (e.g.
+   ".COM", ".NET", ".EDU").  This document specifies how to use the
+   widely deployed technologies secure HTTP [RFC2616] and PKIX
+   certificates [RFC5280] to verify a domain is delegated to a hosting
+   provider.
+
 
 2.  Terminology
+
+   This document inherits XMPP-related terminology from [RFC6120] and
+   security-related terminology from [RFC5280].  The terms "source
+   domain", "derived domain", "reference identifier", and "presented
+   identifier" are used as defined in the "CertID" specification
+   [RFC6125].
+
+   This document is applicable to connections made from an XMPP client
+   to an XMPP server ("_xmpp-client._tcp") or between XMPP servers
+   ("_xmpp-server._tcp").  In both cases, the XMPP initiating entity
+   acts as a TLS client and the XMPP receiving entity acts as a TLS
+   server.  Therefore, to simplify discussion this document uses "_xmpp-
+   client._tcp" to describe to both cases, unless otherwise indicated.
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -136,6 +161,14 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
    PKIX certificate [RFC5280], it is obtained by retrieving it over
    HTTPS [RFC2818] at a well-known URI [RFC5785] (see below), the
    certificate is checked according to the rules from [RFC6120] and
+
+
+
+Miller & Saint-Andre    Expires December 29, 2012               [Page 3]
+
+Internet-Draft             XMPP POSH Prooftype                 June 2012
+
+
    [RFC6125], and secure DNS is not necessary since the HTTPS retrieval
    mechanism relies on the chain of trust from the public key
    infrastructure.
@@ -155,19 +188,8 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
 
    2.  If the source domain HTTPS server has a certificate for the
        requested path, it MUST respond with a success status code, with
-       the message body as the PEM-encoded certificate to expect:
-
-
-
-
-
-
-
-
-Miller & Saint-Andre    Expires December 29, 2012               [Page 3]
-
-Internet-Draft             XMPP POSH Prooftype                 June 2012
-
+       the message body as the DER certificate (optionally encoded as
+       base64 [RFC4684]) to expect:
 
    HTTP/1.1 200 OK
    Content-Type: application/pkix-cert
@@ -195,6 +217,14 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
 
    When PKIX Over Secure HTTP (POSH) is the DNA prooftype, it is
    possible to use HTTPS redirects in determining if a domain is
+
+
+
+Miller & Saint-Andre    Expires December 29, 2012               [Page 4]
+
+Internet-Draft             XMPP POSH Prooftype                 June 2012
+
+
    securely delegated, as follows:
 
    1.  The initiating entity performs an HTTPS GET to the path "/.well-
@@ -217,14 +247,6 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
        "_<service>" portion of the original request (line breaks added
        for readability):
 
-
-
-
-Miller & Saint-Andre    Expires December 29, 2012               [Page 4]
-
-Internet-Draft             XMPP POSH Prooftype                 June 2012
-
-
    HTTP/1.1 302 Found
    Location: https://hosting.example.com/.well-known
              /tls/_xmpp-server._tcp.hosting.example.net.cer
@@ -239,7 +261,25 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
 
    4.  If the derived domain HTTPS server has a certificate, it MUST
        respond with a success status code, with the message body as the
-       PEM-encoded certificate to expect:
+       DER certificate (optionally encoded as base64 [RFC4684]) to
+       expect:
+
+
+
+
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre    Expires December 29, 2012               [Page 5]
+
+Internet-Draft             XMPP POSH Prooftype                 June 2012
+
 
    HTTP/1.1 200 OK
    Content-Type: application/pkix-cert
@@ -273,14 +313,6 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
    is not appropriate to cache at the HTTP level.
 
 
-
-
-
-Miller & Saint-Andre    Expires December 29, 2012               [Page 5]
-
-Internet-Draft             XMPP POSH Prooftype                 June 2012
-
-
 6.  Examples
 
    To follow.
@@ -298,7 +330,16 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
    To follow.
 
 
-9.  Normative References
+
+
+Miller & Saint-Andre    Expires December 29, 2012               [Page 6]
+
+Internet-Draft             XMPP POSH Prooftype                 June 2012
+
+
+9.  References
+
+9.1.  Normative References
 
    [XMPP-DNA]
               Saint-Andre, P. and M. Miller, "Domain Name Associations
@@ -315,6 +356,9 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
 
    [RFC2818]  Rescorla, E., "HTTP Over TLS", RFC 2818, May 2000.
 
+   [RFC4684]  Josefsson, S., "The Base16, Base32, and Base64 Data
+              Encodings", RFC 4648, October 2006.
+
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
               Infrastructure Certificate and Certificate Revocation List
@@ -329,17 +373,28 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
 
    [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
               Verification of Domain-Based Application Service Identity
+              within Internet Public Key Infrastructure Using X.509
+              (PKIX) Certificates in the Context of Transport Layer
+              Security (TLS)", RFC 6125, March 2011.
+
+9.2.  Informative References
+
+   [DANE]     Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
+              of Named Entities (DANE) Transport Layer Security (TLS)
+              Protocol: TLSA", draft-ietf-dane-protocol-23 (work in
+              progress), June 2012.
+
+   [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
 
 
 
-Miller & Saint-Andre    Expires December 29, 2012               [Page 6]
+Miller & Saint-Andre    Expires December 29, 2012               [Page 7]
 
 Internet-Draft             XMPP POSH Prooftype                 June 2012
 
 
-              within Internet Public Key Infrastructure Using X.509
-              (PKIX) Certificates in the Context of Transport Layer
-              Security (TLS)", RFC 6125, March 2011.
+              Rose, "DNS Security Introduction and Requirements",
+              RFC 4033, May 2005.
 
 
 Authors' Addresses
@@ -388,5 +443,6 @@ Authors' Addresses
 
 
 
-Miller & Saint-Andre    Expires December 29, 2012               [Page 7]
+
+Miller & Saint-Andre    Expires December 29, 2012               [Page 8]
 

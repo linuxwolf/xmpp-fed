@@ -48,8 +48,11 @@
   <middle>
     <section title="Introduction" anchor="intro">
       <t>The <xref target='XMPP-DNA'/> specification defines a framework for secure delegation and authenticated domain name associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP).  This document defines one prooftype for DNA, using PKIX certificates obtained over secure HTTP ("POSH").</t>
+      <t>The rationale for POSH is driven by current operational realities.  It is effectively impossible for a hosting service to provide and maintain PKIX certificates <xref target='RFC5280'/> that include the appropriate <xref target='RFC6125'/> identifiers for each hosted domain.  While technologies that provide a path to secure delegation (such as DNS Security <xref target='RFC4033'/> and <xref target='DANE'/>) are not widely deployed, particularly for domains not rooted through the most common top-level domains (e.g. ".COM", ".NET", ".EDU"). This document specifies how to use the widely deployed technologies secure HTTP <xref target='RFC2616'/> and PKIX certificates <xref target='RFC5280'/> to verify a domain is delegated to a hosting provider.</t>
     </section>
     <section title="Terminology" anchor="terms">
+      <t>This document inherits XMPP-related terminology from <xref target="RFC6120"/> and security-related terminology from <xref target='RFC5280'/>.  The terms "source domain", "derived domain", "reference identifier", and "presented identifier" are used as defined in the "CertID" specification <xref target="RFC6125"/>.</t>
+      <t>This document is applicable to connections made from an XMPP client to an XMPP server ("_xmpp-client._tcp") or between XMPP servers ("_xmpp-server._tcp").  In both cases, the XMPP initiating entity acts as a TLS client and the XMPP receiving entity acts as a TLS server.  Therefore, to simplify discussion this document uses "_xmpp-client._tcp" to describe to both cases, unless otherwise indicated.</t>
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>.</t>
     </section>
     <section title="Prooftype" anchor="prooftype">
@@ -63,7 +66,7 @@ HTTP GET /.well-known/_xmpp-server._tcp.im.example.com.cer HTTP/1.1
 Host: im.example.com
               ]]></artwork></figure>
           <vspace blankLines="1"/></t>
-          <t>If the source domain HTTPS server has a certificate for the requested path, it MUST respond with a success status code, with the message body as the PEM-encoded certificate to expect:
+          <t>If the source domain HTTPS server has a certificate for the requested path, it MUST respond with a success status code, with the message body as the DER certificate (optionally encoded as base64 <xref target="RFC4684"/>) to expect:
             <figure><artwork><![CDATA[
 HTTP/1.1 200 OK
 Content-Type: application/pkix-cert
@@ -112,7 +115,7 @@ GET /.well-known/tls/_xmpp-server._tcp.hosting.example.cer HTTP/1.1
 Host: hosting.example.net
               ]]></artwork></figure>
           <vspace blankLines="1"/></t>
-          <t>If the derived domain HTTPS server has a certificate, it MUST respond with a success status code, with the message body as the PEM-encoded certificate to expect:
+          <t>If the derived domain HTTPS server has a certificate, it MUST respond with a success status code, with the message body as the DER certificate (optionally encoded as base64 <xref target="RFC4684"/>) to expect:
             <figure><artwork><![CDATA[
 HTTP/1.1 200 OK
 Content-Type: application/pkix-cert
@@ -337,6 +340,20 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         <seriesInfo name="RFC" value="2818"/>
         <format type="TXT" octets="15170" target="http://www.rfc-editor.org/rfc/rfc2818.txt"/>
       </reference>
+      <reference anchor="RFC4684">
+        <front>
+          <title>The Base16, Base32, and Base64 Data Encodings</title>
+          <author initials="S." surname="Josefsson" fullname="S. Josefsson">
+            <organization/>
+          </author>
+          <date year="2006" month="October"/>
+          <abstract>
+            <t>This document describes the commonly used base 64, base 32, and base 16 encoding schemes. It also discusses the use of line-feeds in encoded data, use of padding in encoded data, use of non-alphabet characters in encoded data, use of different encoding alphabets, and canonical encodings. [STANDARDS TRACK]</t>
+          </abstract>
+        </front>
+        <seriesInfo name="RFC" value="4648"/>
+        <format type="TXT" octets="35491" target="ftp://ftp.isi.edu/in-notes/rfc4648.txt"/>
+      </reference>
       <reference anchor="RFC5280">
         <front>
           <title>Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile</title>
@@ -416,6 +433,66 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         </front>
         <seriesInfo name="RFC" value="6125"/>
         <format type="TXT" target="http://tools.ietf.org/rfc/rfc6125.txt"/>
+      </reference>
+    </references>
+    <references title="Informative References">
+      <reference anchor="DANE">
+        <front>
+          <title>The DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol: TLSA</title>
+          <author initials="P." surname="Hoffman" fullname="Paul Hoffman">
+            <organization>VPN Consortium</organization>
+            <address>
+              <email>paul.hoffman@vpnc.org</email>
+            </address>
+          </author>
+          <author initials="J." surname="Schlyter" fullname="Jakob Schlyter">
+            <organization>Kirei AB</organization>
+            <address>
+              <email>jakob@kirei.se</email>
+            </address>
+          </author>
+          <date month="June" year="2012"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-dane-protocol-23"/>
+        <format type="TXT" target="http://tools.ietf.org/html/draft-ietf-dane-protocol-23.txt"/>
+      </reference>
+      <reference anchor="RFC4033">
+        <front>
+          <title>DNS Security Introduction and Requirements</title>
+          <author initials="R." surname="Arends" fullname="Roy Arends">
+            <organization>Telematica Instituut</organization>
+            <address>
+              <email>roy.arends@telin.nl</email>
+            </address>
+          </author>
+          <author initials="R." surname="Austein" fullname="Rob Austein">
+            <organization>Internet Systems Consortium</organization>
+            <address>
+              <email>sra@isc.org</email>
+            </address>
+          </author>
+          <author initials="M." surname="Larson" fullname="Matt Larson">
+            <organization>VeriSign, Inc.</organization>
+            <address>
+              <email>mlarson@verisign.com</email>
+            </address>
+          </author>
+          <author initials="D." surname="Massey" fullname="Dan Massey">
+            <organization>Colorado State University</organization>
+            <address>
+              <email>massey@cs.colostate.edu</email>
+            </address>
+          </author>
+          <author initials="S." surname="Rose" fullname="Scott Rose">
+            <organization>National Institute for Standards and Technology</organization>
+            <address>
+              <email>scott.rose@nist.gov</email>
+            </address>
+          </author>
+          <date month="May" year="2005"/>
+        </front>
+        <seriesInfo name="RFC" value="4033"/>
+        <format type="TXT" target="http://tools.ietf.org/rfc/rfc4033.txt"/>
       </reference>
     </references>
   </back>
