@@ -5,8 +5,8 @@ XMPP Federation
 
 The approach is two-fold:
 
-* Determine trust
-* Delegation and piggybacking
+* Determine trust (prooftype)
+* Delegation
 
 Prooftype
 =========
