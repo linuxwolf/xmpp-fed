@@ -122,7 +122,7 @@
               <email>jakob@kirei.se</email>
             </address>
           </author>
-          <date month="May" year="2012"/>
+          <date month="June" year="2012"/>
         </front>
         <seriesInfo name="Internet-Draft" value="draft-ietf-dane-protocol-23"/>
         <format type="TXT" target="http://tools.ietf.org/html/draft-ietf-dane-protocol-23.txt"/>
