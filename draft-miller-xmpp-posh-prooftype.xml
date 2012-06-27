@@ -47,11 +47,11 @@
   </front>
   <middle>
     <section title="Introduction" anchor="intro">
-      <t>The <xref target='XMPP-DNA'/> specification defines a framework for secure delegation and authenticated domain name associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP).  This document defines a prooftype for DNA, using PKIX certificates obtained over secure HTTP ("POSH"), as well as a secure delegation method, based on HTTPS redirects, that is appropriate for use with the POSH prooftype.</t>
-      <t>The rationale for POSH is driven by current operational realities.  It is effectively impossible for a hosting service to provide and maintain PKIX certificates <xref target='RFC5280'/> that include the appropriate <xref target='RFC6125'/> identifiers for each hosted domain.  It is true that DNS-based technologies are emerging for secure delegation, in the form of DNS Security <xref target='RFC4033'/> and <xref target='DANE'/>); however, these technologies are not yet widely deployed and might not be deployed in the near future for domains outside the most common top-level domains (e.g., ".COM", ".NET", ".EDU").  Because the XMPP community wishes to deploy secure delegation and authenticated domain name associations as widely and as quickly as possible, this document specifies how to use secure HTTP <xref target='RFC2616'/> and PKIX certificates <xref target='RFC5280'/> to verify that a domain is delegated to a hosting provider and authenticate an assocation between a domain name and an XML stream.</t>
+      <t>The <xref target="XMPP-DNA"/> specification defines a framework for secure delegation and authenticated domain name associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP).  This document defines a prooftype for DNA, using PKIX certificates obtained over secure HTTP ("POSH"), as well as a secure delegation method, based on HTTPS redirects, that is appropriate for use with the POSH prooftype.</t>
+      <t>The rationale for POSH is driven by current operational realities.  It is effectively impossible for a hosting service to provide and maintain PKIX certificates <xref target="RFC5280"/> that include the appropriate <xref target="RFC6125"/> identifiers for each hosted domain.  It is true that DNS-based technologies are emerging for secure delegation, in the form of DNS Security <xref target="RFC4033"/> and <xref target="DANE"/>); however, these technologies are not yet widely deployed and might not be deployed in the near future for domains outside the most common top-level domains (e.g., ".COM", ".NET", ".EDU").  Because the XMPP community wishes to deploy secure delegation and authenticated domain name associations as widely and as quickly as possible, this document specifies how to use secure HTTP <xref target="RFC2616"/> and PKIX certificates <xref target="RFC5280"/> to verify that a domain is delegated to a hosting provider and authenticate an assocation between a domain name and an XML stream.</t>
     </section>
     <section title="Terminology" anchor="terms">
-      <t>This document inherits XMPP-related terminology from <xref target="RFC6120"/> and security-related terminology from <xref target='RFC5280'/>.  The terms "source domain", "derived domain", "reference identifier", and "presented identifier" are used as defined in the "CertID" specification <xref target="RFC6125"/>.</t>
+      <t>This document inherits XMPP-related terminology from <xref target="RFC6120"/> and security-related terminology from <xref target="RFC5280"/>.  The terms "source domain", "derived domain", "reference identifier", and "presented identifier" are used as defined in the "CertID" specification <xref target="RFC6125"/>.</t>
       <t>This document is applicable to connections made from an XMPP client to an XMPP server ("_xmpp-client._tcp") or between XMPP servers ("_xmpp-server._tcp").  In both cases, the XMPP initiating entity acts as a TLS client and the XMPP receiving entity acts as a TLS server.  Therefore, to simplify discussion this document uses "_xmpp-client._tcp" to describe both cases, unless otherwise indicated.</t>
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>.</t>
     </section>
@@ -142,7 +142,7 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
       </t>
     </section>
     <section title="Caching Results" anchor="caching">
-      <t>Ideally, the initiating entity relies on the expiration time of the certificate obtained via POSH, and not on HTTP caching mechanisms.  To that end, the HTTPS servers for source and derived domains SHOULD specify a Cache-Control header indicating a short duration (e.g., max-age=60) or "non-cache" to indicate the response (redirect or content) is not appropriate to cache at the HTTP level.</t>
+      <t>Ideally, the initiating entity relies on the expiration time of the certificate obtained via POSH, and not on HTTP caching mechanisms.  To that end, the HTTPS servers for source and derived domains SHOULD specify a 'Cache-Control' header indicating a short duration (e.g., max-age=60) or "no-cache" to indicate the response (redirect or content) is not appropriate to cache at the HTTP level.</t>
     </section>
     <section title="Examples" anchor="examples">
       <t>Detailed examples will be provided in a future version of this specification.</t>
@@ -152,7 +152,7 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
       <t>Specifically, communication via HTTPS depends on checking the identity of the HTTP server in accordance with <xref target="RFC2818"/>.</t>
     </section>
     <section title="IANA Considerations" anchor="iana">
-      <t>A future version of this specification will register the well-known URIs mentioned above, in accordance with <xref target='RFC5785'/>.</t>
+      <t>A future version of this specification will register the well-known URIs mentioned above, in accordance with <xref target="RFC5785"/>.</t>
     </section>
   </middle>
   <back>
