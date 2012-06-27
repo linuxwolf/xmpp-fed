@@ -99,7 +99,7 @@ GET /.well-known/_xmpp-server._tcp.im.example.com.cer HTTP/1.1
 Host: im.example.com
               ]]></artwork></figure>
           <vspace blankLines="1"/></t>
-          <t>If the source domain HTTPS server has delegated to a derived domain, it MUST respond with a 302 Moved; the 'Location' header MUST specify an HTTPS URL, where the hostname and port is the derived domain HTTPS server, and the path MUST match the pattern "_&lt;service&gt;._tcp.&lt;derived domain&gt;.cer"; where "_&lt;service&gt;" MUST be identical to the "_&lt;service&gt;" portion of the original request (line breaks added for readability):
+          <t>If the source domain HTTPS server has delegated to a derived domain, it MUST respond with one of the redirect mechanisms provided by HTTP (e.g., using the 302, 303, or 307 response).  The 'Location' header MUST specify an HTTPS URL, where the hostname and port is the derived domain HTTPS server, and the path MUST match the pattern "_&lt;service&gt;._tcp.&lt;derived domain&gt;.cer"; where "_&lt;service&gt;" MUST be identical to the "_&lt;service&gt;" portion of the original request (line breaks added for readability):
             <figure><artwork><![CDATA[
 HTTP/1.1 302 Found
 Location: https://hosting.example.com/.well-known
@@ -138,6 +138,9 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         </list>
       </t>
     </section>
+    <section title="Caching Results" anchor="caching">
+      <t>Ideally, the initiating entity relies on the expiration time of the certificate obtained via POSH, and not on HTTP caching mechanisms.  To that end, the HTTPS servers for source and derived domains SHOULD specify a Cache-Control header indicating a short duration (e.g. max-age=60) or "non-cache" to indicate the response (redirect or content) is not appropriate to cache at the HTTP level.</t>
+    </section>
     <section title="Examples" anchor="examples">
       <t>To follow.</t>
     </section>
@@ -150,6 +153,26 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
   </middle>
   <back>
     <references title="Normative References">
+      <reference anchor="XMPP-DNA">
+        <front>
+          <title>Domain Name Associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP)</title>
+          <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
+            <organization>Cisco</organization>
+            <address>
+              <email>psaintan@cisco.com</email>
+            </address>
+          </author>
+          <author initials="M." surname="Miller" fullname="Matthew Miller">
+            <organization>Cisco</organization>
+            <address>
+              <email>mamille2@cisco.com</email>
+            </address>
+          </author>
+          <date month="June" year="2012"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-saintandre-xmpp-dna-00"/>
+        <format type="TXT" target="http://tools.ietf.org/html/draft-sainandre-xmpp-dna-00.txt"/>
+      </reference>
       <reference anchor="RFC2119">
         <front>
           <title abbrev="RFC Key Words">Key words for use in RFCs to Indicate Requirement Levels</title>
@@ -393,26 +416,6 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         </front>
         <seriesInfo name="RFC" value="6125"/>
         <format type="TXT" target="http://tools.ietf.org/rfc/rfc6125.txt"/>
-      </reference>
-      <reference anchor="XMPP-DNA">
-        <front>
-          <title>Domain Name Associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP)</title>
-          <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
-            <organization>Cisco</organization>
-            <address>
-              <email>psaintan@cisco.com</email>
-            </address>
-          </author>
-          <author initials="M." surname="Miller" fullname="Matthew Miller">
-            <organization>Cisco</organization>
-            <address>
-              <email>mamille2@cisco.com</email>
-            </address>
-          </author>
-          <date month="June" year="2012"/>
-        </front>
-        <seriesInfo name="Internet-Draft" value="draft-saintandre-xmpp-dna-00"/>
-        <format type="TXT" target="http://tools.ietf.org/html/draft-sainandre-xmpp-dna-00.txt"/>
       </reference>
     </references>
   </back>

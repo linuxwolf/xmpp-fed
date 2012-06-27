@@ -63,12 +63,12 @@ Table of Contents
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . . . 3
    3.  Prooftype . . . . . . . . . . . . . . . . . . . . . . . . . . . 3
    4.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . . . 4
-   5.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . . . 5
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . . . 5
-   7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 6
-   8.  Normative References  . . . . . . . . . . . . . . . . . . . . . 6
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . . . 6
-
+   5.  Caching Results . . . . . . . . . . . . . . . . . . . . . . . . 5
+   6.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . . . 6
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 6
+   9.  Normative References  . . . . . . . . . . . . . . . . . . . . . 6
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . . . 7
 
 
 
@@ -208,15 +208,15 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
 
 
    2.  If the source domain HTTPS server has delegated to a derived
-       domain, it MUST respond with a 302 Moved; the 'Location' header
-       MUST specify an HTTPS URL, where the hostname and port is the
-       derived domain HTTPS server, and the path MUST match the pattern
-       "_<service>._tcp.<derived domain>.cer"; where "_<service>" MUST
-       be identical to the "_<service>" portion of the original request
-       (line breaks added for readability):
+       domain, it MUST respond with one of the redirect mechanisms
+       provided by HTTP (e.g., using the 302, 303, or 307 response).
+       The 'Location' header MUST specify an HTTPS URL, where the
+       hostname and port is the derived domain HTTPS server, and the
+       path MUST match the pattern "_<service>._tcp.<derived
+       domain>.cer"; where "_<service>" MUST be identical to the
+       "_<service>" portion of the original request (line breaks added
+       for readability):
 
-   HTTP/1.1 302 Found
-   Location: https://hosting.example.com/.well-known
 
 
 
@@ -225,6 +225,8 @@ Miller & Saint-Andre    Expires December 29, 2012               [Page 4]
 Internet-Draft             XMPP POSH Prooftype                 June 2012
 
 
+   HTTP/1.1 302 Found
+   Location: https://hosting.example.com/.well-known
              /tls/_xmpp-server._tcp.hosting.example.net.cer
 
 
@@ -261,16 +263,14 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
 
 
 
-5.  Examples
+5.  Caching Results
 
-   To follow.
-
-
-6.  Security Considerations
-
-   This document supplements but does not supersede the security
-   considerations provided in [RFC2616], [RFC2818], [RFC6120],
-   [RFC6125].
+   Ideally, the initiating entity relies on the expiration time of the
+   certificate obtained via POSH, and not on HTTP caching mechanisms.
+   To that end, the HTTPS servers for source and derived domains SHOULD
+   specify a Cache-Control header indicating a short duration (e.g. max-
+   age=60) or "non-cache" to indicate the response (redirect or content)
+   is not appropriate to cache at the HTTP level.
 
 
 
@@ -281,12 +281,30 @@ Miller & Saint-Andre    Expires December 29, 2012               [Page 5]
 Internet-Draft             XMPP POSH Prooftype                 June 2012
 
 
-7.  IANA Considerations
+6.  Examples
 
    To follow.
 
 
-8.  Normative References
+7.  Security Considerations
+
+   This document supplements but does not supersede the security
+   considerations provided in [RFC2616], [RFC2818], [RFC6120],
+   [RFC6125].
+
+
+8.  IANA Considerations
+
+   To follow.
+
+
+9.  Normative References
+
+   [XMPP-DNA]
+              Saint-Andre, P. and M. Miller, "Domain Name Associations
+              (DNA) in the Extensible Messaging and Presence Protocol
+              (XMPP)", draft-saintandre-xmpp-dna-00 (work in progress),
+              June 2012.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
@@ -311,30 +329,17 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
 
    [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
               Verification of Domain-Based Application Service Identity
-              within Internet Public Key Infrastructure Using X.509
-              (PKIX) Certificates in the Context of Transport Layer
-              Security (TLS)", RFC 6125, March 2011.
-
-   [XMPP-DNA]
-              Saint-Andre, P. and M. Miller, "Domain Name Associations
-              (DNA) in the Extensible Messaging and Presence Protocol
-              (XMPP)", draft-saintandre-xmpp-dna-00 (work in progress),
-              June 2012.
-
-
-
-
-
-
-
-
-
 
 
 
 Miller & Saint-Andre    Expires December 29, 2012               [Page 6]
 
 Internet-Draft             XMPP POSH Prooftype                 June 2012
+
+
+              within Internet Public Key Infrastructure Using X.509
+              (PKIX) Certificates in the Context of Transport Layer
+              Security (TLS)", RFC 6125, March 2011.
 
 
 Authors' Addresses
@@ -355,11 +360,6 @@ Authors' Addresses
    USA
 
    Email: psaintan@cisco.com
-
-
-
-
-
 
 
 
