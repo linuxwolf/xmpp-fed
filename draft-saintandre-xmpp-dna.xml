@@ -42,12 +42,15 @@
     <keyword>Jabber</keyword>
     <keyword>federation</keyword>
     <abstract>
-      <t/>
+      <t>This document defines a framework for improving the security of the Extensible Messaging and Presence Protocol (XMPP) in two respects.  First, it introduces the concept of a prooftype for establishing a strong association between a domain name and an XML stream.  Second, it provides guidelines for securely delegating a source domain to a derived domain, which is especially important in virtual hosting environments.</t>
     </abstract>
   </front>
   <middle>
     <section title="Introduction" anchor="intro">
-      <t>Because the Extensible Messaging and Presence Protocol (XMPP) is built upon a distributed client-server architecture <xref target="RFC6120"/>, it has long included methods for establishing connections among servers on the network.  In XMPP, these server-to-server connections typically do not require pre-arranged peering agreements and thus are negotiated on an ad-hoc or as-needed basis.  Furthermore, to the extent that servers "trust" each other, such trust is established based on information obtained from the Domain Name System (DNS), the Public Key Infrastructure (PKI), or similar sources.  Since XMPP servers are typically identified with DNS domain names, server-to-server connectivity is referred to as "interdomain federation".  This document describes a model for interdomain federation and modernizes some federation methods (e.g., Server Dialback <xref target="XEP-0220"/>) to reflect progress in several underlying technologies, especially DNS Security <xref target="RFC4033"/>.  It also generalizes aspects of this model from server-to-server streams to also include client-to-server streams, since in both cases a server is expected to "prove its identity", i.e., show why a given XML stream that it services deserves to be associated with a given domain name.</t>
+      <t>This document defines a framework for improving the security of the Extensible Messaging and Presence Protocol (XMPP) in two respects.  First, it introduces the concept of a prooftype for establishing a strong association between a domain name and an XML stream (i.e., a domain name association or "DNA").  Second, it provides guidelines for securely delegating a source domain to a derived domain, which is especially important in virtual hosting environments.</t>
+      <t>The need to establish a strong association between a domain name and an XML stream arises in both client-to-server and server-to-server communication using XMPP, because XMPP servers are typically identified by domain names.  However, a client or peer server needs to verify the identity of a server to which it connects.  To date, such verification has been established based on information obtained from the Domain Name System (DNS), the Public Key Infrastructure (PKI), or similar sources.  This document generalizes the model currently in use so that additional prooftypes can be defined, and also provides a basis for modernizing some prooftypes (e.g., Server Dialback <xref target="XEP-0220"/>) to reflect progress in several underlying technologies, especially DNS Security <xref target="RFC4033"/>.</t>
+      <t>The process for resolving the domain name of an XMPP service into the IP address at which an XML stream will be negotiated (defined in <xref target='RFC6120'/>) can involve delegation of a source domain (say, im.example.com) to a derived domain (say, hosting.example.net).  If such delegation is not done in a secure manner, then the domain name association cannot be authenticated.  Therefore, this document also provides guidelines for defining secure delegation methods.</t>
+      <t>This document does not define any DNA prooftypes or secure delegation methods; such technologies are defined in companion documents.</t>
     </section>
     <section title="Terminology" anchor="terms">
       <t>This document inherits XMPP-related terminology from <xref target="RFC6120"/> and <xref target="XEP-0220"/>, DNS-related terminology from <xref target="RFC1034"/>, <xref target="RFC1035"/>, <xref target="RFC2782"/> and <xref target="RFC4033"/>, and security-related terminology from <xref target="RFC4949"/> and <xref target="RFC5280"/>.  The terms "source domain", "derived domain", "reference identity", and "presented identity" are used as defined in the "CertID" specification <xref target="RFC6125"/>.  The terms "permissive federation", "verified federation", and "encrypted federation" are derived from <xref target="XEP-0238"/>, although we substitute the term "authenticated federation" for the term "trusted federation" from that document.</t>
@@ -172,8 +175,8 @@
           </author>
           <date month="June" year="2012"/>
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-miller-xmpp-posh-prooftype-02"/>
-        <format type="TXT" target="http://tools.ietf.org/html/draft-miller-xmpp-posh-prooftype-02.txt"/>
+        <seriesInfo name="Internet-Draft" value="draft-miller-xmpp-posh-prooftype-00"/>
+        <format type="TXT" target="http://tools.ietf.org/html/draft-miller-xmpp-posh-prooftype-00.txt"/>
       </reference>
       <reference anchor="RFC1034">
         <front>

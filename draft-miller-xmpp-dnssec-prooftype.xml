@@ -43,13 +43,12 @@
     <keyword>DNSSEC</keyword>
     <keyword>DANE</keyword>
     <abstract>
-      <t>This document specifies how to use DNSSEC and DANE to securely delegate an XMPP service identified by a domain to a host associated with a different domain.</t>
+      <t>This document defines a prooftype that uses DNS-based Authentication of Named Entities (DANE) for associating a domain name with an XML stream in the Extensible Messaging and Presence Protocol (XMPP).  It also defines a method that uses DNS Security (DNSSEC) for securely delegating a source domain to a derived domain in XMPP.</t>
     </abstract>
   </front>
   <middle>
     <section title="Introduction" anchor="intro">
-      <t>In the core XMPP specification <xref target="RFC6120"/>, the domain to which an XMPP initiating entity wishes to connect -- i.e., its "reference identifier" <xref target='RFC6125'/> -- is asserted via the 'to' attribute of the &lt;stream:stream&gt; header, and the domain(s) contained in the TLS certificate offered by the receiving server -- i.e., its "presented identifier" <xref target='RFC6125'/> -- is required to match this source domain (e.g., "im.example.com").  However, this model can cause problems if the source domain is delegated to a host associated with a different domain that is derived by means of a DNS SRV lookup <xref target='RFC2782'/> on the source domain, since the derived domain (e.g., "hosting.example.net") might also be the delegate for a number of other source domains.  Furthermore, for operational and security reasons a hosting provider is rarely able to present a certificate that matches the source domain.</t>
-      <t>Absent the use of DNS Security <xref target='RFC4033'/>, delegation via SRV does not provide a strong basis for treating a derived domain as a reference identifier during certificate verification.  This document describes how the use of DNSSEC with SRV can result in more secure delegation, such that the initiating XMPP server can legitimately treat a derived domain as a reference identifier.  This document also describes how to use <xref target="DANE"/> to verify TLS certificates containing source domains or derived domains.</t>
+      <t>The <xref target="XMPP-DNA"/> specification defines a framework for secure delegation and authenticated domain name associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP).  This document defines a a secure delegation method that uses DNS Security (DNSSEC) <xref target='RFC4033'/> in conjuction with the standard DNS SRV records <xref target='RFC2782'/> employed in domain name resolution in XMPP, with the result that a client or peer server that inititates an XMPP stream can legitimately treat a derived domain as a reference identifier during stream negotiation.  This document also defines a prooftype for DNA that uses DNS-based Authentication of Named Entities <xref target='DANE'/> to verify TLS certificates containing source domains or derived domains during stream negotiation.</t>
     </section>
     <section title="Terminology" anchor="terms">
       <t>This document inherits XMPP-related terminology from <xref target="RFC6120"/>, DNS-related terminology from <xref target='RFC1034'/>, <xref target='RFC1035'/>, <xref target='RFC2782'/> and <xref target="RFC4033"/>, and security-related terminology from <xref target='RFC4949'/> and <xref target='RFC5280'/>.  The terms "source domain", "derived domain", "reference identifier", and "presented identifier" are used as defined in the "CertID" specification <xref target="RFC6125"/>.</t>
@@ -394,6 +393,26 @@
         </front>
         <seriesInfo name="XSF XEP" value="0220"/>
         <format type="HTML" target="http://xmpp.org/extensions/xep-0220.html#appendix-authorinfo"/>
+      </reference>
+      <reference anchor="XMPP-DNA">
+        <front>
+          <title>Domain Name Associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP)</title>
+          <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
+            <organization>Cisco</organization>
+            <address>
+              <email>psaintan@cisco.com</email>
+            </address>
+          </author>
+          <author initials="M." surname="Miller" fullname="Matthew Miller">
+            <organization>Cisco</organization>
+            <address>
+              <email>mamille2@cisco.com</email>
+            </address>
+          </author>
+          <date month="June" year="2012"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-saintandre-xmpp-dna-00"/>
+        <format type="TXT" target="http://tools.ietf.org/html/draft-sainandre-xmpp-dna-00.txt"/>
       </reference>
     </references>
   </back>
