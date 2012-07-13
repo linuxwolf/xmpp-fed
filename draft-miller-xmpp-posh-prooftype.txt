@@ -4,12 +4,12 @@
 Network Working Group                                          M. Miller
 Internet-Draft                                            P. Saint-Andre
 Intended status: Standards Track                     Cisco Systems, Inc.
-Expires: December 29, 2012                                 June 27, 2012
+Expires: January 17, 2013                                  July 16, 2012
 
 
  Using PKIX over Secure HTTP (POSH) as a Prooftype for XMPP Domain Name
                               Associations
-                  draft-miller-xmpp-posh-prooftype-00
+                  draft-miller-xmpp-posh-prooftype-01
 
 Abstract
 
@@ -35,7 +35,7 @@ Status of this Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 29, 2012.
+   This Internet-Draft will expire on January 17, 2013.
 
 Copyright Notice
 
@@ -52,9 +52,9 @@ Copyright Notice
 
 
 
-Miller & Saint-Andre    Expires December 29, 2012               [Page 1]
+Miller & Saint-Andre    Expires January 17, 2013                [Page 1]
 
-Internet-Draft             XMPP POSH Prooftype                 June 2012
+Internet-Draft             XMPP POSH Prooftype                 July 2012
 
 
    the Trust Legal Provisions and are provided without warranty as
@@ -71,6 +71,8 @@ Table of Contents
    6.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
    7.  Security Considerations . . . . . . . . . . . . . . . . . . . . 6
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 7
+     8.1.  The "posh._xmpp-client._tcp.cer" Well-Known URI . . . . . . 7
+     8.2.  The "posh._xmpp-server._tcp.cer" Well-Known URI . . . . . . 7
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . . . 7
      9.1.  Normative References  . . . . . . . . . . . . . . . . . . . 7
      9.2.  Informative References  . . . . . . . . . . . . . . . . . . 8
@@ -106,11 +108,9 @@ Table of Contents
 
 
 
-
-
-Miller & Saint-Andre    Expires December 29, 2012               [Page 2]
+Miller & Saint-Andre    Expires January 17, 2013                [Page 2]
 
-Internet-Draft             XMPP POSH Prooftype                 June 2012
+Internet-Draft             XMPP POSH Prooftype                 July 2012
 
 
 1.  Introduction
@@ -164,9 +164,9 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
 
 
 
-Miller & Saint-Andre    Expires December 29, 2012               [Page 3]
+Miller & Saint-Andre    Expires January 17, 2013                [Page 3]
 
-Internet-Draft             XMPP POSH Prooftype                 June 2012
+Internet-Draft             XMPP POSH Prooftype                 July 2012
 
 
 3.  Prooftype
@@ -183,12 +183,12 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
    follows.
 
    1.  The initiating entity performs an HTTPS GET to the path "/.well-
-       known/tls/_<service>._tcp<source domain>.cer" at the source
-       domain; where "_<service>" MUST be either "_xmpp-client" for XMPP
-       client-to-server connections or "_xmpp-server" for XMPP server-
-       to-server connections:
+       known/posh._<service>._tcp.cer" at the source domain; where
+       "_<service>" MUST be either "_xmpp-client" for XMPP client-to-
+       server connections or "_xmpp-server" for XMPP server-to-server
+       connections:
 
-   HTTP GET /.well-known/_xmpp-server._tcp.im.example.com.cer HTTP/1.1
+   HTTP GET /.well-known/_xmpp-server._tcp.cer HTTP/1.1
    Host: im.example.com
 
 
@@ -220,9 +220,9 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
 
 
 
-Miller & Saint-Andre    Expires December 29, 2012               [Page 4]
+Miller & Saint-Andre    Expires January 17, 2013                [Page 4]
 
-Internet-Draft             XMPP POSH Prooftype                 June 2012
+Internet-Draft             XMPP POSH Prooftype                 July 2012
 
 
 4.  Secure Delegation
@@ -232,12 +232,12 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
    securely delegated, as follows:
 
    1.  The initiating entity performs an HTTPS GET to the path "/.well-
-       known/tls/_<service>._tcp<source-domain>.cer" at the source
+       known/posh._<service>._tcp<source-domain>.cer" at the source
        domain; where "_<service>" MUST be either "_xmpp-client" for XMPP
        client-to-server connections or "_xmpp-server" for XMPP server-
        to-server connections.  Here is an example:
 
-   GET /.well-known/_xmpp-server._tcp.im.example.com.cer HTTP/1.1
+   GET /.well-known/_xmpp-server._tcp.cer HTTP/1.1
    Host: im.example.com
 
 
@@ -246,20 +246,19 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
        provided by HTTP (e.g., using the 302, 303, or 307 response).
        The 'Location' header MUST specify an HTTPS URL, where the
        hostname and port is the derived domain HTTPS server, and the
-       path MUST match the pattern "_<service>._tcp.<derived
-       domain>.cer"; where "_<service>" MUST be identical to the
-       "_<service>" portion of the original request (line breaks added
-       for readability):
+       path MUST match the pattern "_<service>._tcp.cer"; where
+       "_<service>" MUST be identical to the "_<service>" portion of the
+       original request (line breaks added for readability):
 
    HTTP/1.1 302 Found
    Location: https://hosting.example.com/.well-known
-             /tls/_xmpp-server._tcp.hosting.example.net.cer
+             /posh._xmpp-server._tcp.cer
 
 
    3.  The initiating entity performs an HTTPS GET to the URL specified
        in the 'Location' header:
 
-   GET /.well-known/tls/_xmpp-server._tcp.hosting.example.cer HTTP/1.1
+   GET /.well-known/posh._xmpp-server._tcp.cer HTTP/1.1
    Host: hosting.example.net
 
 
@@ -276,9 +275,10 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
 
 
 
-Miller & Saint-Andre    Expires December 29, 2012               [Page 5]
+
+Miller & Saint-Andre    Expires January 17, 2013                [Page 5]
 
-Internet-Draft             XMPP POSH Prooftype                 June 2012
+Internet-Draft             XMPP POSH Prooftype                 July 2012
 
 
    HTTP/1.1 200 OK
@@ -332,15 +332,34 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
 
 
 
-Miller & Saint-Andre    Expires December 29, 2012               [Page 6]
+Miller & Saint-Andre    Expires January 17, 2013                [Page 6]
 
-Internet-Draft             XMPP POSH Prooftype                 June 2012
+Internet-Draft             XMPP POSH Prooftype                 July 2012
 
 
 8.  IANA Considerations
 
-   A future version of this specification will register the well-known
-   URIs mentioned above, in accordance with [RFC5785].
+8.1.  The "posh._xmpp-client._tcp.cer" Well-Known URI
+
+   This specification registers the "posh._xmpp-client._tcp.cer" well-
+   known URI in the Well-Known URI Registry as defined by [RFC5785].
+
+   URI suffix: posh._xmpp-client._tcp.cer
+
+   Change controller: IETF
+
+   Specitication document(s): This RFC.
+
+8.2.  The "posh._xmpp-server._tcp.cer" Well-Known URI
+
+   This specification registers the "posh._xmpp-server._tcp.cer" well-
+   known URI in the Well-Known URI Registry as defined by [RFC5785].
+
+   URI suffix: posh._xmpp-client._tcp.cer
+
+   Change controller: IETF
+
+   Specitication document(s): This RFC.
 
 
 9.  References
@@ -366,6 +385,14 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
               Encodings", RFC 4648, October 2006.
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
+
+
+
+Miller & Saint-Andre    Expires January 17, 2013                [Page 7]
+
+Internet-Draft             XMPP POSH Prooftype                 July 2012
+
+
               Housley, R., and W. Polk, "Internet X.509 Public Key
               Infrastructure Certificate and Certificate Revocation List
               (CRL) Profile", RFC 5280, May 2008.
@@ -382,16 +409,6 @@ Internet-Draft             XMPP POSH Prooftype                 June 2012
               within Internet Public Key Infrastructure Using X.509
               (PKIX) Certificates in the Context of Transport Layer
               Security (TLS)", RFC 6125, March 2011.
-
-
-
-
-
-
-Miller & Saint-Andre    Expires December 29, 2012               [Page 7]
-
-Internet-Draft             XMPP POSH Prooftype                 June 2012
-
 
 9.2.  Informative References
 
@@ -427,22 +444,5 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Miller & Saint-Andre    Expires December 29, 2012               [Page 8]
+Miller & Saint-Andre    Expires January 17, 2013                [Page 8]
 
