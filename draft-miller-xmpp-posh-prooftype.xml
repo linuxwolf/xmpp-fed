@@ -34,7 +34,7 @@
         <email>psaintan@cisco.com</email>
       </address>
     </author>
-    <date month="July" day="16" year="2012"/>
+    <date month="July" day="13" year="2012"/>
     <area>RAI</area>
     <keyword>Internet-Draft</keyword>
     <keyword>XMPP</keyword>
@@ -60,9 +60,9 @@
       <t>The process for retrieving a PKIX certificate over secure HTTP is as follows.</t>
       <t>
         <list style="numbers">
-          <t>The initiating entity performs an HTTPS GET to the path "/.well-known/posh._&lt;service&gt;._tcp.cer" at the source domain; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections:
+          <t>The initiating entity performs an HTTPS GET at the source domain to the path "/.well-known/posh._&lt;service&gt;._tcp.cer"; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections:
             <figure><artwork><![CDATA[
-HTTP GET /.well-known/_xmpp-server._tcp.cer HTTP/1.1
+HTTP GET /.well-known/posh._xmpp-server._tcp.cer HTTP/1.1
 Host: im.example.com
               ]]></artwork></figure>
           <vspace blankLines="1"/></t>
@@ -96,16 +96,16 @@ tg==
       <t>When PKIX Over Secure HTTP (POSH) is the DNA prooftype, it is possible to use HTTPS redirects in determining if a domain is securely delegated, as follows:</t>
       <t>
         <list style="numbers">
-          <t>The initiating entity performs an HTTPS GET to the path "/.well-known/posh._&lt;service&gt;._tcp&lt;source-domain&gt;.cer" at the source domain; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections.  Here is an example:
+          <t>The initiating entity performs an HTTPS GET at the source domain to the path "/.well-known/posh._&lt;service&gt;._tcp.cer"; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections.  Here is an example:
             <figure><artwork><![CDATA[
-GET /.well-known/_xmpp-server._tcp.cer HTTP/1.1
+GET /.well-known/posh._xmpp-server._tcp.cer HTTP/1.1
 Host: im.example.com
               ]]></artwork></figure>
           <vspace blankLines="1"/></t>
           <t>If the source domain HTTPS server has delegated to a derived domain, it MUST respond with one of the redirect mechanisms provided by HTTP (e.g., using the 302, 303, or 307 response).  The 'Location' header MUST specify an HTTPS URL, where the hostname and port is the derived domain HTTPS server, and the path MUST match the pattern "_&lt;service&gt;._tcp.cer"; where "_&lt;service&gt;" MUST be identical to the "_&lt;service&gt;" portion of the original request (line breaks added for readability):
             <figure><artwork><![CDATA[
 HTTP/1.1 302 Found
-Location: https://hosting.example.com/.well-known
+Location: https://hosting.example.net/.well-known
           /posh._xmpp-server._tcp.cer
               ]]></artwork></figure>
           <vspace blankLines="1"/></t>
@@ -156,13 +156,13 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         <t>This specification registers the "posh._xmpp-client._tcp.cer" well-known URI in the Well-Known URI Registry as defined by <xref target="RFC5785"/>.</t>
         <t>URI suffix: posh._xmpp-client._tcp.cer</t>
         <t>Change controller: IETF</t>
-        <t>Specitication document(s): This RFC.</t>
+        <t>Specification document(s): RFC&rfc.number;.</t>
       </section>
       <section title="The &quot;posh._xmpp-server._tcp.cer&quot; Well-Known URI" anchor="iana-posh-server">
         <t>This specification registers the "posh._xmpp-server._tcp.cer" well-known URI in the Well-Known URI Registry as defined by <xref target="RFC5785"/>.</t>
-        <t>URI suffix: posh._xmpp-client._tcp.cer</t>
+        <t>URI suffix: posh._xmpp-server._tcp.cer</t>
         <t>Change controller: IETF</t>
-        <t>Specitication document(s): This RFC.</t>
+        <t>Specification document(s): RFC&rfc.number;.</t>
       </section>
     </section>
   </middle>
