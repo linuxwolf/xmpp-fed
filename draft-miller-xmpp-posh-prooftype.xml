@@ -48,7 +48,7 @@
   <middle>
     <section title="Introduction" anchor="intro">
       <t>The <xref target="XMPP-DNA"/> specification defines a framework for secure delegation and authenticated domain name associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP).  This document defines a prooftype for DNA, using PKIX certificates obtained over secure HTTP ("POSH"), as well as a secure delegation method, based on HTTPS redirects, that is appropriate for use with the POSH prooftype.</t>
-      <t>The rationale for POSH is driven by current operational realities.  It is effectively impossible for a hosting service to provide and maintain PKIX certificates <xref target="RFC5280"/> that include the appropriate <xref target="RFC6125"/> identifiers for each hosted domain.  It is true that DNS-based technologies are emerging for secure delegation, in the form of DNS Security <xref target="RFC4033"/> and <xref target="DANE"/>); however, these technologies are not yet widely deployed and might not be deployed in the near future for domains outside the most common top-level domains (e.g., ".COM", ".NET", ".EDU").  Because the XMPP community wishes to deploy secure delegation and authenticated domain name associations as widely and as quickly as possible, this document specifies how to use secure HTTP <xref target="RFC2616"/> and PKIX certificates <xref target="RFC5280"/> to verify that a domain is delegated to a hosting provider and authenticate an assocation between a domain name and an XML stream.</t>
+      <t>The rationale for POSH is driven by current operational realities.  It is effectively impossible for a hosting service to provide and maintain PKIX certificates <xref target="RFC5280"/> that include the appropriate <xref target="RFC6125"/> identifiers for each hosted domain.  It is true that DNS-based technologies are emerging for secure delegation, in the form of DNS Security <xref target="RFC4033"/> and <xref target="RFC6698"/>); however, these technologies are not yet widely deployed and might not be deployed in the near future for domains outside the most common top-level domains (e.g., ".COM", ".NET", ".EDU").  Because the XMPP community wishes to deploy secure delegation and authenticated domain name associations as widely and as quickly as possible, this document specifies how to use secure HTTP <xref target="RFC2616"/> and PKIX certificates <xref target="RFC5280"/> to verify that a domain is delegated to a hosting provider and authenticate an assocation between a domain name and an XML stream.</t>
     </section>
     <section title="Terminology" anchor="terms">
       <t>This document inherits XMPP-related terminology from <xref target="RFC6120"/> and security-related terminology from <xref target="RFC5280"/>.  The terms "source domain", "derived domain", "reference identifier", and "presented identifier" are used as defined in the "CertID" specification <xref target="RFC6125"/>.</t>
@@ -448,26 +448,6 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
       </reference>
     </references>
     <references title="Informative References">
-      <reference anchor="DANE">
-        <front>
-          <title>The DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol: TLSA</title>
-          <author initials="P." surname="Hoffman" fullname="Paul Hoffman">
-            <organization>VPN Consortium</organization>
-            <address>
-              <email>paul.hoffman@vpnc.org</email>
-            </address>
-          </author>
-          <author initials="J." surname="Schlyter" fullname="Jakob Schlyter">
-            <organization>Kirei AB</organization>
-            <address>
-              <email>jakob@kirei.se</email>
-            </address>
-          </author>
-          <date month="June" year="2012"/>
-        </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-dane-protocol-23"/>
-        <format type="TXT" target="http://tools.ietf.org/html/draft-ietf-dane-protocol-23.txt"/>
-      </reference>
       <reference anchor="RFC4033">
         <front>
           <title>DNS Security Introduction and Requirements</title>
@@ -505,6 +485,23 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         </front>
         <seriesInfo name="RFC" value="4033"/>
         <format type="TXT" target="http://tools.ietf.org/rfc/rfc4033.txt"/>
+      </reference>
+      <reference anchor='RFC6698'>
+        <front>
+          <title>The DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol: TLSA</title>
+          <author initials='P.' surname='Hoffman' fullname='P. Hoffman'>
+            <organization />
+          </author>
+          <author initials='J.' surname='Schlyter' fullname='J. Schlyter'>
+            <organization />
+          </author>
+          <date year='2012' month='August' />
+          <abstract>
+            <t>Encrypted communication on the Internet often uses Transport Layer Security (TLS), which depends on third parties to certify the keys used.  This document improves on that situation by enabling the administrators of domain names to specify the keys used in that domain's TLS servers.  This requires matching improvements in TLS client software, but no change in TLS server software. [STANDARDS-TRACK]</t>
+          </abstract>
+        </front>
+        <seriesInfo name='RFC' value='6698' />
+        <format type='TXT' octets='84034' target='http://www.rfc-editor.org/rfc/rfc6698.txt' />
       </reference>
     </references>
   </back>

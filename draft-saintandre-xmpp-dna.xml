@@ -66,7 +66,7 @@
     </section>
     <section title="Framework" anchor="framework">
       <t>In essence, we need to establish an association between a domain and an XML stream: is the XMPP server to which a client or peer server connects "allowed" to accept stanzas for or send stanzas from a given domain?  If so, we say that there is a domain name association ("DNA") for the stream.</t>
-      <t>For TLS in general, the TLS client has some expectations about the identity of the TLS server (in the language of the "CertID" specification <xref target="RFC6125"/>, the TLS client has a "reference identity"), and then checks some material presented by the TLS server (the "presented identity" within the server certificate) to verify that its expectations have been met.  In XMPP, Server Dialback follows a similar model, except that the verification material takes the form of a token instead of a certificate.  The DNS-Based Authentication of Named Entities protocol <xref target="DANE"/>, at least in some of its modes, adds another kind of verification material: not the presented identity within a PKIX certificate, but a complete certificate or hash thereof.  And other kinds of verification material could be envisioned (e.g., OpenPGP keys, Kerberos tickets, OAuth tokens), although they are not considered here.</t>
+      <t>For TLS in general, the TLS client has some expectations about the identity of the TLS server (in the language of the "CertID" specification <xref target="RFC6125"/>, the TLS client has a "reference identity"), and then checks some material presented by the TLS server (the "presented identity" within the server certificate) to verify that its expectations have been met.  In XMPP, Server Dialback follows a similar model, except that the verification material takes the form of a token instead of a certificate.  The DNS-Based Authentication of Named Entities protocol <xref target="RFC6698"/>, at least in some of its modes, adds another kind of verification material: not the presented identity within a PKIX certificate, but a complete certificate or hash thereof.  And other kinds of verification material could be envisioned (e.g., OpenPGP keys, Kerberos tickets, OAuth tokens), although they are not considered here.</t>
       <t>No matter what kind of verification material is used, an XMPP client or peer server that wishes to verify a domain name association needs a way to obtain the verification material it will refer to when establishing the association.  For instance, when a server presents a PKIX certificate during TLS negotiation, the connecting client or peer server has traditionally obtained its verification material out of band or via configuration from a certification authority (i.e., in the form of a root certificate contained in a certificate bundle).  In the Server Dialback protocol, the verification material is a token that is obtained over XMPP itself.  In DANE, the verification material is obtained from the Domain Name System.  In the PKIX Over Secure HTTP ("POSH") method described in an accompanying specification, the verification material is obtained over secure HTTP.  And other methods for obtaining verification material could be envisioned (e.g., IPsec), although they are not considered here.</t>
       <t>Furthermore, the matching rules for checking the verification material will depend on the nature of that material; for example, <xref target="RFC6120"/> defines a profile of the rules from the "CertID" specification <xref target="RFC6125"/>, Server Dialback <xref target="XEP-0220"/> typically performs a character-for-character comparison of tokens, DANE might compare the SubjectPublicKeyInfo data or the full certificate, and so on.</t>
       <t>Finally, given the relationship between XMPP and the DNS (XMPP services are usually identified by domain name, not IP address), it is important to make it clear whether a given verification method can (or must) be used only with secure DNS or also with insecure DNS.</t>
@@ -121,63 +121,6 @@
   </middle>
   <back>
     <references title="Normative References">
-      <reference anchor="DANE">
-        <front>
-          <title>The DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol: TLSA</title>
-          <author initials="P" surname="Hoffman" fullname="Paul Hoffman">
-            <organization/>
-          </author>
-          <author initials="J" surname="Schlyter" fullname="Jakob Schlyter">
-            <organization/>
-          </author>
-          <date month="June" day="14" year="2012"/>
-          <abstract>
-            <t>Encrypted communication on the Internet often uses Transport Level Security (TLS), which depends on third parties to certify the keys used.  This document improves on that situation by enabling the administrators of domain names to specify the keys used in that domain's TLS servers.  This requires matching improvements in TLS client software, but no change in TLS server software.</t>
-          </abstract>
-        </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-dane-protocol-23"/>
-        <format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-dane-protocol-23.txt"/>
-      </reference>
-      <reference anchor="XMPP-DANE">
-        <front>
-          <title>Using DNS Security Extensions (DNSSEC) and DNS-based Authentication of Named Entities (DANE) as a Prooftype for XMPP Domain Name Associations</title>
-          <author initials="M." surname="Miller" fullname="Matthew Miller">
-            <organization>Cisco</organization>
-            <address>
-              <email>mamille2@cisco.com</email>
-            </address>
-          </author>
-          <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
-            <organization>Cisco</organization>
-            <address>
-              <email>psaintan@cisco.com</email>
-            </address>
-          </author>
-          <date month="June" year="2012"/>
-        </front>
-        <seriesInfo name="Internet-Draft" value="draft-miller-xmpp-dnssec-prooftype-02"/>
-        <format type="TXT" target="http://tools.ietf.org/html/draft-miller-xmpp-prooftype-dnsssec-prooftype-02.txt"/>
-      </reference>
-      <reference anchor="XMPP-POSH">
-        <front>
-          <title>Using PKIX over Secure HTTP (POSH) as a Prooftype for XMPP Domain Name Associations</title>
-          <author initials="M." surname="Miller" fullname="Matthew Miller">
-            <organization>Cisco</organization>
-            <address>
-              <email>mamille2@cisco.com</email>
-            </address>
-          </author>
-          <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
-            <organization>Cisco</organization>
-            <address>
-              <email>psaintan@cisco.com</email>
-            </address>
-          </author>
-          <date month="June" year="2012"/>
-        </front>
-        <seriesInfo name="Internet-Draft" value="draft-miller-xmpp-posh-prooftype-00"/>
-        <format type="TXT" target="http://tools.ietf.org/html/draft-miller-xmpp-posh-prooftype-00.txt"/>
-      </reference>
       <reference anchor="RFC1034">
         <front>
           <title abbrev="Domain Concepts and Facilities">Domain names - concepts and facilities</title>
@@ -437,6 +380,23 @@
         <seriesInfo name="RFC" value="6125"/>
         <format type="TXT" target="http://tools.ietf.org/rfc/rfc6125.txt"/>
       </reference>
+      <reference anchor='RFC6698'>
+        <front>
+          <title>The DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol: TLSA</title>
+          <author initials='P.' surname='Hoffman' fullname='P. Hoffman'>
+            <organization />
+          </author>
+          <author initials='J.' surname='Schlyter' fullname='J. Schlyter'>
+            <organization />
+          </author>
+          <date year='2012' month='August' />
+          <abstract>
+            <t>Encrypted communication on the Internet often uses Transport Layer Security (TLS), which depends on third parties to certify the keys used.  This document improves on that situation by enabling the administrators of domain names to specify the keys used in that domain's TLS servers.  This requires matching improvements in TLS client software, but no change in TLS server software. [STANDARDS-TRACK]</t>
+          </abstract>
+        </front>
+        <seriesInfo name='RFC' value='6698' />
+        <format type='TXT' octets='84034' target='http://www.rfc-editor.org/rfc/rfc6698.txt' />
+      </reference>
       <reference anchor="XEP-0220">
         <front>
           <title>Server Dialback</title>
@@ -460,6 +420,46 @@
         </front>
         <seriesInfo name="XSF XEP" value="0220"/>
         <format type="HTML" target="http://xmpp.org/extensions/xep-0220.html#appendix-authorinfo"/>
+      </reference>
+      <reference anchor="XMPP-DANE">
+        <front>
+          <title>Using DNS Security Extensions (DNSSEC) and DNS-based Authentication of Named Entities (DANE) as a Prooftype for XMPP Domain Name Associations</title>
+          <author initials="M." surname="Miller" fullname="Matthew Miller">
+            <organization>Cisco</organization>
+            <address>
+              <email>mamille2@cisco.com</email>
+            </address>
+          </author>
+          <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
+            <organization>Cisco</organization>
+            <address>
+              <email>psaintan@cisco.com</email>
+            </address>
+          </author>
+          <date month="June" year="2012"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-miller-xmpp-dnssec-prooftype-02"/>
+        <format type="TXT" target="http://tools.ietf.org/html/draft-miller-xmpp-prooftype-dnsssec-prooftype-02.txt"/>
+      </reference>
+      <reference anchor="XMPP-POSH">
+        <front>
+          <title>Using PKIX over Secure HTTP (POSH) as a Prooftype for XMPP Domain Name Associations</title>
+          <author initials="M." surname="Miller" fullname="Matthew Miller">
+            <organization>Cisco</organization>
+            <address>
+              <email>mamille2@cisco.com</email>
+            </address>
+          </author>
+          <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
+            <organization>Cisco</organization>
+            <address>
+              <email>psaintan@cisco.com</email>
+            </address>
+          </author>
+          <date month="June" year="2012"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-miller-xmpp-posh-prooftype-00"/>
+        <format type="TXT" target="http://tools.ietf.org/html/draft-miller-xmpp-posh-prooftype-00.txt"/>
       </reference>
     </references>
     <references title="Informative References">
