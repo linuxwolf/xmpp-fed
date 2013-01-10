@@ -5,7 +5,7 @@
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="4"?>
-<rfc category="std" docName="draft-miller-xmpp-dnssec-prooftype-02" ipr="trust200902">
+<rfc category="std" docName="draft-miller-xmpp-dnssec-prooftype-03" ipr="trust200902">
   <front>
     <title abbrev="XMPP DANE Prooftype">Using DNS Security Extensions (DNSSEC) and DNS-based Authentication of Named Entities (DANE) as a Prooftype for XMPP Domain Name Associations</title>
     <author initials="M." surname="Miller" fullname="Matthew Miller">
@@ -34,7 +34,7 @@
         <email>psaintan@cisco.com</email>
       </address>
     </author>
-    <date month="June" day="27" year="2012"/>
+    <date month="January" day="10" year="2013"/>
     <area>RAI</area>
     <keyword>Internet-Draft</keyword>
     <keyword>XMPP</keyword>
