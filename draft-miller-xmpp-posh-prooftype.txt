@@ -1,6 +1,7 @@
 
 
 
+
 Network Working Group                                          M. Miller
 Internet-Draft                                            P. Saint-Andre
 Intended status: Standards Track                     Cisco Systems, Inc.
@@ -20,7 +21,7 @@ Abstract
    prooftype) for securely delegating a source domain to a derived
    domain in XMPP.
 
-Status of this Memo
+Status of This Memo
 
    This Internet-Draft is submitted in full conformance with the
    provisions of BCP 78 and BCP 79.
@@ -54,64 +55,28 @@ Copyright Notice
 
 Miller & Saint-Andre    Expires January 14, 2013                [Page 1]
 
-Internet-Draft             XMPP POSH Prooftype                 July 2012
+Internet-Draft            XMPP POSH Prooftype                  July 2012
 
 
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
 
-
 Table of Contents
 
-   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . . . 3
-   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . . . 3
-   3.  Prooftype . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
-   4.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . . . 5
-   5.  Caching Results . . . . . . . . . . . . . . . . . . . . . . . . 6
-   6.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . . . 6
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . . . 6
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 7
-     8.1.  The "posh._xmpp-client._tcp.cer" Well-Known URI . . . . . . 7
-     8.2.  The "posh._xmpp-server._tcp.cer" Well-Known URI . . . . . . 7
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . . . 7
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . . . 7
-     9.2.  Informative References  . . . . . . . . . . . . . . . . . . 8
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . . . 8
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Miller & Saint-Andre    Expires January 14, 2013                [Page 2]
-
-Internet-Draft             XMPP POSH Prooftype                 July 2012
-
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   2
+   3.  Prooftype . . . . . . . . . . . . . . . . . . . . . . . . . .   3
+   4.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . .   4
+   5.  Caching Results . . . . . . . . . . . . . . . . . . . . . . .   5
+   6.  Examples  . . . . . . . . . . . . . . . . . . . . . . . . . .   6
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   6
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
+     8.1.  The "posh._xmpp-client._tcp.cer" Well-Known URI . . . . .   6
+     8.2.  The "posh._xmpp-server._tcp.cer" Well-Known URI . . . . .   6
+   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   6
+     9.1.  Normative References  . . . . . . . . . . . . . . . . . .   6
+     9.2.  Informative References  . . . . . . . . . . . . . . . . .   7
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   7
 
 1.  Introduction
 
@@ -127,21 +92,28 @@ Internet-Draft             XMPP POSH Prooftype                 July 2012
    maintain PKIX certificates [RFC5280] that include the appropriate
    [RFC6125] identifiers for each hosted domain.  It is true that DNS-
    based technologies are emerging for secure delegation, in the form of
-   DNS Security [RFC4033] and [DANE]); however, these technologies are
-   not yet widely deployed and might not be deployed in the near future
-   for domains outside the most common top-level domains (e.g., ".COM",
-   ".NET", ".EDU").  Because the XMPP community wishes to deploy secure
-   delegation and authenticated domain name associations as widely and
-   as quickly as possible, this document specifies how to use secure
-   HTTP [RFC2616] and PKIX certificates [RFC5280] to verify that a
-   domain is delegated to a hosting provider and authenticate an
+   DNS Security [RFC4033] and [RFC6698]); however, these technologies
+   are not yet widely deployed and might not be deployed in the near
+   future for domains outside the most common top-level domains (e.g.,
+   ".COM", ".NET", ".EDU").  Because the XMPP community wishes to deploy
+   secure delegation and authenticated domain name associations as
+   widely and as quickly as possible, this document specifies how to use
+   secure HTTP [RFC2616] and PKIX certificates [RFC5280] to verify that
+   a domain is delegated to a hosting provider and authenticate an
    assocation between a domain name and an XML stream.
-
 
 2.  Terminology
 
    This document inherits XMPP-related terminology from [RFC6120] and
    security-related terminology from [RFC5280].  The terms "source
+
+
+
+Miller & Saint-Andre    Expires January 14, 2013                [Page 2]
+
+Internet-Draft            XMPP POSH Prooftype                  July 2012
+
+
    domain", "derived domain", "reference identifier", and "presented
    identifier" are used as defined in the "CertID" specification
    [RFC6125].
@@ -157,17 +129,6 @@ Internet-Draft             XMPP POSH Prooftype                 July 2012
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
    "OPTIONAL" in this document are to be interpreted as described in
    [RFC2119].
-
-
-
-
-
-
-
-Miller & Saint-Andre    Expires January 14, 2013                [Page 3]
-
-Internet-Draft             XMPP POSH Prooftype                 July 2012
-
 
 3.  Prooftype
 
@@ -192,14 +153,23 @@ Internet-Draft             XMPP POSH Prooftype                 July 2012
    Host: im.example.com
 
 
+
    2.  If the source domain HTTPS server has a certificate for the
        requested path, it MUST respond with a success status code, with
        the message body as the DER certificate (optionally encoded as
-       base64 [RFC4684]) that the XMPP server at the source domain will
+       base64 [RFC4648]) that the XMPP server at the source domain will
        present during the TLS negotiation phase of XMPP stream setup:
 
    HTTP/1.1 200 OK
    Content-Type: application/pkix-cert
+
+
+
+Miller & Saint-Andre    Expires January 14, 2013                [Page 3]
+
+Internet-Draft            XMPP POSH Prooftype                  July 2012
+
+
    Content-Length: 839
 
    -----BEGIN CERTIFICATE-----
@@ -220,11 +190,6 @@ Internet-Draft             XMPP POSH Prooftype                 July 2012
 
 
 
-Miller & Saint-Andre    Expires January 14, 2013                [Page 4]
-
-Internet-Draft             XMPP POSH Prooftype                 July 2012
-
-
 4.  Secure Delegation
 
    When PKIX Over Secure HTTP (POSH) is the DNA prooftype, it is
@@ -241,6 +206,7 @@ Internet-Draft             XMPP POSH Prooftype                 July 2012
    Host: im.example.com
 
 
+
    2.  If the source domain HTTPS server has delegated to a derived
        domain, it MUST respond with one of the redirect mechanisms
        provided by HTTP (e.g., using the 302, 303, or 307 response).
@@ -252,7 +218,16 @@ Internet-Draft             XMPP POSH Prooftype                 July 2012
 
    HTTP/1.1 302 Found
    Location: https://hosting.example.net/.well-known
+
+
+
+Miller & Saint-Andre    Expires January 14, 2013                [Page 4]
+
+Internet-Draft            XMPP POSH Prooftype                  July 2012
+
+
              /posh._xmpp-server._tcp.cer
+
 
 
    3.  The initiating entity performs an HTTPS GET to the URL specified
@@ -262,24 +237,12 @@ Internet-Draft             XMPP POSH Prooftype                 July 2012
    Host: hosting.example.net
 
 
+
    4.  If the derived domain HTTPS server has a certificate, it MUST
        respond with a success status code, with the message body as the
-       DER certificate (optionally encoded as base64 [RFC4684]) that the
+       DER certificate (optionally encoded as base64 [RFC4648]) that the
        XMPP server at the derived domain will present during the TLS
        negotiation phase of XMPP stream setup:
-
-
-
-
-
-
-
-
-
-Miller & Saint-Andre    Expires January 14, 2013                [Page 5]
-
-Internet-Draft             XMPP POSH Prooftype                 July 2012
-
 
    HTTP/1.1 200 OK
    Content-Type: application/pkix-cert
@@ -313,11 +276,16 @@ Internet-Draft             XMPP POSH Prooftype                 July 2012
    content) is not appropriate to cache at the HTTP level.
 
 
+
+Miller & Saint-Andre    Expires January 14, 2013                [Page 5]
+
+Internet-Draft            XMPP POSH Prooftype                  July 2012
+
+
 6.  Examples
 
    Detailed examples will be provided in a future version of this
    specification.
-
 
 7.  Security Considerations
 
@@ -327,15 +295,6 @@ Internet-Draft             XMPP POSH Prooftype                 July 2012
 
    Specifically, communication via HTTPS depends on checking the
    identity of the HTTP server in accordance with [RFC2818].
-
-
-
-
-
-Miller & Saint-Andre    Expires January 14, 2013                [Page 6]
-
-Internet-Draft             XMPP POSH Prooftype                 July 2012
-
 
 8.  IANA Considerations
 
@@ -348,7 +307,7 @@ Internet-Draft             XMPP POSH Prooftype                 July 2012
 
    Change controller: IETF
 
-   Specification document(s): RFCXXXX.
+   Specification document(s): [[ this document ]]
 
 8.2.  The "posh._xmpp-server._tcp.cer" Well-Known URI
 
@@ -359,8 +318,7 @@ Internet-Draft             XMPP POSH Prooftype                 July 2012
 
    Change controller: IETF
 
-   Specification document(s): RFCXXXX.
-
+   Specification document(s): [[ this document ]]
 
 9.  References
 
@@ -372,6 +330,14 @@ Internet-Draft             XMPP POSH Prooftype                 July 2012
               (XMPP)", draft-saintandre-xmpp-dna-00 (work in progress),
               June 2012.
 
+
+
+
+Miller & Saint-Andre    Expires January 14, 2013                [Page 6]
+
+Internet-Draft            XMPP POSH Prooftype                  July 2012
+
+
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
 
@@ -381,25 +347,17 @@ Internet-Draft             XMPP POSH Prooftype                 July 2012
 
    [RFC2818]  Rescorla, E., "HTTP Over TLS", RFC 2818, May 2000.
 
-   [RFC4684]  Josefsson, S., "The Base16, Base32, and Base64 Data
+   [RFC4648]  Josefsson, S., "The Base16, Base32, and Base64 Data
               Encodings", RFC 4648, October 2006.
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
-
-
-
-Miller & Saint-Andre    Expires January 14, 2013                [Page 7]
-
-Internet-Draft             XMPP POSH Prooftype                 July 2012
-
-
               Housley, R., and W. Polk, "Internet X.509 Public Key
               Infrastructure Certificate and Certificate Revocation List
               (CRL) Profile", RFC 5280, May 2008.
 
    [RFC5785]  Nottingham, M. and E. Hammer-Lahav, "Defining Well-Known
-              Uniform Resource Identifiers (URIs)", RFC 5785,
-              April 2010.
+              Uniform Resource Identifiers (URIs)", RFC 5785, April
+              2010.
 
    [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
               Protocol (XMPP): Core", RFC 6120, March 2011.
@@ -412,17 +370,29 @@ Internet-Draft             XMPP POSH Prooftype                 July 2012
 
 9.2.  Informative References
 
-   [DANE]     Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
-              of Named Entities (DANE) Transport Layer Security (TLS)
-              Protocol: TLSA", draft-ietf-dane-protocol-23 (work in
-              progress), June 2012.
-
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
-              Rose, "DNS Security Introduction and Requirements",
-              RFC 4033, May 2005.
+              Rose, "DNS Security Introduction and Requirements", RFC
+              4033, May 2005.
 
+   [RFC6698]  Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
+              of Named Entities (DANE) Transport Layer Security (TLS)
+              Protocol: TLSA", RFC 6698, August 2012.
 
 Authors' Addresses
+
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre    Expires January 14, 2013                [Page 7]
+
+Internet-Draft            XMPP POSH Prooftype                  July 2012
+
 
    Matthew Miller
    Cisco Systems, Inc.
@@ -444,5 +414,34 @@ Authors' Addresses
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Miller & Saint-Andre    Expires January 14, 2013                [Page 8]
-

@@ -66,7 +66,7 @@ HTTP GET /.well-known/posh._xmpp-server._tcp.cer HTTP/1.1
 Host: im.example.com
               ]]></artwork></figure>
           <vspace blankLines="1"/></t>
-          <t>If the source domain HTTPS server has a certificate for the requested path, it MUST respond with a success status code, with the message body as the DER certificate (optionally encoded as base64 <xref target="RFC4684"/>) that the XMPP server at the source domain will present during the TLS negotiation phase of XMPP stream setup:
+          <t>If the source domain HTTPS server has a certificate for the requested path, it MUST respond with a success status code, with the message body as the DER certificate (optionally encoded as base64 <xref target="RFC4648"/>) that the XMPP server at the source domain will present during the TLS negotiation phase of XMPP stream setup:
             <figure><artwork><![CDATA[
 HTTP/1.1 200 OK
 Content-Type: application/pkix-cert
@@ -115,7 +115,7 @@ GET /.well-known/posh._xmpp-server._tcp.cer HTTP/1.1
 Host: hosting.example.net
               ]]></artwork></figure>
           <vspace blankLines="1"/></t>
-          <t>If the derived domain HTTPS server has a certificate, it MUST respond with a success status code, with the message body as the DER certificate (optionally encoded as base64 <xref target="RFC4684"/>) that the XMPP server at the derived domain will present during the TLS negotiation phase of XMPP stream setup:
+          <t>If the derived domain HTTPS server has a certificate, it MUST respond with a success status code, with the message body as the DER certificate (optionally encoded as base64 <xref target="RFC4648"/>) that the XMPP server at the derived domain will present during the TLS negotiation phase of XMPP stream setup:
             <figure><artwork><![CDATA[
 HTTP/1.1 200 OK
 Content-Type: application/pkix-cert
@@ -156,13 +156,13 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         <t>This specification registers the "posh._xmpp-client._tcp.cer" well-known URI in the Well-Known URI Registry as defined by <xref target="RFC5785"/>.</t>
         <t>URI suffix: posh._xmpp-client._tcp.cer</t>
         <t>Change controller: IETF</t>
-        <t>Specification document(s): RFC&rfc.number;.</t>
+        <t>Specification document(s): [[ this document ]]</t>
       </section>
       <section title="The &quot;posh._xmpp-server._tcp.cer&quot; Well-Known URI" anchor="iana-posh-server">
         <t>This specification registers the "posh._xmpp-server._tcp.cer" well-known URI in the Well-Known URI Registry as defined by <xref target="RFC5785"/>.</t>
         <t>URI suffix: posh._xmpp-server._tcp.cer</t>
         <t>Change controller: IETF</t>
-        <t>Specification document(s): RFC&rfc.number;.</t>
+        <t>Specification document(s): [[ this document ]]</t>
       </section>
     </section>
   </middle>
@@ -352,7 +352,7 @@ d8avm8gJ5Iu7L96qosWzL3epHYW7
         <seriesInfo name="RFC" value="2818"/>
         <format type="TXT" octets="15170" target="http://www.rfc-editor.org/rfc/rfc2818.txt"/>
       </reference>
-      <reference anchor="RFC4684">
+      <reference anchor="RFC4648">
         <front>
           <title>The Base16, Base32, and Base64 Data Encodings</title>
           <author initials="S." surname="Josefsson" fullname="S. Josefsson">
