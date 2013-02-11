@@ -5,7 +5,7 @@
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="4"?>
-<rfc category="std" docName="draft-saintandre-xmpp-dna-00" ipr="trust200902">
+<rfc category="std" docName="draft-saintandre-xmpp-dna-01" ipr="trust200902">
   <front>
     <title abbrev="XMPP DNA">Domain Name Associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP)</title>
     <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
@@ -34,7 +34,7 @@
         <email>mamille2@cisco.com</email>
       </address>
     </author>
-    <date month="June" day="27" year="2012"/>
+    <date month="January" day="30" year="2013"/>
     <area>RAI</area>
     <keyword>Internet-Draft</keyword>
     <keyword>XMPP</keyword>
@@ -91,6 +91,9 @@
       </section>
       <section title="Dialback Keys" anchor="prooftype-dbkeys">
         <t>The Dialback Keys prooftype formalizes the existing Server Dialback protocol: the verification materials consist of a token obtained over XMPP, the token is checked by the authoritative server for a given domain using implementation-specific methods such as character-by-character comparison, and secure DNS is needed in order to place significant trust in such tokens, although it is known that at the time of this writing many domains use Dialback Keys even in the absence of secure DNS.</t>
+      </section>
+      <section title="Order of Operations" anchor="prooftype-order">
+        <t></t>
       </section>
     </section>
     <section title="Assertion Mechanisms" anchor="assertions">
@@ -436,10 +439,10 @@
               <email>psaintan@cisco.com</email>
             </address>
           </author>
-          <date month="June" year="2012"/>
+          <date month="January" year="2013"/>
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-miller-xmpp-dnssec-prooftype-02"/>
-        <format type="TXT" target="http://tools.ietf.org/html/draft-miller-xmpp-prooftype-dnsssec-prooftype-02.txt"/>
+        <seriesInfo name="Internet-Draft" value="draft-miller-xmpp-dnssec-prooftype-03"/>
+        <format type="TXT" target="http://tools.ietf.org/html/draft-miller-xmpp-prooftype-dnsssec-prooftype-03.txt"/>
       </reference>
       <reference anchor="XMPP-POSH">
         <front>
@@ -456,10 +459,10 @@
               <email>psaintan@cisco.com</email>
             </address>
           </author>
-          <date month="June" year="2012"/>
+          <date month="January" year="2013"/>
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-miller-xmpp-posh-prooftype-00"/>
-        <format type="TXT" target="http://tools.ietf.org/html/draft-miller-xmpp-posh-prooftype-00.txt"/>
+        <seriesInfo name="Internet-Draft" value="draft-miller-xmpp-posh-prooftype-01"/>
+        <format type="TXT" target="http://tools.ietf.org/html/draft-miller-xmpp-posh-prooftype-01.txt"/>
       </reference>
     </references>
     <references title="Informative References">
