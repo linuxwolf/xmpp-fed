@@ -2,7 +2,7 @@
 
 
 
-Network Working Group                                          M. Miller
+XMPP                                                           M. Miller
 Internet-Draft                                            P. Saint-Andre
 Intended status: Standards Track                     Cisco Systems, Inc.
 Expires: August 16, 2013                               February 12, 2013
@@ -10,7 +10,7 @@ Expires: August 16, 2013                               February 12, 2013
 
  Using PKIX over Secure HTTP (POSH) as a Prooftype for XMPP Domain Name
                               Associations
-                  draft-miller-xmpp-posh-prooftype-01
+                  draft-miller-xmpp-posh-prooftype-02
 
 Abstract
 
