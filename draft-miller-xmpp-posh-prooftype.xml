@@ -48,7 +48,7 @@
   <middle>
     <section title="Introduction" anchor="intro">
       <t>The <xref target="XMPP-DNA"/> specification defines a framework for secure delegation and authenticated domain name associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP).  This document defines a prooftype for DNA, using PKIX certificates obtained over secure HTTP ("POSH"), as well as a secure delegation method, based on HTTPS redirects, that is appropriate for use with the POSH prooftype.</t>
-      <t>The rationale for POSH is driven by current operational realities.  It is effectively impossible for a hosting service to provide and maintain PKIX certificates <xref target="RFC5280"/> that include the appropriate <xref target="RFC6125"/> identifiers for each hosted domain.  It is true that DNS-based technologies are emerging for secure delegation, in the form of DNS Security <xref target="RFC4033"/> and <xref target="RFC6698"/>); however, these technologies are not yet widely deployed and might not be deployed in the near future for domains outside the most common top-level domains (e.g., ".COM", ".NET", ".EDU").  Because the XMPP community wishes to deploy secure delegation and authenticated domain name associations as widely and as quickly as possible, this document specifies how to use secure HTTP <xref target="RFC2616"/> and PKIX certificates <xref target="RFC5280"/> to verify that a domain is delegated to a hosting provider and authenticate an assocation between a domain name and an XML stream.</t>
+      <t>The rationale for POSH is driven by current operational realities.  It is effectively impossible for a hosting service to provide and maintain PKIX certificates <xref target="RFC5280"/> that include the appropriate <xref target="RFC6125"/> identifiers for each hosted domain.  It is true that DNS-based technologies are emerging for secure delegation, in the form of DNS Security <xref target="RFC4033"/> and <xref target="RFC6698"/>); however, these technologies are not yet widely deployed and might not be deployed in the near future for domains outside the most common top-level domains (e.g., ".COM", ".NET", ".EDU").  Because the XMPP community wishes to deploy secure delegation and authenticated domain name associations as widely and as quickly as possible, this document specifies how to use secure HTTP (<xref target="RFC2616"/> and <xref target="RFC2818"/>) and PKIX certificates <xref target="RFC5280"/> to verify that a domain is delegated to a hosting provider and authenticate an assocation between a domain name and an XML stream.</t>
     </section>
     <section title="Terminology" anchor="terms">
       <t>This document inherits XMPP-related terminology from <xref target="RFC6120"/> and security-related terminology from <xref target="RFC5280"/>.  The terms "source domain", "derived domain", "reference identifier", and "presented identifier" are used as defined in the "CertID" specification <xref target="RFC6125"/>.</t>
@@ -56,7 +56,7 @@
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>.</t>
     </section>
     <section title="Prooftype" anchor="prooftype">
-      <t>POSH stands for PKIX Over Secure HTTP: the verification materials consist of a PKIX certificate <xref target="RFC5280"/>, they are obtained by retrieving the certificate over HTTPS <xref target="RFC2818"/> from a well-known URI <xref target="RFC5785"/>, the certificate is checked according to the rules from <xref target="RFC6120"/> and <xref target="RFC6125"/>, and secure DNS is not necessary since the HTTPS retrieval mechanism relies on the chain of trust based on the public key infrastructure.</t>
+      <t>POSH stands for PKIX Over Secure HTTP: the verification materials consist of a PKIX certificate <xref target="RFC5280"/>, they are obtained by retrieving the certificate over HTTPS (<xref target="RFC2616"/> and <xref target="RFC2818"/>) from a well-known URI <xref target="RFC5785"/>, the certificate is checked according to the rules from <xref target="RFC6120"/> and <xref target="RFC6125"/>, and secure DNS is not necessary since the HTTPS retrieval mechanism relies on the chain of trust based on the public key infrastructure.</t>
       <t>The process for retrieving a PKIX certificate over secure HTTP is as follows.</t>
       <t>
         <list style="numbers">
@@ -158,6 +158,10 @@ Content-Length: 806
           <vspace blankLines="1"/></t>
         </list>
       </t>
+      <section title="Permanent versus Temporary Redirects" anchor="delegation-redirects">
+        <t>Care needs to be taken with which redirect mechanism a source domain uses to deletate. Permanent redirects might result in clients remembering the delegation, which can lead to problems when a source domain is migrated to a different delegated domain.</t>
+        <t>To mitigate this concern, source domains SHOULD use only temporary redirect mechanisms, such as HTTP status codes 302 (Found) and 307 (Temporary Redirect). Clients MAY treat any redirect as temporary, ignoring the specific semantics for 301 (Moved Permanently) or 308 (Permanent Redirect <xref target="HTTP-STATUS-308"/>).</t>
+      </section>
     </section>
     <section title="Caching Results" anchor="caching">
       <t>Ideally, the initiating entity relies on the expiration time of the certificate obtained via POSH, and not on HTTP caching mechanisms.  To that end, the HTTPS servers for source and derived domains SHOULD specify a 'Cache-Control' header indicating a short duration (e.g., max-age=60) or "no-cache" to indicate the response (redirect or content) is not appropriate to cache at the HTTP level.</t>
@@ -567,6 +571,20 @@ Content-Length: 806
       </reference>
     </references>
     <references title="Informative References">
+      <reference anchor="HTTP-STATUS-308">
+        <front>
+          <title>The Hypertext Transfer Protocol (HTTP) Status Code 308 (Permanent Redirect)</title>
+          <author initials="J." surname="Reschke" fullname="Julian F. Reschke">
+            <organization>greenbytes GmbH</organization>
+            <address>
+              <email>julian.reschke@greenbytes.de</email>
+            </address>
+          </author>
+          <date month="March" year="2012"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-reschke-http-status-308-07"/>
+        <format type="TXT" target="http://tools.ietf.org/html/draft-reschke-http-status-308-07.txt"/>
+      </reference>
       <reference anchor="RFC4033">
         <front>
           <title>DNS Security Introduction and Requirements</title>
