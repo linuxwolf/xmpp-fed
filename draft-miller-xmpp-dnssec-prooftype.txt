@@ -1,6 +1,7 @@
 
 
 
+
 Network Working Group                                          M. Miller
 Internet-Draft                                            P. Saint-Andre
 Intended status: Standards Track                     Cisco Systems, Inc.
@@ -19,7 +20,7 @@ Abstract
    also defines a method that uses DNS Security (DNSSEC) for securely
    delegating a source domain to a derived domain in XMPP.
 
-Status of this Memo
+Status of This Memo
 
    This Internet-Draft is submitted in full conformance with the
    provisions of BCP 78 and BCP 79.
@@ -41,6 +42,22 @@ Copyright Notice
    Copyright (c) 2013 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
+
+
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre     Expires July 14, 2013                  [Page 1]
+
+Internet-Draft            XMPP DANE Prooftype               January 2013
+
+
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
    (http://trustee.ietf.org/license-info) in effect on the date of
@@ -49,69 +66,24 @@ Copyright Notice
    to this document.  Code Components extracted from this document must
    include Simplified BSD License text as described in Section 4.e of
    the Trust Legal Provisions and are provided without warranty as
-
-
-
-Miller & Saint-Andre      Expires July 14, 2013                 [Page 1]
-
-Internet-Draft             XMPP DANE Prooftype              January 2013
-
-
    described in the Simplified BSD License.
-
 
 Table of Contents
 
-   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . . . 3
-   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . . . 3
-   3.  Requirements  . . . . . . . . . . . . . . . . . . . . . . . . . 3
-   4.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . . . 4
-   5.  Prooftype . . . . . . . . . . . . . . . . . . . . . . . . . . . 4
-     5.1.  No Service Records  . . . . . . . . . . . . . . . . . . . . 4
-     5.2.  Insecure Delegation . . . . . . . . . . . . . . . . . . . . 5
-     5.3.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . 5
-   6.  Internationalization Considerations . . . . . . . . . . . . . . 5
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . . . 5
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 5
-   9.  Normative References  . . . . . . . . . . . . . . . . . . . . . 6
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . . . 7
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Miller & Saint-Andre      Expires July 14, 2013                 [Page 2]
-
-Internet-Draft             XMPP DANE Prooftype              January 2013
-
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
+   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   2
+   3.  Requirements  . . . . . . . . . . . . . . . . . . . . . . . .   3
+   4.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . .   3
+   5.  Prooftype . . . . . . . . . . . . . . . . . . . . . . . . . .   4
+     5.1.  No Service Records  . . . . . . . . . . . . . . . . . . .   4
+     5.2.  Insecure Delegation . . . . . . . . . . . . . . . . . . .   4
+     5.3.  Secure Delegation . . . . . . . . . . . . . . . . . . . .   4
+   6.  Order of Operations . . . . . . . . . . . . . . . . . . . . .   5
+   7.  Internationalization Considerations . . . . . . . . . . . . .   5
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
+   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   5
+   10. Normative References  . . . . . . . . . . . . . . . . . . . .   5
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   7
 
 1.  Introduction
 
@@ -124,10 +96,9 @@ Internet-Draft             XMPP DANE Prooftype              January 2013
    client or peer server that inititates an XMPP stream can legitimately
    treat a derived domain as a reference identifier during stream
    negotiation.  This document also defines a prooftype for DNA that
-   uses DNS-based Authentication of Named Entities [RFC6698] to verify
-   TLS certificates containing source domains or derived domains during
-   stream negotiation.
-
+   uses DNS-based Authentication of Named Entities [RFC6698] (DANE) to
+   verify TLS certificates containing source domains or derived domains
+   during stream negotiation.
 
 2.  Terminology
 
@@ -135,6 +106,14 @@ Internet-Draft             XMPP DANE Prooftype              January 2013
    related terminology from [RFC1034], [RFC1035], [RFC2782] and
    [RFC4033], and security-related terminology from [RFC4949] and
    [RFC5280].  The terms "source domain", "derived domain", "reference
+
+
+
+Miller & Saint-Andre     Expires July 14, 2013                  [Page 2]
+
+Internet-Draft            XMPP DANE Prooftype               January 2013
+
+
    identifier", and "presented identifier" are used as defined in the
    "CertID" specification [RFC6125].
 
@@ -150,7 +129,6 @@ Internet-Draft             XMPP DANE Prooftype              January 2013
    "OPTIONAL" in this document are to be interpreted as described in
    [RFC2119].
 
-
 3.  Requirements
 
    An XMPP initiating entity (TLS client) that wishes to use this
@@ -162,23 +140,18 @@ Internet-Draft             XMPP DANE Prooftype              January 2013
    addition of new source domains onto an existing connection, such as
    multiplexing or "piggybacking" via [XEP-0220].
 
-
-
-Miller & Saint-Andre      Expires July 14, 2013                 [Page 3]
-
-Internet-Draft             XMPP DANE Prooftype              January 2013
-
-
 4.  Secure Delegation
 
    An XMPP initiating entity (TLS client) that wishes to use this
    prooftype performs the following actions:
 
    1.  Query for the appropriate SRV resource record for the source
-       domain (e.g. "_xmpp-client._tcp.im.example.com").
+       domain (e.g.  "_xmpp-client._tcp.im.example.com").
+
 
    2.  If there is no SRV resource record, pursue the fallback methods
        described in [RFC6120].
+
 
    3.  If there is an SRV resource record, validate that the SRV record
        answer is secure according to [RFC4033].  If the answer is
@@ -188,17 +161,25 @@ Internet-Draft             XMPP DANE Prooftype              January 2013
        certificate verification, as described in [RFC6120]; if the
        answer is bogus, the TLS client MUST abort.
 
+
+
+
+
+Miller & Saint-Andre     Expires July 14, 2013                  [Page 3]
+
+Internet-Draft            XMPP DANE Prooftype               January 2013
+
+
    4.  If the answer is secure, the TLS client SHOULD consider any
        derived domain(s) in the answer as securely delegated; during
        certificate verification, the TLS client MUST treat both the
        source domain and the derived domain to which it has connected as
        reference identifiers.
 
-
 5.  Prooftype
 
-   [RFC6698] provides additional tools to verify the keys used in TLS
-   connections.  A TLS client MAY use [RFC6698] for TLS certificate
+   DANE provides additional tools to verify the keys used in TLS
+   connections.  A TLS client MAY use DANE for TLS certificate
    verification; its use depends on the delegation status of the source
    domain, as described in the following sections.
 
@@ -208,22 +189,12 @@ Internet-Draft             XMPP DANE Prooftype              January 2013
    client MUST query for a TLSA resource record as described in
    [RFC6698], where the prepared domain name MUST contain the source
    domain and the IANA-registered port 5222 for client-to-server streams
-   (e.g. "_5222._tcp.im.example.com") or the IANA-registered port 5269
-   for server-to-server streams (e.g. "_5269._tcp.im.example.com").
+   (e.g.  "_5222._tcp.im.example.com") or the IANA-registered port 5269
+   for server-to-server streams (e.g.  "_5269._tcp.im.example.com").
 
    In this case, the TLS client MUST treat only the source domain as its
    reference identifier during certificate verification, as described in
    [RFC6120].
-
-
-
-
-
-
-Miller & Saint-Andre      Expires July 14, 2013                 [Page 4]
-
-Internet-Draft             XMPP DANE Prooftype              January 2013
-
 
 5.2.  Insecure Delegation
 
@@ -232,7 +203,7 @@ Internet-Draft             XMPP DANE Prooftype              January 2013
    derived domain as described in [RFC6698].  Instead, the TLS client
    MUST treat only the source domain as its reference identifier during
    certificate verification, as described in [RFC6120], and MUST NOT use
-   [RFC6698].
+   DANE.
 
 5.3.  Secure Delegation
 
@@ -248,40 +219,68 @@ Internet-Draft             XMPP DANE Prooftype              January 2013
    TLS client MUST perform certificate verification as described under
    Section 4.
 
+
+
+Miller & Saint-Andre     Expires July 14, 2013                  [Page 4]
+
+Internet-Draft            XMPP DANE Prooftype               January 2013
+
+
    If TLSA resource records exist for the specified service, then the
    TLS client MUST treat the derived domain(s) as its reference
    identifier during certificate verification, using the information
    from the TLSA answer as the basis for verification as described in
    [RFC6698].
 
+6.  Order of Operations
 
-6.  Internationalization Considerations
+   The processes for this prooftype MUST be complete before the TLS
+   handshake over the XMPP connection complete, so that the client can
+   perform verification of reference identities.  To that end, a TLS
+   client SHOULD perform the processes for this prooftype as part of its
+   normal DNS resolution of the source domain into a socket address.
+   Validating secure delegation ought to be done immediately upon
+   receiving the answers to the SRV and follow-up A/AAAA queries;
+   queries for TLSA records ought to be done once the target service is
+   determined (whether the source domain and IANA-registered port, or
+   delegated domain and port).
+
+   While a TLS client ought to perform as much of the DNSSEC and DANE
+   processes in parallel with other XMPP session establishment processes
+   where possible (e.g.  perform the TLSA resource queries as the socket
+   connection is made to the server), a TLS client might delay as much
+   of the XMPP session establishment as it needs to in order to gather
+   all of the DNSSEC- and DANE-based verification materials.  For
+   instance, a TLS client might not open the socket connection until it
+   has validated the secure delegation, or might delay beginning the TLS
+   handshake until it has obtained the TLSA certificate verification
+   materials.
+
+7.  Internationalization Considerations
 
    If the SRV, A/AAAA, and TLSA record queries are for an
    internationalized domain name, then they need to use the A-label form
    as defined in [RFC5890].
 
-
-7.  Security Considerations
+8.  Security Considerations
 
    This document supplements but does not supersede the security
    considerations provided in [RFC4033], [RFC6120], [RFC6125], and
    [RFC6698].
 
-
-8.  IANA Considerations
+9.  IANA Considerations
 
    This document has no actions for the IANA.
 
+10.  Normative References
 
 
 
-Miller & Saint-Andre      Expires July 14, 2013                 [Page 5]
+
+Miller & Saint-Andre     Expires July 14, 2013                  [Page 5]
 
-Internet-Draft             XMPP DANE Prooftype              January 2013
+Internet-Draft            XMPP DANE Prooftype               January 2013
 
-
-9.  Normative References
 
    [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
               STD 13, RFC 1034, November 1987.
@@ -297,11 +296,11 @@ Internet-Draft             XMPP DANE Prooftype              January 2013
               February 2000.
 
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
-              Rose, "DNS Security Introduction and Requirements",
-              RFC 4033, May 2005.
+              Rose, "DNS Security Introduction and Requirements", RFC
+              4033, May 2005.
 
-   [RFC4949]  Shirey, R., "Internet Security Glossary, Version 2",
-              RFC 4949, August 2007.
+   [RFC4949]  Shirey, R., "Internet Security Glossary, Version 2", RFC
+              4949, August 2007.
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
@@ -329,20 +328,20 @@ Internet-Draft             XMPP DANE Prooftype              January 2013
               Miller, J., Saint-Andre, P., and P. Hancke, "Server
               Dialback", XSF XEP 0220, August 2011.
 
-
-
-
-Miller & Saint-Andre      Expires July 14, 2013                 [Page 6]
-
-Internet-Draft             XMPP DANE Prooftype              January 2013
-
-
    [XMPP-DNA]
+
+
+
+
+Miller & Saint-Andre     Expires July 14, 2013                  [Page 6]
+
+Internet-Draft            XMPP DANE Prooftype               January 2013
+
+
               Saint-Andre, P. and M. Miller, "Domain Name Associations
               (DNA) in the Extensible Messaging and Presence Protocol
               (XMPP)", draft-saintandre-xmpp-dna-00 (work in progress),
               June 2012.
-
 
 Authors' Addresses
 
@@ -388,5 +387,5 @@ Authors' Addresses
 
 
 
-Miller & Saint-Andre      Expires July 14, 2013                 [Page 7]
-
+
+Miller & Saint-Andre     Expires July 14, 2013                  [Page 7]
