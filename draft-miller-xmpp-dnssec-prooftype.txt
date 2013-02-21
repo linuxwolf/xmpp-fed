@@ -81,8 +81,8 @@ Table of Contents
    6.  Order of Operations . . . . . . . . . . . . . . . . . . . . .   5
    7.  Internationalization Considerations . . . . . . . . . . . . .   5
    8.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
-   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   5
-   10. Normative References  . . . . . . . . . . . . . . . . . . . .   5
+   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   6
+   10. Normative References  . . . . . . . . . . . . . . . . . . . .   6
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   7
 
 1.  Introduction
@@ -245,10 +245,11 @@ Internet-Draft            XMPP DANE Prooftype               January 2013
    determined (whether the source domain and IANA-registered port, or
    delegated domain and port).
 
-   While a TLS client ought to perform as much of the DNSSEC and DANE
+   Ideally a TLS client performs as much of the DNSSEC and DANE
    processes in parallel with other XMPP session establishment processes
    where possible (e.g.  perform the TLSA resource queries as the socket
-   connection is made to the server), a TLS client might delay as much
+   connection is made to the server); this is sometimes called the
+   "happy eyeballs" approach.  However, a TLS client might delay as much
    of the XMPP session establishment as it needs to in order to gather
    all of the DNSSEC- and DANE-based verification materials.  For
    instance, a TLS client might not open the socket connection until it
@@ -268,11 +269,10 @@ Internet-Draft            XMPP DANE Prooftype               January 2013
    considerations provided in [RFC4033], [RFC6120], [RFC6125], and
    [RFC6698].
 
-9.  IANA Considerations
 
-   This document has no actions for the IANA.
 
-10.  Normative References
+
+
 
 
 
@@ -281,6 +281,12 @@ Miller & Saint-Andre     Expires July 14, 2013                  [Page 5]
 
 Internet-Draft            XMPP DANE Prooftype               January 2013
 
+
+9.  IANA Considerations
+
+   This document has no actions for the IANA.
+
+10.  Normative References
 
    [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
               STD 13, RFC 1034, November 1987.
@@ -324,12 +330,6 @@ Internet-Draft            XMPP DANE Prooftype               January 2013
               of Named Entities (DANE) Transport Layer Security (TLS)
               Protocol: TLSA", RFC 6698, August 2012.
 
-   [XEP-0220]
-              Miller, J., Saint-Andre, P., and P. Hancke, "Server
-              Dialback", XSF XEP 0220, August 2011.
-
-   [XMPP-DNA]
-
 
 
 
@@ -338,6 +338,11 @@ Miller & Saint-Andre     Expires July 14, 2013                  [Page 6]
 Internet-Draft            XMPP DANE Prooftype               January 2013
 
 
+   [XEP-0220]
+              Miller, J., Saint-Andre, P., and P. Hancke, "Server
+              Dialback", XSF XEP 0220, August 2011.
+
+   [XMPP-DNA]
               Saint-Andre, P. and M. Miller, "Domain Name Associations
               (DNA) in the Extensible Messaging and Presence Protocol
               (XMPP)", draft-saintandre-xmpp-dna-00 (work in progress),
@@ -361,11 +366,6 @@ Authors' Addresses
    USA
 
    Email: psaintan@cisco.com
-
-
-
-
-
 
 
 
