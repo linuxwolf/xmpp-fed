@@ -4,11 +4,12 @@
 <?rfc strict="yes"?>
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
-<?rfc tocdepth="4"?>
+<?rfc tocdepth="2"?>
 <rfc category="std" docName="draft-saintandre-xmpp-dna-01" ipr="trust200902">
 
   <front>
     <title abbrev="XMPP DNA">Domain Name Associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP)</title>
+
     <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
       <organization>Cisco Systems, Inc.</organization>
       <address>
@@ -22,6 +23,7 @@
         <email>psaintan@cisco.com</email>
       </address>
     </author>
+
     <author initials="M." surname="Miller" fullname="Matthew Miller">
       <organization>Cisco Systems, Inc.</organization>
       <address>
@@ -36,7 +38,7 @@
       </address>
     </author>
 
-    <date month="February" day="25" year="2013"/>
+    <date month="February" day="21" year="2013"/>
     <area>RAI</area>
     <keyword>Internet-Draft</keyword>
     <keyword>XMPP</keyword>
@@ -46,97 +48,181 @@
     <keyword>delegation</keyword>
     <keyword>security</keyword>
     <abstract>
-      <t>This document defines a framework for improving the security of the Extensible Messaging and Presence Protocol (XMPP) in two respects.  First, it introduces the concept of a prooftype for establishing a strong association between a domain name and an XML stream.  Second, it provides guidelines for securely delegating a source domain to a derived domain, which is especially important in virtual hosting environments.</t>
+      <t>This document improves the security of the Extensible Messaging and Presence Protocol (XMPP) in two ways.  First, it introduces the concept of a prooftype for establishing a strong association between a domain name and an XML stream.  Second, it provides guidelines for securely delegating a source domain to a derived domain, which is especially important in virtual hosting environments.</t>
     </abstract>
   </front>
 
   <middle>
 
     <section title="Introduction" anchor="intro">
-      <t>This document defines a framework for improving the security of the Extensible Messaging and Presence Protocol (XMPP) in two respects.  First, it introduces the concept of a prooftype for establishing a strong association between a domain name and an XML stream (i.e., a domain name association or "DNA").  Second, it provides guidelines for securely delegating a source domain to a derived domain, which is especially important in virtual hosting environments.</t>
-      <t>Regarding domain name associations, the need to establish a strong association between a domain name and an XML stream arises in both client-to-server and server-to-server communication using XMPP, because XMPP servers are typically identified by domain names.  However, a client or peer server needs to verify the identity of a server to which it connects.  To date, such verification has been established based on information obtained from the Domain Name System (DNS), the Public Key Infrastructure (PKI), or similar sources.  This document generalizes the model currently in use so that additional prooftypes can be defined.  It also provides a basis for modernizing some prooftypes to reflect progress in several underlying technologies, especially DNS Security <xref target="RFC4033"/>.  It also describes the flow of operations for establishing a domain name association.</t>
-      <t>Regarding secure delegation, the process for resolving the domain name of an XMPP service into the IP address at which an XML stream will be negotiated (defined in <xref target='RFC6120'/>) can involve delegation of a source domain (say, im.example.com) to a derived domain (say, hosting.example.net).  If such delegation is not done in a secure manner, then the domain name association cannot be authenticated.  Therefore, this document also provides guidelines for defining secure delegation methods.</t>
+      <t>The need to establish a strong association between a domain name and an XML stream arises in both client-to-server and server-to-server communication using the Extensible Messaging and Presence Protocol (XMPP), because XMPP servers are typically identified by domain names.  However, a client or peer server needs to verify the identity of a server to which it connects.  To date, such verification has been established based on information obtained from the Domain Name System (DNS), the Public Key Infrastructure (PKI), or similar sources.  This document generalizes the model currently in use so that additional prooftypes can be defined, provides a basis for modernizing some prooftypes to reflect progress in underlying technologies such as DNS Security <xref target="RFC4033"/>, and describes the flow of operations for establishing a domain name association.</t>
+      <t>Furthermore, the process for resolving the domain name of an XMPP service into the IP address at which an XML stream will be negotiated (defined in <xref target='RFC6120'/>) can involve delegation of a source domain (say, example.com) to a derived domain (say, hosting.example.net).  If such delegation is not done in a secure manner, then the domain name association cannot be authenticated.  Therefore, this document provides guidelines for defining secure delegation methods.</t>
       <t>This document does not define any DNA prooftypes or secure delegation methods; such technologies are defined in companion documents.</t>
     </section>
 
     <section title="Terminology" anchor="terms">
-      <t>This document inherits XMPP-related terminology from <xref target="RFC6120"/> and <xref target="XEP-0220"/>, DNS-related terminology from <xref target="RFC1034"/>, <xref target="RFC1035"/>, <xref target="RFC2782"/> and <xref target="RFC4033"/>, and security-related terminology from <xref target="RFC4949"/> and <xref target="RFC5280"/>.  The terms "source domain", "derived domain", "reference identity", and "presented identity" are used as defined in the "CertID" specification <xref target="RFC6125"/>.  The terms "permissive federation", "verified federation", and "encrypted federation" are derived from <xref target="XEP-0238"/>, although we substitute the term "authenticated federation" for the term "trusted federation" from that document.</t>
+      <t>This document inherits XMPP terminology from <xref target="RFC6120"/> and <xref target="XEP-0220"/>, DNS terminology from <xref target="RFC1034"/>, <xref target="RFC1035"/>, <xref target="RFC2782"/> and <xref target="RFC4033"/>, and security terminology from <xref target="RFC4949"/> and <xref target="RFC5280"/>.  The terms "source domain", "derived domain", "reference identity", and "presented identity" are used as defined in the "CertID" specification <xref target="RFC6125"/>.  The terms "permissive federation", "verified federation", and "encrypted federation" are derived from <xref target="XEP-0238"/>, although we substitute the term "authenticated federation" for the term "trusted federation" from that document.</t>
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>.</t>
     </section>
 
-    <section title="Problem Statement" anchor="problem">
-      <t>In XMPP, each party to a stream expects the other party to provide some proof of its identity.  For example, in client-to-server streams the server expects the client to present some credentials (such as a username and password or a client certificate), and ideally the client also expects the server to provide a certificate that identifies the domain(s) of the server.  Similar considerations hold true for server-to-server streams, also called "interdomain federation".</t>
-      <t>When the Jabber.org open-source community developed the precursor to XMPP in 1999, it defined methods for interdomain federation but no mechanisms for authenticating or checking the identity of peer servers.  We could describe this as "permissive federation", which is clearly sub-optimal given the strong potential for domain spoofing.  In the year 2000, the community filled the gap to some extent by defining a technology called Server Dialback (first documented in <xref target="RFC3920"/> and since moved to <xref target="XEP-0220"/>).  Although Server Dialback does not provide a strong mechanism for identity checking without the use of DNSSEC, it does provide DNS-based verification and thus has effectively prevented most instances of domain spoofing on the XMPP network since late 2000.  Also, because Server Dialback typically does not involve the use of server certificates, it does not result in an encrypted stream; thus we refer to it as a technology for "verified federation".</t>
-      <t>In 2002-2004, the IETF's XMPP Working Group hardened the original Jabber.org protocols by adding Transport Layer Security (TLS) and Simple Authentication and Security Layer (SASL), thus making it possible for two servers to engage in "authenticated federation" (i.e., when two peer servers present PKIX certificates anchored to trusted roots during negotiation of a server-to-server stream) or "encrypted federation" (i.e., when two peer servers present PKIX certificates that are self-signed or not anchored to trusted roots during negotiation of a server-to-server stream).</t>
-      <t>Unfortunately, authenticated federation has not been widely deployed on the XMPP network (indeed, even encrypted federation is not widely deployed because verified federation is perceived as "good enough"); one of the primary reasons is that it is feasible (although not always easy) for single-domain servers to obtain the proper certificates, but much more difficult (or practically impossible) for large XMPP hosting providers to do so.  The primary challenge here is operational: it is highly unlikely that an organization (say, example.com) wishing to delegate its XMPP service (say, im.example.com) to a hosting provider (say, hosting.example.net) will hand over its private key to the hosting provider.  Even if that were feasible, further operational challenges (e.g., maintaining large numbers of certificates for hosted domains, and configuring XMPP software to present the correct certificate based on the 'to' address of the initial stream header) have also discouraged deployment of authenticated federation in virtual hosting environments, which happen to be a common deployment scenario.</t>
-      <t>Furthermore, the prevalence of delegation to hosting providers leads to one additional shortcoming, caused by the use of DNS SRV records <xref target="RFC2782"/> in XMPP: if DNSSEC is not used, the act of delegation is inherently insecure.  Unfortunately, no existing documentation explains how to use DNSSEC for secure delegation, with the result that clients and servers often take a "leap of faith" if using an SRV record to determine that when communicating with, say, im.example.com they actually need to connect to, say, hosting.example.net.</t>
-      <t>In order to meet the requirements for strong security <xref target="RFC3365"/>, both authenticated federation and secure delegation are needed so that the association between a domain name and an XML stream can be trusted by XMPP entities.  Unfortunately, authenticated federation is uncommon and secure delegation is unheard of on the XMPP network today.  Because the current situation is clearly sub-optimal, this document defines a framework for both authenticated federation (i.e., strong domain name associations) and secure delegation in XMPP.</t>
+    <section title="A Simple Scenario" anchor="simple">
+      <t>To illustrate the problem, consider the simplified order of events (see <xref target='RFC6120'/> for details) in establishing an XML stream between Server A (a.example) and Server B (b.example):</t>
+      <t>
+        <list style='numbers'>
+          <t>Server A resolves the DNS domain name b.example.</t>
+          <t>Server A opens a TCP connection to the resolved IP address.</t>
+          <t>
+            Server A sends an initial stream header to Server B, asserting that it is a.example:
+            <vspace blankLines='1'/>
+            &lt;stream:stream from='a.example' to='b.example'&gt;
+          </t>
+          <t>
+            Server B sends a response stream header to Server A, asserting that it is b.example:
+            <vspace blankLines='1'/>
+            &lt;stream:stream from='b.example' to='a.example'&gt;
+          </t>
+          <t>The servers attempt TLS negotiation, during which Server B (acting as a TLS server) presents a PKIX certificate proving that it is b.example and Server A (acting as a TLS client) presents a PKIX certificate proving that it is a.example.</t>
+          <t>Server A checks the PKIX certificate that Server B provided and Server B checks the PKIX certificate that Server A provided; if these proofs are consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, each server accepts that there is a strong domain name association between its stream to the other party and the DNS domain name of the other party.</t>
+        </list>
+      </t>
+      <t>Several simplifying assumptions underlie the happy scenario just outlined:</t>
+      <t>
+        <list style='symbols'>
+          <t>Server A presents a PKIX certificate during TLS negotiation, which enables the parties to complete mutual authentication.</t>
+          <t>There are no additional domains associated with Server A and Server B (say, a subdomain chatrooms.a.example on Server A or a second domain c.example on Server B).</t>
+          <t>The server administrators are able to obtain PKIX certificates in the first place.</t>
+          <t>The server administrators are running their own XMPP servers, rather than using hosting services.</t>
+        </list>
+      </t>
+      <t>Let's consider each of these "wrinkles" in turn.</t>
     </section>
 
-    <section title="Framework" anchor="framework">
-      <t>In essence, we need to establish an association between a domain and an XML stream: is the XMPP server to which a client or peer server connects "allowed" to accept stanzas for or send stanzas from a given domain?  If so, we say that there is a domain name association ("DNA") for the stream.</t>
-      <t>For TLS in general, the TLS client has some expectations about the identity of the TLS server (in the language of the "CertID" specification <xref target="RFC6125"/>, the TLS client has a "reference identity"), and then checks some material presented by the TLS server (the "presented identity" within the server certificate) to verify that its expectations have been met.  The DNS-Based Authentication of Named Entities protocol <xref target="RFC6698"/>, at least in some of its modes, adds another kind of verification material: not the presented identity within a PKIX certificate, but a complete certificate or hash thereof.  And other kinds of verification material could be envisioned (e.g., OpenPGP keys, Kerberos tickets, OAuth tokens), although they are not considered here.</t>
-      <t>No matter what kind of verification material is used, an XMPP client or peer server that wishes to verify a domain name association needs a way to obtain the verification material it will refer to when establishing the association.  For instance, when a server presents a PKIX certificate during TLS negotiation, the connecting client or peer server has traditionally obtained its verification material out of band or via configuration from a certification authority (i.e., in the form of a root certificate contained in a certificate bundle).  In DANE, the verification material is obtained from the Domain Name System.  In the PKIX Over Secure HTTP ("POSH") method described in an accompanying specification, the verification material is obtained over secure HTTP.  And other methods for obtaining verification material could be envisioned (e.g., IPsec), although they are not considered here.</t>
-      <t>Furthermore, the matching rules for checking the verification material will depend on the nature of that material; for example, <xref target="RFC6120"/> defines a profile of the rules from the "CertID" specification <xref target="RFC6125"/>, DANE might compare the SubjectPublicKeyInfo data or the full certificate, and so on.</t>
-      <t>Finally, given the relationship between XMPP and the DNS (XMPP services are usually identified by domain name, not IP address), it is important to make it clear whether a given verification method can (or must) be used only with secure DNS or also with insecure DNS.</t>
-      <t>Putting these pieces together, we define the concept of a "prooftype":</t>
+    <section title="One-Way Authentication" anchor="oneway">
+      <t>If Server A does not present its PKIX certificate during TLS negotiation (perhaps because it wishes to verify the identity of Server B before presenting its own credentials), Server B is unable to mutually authenticate Server A.  Therefore, Server B needs to negotiate and authenticate a stream to Server A, just as Server A has done:</t>
+      <t>
+        <list style='numbers'>
+          <t>Server B resolves the DNS domain name a.example.</t>
+          <t>Server B opens a TCP connection to the resolved IP address.</t>
+          <t>
+            Server B sends an initial stream header to Server A, asserting that it is b.example:
+            <vspace blankLines='1'/>
+            &lt;stream:stream from='b.example' to='a.example'&gt;
+          </t>
+          <t>
+            Server A sends a response stream header to Server B, asserting that it is a.example:
+            <vspace blankLines='1'/>
+            &lt;stream:stream from='a.example' to='b.example'&gt;
+          </t>
+          <t>The servers attempt TLS negotiation, during which Server A (acting as a TLS server) presents a PKIX certificate proving that it is a.example.</t>
+          <t>Server B checks the PKIX certificate that Server A provided; if it is consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, Server B accepts that there is a strong domain name association between its stream to Server A and the DNS domain name a.example.</t>
+        </list>
+      </t>
+      <t>Unfortunately, now the servers are using two TCP connections instead of one, which is somewhat wasteful.  However, there are ways to tie the authentication achieved on the second TCP connection to the first TCP connection; see <xref target='XEP-0288'/> for further discussion.</t>
+    </section>
+
+    <section title="Piggybacking" anchor="piggybacking">
+      <t>Consider the common scenario in which Server B hosts not only b.example but also a second domain c.example.  If a user of Server B associated with c.example wishes to communicate with a friend at a.example, Server B needs to send XMPP stanzas from the domain c.example rather than b.example.  Although Server B could open an new TCP connection and negotiate new XML streams for the domain pair of c.example and a.example, that too is wasteful.  Server B already has a connection to a.example, so how can it assert that it would like to add a new domain pair to the existing connection?</t>
+      <t>The traditional method for doing so is the Server Dialback protocol, first specified in <xref target='RFC3920'/> and since moved to <xref target='XEP-0220'/>.  Here, Server B can send a &lt;db:result/&gt; element for the new domain pair over the existing stream.</t>
+      <figure>
+        <artwork><![CDATA[
+<db:result from='c.example' to='a.example'>
+  some-dialback-key
+</db:result>
+        ]]></artwork>
+      </figure>
+      <t>This element functions as Server B's assertion that it is (also) c.example, and thus is functionally equivalent to the 'from' address of an initial stream header as previously described.</t>
+      <t>In response to this assertion, Server A needs to obtain some kind of proof that Server B really is also c.example.  It can do the same thing that it did before:</t>
+      <t>
+        <list style='numbers'>
+          <t>Server A resolves the DNS domain name c.example.</t>
+          <t>Server A opens a TCP connection to the resolved IP address (which might be the same IP address as for b.example).</t>
+          <t>
+            Server A sends an initial stream header to Server B, asserting that it is a.example:
+            <vspace blankLines='1'/>
+            &lt;stream:stream from='a.example' to='c.example'&gt;
+          </t>
+          <t>
+            Server B sends a response stream header to Server A, asserting that it is c.example:
+            <vspace blankLines='1'/>
+            &lt;stream:stream from='c.example' to='a.example'&gt;
+          </t>
+          <t>The servers attempt TLS negotiation, during which Server B (acting as a TLS server) presents a PKIX certificate proving that it is c.example.</t>
+          <t>Server A checks the PKIX certificate that Server B provided; if it is consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, Server A accepts that there is a strong domain name association between its stream to Server B and the DNS domain name c.example.</t>
+        </list>
+      </t>
+      <t>Now that Server A accepts the domain name association, it informs Server B of that fact by sending verification of the Server Dialback key over the original connection:</t>
+      <figure>
+        <artwork><![CDATA[
+<db:verify from='a.example' to='c.example' type='valid'/>
+        ]]></artwork>
+      </figure>
+      <t>The parties can then terminate the second connection, since it was used only for Server A to associate a stream over the same IP:port combination with the domain name c.example and the dialback key links the original stream to that association.</t>
+      <t>Piggybacking can also occur in the other direction.  Consider the common scenario in which Server A provides XMPP services not only for a.example but also for a subdomain such as a groupchat service at chatrooms.a.example (see <xref target='XEP-0045'/>).  If user from c.example at Server B wishes to join a room on the groupchat sevice, Server B needs to send XMPP stanzas from the domain c.example to the domain chatrooms.a.example rather than a.example.  Therefore, Server B needs to negotiate and authenticate a stream to chatrooms.a.example:</t>
+      <t>
+        <list style='numbers'>
+          <t>Server B resolves the DNS domain name chatrooms.a.example.</t>
+          <t>Server B opens a TCP connection to the resolved IP address.</t>
+          <t>
+            Server B sends an initial stream header to Server A acting as chatrooms.a.example, asserting that it is b.example:
+            <vspace blankLines='1'/>
+            &lt;stream:stream from='b.example' to='chatrooms.a.example'&gt;
+          </t>
+          <t>
+            Server A sends a response stream header to Server B, asserting that it is chatrooms.a.example:
+            <vspace blankLines='1'/>
+            &lt;stream:stream from='chatrooms.a.example' to='b.example'&gt;
+          </t>
+          <t>The servers attempt TLS negotiation, during which Server A (acting as a TLS server) presents a PKIX certificate proving that it is chatrooms.a.example.</t>
+          <t>Server B checks the PKIX certificate that Server A provided; if it is consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, Server B accepts that there is a strong domain name association between its stream to Server A and the DNS domain name chatrooms.a.example.</t>
+        </list>
+      </t>
+      <t>As before, the parties now have two TCP connections open.  So that they can close the now-redundant connection, Server B sends a dialback key to Server A over the new connection.</t>
+      <figure>
+        <artwork><![CDATA[
+<db:result from='c.example' to='chatrooms.a.example'>
+  some-dialback-key
+</db:result>
+        ]]></artwork>
+      </figure>
+      <t>Server A then informs Server B that the original connection is valid by sending verification of the dialback key over the original connection:</t>
+      <figure>
+        <artwork><![CDATA[
+<db:verify from='chatrooms.a.example' to='c.example' type='valid'/>
+        ]]></artwork>
+      </figure>
+      <t>Server B can now close the connection over which it tested the domain name association for chatrooms.a.example.</t>
+    </section>
+
+    <section title="Alternate Prooftypes" anchor="alternate">
+      <t>Sometimes XMPP server administrators are unable to obtain valid PKIX certificates for their servers (e.g., the administrator of im.cs.podunk.example can't receive certification authority verification messages sent to mailto:hostmaster@podunk.example, or hosting.example.net does not want to take on the liability of holding the certificate and private key for example.com).  In these circumstances, prooftypes other than PKIX are desirable.  Two companion documents, <xref target='XMPP-DANE'/> and <xref target='XMPP-POSH'/>, define alternate prooftypes:</t>
+      <t>
+        <list style='symbols'>
+          <t>In the DANE prooftype, the verification materials consist of a PKIX certificate that is compared as an exact match or a hash of either the SubjectPublicKeyInfo or the full certificate, and the verification materials are obtained via secure DNS.  See the accompanying <xref target="XMPP-DANE"/> spec for discussion and examples.</t>
+          <t>POSH stands for PKIX Over Secure HTTP: the verification material consists of a PKIX certificate, it is obtained by retrieving it over HTTPS at a well-known URI <xref target="RFC5785"/>, the certificate is checked according to the rules from <xref target="RFC6120"/> and <xref target="RFC6125"/>, and secure DNS is not necessary since the HTTPS retrieval mechanism relies on the chain of trust from the public key infrastructure.  See the accompanying <xref target="XMPP-POSH"/> spec for discussion and examples.</t>
+        </list>
+      </t>
+      <t>By contrast, the standard PKI prooftype is a DNA proof that follows the rules from <xref target="RFC6120"/>: that is, the verification material consists of a PKIX certificate that is checked according to a profile of the matching rules from <xref target="RFC6125"/>, the client's verification material is obtained out of band in the form of a trusted root, and secure DNS is not necessary.</t>
+    </section>
+
+    <section title="Virtual Hosting" anchor="hosting">
+      <t>One common method for deploying XMPP services is virtual hosting: e.g., the XMPP service for example.com is actually hosted at hosting.example.net.  Such an arrangement is relatively convenient in XMPP given the use of DNS SRV records <xref target="RFC2782"/>, such as the following pointer from example.com to hosting.example.net:</t>
+      <figure>
+        <artwork><![CDATA[
+_xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
+        ]]></artwork>
+      </figure>
+      <t>In typical deployments the administrators of hosting.example.net do not wish to hold the certificate and private key for example.com and the owners of example.com do not wish to share their certificate and private key with the administrators of hosting.example.net.  In practice this means that server-to-server communications to example.com go unencrypted or the communications are TLS-encrypted but the certificates are not checked (which is functionally equivalent to an unencrypted connection).  This is also true of client-to-server communications, forcing end users to override certificate warnings or configure their clients to accept certificates for hosting.example.net instead of example.com.  The fundamental problem here is that if DNSSEC is not used the act of delegation is inherently insecure.  Explanations of how to use DNSSEC for secure delegation can be found in <xref target='XMPP-POSH'/>.</t>
+    </section>
+
+    <section title="Prooftype Model" anchor="model">
+      <t>In general, a DNA prooftype conforms to the following definition:</t>
       <t>
         <list style="hanging">
           <t hangText="prooftype:">A mechanism for proving an association between a domain name and an XML stream, where the mechanism defines (1) the verification material to be used, (2) the matching rules for comparing the reference version and presented version of the material, (3) how the verification material is obtained, and (4) whether the mechanism depends on secure DNS.</t>
         </list>
       </t>
-      <t>The following sections outline several prooftypes that are used, or could be used, in XMPP; detailed definitions are provided in separate specifications.</t>
-      <t>Note: So far, our definition of a prooftype does not include the exact protocol mechanism that is used to assert a domain name; this is explained further under <xref target="assertions"/>.</t>
-    </section>
-
-    <section title="Prooftypes" anchor="prooftypes">
-
-      <section title="PKI" anchor="prooftypes-pki">
-        <t>The PKI prooftype is a DNA proof that follows the rules from <xref target="RFC6120"/>: that is, the verification material consists of a PKIX certificate that is checked according to a profile of the matching rules from <xref target="RFC6125"/>, the client's verification material is obtained out of band in the form of a trusted root, and secure DNS is not necessary.</t>
-      </section>
-
-      <section title="DANE" anchor="prooftypes-dane">
-        <t>In the DANE prooftype, the verification materials consist of a PKIX certificate that is compared as an exact match or a hash of either the SubjectPublicKeyInfo or the full certificate, and the verification materials are obtained via secure DNS.  See the accompanying <xref target="XMPP-DANE"/> spec for discussion and examples.</t>
-      </section>
-
-      <section title="POSH" anchor="prooftypes-posh">
-        <t>POSH stands for PKIX Over Secure HTTP: the verification material consists of a PKIX certificate, it is obtained by retrieving it over HTTPS at a well-known URI <xref target="RFC5785"/>, the certificate is checked according to the rules from <xref target="RFC6120"/> and <xref target="RFC6125"/>, and secure DNS is not necessary since the HTTPS retrieval mechanism relies on the chain of trust from the public key infrastructure.  See the accompanying <xref target="XMPP-POSH"/> spec for discussion and examples.</t>
-      </section>
-
-      <section title="A Note about Server Dialback" anchor="prooftypes-dialback">
-        <t>After much deliberation, the authors have concluded that the Server Dialback protocol <xref target='XEP-0220'/> is not a DNA prooftype, even when DNSSEC is used.  However, as explained below, Server Dialback does provide a method for asserting one of a server's domain names after a domain name association has been established in the context of server-to-server communicaton.</t>
-      </section>
-
-      <section title="Order of Operations" anchor="prooftype-order">
-        <t></t>
-      </section>
-
-    </section>
-
-    <section title="Assertion Mechanisms" anchor="assertions">
-      <t>An assertion is a server's statement that an XML stream is to be associated with the asserted domain.</t>
-
-      <section title="From Attribute" anchor="assertions-from">
-        <t>The header of an XML stream includes a 'from' attribute (see <xref target='RFC6120'/>.  Traditionally, the value of this 'from' attribute has been interpreted as a server's assertion of its domain name (or one of its domain names).  This assertion works only as the first assertion, and cannot be used for subsequent assertions (as can a Server Dialback &lt;db:result/&gt; element).</t>
-      </section>
-
-      <section title="SASL" anchor="assertions-sasl">
-        <t>During SASL negotiation after TLS negotiation, an XMPP server acting as a TLS client can include an authorization identity that asserts a domain name for the server.</t>
-      </section>
-
-      <section title="&lt;db:result&gt;" anchor="assertions-dbresult">
-        <t>When two servers use the Server Dialback protocol <xref target="XEP-0220"/>, the originating server asserts its identity by sending a &lt;db:result/&gt; element to the receiving server, where the 'from' attribute specifies the domain name being asserted by the originating server.</t>
-        <t>Note: Although historically the &lt;db:result/&gt; element has contained a dialback key as XML character data, the &lt;db:result/&gt; element can also be used without dialback keys as a mere assertion; this usage is sometimes colloquially referred to as "dialback without dialback".</t>
-      </section>
-
-      <section title="A Note about TLS Certificates" anchor="assertions-tls">
-        <t>During TLS negotiation, an XMPP server acting as a TLS server sends its certificate to the connecting client or peer server acting as a TLS client.  This certificate does not assert the server's identity, but instead comprises a presentation of the server's credentials for the purpose of proving its identity.</t>
-      </section>
-
-    </section>
-
-    <section title="Delegation Methods" anchor="delegation">
-      <t>Although domain name associations are closely tied to delegation in some scenarios, delegation is irrelevant when the source domain is exactly the same as the hostname of the XMPP service, as is often the case with single-domain services.  There are two methods for secure delegation: DNSSEC (see the <xref target="XMPP-DANE"/> spec) and HTTPS Redirect (see the <xref target="XMPP-POSH"/> spec).</t>
+      <t>The PKI, DANE, and POSH prooftypes follow this model, but other prooftypes are possible (examples might include PGP keys rather than PKIX certificates, or a token mechanism such as Kerberos or OAuth).</t>
+      <t>Some prooftypes depend on secure DNS and therefore also need to describe how secure delegation occurs for that prooftype.</t>
     </section>
 
     <section title="Supported Prooftypes and Prooftype Ordering" anchor="support-and-order">
@@ -548,6 +634,21 @@
         <format type="XML" octets="234610" target="http://xml.resource.org/public/rfc/xml/rfc3920.xml"/>
       </reference>
 
+      <reference anchor="XEP-0045">
+        <front>
+          <title>Multi-User Chat</title>
+          <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
+            <organization/>
+            <address>
+              <email>stpeter@jabber.org</email>
+            </address>
+          </author>
+          <date day="08" month="February" year="2012"/>
+        </front>
+        <seriesInfo name="XSF XEP" value="0045"/>
+        <format type="HTML" target="http://xmpp.org/extensions/xep-0045.html"/>
+      </reference>
+
       <reference anchor="XEP-0238">
         <front>
           <title>XMPP Protocol Flows for Inter-Domain Federation</title>
@@ -562,8 +663,109 @@
         <seriesInfo name="XSF XEP" value="0238"/>
         <format type="HTML" target="http://xmpp.org/extensions/xep-0238.html"/>
       </reference>
+
+      <reference anchor="XEP-0288">
+        <front>
+          <title>Bidirectional Server-to-Server Connections</title>
+          <author initials="P." surname="Hancke" fullname="Philipp Hancke">
+            <organization/>
+            <address>
+              <email/>
+            </address>
+          </author>
+          <author initials="D." surname="Cridland" fullname="Dave Cridland">
+            <organization/>
+            <address>
+              <email>dave.cridland@isode.com</email>
+            </address>
+          </author>
+          <date day="21" month="August" year="2012"/>
+        </front>
+        <seriesInfo name="XSF XEP" value="0288"/>
+        <format type="HTML" target="http://xmpp.org/extensions/xep-0288.html"/>
+      </reference>
+
     </references>
 
   </back>
 
 </rfc>
+
+<!-- OLD MATERIAL IS PARKED HERE ...
+
+      <t>In XMPP, each party to a stream expects the other party to provide some proof of its identity.  For example, in client-to-server streams the server expects the client to present some credentials (such as a username and password or a client certificate), and ideally the client also expects the server to provide a certificate that identifies the domain(s) of the server.  Similar considerations hold true for server-to-server streams, also called "interdomain federation".</t>
+      <t>When the Jabber.org open-source community developed the precursor to XMPP in 1999, it defined methods for interdomain federation but no mechanisms for authenticating or checking the identity of peer servers.  We could describe this as "permissive federation", which is clearly sub-optimal given the strong potential for domain spoofing.  In the year 2000, the community filled the gap to some extent by defining a technology called Server Dialback (first documented in <xref target="RFC3920"/> and since moved to <xref target="XEP-0220"/>).  Although Server Dialback does not provide a strong mechanism for identity checking without the use of DNSSEC, it does provide DNS-based verification and thus has effectively prevented most instances of domain spoofing on the XMPP network since late 2000.  Also, because Server Dialback typically does not involve the use of server certificates, it does not result in an encrypted stream; thus we refer to it as a technology for "verified federation".</t>
+      <t>In 2002-2004, the IETF's XMPP Working Group hardened the original Jabber.org protocols by adding Transport Layer Security (TLS) and Simple Authentication and Security Layer (SASL), thus making it possible for two servers to engage in "authenticated federation" (i.e., when two peer servers present PKIX certificates anchored to trusted roots during negotiation of a server-to-server stream) or "encrypted federation" (i.e., when two peer servers present PKIX certificates that are self-signed or not anchored to trusted roots during negotiation of a server-to-server stream).</t>
+      <t>Unfortunately, authenticated federation has not been widely deployed on the XMPP network (indeed, even encrypted federation is not widely deployed because verified federation is perceived as "good enough"); one of the primary reasons is that it is feasible (although not always easy) for single-domain servers to obtain the proper certificates, but much more difficult (or practically impossible) for large XMPP hosting providers to do so.  The primary challenge here is operational: it is highly unlikely that an organization (say, example.com) wishing to delegate its XMPP service (say, example.com) to a hosting provider (say, hosting.example.net) will hand over its private key to the hosting provider.  Even if that were feasible, further operational challenges (e.g., maintaining large numbers of certificates for hosted domains, and configuring XMPP software to present the correct certificate based on the 'to' address of the initial stream header) have also discouraged deployment of authenticated federation in virtual hosting environments, which happen to be a common deployment scenario.</t>
+      <t>Furthermore, the prevalence of delegation to hosting providers leads to one additional shortcoming, caused by the use of DNS SRV records <xref target="RFC2782"/> in XMPP: if DNSSEC is not used, the act of delegation is inherently insecure.  Unfortunately, no existing documentation explains how to use DNSSEC for secure delegation, with the result that clients and servers often take a "leap of faith" if using an SRV record to determine that when communicating with, say, example.com they actually need to connect to, say, hosting.example.net.</t>
+      <t>In order to meet the requirements for strong security <xref target="RFC3365"/>, both authenticated federation and secure delegation are needed so that the association between a domain name and an XML stream can be trusted by XMPP entities.  Unfortunately, authenticated federation is uncommon and secure delegation is unheard of on the XMPP network today.  Because the current situation is clearly sub-optimal, this document defines a framework for both authenticated federation (i.e., strong domain name associations) and secure delegation in XMPP.</t>
+
+    </section>
+
+    <section title="Framework" anchor="framework">
+      <t>In essence, we need to establish an association between a domain and an XML stream: is the XMPP server to which a client or peer server connects "allowed" to accept stanzas for or send stanzas from a given domain?  If so, we say that there is a domain name association ("DNA") for the stream.</t>
+      <t>For TLS in general, the TLS client has some expectations about the identity of the TLS server (in the language of the "CertID" specification <xref target="RFC6125"/>, the TLS client has a "reference identity"), and then checks some material presented by the TLS server (the "presented identity" within the server certificate) to verify that its expectations have been met.  The DNS-Based Authentication of Named Entities protocol <xref target="RFC6698"/>, at least in some of its modes, adds another kind of verification material: not the presented identity within a PKIX certificate, but a complete certificate or hash thereof.  And other kinds of verification material could be envisioned (e.g., OpenPGP keys, Kerberos tickets, OAuth tokens), although they are not considered here.</t>
+      <t>No matter what kind of verification material is used, an XMPP client or peer server that wishes to verify a domain name association needs a way to obtain the verification material it will refer to when establishing the association.  For instance, when a server presents a PKIX certificate during TLS negotiation, the connecting client or peer server has traditionally obtained its verification material out of band or via configuration from a certification authority (i.e., in the form of a root certificate contained in a certificate bundle).  In DANE, the verification material is obtained from the Domain Name System.  In the PKIX Over Secure HTTP ("POSH") method described in an accompanying specification, the verification material is obtained over secure HTTP.  And other methods for obtaining verification material could be envisioned (e.g., IPsec), although they are not considered here.</t>
+      <t>Furthermore, the matching rules for checking the verification material will depend on the nature of that material; for example, <xref target="RFC6120"/> defines a profile of the rules from the "CertID" specification <xref target="RFC6125"/>, DANE might compare the SubjectPublicKeyInfo data or the full certificate, and so on.</t>
+      <t>Finally, given the relationship between XMPP and the DNS (XMPP services are usually identified by domain name, not IP address), it is important to make it clear whether a given verification method can (or must) be used only with secure DNS or also with insecure DNS.</t>
+      <t>Putting these pieces together, we define the concept of a "prooftype":</t>
+      <t>
+        <list style="hanging">
+          <t hangText="prooftype:">A mechanism for proving an association between a domain name and an XML stream, where the mechanism defines (1) the verification material to be used, (2) the matching rules for comparing the reference version and presented version of the material, (3) how the verification material is obtained, and (4) whether the mechanism depends on secure DNS.</t>
+        </list>
+      </t>
+      <t>The following sections outline several prooftypes that are used, or could be used, in XMPP; detailed definitions are provided in separate specifications.</t>
+      <t>Note: So far, our definition of a prooftype does not include the exact protocol mechanism that is used to assert a domain name; this is explained further under <xref target="assertions"/>.</t>
+    </section>
+
+    <section title="Prooftypes" anchor="prooftypes">
+
+      <section title="PKI" anchor="prooftypes-pki">
+        <t>The PKI prooftype is a DNA proof that follows the rules from <xref target="RFC6120"/>: that is, the verification material consists of a PKIX certificate that is checked according to a profile of the matching rules from <xref target="RFC6125"/>, the client's verification material is obtained out of band in the form of a trusted root, and secure DNS is not necessary.</t>
+      </section>
+
+      <section title="DANE" anchor="prooftypes-dane">
+        <t>In the DANE prooftype, the verification materials consist of a PKIX certificate that is compared as an exact match or a hash of either the SubjectPublicKeyInfo or the full certificate, and the verification materials are obtained via secure DNS.  See the accompanying <xref target="XMPP-DANE"/> spec for discussion and examples.</t>
+      </section>
+
+      <section title="POSH" anchor="prooftypes-posh">
+        <t>POSH stands for PKIX Over Secure HTTP: the verification material consists of a PKIX certificate, it is obtained by retrieving it over HTTPS at a well-known URI <xref target="RFC5785"/>, the certificate is checked according to the rules from <xref target="RFC6120"/> and <xref target="RFC6125"/>, and secure DNS is not necessary since the HTTPS retrieval mechanism relies on the chain of trust from the public key infrastructure.  See the accompanying <xref target="XMPP-POSH"/> spec for discussion and examples.</t>
+      </section>
+
+      <section title="A Note about Server Dialback" anchor="prooftypes-dialback">
+        <t>After much deliberation, the authors have concluded that the Server Dialback protocol <xref target='XEP-0220'/> is not a DNA prooftype, even when DNSSEC is used.  However, as explained below, Server Dialback does provide a method for asserting one of a server's domain names after a domain name association has been established in the context of server-to-server communicaton.</t>
+      </section>
+
+      <section title="Order of Operations" anchor="prooftype-order">
+        <t></t>
+      </section>
+
+    </section>
+
+    <section title="Assertion Mechanisms" anchor="assertions">
+      <t>An assertion is a server's statement that an XML stream is to be associated with the asserted domain.</t>
+
+      <section title="From Attribute" anchor="assertions-from">
+        <t>The header of an XML stream includes a 'from' attribute (see <xref target='RFC6120'/>.  Traditionally, the value of this 'from' attribute has been interpreted as a server's assertion of its domain name (or one of its domain names).  This assertion works only as the first assertion, and cannot be used for subsequent assertions (as can a Server Dialback &lt;db:result/&gt; element).</t>
+      </section>
+
+      <section title="SASL" anchor="assertions-sasl">
+        <t>During SASL negotiation after TLS negotiation, an XMPP server acting as a TLS client can include an authorization identity that asserts a domain name for the server.</t>
+      </section>
+
+      <section title="&lt;db:result&gt;" anchor="assertions-dbresult">
+        <t>When two servers use the Server Dialback protocol <xref target="XEP-0220"/>, the originating server asserts its identity by sending a &lt;db:result/&gt; element to the receiving server, where the 'from' attribute specifies the domain name being asserted by the originating server.</t>
+        <t>Note: Although historically the &lt;db:result/&gt; element has contained a dialback key as XML character data, the &lt;db:result/&gt; element can also be used without dialback keys as a mere assertion; this usage is sometimes colloquially referred to as "dialback without dialback".</t>
+      </section>
+
+      <section title="A Note about TLS Certificates" anchor="assertions-tls">
+        <t>During TLS negotiation, an XMPP server acting as a TLS server sends its certificate to the connecting client or peer server acting as a TLS client.  This certificate does not assert the server's identity, but instead comprises a presentation of the server's credentials for the purpose of proving its identity.</t>
+      </section>
+
+    </section>
+
+    <section title="Delegation Methods" anchor="delegation">
+      <t>Although domain name associations are closely tied to delegation in some scenarios, delegation is irrelevant when the source domain is exactly the same as the hostname of the XMPP service, as is often the case with single-domain services.  There are two methods for secure delegation: DNSSEC (see the <xref target="XMPP-DANE"/> spec) and HTTPS Redirect (see the <xref target="XMPP-POSH"/> spec).</t>
+    </section>
+
+... END OF OLD MATERIAL -->
