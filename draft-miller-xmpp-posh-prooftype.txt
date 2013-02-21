@@ -5,7 +5,7 @@
 XMPP                                                           M. Miller
 Internet-Draft                                            P. Saint-Andre
 Intended status: Standards Track                     Cisco Systems, Inc.
-Expires: August 17, 2013                               February 13, 2013
+Expires: August 24, 2013                               February 20, 2013
 
 
  Using PKIX over Secure HTTP (POSH) as a Prooftype for XMPP Domain Name
@@ -36,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 17, 2013.
+   This Internet-Draft will expire on August 24, 2013.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Miller & Saint-Andre    Expires August 17, 2013                 [Page 1]
+Miller & Saint-Andre    Expires August 24, 2013                 [Page 1]
 
 Internet-Draft            XMPP POSH Prooftype              February 2013
 
@@ -68,15 +68,16 @@ Table of Contents
    3.  Prooftype . . . . . . . . . . . . . . . . . . . . . . . . . .   3
    4.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . .   4
      4.1.  Permanent versus Temporary Redirects  . . . . . . . . . .   6
-   5.  Caching Results . . . . . . . . . . . . . . . . . . . . . . .   6
-   6.  Alternates and Roll-over  . . . . . . . . . . . . . . . . . .   6
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
-     8.1.  The "posh._xmpp-client._tcp.json" Well-Known URI  . . . .   8
-     8.2.  The "posh._xmpp-server._tcp.json" Well-Known URI  . . . .   9
-   9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
-     9.1.  Normative References  . . . . . . . . . . . . . . . . . .   9
-     9.2.  Informative References  . . . . . . . . . . . . . . . . .  10
+   5.  Order of Operations . . . . . . . . . . . . . . . . . . . . .   6
+   6.  Caching Results . . . . . . . . . . . . . . . . . . . . . . .   7
+   7.  Alternates and Roll-over  . . . . . . . . . . . . . . . . . .   7
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
+   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
+     9.1.  The "posh._xmpp-client._tcp.json" Well-Known URI  . . . .   9
+     9.2.  The "posh._xmpp-server._tcp.json" Well-Known URI  . . . .   9
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .   9
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  10
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
 
 1.  Introduction
@@ -108,8 +109,7 @@ Table of Contents
 
 
 
-
-Miller & Saint-Andre    Expires August 17, 2013                 [Page 2]
+Miller & Saint-Andre    Expires August 24, 2013                 [Page 2]
 
 Internet-Draft            XMPP POSH Prooftype              February 2013
 
@@ -165,7 +165,7 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
 
 
 
-Miller & Saint-Andre    Expires August 17, 2013                 [Page 3]
+Miller & Saint-Andre    Expires August 24, 2013                 [Page 3]
 
 Internet-Draft            XMPP POSH Prooftype              February 2013
 
@@ -221,7 +221,7 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
 
 
 
-Miller & Saint-Andre    Expires August 17, 2013                 [Page 4]
+Miller & Saint-Andre    Expires August 24, 2013                 [Page 4]
 
 Internet-Draft            XMPP POSH Prooftype              February 2013
 
@@ -277,7 +277,7 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
 
 
 
-Miller & Saint-Andre    Expires August 17, 2013                 [Page 5]
+Miller & Saint-Andre    Expires August 24, 2013                 [Page 5]
 
 Internet-Draft            XMPP POSH Prooftype              February 2013
 
@@ -318,7 +318,27 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
    ignoring the specific semantics for 301 (Moved Permanently) or 308
    (Permanent Redirect) [HTTP-STATUS-308].
 
-5.  Caching Results
+5.  Order of Operations
+
+   The processes for this prooftype MUST be complete before the TLS
+   handshake over the XMPP connection complete, so that the client can
+   perform verification of reference identities.  Ideally a TLS client
+   ought to perform the POSH processes in parallel with other XMPP
+   session establishment processes; this is sometimes called the "happy
+   eyeballs" approach.  However, a TLS client might delay as much of the
+   XMPP session establishment as it needs to in order to gather all of
+   the POSH-based verification materials.  For instance, a TLS client
+   might not open the socket connection until it retrieve the PKIX
+   certificates.
+
+
+
+Miller & Saint-Andre    Expires August 24, 2013                 [Page 6]
+
+Internet-Draft            XMPP POSH Prooftype              February 2013
+
+
+6.  Caching Results
 
    Ideally, the initiating entity relies on the expiration time of the
    certificate obtained via POSH, and not on HTTP caching mechanisms.
@@ -327,16 +347,7 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
    max-age=60) or "no-cache" to indicate the response (redirect or
    content) is not appropriate to cache at the HTTP level.
 
-6.  Alternates and Roll-over
-
-
-
-
-
-Miller & Saint-Andre    Expires August 17, 2013                 [Page 6]
-
-Internet-Draft            XMPP POSH Prooftype              February 2013
-
+7.  Alternates and Roll-over
 
    To indicate alternate PKIX certificates, such as when an existing
    certificate will soon expire, the returned JWK Set can contain
@@ -375,6 +386,14 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
            jETMBEGA1UEAxMKRXhhbXBsZSBDQTAeFw0xMzAyMTIyMTI5MDBaFw0x
            NDAyMTIyMTI5MDBaME8xCzAJBgNVBAYTAlVTMREwDwYDVQQIEwhDb2x
            vcmFkbzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQDExNob3N0aW5nLm
+
+
+
+Miller & Saint-Andre    Expires August 24, 2013                 [Page 7]
+
+Internet-Draft            XMPP POSH Prooftype              February 2013
+
+
            V4YW1wbGUubmV0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDi4
            6kMWnCfg0DTrlcTc6AQUci5Lu1f2RKRWPEhz8qyt_CO0N5VpxKQMlGp
            6TApQzFdAfxCUA3rniYFpMq4Hemw2S74v1LRoWvROKviKRzunDP3EhP
@@ -386,14 +405,6 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
            lmU6eVwEcUQSAkHaC4Q2isWCIES58Wm5P2VVQTYBUn58H7ZR9-7looj
            YVykwEIQmE_aaVsMM-8AwTMJ7qj7aGhXFlKT2xwiPMVq9JF_Gv43qSy
            V9GJ3Uw5Jz6AN4WawXmlIVD0eKhPoHSDO0wfnFc8KM8mHPu7JXqIriX
-
-
-
-Miller & Saint-Andre    Expires August 17, 2013                 [Page 7]
-
-Internet-Draft            XMPP POSH Prooftype              February 2013
-
-
            18w4jfj3ySuHIkXeOjdbDWqZWJ7akBVf8McbB05tXP5T7sDTV-t8qH5
            6fdnSQC-qO-sQgmWlKLFtKybT6Fa6J7ChEd_sOJNqB9SoMar5sRYyfS
            foV0D7m_IF1MI6X95rL1YnKIGxDYWBq4ck",
@@ -425,36 +436,37 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
    }
 
 
-7.  Security Considerations
+8.  Security Considerations
 
    This document supplements but does not supersede the security
    considerations provided in [RFC2616], [RFC2818], [RFC6120], and
    [RFC6125].
 
+
+
+
+Miller & Saint-Andre    Expires August 24, 2013                 [Page 8]
+
+Internet-Draft            XMPP POSH Prooftype              February 2013
+
+
    Specifically, communication via HTTPS depends on checking the
    identity of the HTTP server in accordance with [RFC2818].
 
-8.  IANA Considerations
+9.  IANA Considerations
 
-8.1.  The "posh._xmpp-client._tcp.json" Well-Known URI
+9.1.  The "posh._xmpp-client._tcp.json" Well-Known URI
 
    This specification registers the "posh._xmpp-client._tcp.json" well-
    known URI in the Well-Known URI Registry as defined by [RFC5785].
 
    URI suffix: posh._xmpp-client._tcp.json
 
-
-
-Miller & Saint-Andre    Expires August 17, 2013                 [Page 8]
-
-Internet-Draft            XMPP POSH Prooftype              February 2013
-
-
    Change controller: IETF
 
    Specification document(s): [[ this document ]]
 
-8.2.  The "posh._xmpp-server._tcp.json" Well-Known URI
+9.2.  The "posh._xmpp-server._tcp.json" Well-Known URI
 
    This specification registers the "posh._xmpp-server._tcp.json" well-
    known URI in the Well-Known URI Registry as defined by [RFC5785].
@@ -465,9 +477,9 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
 
    Specification document(s): [[ this document ]]
 
-9.  References
+10.  References
 
-9.1.  Normative References
+10.1.  Normative References
 
    [JOSE-JWK]
               Jones, M., "JSON Web Key (JWK)", draft-miller-jose-pkix-
@@ -487,6 +499,13 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
 
+
+
+Miller & Saint-Andre    Expires August 24, 2013                 [Page 9]
+
+Internet-Draft            XMPP POSH Prooftype              February 2013
+
+
    [RFC2616]  Fielding, R., Gettys, J., Mogul, J., Frystyk, H.,
               Masinter, L., Leach, P., and T. Berners-Lee, "Hypertext
               Transfer Protocol -- HTTP/1.1", RFC 2616, June 1999.
@@ -498,14 +517,6 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
-
-
-
-Miller & Saint-Andre    Expires August 17, 2013                 [Page 9]
-
-Internet-Draft            XMPP POSH Prooftype              February 2013
-
-
               Infrastructure Certificate and Certificate Revocation List
               (CRL) Profile", RFC 5280, May 2008.
 
@@ -522,7 +533,7 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
               (PKIX) Certificates in the Context of Transport Layer
               Security (TLS)", RFC 6125, March 2011.
 
-9.2.  Informative References
+10.2.  Informative References
 
    [HTTP-STATUS-308]
               Reschke, J., "The Hypertext Transfer Protocol (HTTP)
@@ -539,6 +550,18 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
 
 Authors' Addresses
 
+
+
+
+
+
+
+
+Miller & Saint-Andre    Expires August 24, 2013                [Page 10]
+
+Internet-Draft            XMPP POSH Prooftype              February 2013
+
+
    Matthew Miller
    Cisco Systems, Inc.
    1899 Wynkoop Street, Suite 600
@@ -546,20 +569,6 @@ Authors' Addresses
    USA
 
    Email: mamille2@cisco.com
-
-
-
-
-
-
-
-
-
-
-
-Miller & Saint-Andre    Expires August 17, 2013                [Page 10]
-
-Internet-Draft            XMPP POSH Prooftype              February 2013
 
 
    Peter Saint-Andre
@@ -603,13 +612,4 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
 
 
 
-
-
-
-
-
-
-
-
-
-Miller & Saint-Andre    Expires August 17, 2013                [Page 11]
+Miller & Saint-Andre    Expires August 24, 2013                [Page 11]
