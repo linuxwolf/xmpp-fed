@@ -35,6 +35,7 @@
         <email>mamille2@cisco.com</email>
       </address>
     </author>
+
     <date month="February" day="25" year="2013"/>
     <area>RAI</area>
     <keyword>Internet-Draft</keyword>
@@ -105,6 +106,11 @@
       <section title="A Note about Server Dialback" anchor="prooftypes-dialback">
         <t>After much deliberation, the authors have concluded that the Server Dialback protocol <xref target='XEP-0220'/> is not a DNA prooftype, even when DNSSEC is used.  However, as explained below, Server Dialback does provide a method for asserting one of a server's domain names after a domain name association has been established in the context of server-to-server communicaton.</t>
       </section>
+
+      <section title="Order of Operations" anchor="prooftype-order">
+        <t></t>
+      </section>
+
     </section>
 
     <section title="Assertion Mechanisms" anchor="assertions">
@@ -477,10 +483,10 @@
               <email>psaintan@cisco.com</email>
             </address>
           </author>
-          <date month="June" year="2012"/>
+          <date month="January" year="2013"/>
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-miller-xmpp-dnssec-prooftype-02"/>
-        <format type="TXT" target="http://tools.ietf.org/html/draft-miller-xmpp-prooftype-dnsssec-prooftype-02.txt"/>
+        <seriesInfo name="Internet-Draft" value="draft-miller-xmpp-dnssec-prooftype-03"/>
+        <format type="TXT" target="http://tools.ietf.org/html/draft-miller-xmpp-prooftype-dnsssec-prooftype-03.txt"/>
       </reference>
 
       <reference anchor="XMPP-POSH">
@@ -498,10 +504,10 @@
               <email>psaintan@cisco.com</email>
             </address>
           </author>
-          <date month="June" year="2012"/>
+          <date month="January" year="2013"/>
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-miller-xmpp-posh-prooftype-00"/>
-        <format type="TXT" target="http://tools.ietf.org/html/draft-miller-xmpp-posh-prooftype-00.txt"/>
+        <seriesInfo name="Internet-Draft" value="draft-miller-xmpp-posh-prooftype-01"/>
+        <format type="TXT" target="http://tools.ietf.org/html/draft-miller-xmpp-posh-prooftype-01.txt"/>
       </reference>
 
     </references>
