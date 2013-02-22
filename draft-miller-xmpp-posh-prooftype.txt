@@ -79,7 +79,7 @@ Table of Contents
      10.1.  Normative References . . . . . . . . . . . . . . . . . .   9
      10.2.  Informative References . . . . . . . . . . . . . . . . .  10
      10.3.  Informative References . . . . . . . . . . . . . . . . .  10
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  11
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
 
 1.  Introduction
 
@@ -479,19 +479,19 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
 10.1.  Normative References
 
    [JOSE-JWK]
-              Jones, M., "JSON Web Key (JWK)", draft-miller-jose-pkix-
-              key-00 (work in progress), December 2012.
+              Jones, M., "JSON Web Key (JWK)", draft-ietf-jose-json-web-
+              key-08 (work in progress), December 2012.
 
    [JOSE-PKIX-KEY]
               Miller, M., "JSON Web Key (JWK) for PKIX Certificates",
-              draft-miller-jose-pkix-key-00 (work in progress), February
+              draft-miller-jose-pkix-key-01 (work in progress), February
               2013.
 
    [XMPP-DNA]
               Saint-Andre, P. and M. Miller, "Domain Name Associations
               (DNA) in the Extensible Messaging and Presence Protocol
-              (XMPP)", draft-saintandre-xmpp-dna-00 (work in progress),
-              June 2012.
+              (XMPP)", draft-saintandre-xmpp-dna-01 (work in progress),
+              February 2013.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
@@ -511,9 +511,6 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
               Transfer Protocol -- HTTP/1.1", RFC 2616, June 1999.
 
    [RFC2818]  Rescorla, E., "HTTP Over TLS", RFC 2818, May 2000.
-
-   [RFC4648]  Josefsson, S., "The Base16, Base32, and Base64 Data
-              Encodings", RFC 4648, October 2006.
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
@@ -553,6 +550,9 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
    [RFC6555]  Wing, D. and A. Yourtchenko, "Happy Eyeballs: Success with
               Dual-Stack Hosts", RFC 6555, April 2012.
 
+Authors' Addresses
+
+
 
 
 
@@ -561,8 +561,6 @@ Miller & Saint-Andre    Expires August 26, 2013                [Page 10]
 
 Internet-Draft            XMPP POSH Prooftype              February 2013
 
-
-Authors' Addresses
 
    Matthew Miller
    Cisco Systems, Inc.
@@ -580,6 +578,8 @@ Authors' Addresses
    USA
 
    Email: psaintan@cisco.com
+
+
 
 
 
