@@ -411,10 +411,10 @@
               <email>mamille2@cisco.com</email>
             </address>
           </author>
-          <date month="June" year="2012"/>
+          <date month="February" year="2013"/>
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-saintandre-xmpp-dna-00"/>
-        <format type="TXT" target="http://tools.ietf.org/html/draft-sainandre-xmpp-dna-00.txt"/>
+        <seriesInfo name="Internet-Draft" value="draft-saintandre-xmpp-dna-01"/>
+        <format type="TXT" target="http://tools.ietf.org/html/draft-sainandre-xmpp-dna-01.txt"/>
       </reference>
     </references>
     <references title="Informative References">

@@ -349,8 +349,8 @@ Internet-Draft            XMPP DANE Prooftype              February 2013
    [XMPP-DNA]
               Saint-Andre, P. and M. Miller, "Domain Name Associations
               (DNA) in the Extensible Messaging and Presence Protocol
-              (XMPP)", draft-saintandre-xmpp-dna-00 (work in progress),
-              June 2012.
+              (XMPP)", draft-saintandre-xmpp-dna-01 (work in progress),
+              February 2013.
 
 10.2.  Informative References
 
