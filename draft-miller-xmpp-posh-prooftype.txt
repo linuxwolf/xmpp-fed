@@ -302,7 +302,7 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
 
 4.1.  Permanent versus Temporary Redirects
 
-   Care needs to be taken with which redirect mechanism used for
+   Care needs to be taken with which redirect mechanism is used for
    delegation.  Clients might remember the redirected location in place
    of the original, which can lead to verification mismatches when a
    source domain is migrated to a different delegated domain.
