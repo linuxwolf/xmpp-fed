@@ -323,7 +323,7 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
    eyeballs" approach, similar to [RFC6555] for IPv4 and IPv6.  However,
    a TLS client might delay as much of the XMPP session establishment as
    it needs to in order to gather all of the POSH-based verification
-   materials.  For instance, a TLS client might not open the socket
+   material.  For instance, a TLS client might not open the socket
    connection until it retrieves the PKIX certificates.
 
 6.  Caching Results

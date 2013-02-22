@@ -256,10 +256,10 @@ Internet-Draft            XMPP DANE Prooftype              February 2013
    "happy eyeballs" approach, similar to [RFC6555] for IPv4 and IPv6.
    However, a TLS client might delay as much of the XMPP session
    establishment as it needs to in order to gather all of the DNSSEC-
-   and DANE-based verification materials.  For instance, a TLS client
+   and DANE-based verification material.  For instance, a TLS client
    might not open the socket connection until it has validated the
    secure delegation, or it might delay beginning the TLS handshake
-   until it has obtained the TLSA certificate verification materials.
+   until it has obtained the TLSA certificate verification material.
 
 7.  Internationalization Considerations
 
