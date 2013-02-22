@@ -5,7 +5,7 @@
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="4"?>
-<rfc category="std" docName="draft-miller-xmpp-dnssec-prooftype-03" ipr="trust200902">
+<rfc category="std" docName="draft-miller-xmpp-dnssec-prooftype-04" ipr="trust200902">
   <front>
     <title abbrev="XMPP DANE Prooftype">Using DNS Security Extensions (DNSSEC) and DNS-based Authentication of Named Entities (DANE) as a Prooftype for XMPP Domain Name Associations</title>
     <author initials="M." surname="Miller" fullname="Matthew Miller">
@@ -34,7 +34,7 @@
         <email>psaintan@cisco.com</email>
       </address>
     </author>
-    <date month="January" day="10" year="2013"/>
+    <date month="February" day="22" year="2013"/>
     <area>RAI</area>
     <keyword>Internet-Draft</keyword>
     <keyword>XMPP</keyword>
@@ -48,36 +48,37 @@
   </front>
   <middle>
     <section title="Introduction" anchor="intro">
-      <t>The <xref target="XMPP-DNA"/> specification defines a framework for secure delegation and authenticated domain name associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP).  This document defines a a secure delegation method that uses DNS Security (DNSSEC) <xref target='RFC4033'/> in conjuction with the standard DNS SRV records <xref target='RFC2782'/> employed in domain name resolution in XMPP, with the result that a client or peer server that inititates an XMPP stream can legitimately treat a derived domain as a reference identifier during stream negotiation.  This document also defines a prooftype for DNA that uses DNS-based Authentication of Named Entities <xref target="RFC6698"/> (DANE) to verify TLS certificates containing source domains or derived domains during stream negotiation.</t>
+      <t>The <xref target="XMPP-DNA"/> specification defines a framework for secure delegation and strong domain name associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP).  This document defines a secure delegation method that uses DNS Security (DNSSEC) <xref target='RFC4033'/> in conjuction with the standard DNS SRV records <xref target='RFC2782'/> employed in domain name resolution in XMPP, with the result that a client or peer server that inititates an XMPP stream can legitimately treat a derived domain as a reference identifier during stream negotiation.  This document also defines a DNA prooftype that uses DNS-based Authentication of Named Entities <xref target="RFC6698"/> (DANE) to verify TLS certificates containing source domains or derived domains during stream negotiation.</t>
     </section>
     <section title="Terminology" anchor="terms">
-      <t>This document inherits XMPP-related terminology from <xref target="RFC6120"/>, DNS-related terminology from <xref target='RFC1034'/>, <xref target='RFC1035'/>, <xref target='RFC2782'/> and <xref target="RFC4033"/>, and security-related terminology from <xref target='RFC4949'/> and <xref target='RFC5280'/>.  The terms "source domain", "derived domain", "reference identifier", and "presented identifier" are used as defined in the "CertID" specification <xref target="RFC6125"/>.</t>
+      <t>This document inherits XMPP terminology from <xref target="RFC6120"/>, DNS terminology from <xref target='RFC1034'/>, <xref target='RFC1035'/>, <xref target='RFC2782'/> and <xref target="RFC4033"/>, and security terminology from <xref target='RFC4949'/> and <xref target='RFC5280'/>.  The terms "source domain", "derived domain", "reference identifier", and "presented identifier" are used as defined in the "CertID" specification <xref target="RFC6125"/>.</t>
       <t>This document is applicable to connections made from an XMPP client to an XMPP server ("_xmpp-client._tcp") or between XMPP servers ("_xmpp-server._tcp").  In both cases, the XMPP initiating entity acts as a TLS client and the XMPP receiving entity acts as a TLS server.  Therefore, to simplify discussion this document uses "_xmpp-client._tcp" to describe to both cases, unless otherwise indicated.</t>
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119'/>.</t>
     </section>
     <section title="Requirements" anchor="reqs">
-      <t>An XMPP initiating entity (TLS client) that wishes to use this prooftype MUST do so before exchanging stanzas addressed to the source domain.  In general, this means that the proof MUST be completed before the XMPP stream is restarted following STARTTLS negotiation (as specified in <xref target="RFC6120"/>).  However, connections between XMPP servers MAY also use this prooftype to verify the addition of new source domains onto an existing connection, such as multiplexing or "piggybacking" via <xref target="XEP-0220"/>.</t>
+      <t>An XMPP initiating entity (TLS client) that wishes to use the DNSSEC prooftype MUST do so before exchanging stanzas addressed to the source domain.  In general, this means that the proof MUST be completed before the XMPP stream is restarted following STARTTLS negotiation (as specified in <xref target="RFC6120"/>).  However, connections between XMPP servers MAY also use this prooftype to verify the addition of new source domains onto an existing connection, such as multiplexing or "piggybacking" via <xref target="XEP-0220"/>.</t>
     </section>
-    <section title="Secure Delegation" anchor="delegation">
-      <t>An XMPP initiating entity (TLS client) that wishes to use this prooftype performs the following actions:</t>
+    <section title="Secure Delegation using DNS SRV" anchor="delegation">
+      <t>In order to determine if delegation using DNS SRV records is secure, an XMPP initiating entity (TLS client) performs the following actions:</t>
       <t>
         <list style="numbers">
-          <t>Query for the appropriate SRV resource record for the source domain (e.g. "_xmpp-client._tcp.im.example.com").<vspace blankLines="1"/></t>
-          <t>If there is no SRV resource record, pursue the fallback methods described in <xref target='RFC6120'/>.<vspace blankLines='1'/></t>
-          <t>If there is an SRV resource record, validate that the SRV record answer is secure according to <xref target='RFC4033'/>.  If the answer is insecure, then delegation to the derived domain(s), as indicated by the "target host" field, is insecure and the TLS client MUST treat only the source domain as a reference identifier during certificate verification, as described in <xref target='RFC6120'/>; if the answer is bogus, the TLS client MUST abort.<vspace blankLines="1"/></t>
+          <t>Query for the appropriate SRV resource record for the source domain (e.g., "_xmpp-client._tcp.im.example.com").</t>
+          <t>If there is no SRV resource record, pursue the fallback methods described in <xref target='RFC6120'/>.</t>
+          <t>If there is an SRV resource record, validate that the SRV record answer is secure according to <xref target='RFC4033'/>.  If the answer is insecure, then delegation to the derived domain(s), as indicated by the "target host" field, is insecure and the TLS client MUST treat only the source domain as a reference identifier during certificate verification, as described in <xref target='RFC6120'/>; if the answer is bogus, the TLS client MUST abort.</t>
           <!--
-          <t>If there is an SRV record, for each derived domain from the SRV record answer (e.g. "hosting.example.net"), query for the "A" and/or "AAAA" resource records as described in <xref target='RFC6120'/>.<vspace blankLines="1"/></t>
-          <t>For each derived domain, validate that the address record answers are secure according to <xref target='RFC4033'/><vspace blankLines='1'/></t>
-          <t>If any answer is insecure, then the TLS client MUST NOT consider a connection to that derived domain as securely delegated from the source domain; when verifying the certificate, the TLS client MUST do so against the source domain as described in <xref target='RFC6120'/>.<vspace blankLines="1"/></t>
+          <t>If there is an SRV record, for each derived domain from the SRV record answer (e.g., "hosting.example.net"), query for the "A" and/or "AAAA" resource records as described in <xref target='RFC6120'/>.</t>
+          <t>For each derived domain, validate that the address record answers are secure according to <xref target='RFC4033'/></t>
+          <t>If any answer is insecure, then the TLS client MUST NOT consider a connection to that derived domain as securely delegated from the source domain; when verifying the certificate, the TLS client MUST do so against the source domain as described in <xref target='RFC6120'/>.</t>
           -->
           <t>If the answer is secure, the TLS client SHOULD consider any derived domain(s) in the answer as securely delegated; during certificate verification, the TLS client MUST treat both the source domain and the derived domain to which it has connected as reference identifiers.</t>
         </list>
       </t>
+      <t>The foregoing secure delegation method can be used with the DANE prooftype defined below, or with the PKIX prooftype specified in <xref target='RFC6120'/>.</t>
     </section>
-    <section title="Prooftype" anchor="prooftype">
+    <section title="DANE Prooftype" anchor="prooftype">
       <t>DANE provides additional tools to verify the keys used in TLS connections.  A TLS client MAY use DANE for TLS certificate verification; its use depends on the delegation status of the source domain, as described in the following sections.</t>
       <section title="No Service Records" anchor="prooftype-none">
-        <t>If no SRV records are found for the source domain, then the TLS client MUST query for a TLSA resource record as described in <xref target='RFC6698'/>, where the prepared domain name MUST contain the source domain and the IANA-registered port 5222 for client-to-server streams  (e.g. "_5222._tcp.im.example.com") or the IANA-registered port 5269 for server-to-server streams (e.g. "_5269._tcp.im.example.com").</t>
+        <t>If no SRV records are found for the source domain, then the TLS client MUST query for a TLSA resource record as described in <xref target='RFC6698'/>, where the prepared domain name MUST contain the source domain and the IANA-registered port 5222 for client-to-server streams  (e.g., "_5222._tcp.im.example.com") or the IANA-registered port 5269 for server-to-server streams (e.g., "_5269._tcp.im.example.com").</t>
         <t>In this case, the TLS client MUST treat only the source domain as its reference identifier during certificate verification, as described in <xref target='RFC6120'/>.</t>
       </section>
       <section title="Insecure Delegation" anchor="prooftype-insecure">
@@ -95,8 +96,8 @@
       -->
     </section>
     <section title="Order of Operations" anchor="order">
-      <t>The processes for this prooftype MUST be complete before the TLS handshake over the XMPP connection complete, so that the client can perform verification of reference identities. To that end, a TLS client SHOULD perform the processes for this prooftype as part of its normal DNS resolution of the source domain into a socket address. Validating secure delegation ought to be done immediately upon receiving the answers to the SRV and follow-up A/AAAA queries; queries for TLSA records ought to be done once the target service is determined (whether the source domain and IANA-registered port, or delegated domain and port).</t>
-      <t>Ideally a TLS client performs as much of the DNSSEC and DANE processes in parallel with other XMPP session establishment processes where possible (e.g. perform the TLSA resource queries as the socket connection is made to the server); this is sometimes called the "happy eyeballs" approach. However, a TLS client might delay as much of the XMPP session establishment as it needs to in order to gather all of the DNSSEC- and DANE-based verification materials. For instance, a TLS client might not open the socket connection until it has validated the secure delegation, or might delay beginning the TLS handshake until it has obtained the TLSA certificate verification materials.</t>
+      <t>The processes for the DANE prooftype MUST be complete before the TLS handshake over the XMPP connection finishes, so that the client can perform verification of reference identities. To that end, a TLS client SHOULD perform the processes for this prooftype as part of its normal DNS resolution of the source domain into a socket address. Validating secure delegation ought to be done immediately upon receiving the answers to the SRV and follow-up A/AAAA queries; queries for TLSA records ought to be done once the target service is determined (whether the source domain and IANA-registered port, or delegated domain and port).</t>
+      <t>Ideally a TLS client will perform the DNSSEC and DANE processes in parallel with other XMPP session establishment processes where possible (e.g., perform the TLSA resource queries as the socket connection is made to the server); this is sometimes called the "happy eyeballs" approach, similar to <xref target='RFC6555'/> for IPv4 and IPv6. However, a TLS client might delay as much of the XMPP session establishment as it needs to in order to gather all of the DNSSEC- and DANE-based verification materials. For instance, a TLS client might not open the socket connection until it has validated the secure delegation, or it might delay beginning the TLS handshake until it has obtained the TLSA certificate verification materials.</t>
     </section>
     <section title="Internationalization Considerations" anchor="i18n">
       <t>If the SRV, A/AAAA, and TLSA record queries are for an internationalized domain name, then they need to use the A-label form as defined in <xref target='RFC5890'/>.</t>
@@ -415,6 +416,21 @@
         <seriesInfo name="Internet-Draft" value="draft-saintandre-xmpp-dna-00"/>
         <format type="TXT" target="http://tools.ietf.org/html/draft-sainandre-xmpp-dna-00.txt"/>
       </reference>
+    </references>
+    <references title="Informative References">
+<reference anchor='RFC6555'>
+<front>
+<title>Happy Eyeballs: Success with Dual-Stack Hosts</title>
+<author initials='D.' surname='Wing' fullname='D. Wing'>
+<organization /></author>
+<author initials='A.' surname='Yourtchenko' fullname='A. Yourtchenko'>
+<organization /></author>
+<date year='2012' month='April' />
+<abstract>
+<t>When a server's IPv4 path and protocol are working, but the server's IPv6 path and protocol are not working, a dual-stack client application experiences significant connection delay compared to an IPv4-only client.  This is undesirable because it causes the dual- stack client to have a worse user experience.  This document specifies requirements for algorithms that reduce this user-visible delay and provides an algorithm. [STANDARDS-TRACK]</t></abstract></front>
+<seriesInfo name='RFC' value='6555' />
+<format type='TXT' octets='34048' target='http://www.rfc-editor.org/rfc/rfc6555.txt' />
+</reference>
     </references>
   </back>
 </rfc>
