@@ -129,11 +129,6 @@ Internet-Draft                  XMPP DNA                   February 2013
    [XEP-0238], although we substitute the term "authenticated
    federation" for the term "trusted federation" from that document.
 
-   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
-   "OPTIONAL" in this document are to be interpreted as described in
-   [RFC2119].
-
 3.  Flow Chart
 
    The following flow chart illustrates the protocol flow for
@@ -162,6 +157,11 @@ Internet-Draft                  XMPP DNA                   February 2013
    |  [A: Client Certificate]                      |
    |                                               |
    +-----------------------------------------------+
+                       |
+       (A establishes DNA for b.example!)
+                       |
+   +-------------AUTHENTICATION--------------------+
+   |                   |                           |
 
 
 
@@ -170,11 +170,6 @@ Saint-Andre & Miller    Expires August 26, 2013                 [Page 3]
 Internet-Draft                  XMPP DNA                   February 2013
 
 
-                       |
-       (A establishes DNA for b.example!)
-                       |
-   +-------------AUTHENTICATION--------------------+
-   |                   |                           |
    |          {client certificate?} ----+          |
    |                   |                |          |
    |                   | yes         no |          |
@@ -218,6 +213,11 @@ Internet-Draft                  XMPP DNA                   February 2013
    |                                               |
    +-----------------------------------------------+
                        |
+   +-----------DNA DANCE AS ABOVE------------------+
+   |                                               |
+   |    DNS RESOLUTION, STREAM HEADERS,            |
+   |    TLS NEGOTIATION, AUTHENTICATION            |
+   |                                               |
 
 
 
@@ -226,11 +226,6 @@ Saint-Andre & Miller    Expires August 26, 2013                 [Page 4]
 Internet-Draft                  XMPP DNA                   February 2013
 
 
-   +-----------DNA DANCE AS ABOVE------------------+
-   |                                               |
-   |    DNS RESOLUTION, STREAM HEADERS,            |
-   |    TLS NEGOTIATION, AUTHENTICATION            |
-   |                                               |
    +-----------------------------------------------+
                        |
    +----------DIALBACK IDENTITY VERIFICATION-------+
@@ -272,6 +267,11 @@ Internet-Draft                  XMPP DNA                   February 2013
    |                type='valid'/>                 |
    |                                               |
    +-----------------------------------------------+
+
+
+
+
+
 
 
 
@@ -646,16 +646,9 @@ Internet-Draft                  XMPP DNA                   February 2013
    [RFC1035]  Mockapetris, P., "Domain names - implementation and
               specification", STD 13, RFC 1035, November 1987.
 
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119, March 1997.
-
    [RFC2782]  Gulbrandsen, A., Vixie, P., and L. Esibov, "A DNS RR for
               specifying the location of services (DNS SRV)", RFC 2782,
               February 2000.
-
-   [RFC3365]  Schiller, J., "Strong Security Requirements for Internet
-              Engineering Task Force Standard Protocols", BCP 61, RFC
-              3365, August 2002.
 
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "DNS Security Introduction and Requirements", RFC
@@ -666,6 +659,13 @@ Internet-Draft                  XMPP DNA                   February 2013
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
+              Infrastructure Certificate and Certificate Revocation List
+              (CRL) Profile", RFC 5280, May 2008.
+
+   [RFC5785]  Nottingham, M. and E. Hammer-Lahav, "Defining Well-Known
+              Uniform Resource Identifiers (URIs)", RFC 5785, April
+              2010.
+
 
 
 
@@ -673,13 +673,6 @@ Saint-Andre & Miller    Expires August 26, 2013                [Page 12]
 
 Internet-Draft                  XMPP DNA                   February 2013
 
-
-              Infrastructure Certificate and Certificate Revocation List
-              (CRL) Profile", RFC 5280, May 2008.
-
-   [RFC5785]  Nottingham, M. and E. Hammer-Lahav, "Defining Well-Known
-              Uniform Resource Identifiers (URIs)", RFC 5785, April
-              2010.
 
    [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
               Protocol (XMPP): Core", RFC 6120, March 2011.
@@ -690,10 +683,6 @@ Internet-Draft                  XMPP DNA                   February 2013
               (PKIX) Certificates in the Context of Transport Layer
               Security (TLS)", RFC 6125, March 2011.
 
-   [RFC6698]  Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
-              of Named Entities (DANE) Transport Layer Security (TLS)
-              Protocol: TLSA", RFC 6698, August 2012.
-
    [XEP-0220]
               Miller, J., Saint-Andre, P., and P. Hancke, "Server
               Dialback", XSF XEP 0220, August 2011.
@@ -702,14 +691,14 @@ Internet-Draft                  XMPP DNA                   February 2013
               Miller, M. and P. Saint-Andre, "Using DNS Security
               Extensions (DNSSEC) and DNS-based Authentication of Named
               Entities (DANE) as a Prooftype for XMPP Domain Name
-              Associations", draft-miller-xmpp-dnssec-prooftype-03 (work
-              in progress), January 2013.
+              Associations", draft-miller-xmpp-dnssec-prooftype-04 (work
+              in progress), February 2013.
 
    [XMPP-POSH]
               Miller, M. and P. Saint-Andre, "Using PKIX over Secure
               HTTP (POSH) as a Prooftype for XMPP Domain Name
-              Associations", draft-miller-xmpp-posh-prooftype-01 (work
-              in progress), January 2013.
+              Associations", draft-miller-xmpp-posh-prooftype-03 (work
+              in progress), February 2013.
 
 12.2.  Informative References
 
@@ -721,6 +710,17 @@ Internet-Draft                  XMPP DNA                   February 2013
               2012.
 
    [XEP-0238]
+              Saint-Andre, P., "XMPP Protocol Flows for Inter-Domain
+              Federation", XSF XEP 0238, March 2008.
+
+   [XEP-0288]
+              Hancke, P. and D. Cridland, "Bidirectional Server-to-
+              Server Connections", XSF XEP 0288, August 2012.
+
+
+
+
+
 
 
 
@@ -729,13 +729,6 @@ Saint-Andre & Miller    Expires August 26, 2013                [Page 13]
 
 Internet-Draft                  XMPP DNA                   February 2013
 
-
-              Saint-Andre, P., "XMPP Protocol Flows for Inter-Domain
-              Federation", XSF XEP 0238, March 2008.
-
-   [XEP-0288]
-              Hancke, P. and D. Cridland, "Bidirectional Server-to-
-              Server Connections", XSF XEP 0288, August 2012.
 
 Authors' Addresses
 
@@ -755,6 +748,13 @@ Authors' Addresses
    USA
 
    Email: mamille2@cisco.com
+
+
+
+
+
+
+
 
 
 
