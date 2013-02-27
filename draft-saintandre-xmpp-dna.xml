@@ -679,7 +679,7 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
               <email>fippo@goodadvice.pages.de</email>
             </address>
           </author>
-          <date month="August" year="2011"/>
+          <date day="21" month="August" year="2012"/>
         </front>
         <seriesInfo name="XSF XEP" value="0220"/>
         <format type="HTML" target="http://xmpp.org/extensions/xep-0220.html#appendix-authorinfo"/>
