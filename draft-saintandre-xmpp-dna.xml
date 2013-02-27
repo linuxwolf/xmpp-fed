@@ -148,7 +148,7 @@
                     |
 +----------DIALBACK IDENTITY VERIFICATION-------+
 |                                               |
-|  A: <db:verify from='a.example'               |
+|  A: <db:result from='a.example'               |
 |                to='c.example'                 |
 |                type='valid'/>                 |
 |                                               |
@@ -180,7 +180,7 @@
 |  B: <db:result from='c.example'               |
 |                to='chatrooms.a.example'/>     |
 |                                               |
-|  B: <db:verify from='chatrooms.a.example'     |
+|  B: <db:result from='chatrooms.a.example'     |
 |                to='c.example'                 |
 |                type='valid'/>                 |
 |                                               |
@@ -275,10 +275,10 @@
             <t>Server A checks the PKIX certificate that Server B provided; if it is consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, Server A accepts that there is a strong domain name association between its stream to Server B and the DNS domain name c.example.</t>
           </list>
         </t>
-        <t>Now that Server A accepts the domain name association, it informs Server B of that fact by sending verification of the Server Dialback key over the original connection:</t>
+        <t>Now that Server A accepts the domain name association, it informs Server B of that fact:</t>
         <figure>
           <artwork><![CDATA[
-    <db:verify from='a.example' to='c.example' type='valid'/>
+    <db:result from='a.example' to='c.example' type='valid'/>
           ]]></artwork>
         </figure>
         <t>The parties can then terminate the second connection, since it was used only for Server A to associate a stream over the same IP:port combination with the domain name c.example (dialback key links the original stream to the new association).</t>
@@ -311,10 +311,10 @@
     </db:result>
           ]]></artwork>
         </figure>
-        <t>Server A then informs Server B that it accepts the domain name association by sending verification of the dialback key over the original connection:</t>
+        <t>Server A then informs Server B that it accepts the domain name association by sending:</t>
         <figure>
           <artwork><![CDATA[
-    <db:verify from='chatrooms.a.example' to='c.example' type='valid'/>
+    <db:result from='chatrooms.a.example' to='c.example' type='valid'/>
           ]]></artwork>
         </figure>
         <t>Server B can now close the connection over which it tested the domain name association for chatrooms.a.example.</t>
