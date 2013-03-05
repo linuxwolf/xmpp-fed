@@ -248,6 +248,7 @@
       <section title="Assertion" anchor="piggybacking-assertion">
         <t>Consider the common scenario in which Server B hosts not only b.example but also a second domain c.example.  If a user of Server B associated with c.example wishes to communicate with a friend at a.example, Server B needs to send XMPP stanzas from the domain c.example rather than b.example.  Although Server B could open an new TCP connection and negotiate new XML streams for the domain pair of c.example and a.example, that too is wasteful.  Server B already has a connection to a.example, so how can it assert that it would like to add a new domain pair to the existing connection?</t>
         <t>The traditional method for doing so is the Server Dialback protocol, first specified in <xref target='RFC3920'/> and since moved to <xref target='XEP-0220'/>.  Here, Server B can send a &lt;db:result/&gt; element for the new domain pair over the existing stream.</t>
+        <t>We assume that Server B has a PKIX certificate containing subjectAlternativeName dNSName entries for both b.example and c.example.</t>
         <figure>
           <artwork><![CDATA[
     <db:result from='c.example' to='a.example'>
@@ -256,32 +257,13 @@
           ]]></artwork>
         </figure>
         <t>This element functions as Server B's assertion that it is (also) c.example, and thus is functionally equivalent to the 'from' address of an initial stream header as previously described.</t>
-        <t>In response to this assertion, Server A needs to obtain some kind of proof that Server B really is also c.example.  It can do the same thing that it did before:</t>
-        <t>
-          <list style='numbers'>
-            <t>Server A resolves the DNS domain name c.example.</t>
-            <t>Server A opens a TCP connection to the resolved IP address (which might be the same IP address as for b.example).</t>
-            <t>
-              Server A sends an initial stream header to Server B, asserting that it is a.example:
-              <vspace blankLines='1'/>
-              &lt;stream:stream from='a.example' to='c.example'&gt;
-            </t>
-            <t>
-              Server B sends a response stream header to Server A, asserting that it is c.example:
-              <vspace blankLines='1'/>
-              &lt;stream:stream from='c.example' to='a.example'&gt;
-            </t>
-            <t>The servers attempt TLS negotiation, during which Server B (acting as a TLS server) presents a PKIX certificate proving that it is c.example.</t>
-            <t>Server A checks the PKIX certificate that Server B provided; if it is consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, Server A accepts that there is a strong domain name association between its stream to Server B and the DNS domain name c.example.</t>
-          </list>
-        </t>
+        <t>In response to this assertion, Server A needs to obtain some kind of proof that Server B really is also c.example. Since the certificate Server B used contains a subjectAlternative dNSName entry for c.example, Server A can use the matching rules detailed in <xref target='RFC6125'/> as a proof.</t>
         <t>Now that Server A accepts the domain name association, it informs Server B of that fact:</t>
         <figure>
           <artwork><![CDATA[
     <db:result from='a.example' to='c.example' type='valid'/>
           ]]></artwork>
         </figure>
-        <t>The parties can then terminate the second connection, since it was used only for Server A to associate a stream over the same IP:port combination with the domain name c.example (dialback key links the original stream to the new association).</t>
       </section>
       <section title="Supposition" anchor="piggybacking-supposition">
         <t>Piggybacking can also occur in the other direction.  Consider the common scenario in which Server A provides XMPP services not only for a.example but also for a subdomain such as a groupchat service at chatrooms.a.example (see <xref target='XEP-0045'/>).  If a user from c.example at Server B wishes to join a room on the groupchat sevice, Server B needs to send XMPP stanzas from the domain c.example to the domain chatrooms.a.example rather than a.example.  Therefore, Server B needs to negotiate and authenticate a stream to chatrooms.a.example:</t>
