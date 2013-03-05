@@ -102,6 +102,7 @@
 |                   v                |          |
 |             SASL EXTERNAL          |          |
 |             (mutual auth!)         |          |
+|               (optional)           |          |
 +------------------------------------|----------+
                                      |
                     +----------------+
@@ -139,13 +140,6 @@
 |                                               |
 +-----------------------------------------------+
                     |
-+-----------DNA DANCE AS ABOVE------------------+
-|                                               |
-|    DNS RESOLUTION, STREAM HEADERS,            |
-|    TLS NEGOTIATION, AUTHENTICATION            |
-|                                               |
-+-----------------------------------------------+
-                    |
 +----------DIALBACK IDENTITY VERIFICATION-------+
 |                                               |
 |  A: <db:result from='a.example'               |
@@ -157,23 +151,6 @@
                     |
       (Section 6.2: Piggybacking Supposition)
                     |
-                    |
-+-----------SUBSEQUENT CONNECTION---------------+
-|                                               |
-|  B: <stream from='c.example'                  |
-|             to='chatrooms.a.example'>         |
-|                                               |
-|  A: <stream from='chatrooms.a.example'        |
-|             to='c.example'>                   |
-|                                               |
-+-----------------------------------------------+
-                    |
-+-----------DNA DANCE AS ABOVE------------------+
-|                                               |
-|    DNS RESOLUTION, STREAM HEADERS,            |
-|    TLS NEGOTIATION, AUTHENTICATION            |
-|                                               |
-+-----------------------------------------------+
                     |
 +-----------DIALBACK OPTIMIZATION---------------+
 |                                               |
@@ -206,7 +183,7 @@
             &lt;stream:stream from='b.example' to='a.example'&gt;
           </t>
           <t>The servers attempt TLS negotiation, during which Server B (acting as a TLS server) presents a PKIX certificate proving that it is b.example and Server A (acting as a TLS client) presents a PKIX certificate proving that it is a.example.</t>
-          <t>Server A checks the PKIX certificate that Server B provided and Server B checks the PKIX certificate that Server A provided; if these proofs are consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, each server accepts that there is a strong domain name association between its stream to the other party and the DNS domain name of the other party.</t>
+          <t>Server A checks the PKIX certificate that Server B provided and Server B checks the PKIX certificate that Server A provided; if these proofs are consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, each server accepts that there is a strong domain name association between its stream to the other party and the DNS domain name of the other party. Server A can then either offer the EXTERNAL SASL mechanism in it's set of &lt;stream:features/&gt; or let Server B use &lt;db:result/&gt; to negotiate this.</t>
         </list>
       </t>
       <t>Several simplifying assumptions underlie the happy scenario just outlined:</t>
