@@ -266,26 +266,15 @@
         </figure>
       </section>
       <section title="Supposition" anchor="piggybacking-supposition">
-        <t>Piggybacking can also occur in the other direction.  Consider the common scenario in which Server A provides XMPP services not only for a.example but also for a subdomain such as a groupchat service at chatrooms.a.example (see <xref target='XEP-0045'/>).  If a user from c.example at Server B wishes to join a room on the groupchat sevice, Server B needs to send XMPP stanzas from the domain c.example to the domain chatrooms.a.example rather than a.example.  Therefore, Server B needs to negotiate and authenticate a stream to chatrooms.a.example:</t>
-        <t>
+        <t>Piggybacking can also occur in the other direction.  Consider the common scenario in which Server A provides XMPP services not only for a.example but also for a subdomain such as a groupchat service at chatrooms.a.example (see <xref target='XEP-0045'/>).  If a user from c.example at Server B wishes to join a room on the groupchat sevice, Server B needs to send XMPP stanzas from the domain c.example to the domain chatrooms.a.example rather than a.example. Therefore, Server B needs to negotiate an additional domain pair on the stream.</t>
+        <t>Before that negotation can take place, Server B must discover that both domains are hosted on the same server. This is done as follows:
           <list style='numbers'>
-            <t>Server B resolves the DNS domain name chatrooms.a.example.</t>
-            <t>Server B opens a TCP connection to the resolved IP address.</t>
-            <t>
-              Server B sends an initial stream header to Server A acting as chatrooms.a.example, asserting that it is b.example:
-              <vspace blankLines='1'/>
-              &lt;stream:stream from='b.example' to='chatrooms.a.example'&gt;
-            </t>
-            <t>
-              Server A sends a response stream header to Server B, asserting that it is chatrooms.a.example:
-              <vspace blankLines='1'/>
-              &lt;stream:stream from='chatrooms.a.example' to='b.example'&gt;
-            </t>
-            <t>The servers attempt TLS negotiation, during which Server A (acting as a TLS server) presents a PKIX certificate proving that it is chatrooms.a.example.</t>
-            <t>Server B checks the PKIX certificate that Server A provided; if it is consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, Server B accepts that there is a strong domain name association between its stream to Server A and the DNS domain name chatrooms.a.example.</t>
+            <t>Server B resolves the _xmpp-server._tcp DNS-SRV record for chatrooms.a.example.</t>
+            <t>The DNS SRV record points to the same target as the DNS-SRV record for a.example.com.</t>
+			<t>On the XML stream from Server B to Server A, Server A has advertised support for graceful dialback error handling as described in <xref target='XEP-0220'/>.</t>
           </list>
         </t>
-        <t>As before, the parties now have two TCP connections open.  So that they can close the now-redundant connection, Server B sends a dialback key to Server A over the new connection.</t>
+        <t>After ensuring that the certificate Server A presented is also legitimate for the chatrooms.a.example domain (e.g. because the certificate contains to dNSNames, a.example and chatrooms.a.example), Server B sends a dialback key to Server A.</t>
         <figure>
           <artwork><![CDATA[
     <db:result from='c.example' to='chatrooms.a.example'>
@@ -299,7 +288,6 @@
     <db:result from='chatrooms.a.example' to='c.example' type='valid'/>
           ]]></artwork>
         </figure>
-        <t>Server B can now close the connection over which it tested the domain name association for chatrooms.a.example.</t>
       </section>
     </section>
 
