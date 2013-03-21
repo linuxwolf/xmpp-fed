@@ -225,7 +225,6 @@
       <section title="Assertion" anchor="piggybacking-assertion">
         <t>Consider the common scenario in which Server B hosts not only b.example but also a second domain c.example.  If a user of Server B associated with c.example wishes to communicate with a friend at a.example, Server B needs to send XMPP stanzas from the domain c.example rather than b.example.  Although Server B could open an new TCP connection and negotiate new XML streams for the domain pair of c.example and a.example, that too is wasteful.  Server B already has a connection to a.example, so how can it assert that it would like to add a new domain pair to the existing connection?</t>
         <t>The traditional method for doing so is the Server Dialback protocol, first specified in <xref target='RFC3920'/> and since moved to <xref target='XEP-0220'/>.  Here, Server B can send a &lt;db:result/&gt; element for the new domain pair over the existing stream.</t>
-        <t>We assume that Server B has a PKIX certificate containing subjectAlternativeName dNSName entries for both b.example and c.example.</t>
         <figure>
           <artwork><![CDATA[
     <db:result from='c.example' to='a.example'>
@@ -234,7 +233,7 @@
           ]]></artwork>
         </figure>
         <t>This element functions as Server B's assertion that it is (also) c.example, and thus is functionally equivalent to the 'from' address of an initial stream header as previously described.</t>
-        <t>In response to this assertion, Server A needs to obtain some kind of proof that Server B really is also c.example. Since the certificate Server B used contains a subjectAlternative dNSName entry for c.example, Server A can use the matching rules detailed in <xref target='RFC6125'/> as a proof.</t>
+        <t>In response to this assertion, Server A needs to obtain some kind of proof that Server B really is also c.example. For example, if the certificate Server B used also contains a subjectAlternative dNSName entry for c.example, Server A can use the matching rules detailed in <xref target='RFC6125'/> as a proof.</t>
         <t>Now that Server A accepts the domain name association, it informs Server B of that fact:</t>
         <figure>
           <artwork><![CDATA[
