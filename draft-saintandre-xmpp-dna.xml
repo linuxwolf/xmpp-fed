@@ -61,7 +61,7 @@
     </section>
 
     <section title="Terminology" anchor="terms">
-      <t>This document inherits XMPP terminology from <xref target="RFC6120"/> and <xref target="XEP-0220"/>, DNS terminology from <xref target="RFC1034"/>, <xref target="RFC1035"/>, <xref target="RFC2782"/> and <xref target="RFC4033"/>, and security terminology from <xref target="RFC4949"/> and <xref target="RFC5280"/>.  The terms "source domain", "derived domain", "reference identity", and "presented identity" are used as defined in the "CertID" specification <xref target="RFC6125"/>.  The terms "permissive federation", "verified federation", and "encrypted federation" are derived from <xref target="XEP-0238"/>, although we substitute the term "authenticated federation" for the term "trusted federation" from that document.</t>
+      <t>This document inherits XMPP terminology from <xref target="RFC6120"/> and <xref target="XEP-0220"/>, DNS terminology from <xref target="RFC1034"/>, <xref target="RFC1035"/>, <xref target="RFC2782"/> and <xref target="RFC4033"/>, and security terminology from <xref target="RFC4949"/> and <xref target="RFC5280"/>.  The terms "source domain", "derived domain", "reference identity", and "presented identity" are used as defined in the "CertID" specification <xref target="RFC6125"/>.</t>
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>.</t>
     </section>
 
@@ -106,28 +106,6 @@
 +------------------------------------|----------+
                                      |
                     +----------------+
-                    | B needs to auth A
-                    |
-        (Section 5: One-Way Authentication)
-                    |
-                    |
-             DNS RESOLUTION ETC.
-                    |
-+-------------STREAM HEADERS--------------------+
-|                                               |
-|  B: <stream from='b.example' to='a.example'>  |
-|                                               |
-|  A: <stream from='a.example' to='b.example'>  |
-|                                               |
-+-----------------------------------------------+
-                    |
-+-------------TLS NEGOTIATION-------------------+
-|                                               |
-|   A: Server Certificate                       |
-|                                               |
-+-----------------------------------------------+
-                    |
-    (B establishes DNA for a.example!)
                     |
                     |
       (Section 6.1: Piggybacking Assertion)
@@ -196,29 +174,6 @@
         </list>
       </t>
       <t>Let's consider each of these "wrinkles" in turn.</t>
-    </section>
-
-    <section title="One-Way Authentication" anchor="oneway">
-      <t>If Server A does not present its PKIX certificate during TLS negotiation (perhaps because it wishes to verify the identity of Server B before presenting its own credentials), Server B is unable to mutually authenticate Server A.  Therefore, Server B needs to negotiate and authenticate a stream to Server A, just as Server A has done:</t>
-      <t>
-        <list style='numbers'>
-          <t>Server B resolves the DNS domain name a.example.</t>
-          <t>Server B opens a TCP connection to the resolved IP address.</t>
-          <t>
-            Server B sends an initial stream header to Server A, asserting that it is b.example:
-            <vspace blankLines='1'/>
-            &lt;stream:stream from='b.example' to='a.example'&gt;
-          </t>
-          <t>
-            Server A sends a response stream header to Server B, asserting that it is a.example:
-            <vspace blankLines='1'/>
-            &lt;stream:stream from='a.example' to='b.example'&gt;
-          </t>
-          <t>The servers attempt TLS negotiation, during which Server A (acting as a TLS server) presents a PKIX certificate proving that it is a.example.</t>
-          <t>Server B checks the PKIX certificate that Server A provided; if it is consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, Server B accepts that there is a strong domain name association between its stream to Server A and the DNS domain name a.example.</t>
-        </list>
-      </t>
-      <t>Unfortunately, now the servers are using two TCP connections instead of one, which is somewhat wasteful.  However, there are ways to tie the authentication achieved on the second TCP connection to the first TCP connection; see <xref target='XEP-0288'/> for further discussion.</t>
     </section>
 
     <section title="Piggybacking" anchor="piggybacking">
@@ -724,21 +679,6 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
         </front>
         <seriesInfo name="XSF XEP" value="0045"/>
         <format type="HTML" target="http://xmpp.org/extensions/xep-0045.html"/>
-      </reference>
-
-      <reference anchor="XEP-0238">
-        <front>
-          <title>XMPP Protocol Flows for Inter-Domain Federation</title>
-          <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
-            <organization/>
-            <address>
-              <email>stpeter@jabber.org</email>
-            </address>
-          </author>
-          <date day="31" month="March" year="2008"/>
-        </front>
-        <seriesInfo name="XSF XEP" value="0238"/>
-        <format type="HTML" target="http://xmpp.org/extensions/xep-0238.html"/>
       </reference>
 
       <reference anchor="XEP-0288">
