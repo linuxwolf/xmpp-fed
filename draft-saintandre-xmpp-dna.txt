@@ -5,12 +5,12 @@
 Network Working Group                                     P. Saint-Andre
 Internet-Draft                                                 M. Miller
 Intended status: Standards Track                     Cisco Systems, Inc.
-Expires: August 26, 2013                               February 22, 2013
+Expires: October 17, 2013                                 April 15, 2013
 
 
 Domain Name Associations (DNA) in the Extensible Messaging and Presence
                             Protocol (XMPP)
-                      draft-saintandre-xmpp-dna-01
+                      draft-saintandre-xmpp-dna-02
 
 Abstract
 
@@ -36,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 26, 2013.
+   This Internet-Draft will expire on October 17, 2013.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Saint-Andre & Miller    Expires August 26, 2013                 [Page 1]
+Saint-Andre & Miller    Expires October 17, 2013                [Page 1]
 
-Internet-Draft                  XMPP DNA                   February 2013
+Internet-Draft                  XMPP DNA                      April 2013
 
 
    the Trust Legal Provisions and are provided without warranty as
@@ -66,14 +66,16 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
    3.  Flow Chart  . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   4.  A Simple Scenario . . . . . . . . . . . . . . . . . . . . . .   6
-   5.  One-Way Authentication  . . . . . . . . . . . . . . . . . . .   7
+   4.  A Simple Scenario . . . . . . . . . . . . . . . . . . . . . .   5
+   5.  One-Way Authentication  . . . . . . . . . . . . . . . . . . .   6
    6.  Piggybacking  . . . . . . . . . . . . . . . . . . . . . . . .   7
      6.1.  Assertion . . . . . . . . . . . . . . . . . . . . . . . .   7
      6.2.  Supposition . . . . . . . . . . . . . . . . . . . . . . .   9
-   7.  Alternate Prooftypes  . . . . . . . . . . . . . . . . . . . .  10
-   8.  Virtual Hosting . . . . . . . . . . . . . . . . . . . . . . .  11
-   9.  Prooftype Model . . . . . . . . . . . . . . . . . . . . . . .  11
+   7.  Alternative Prooftypes  . . . . . . . . . . . . . . . . . . .  10
+     7.1.  DANE  . . . . . . . . . . . . . . . . . . . . . . . . . .  10
+     7.2.  POSH  . . . . . . . . . . . . . . . . . . . . . . . . . .  10
+   8.  Secure Delegation and Multi-Tenancy . . . . . . . . . . . . .  11
+   9.  Prooftype Model . . . . . . . . . . . . . . . . . . . . . . .  12
    10. Security Considerations . . . . . . . . . . . . . . . . . . .  12
    11. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  12
    12. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
@@ -107,15 +109,10 @@ Table of Contents
 
 
 
-
-
-Saint-Andre & Miller    Expires August 26, 2013                 [Page 2]
+Saint-Andre & Miller    Expires October 17, 2013                [Page 2]
 
-Internet-Draft                  XMPP DNA                   February 2013
+Internet-Draft                  XMPP DNA                      April 2013
 
-
-   This document does not define any DNA prooftypes or secure delegation
-   methods; such technologies are defined in companion documents.
 
 2.  Terminology
 
@@ -162,17 +159,17 @@ Internet-Draft                  XMPP DNA                   February 2013
                        |
    +-------------AUTHENTICATION--------------------+
    |                   |                           |
-
-
-
-Saint-Andre & Miller    Expires August 26, 2013                 [Page 3]
-
-Internet-Draft                  XMPP DNA                   February 2013
-
-
    |          {client certificate?} ----+          |
    |                   |                |          |
    |                   | yes         no |          |
+
+
+
+Saint-Andre & Miller    Expires October 17, 2013                [Page 3]
+
+Internet-Draft                  XMPP DNA                      April 2013
+
+
    |                   v                |          |
    |             SASL EXTERNAL          |          |
    |             (mutual auth!)         |          |
@@ -218,19 +215,19 @@ Internet-Draft                  XMPP DNA                   February 2013
    |    DNS RESOLUTION, STREAM HEADERS,            |
    |    TLS NEGOTIATION, AUTHENTICATION            |
    |                                               |
-
-
-
-Saint-Andre & Miller    Expires August 26, 2013                 [Page 4]
-
-Internet-Draft                  XMPP DNA                   February 2013
-
-
    +-----------------------------------------------+
                        |
    +----------DIALBACK IDENTITY VERIFICATION-------+
+
+
+
+Saint-Andre & Miller    Expires October 17, 2013                [Page 4]
+
+Internet-Draft                  XMPP DNA                      April 2013
+
+
    |                                               |
-   |  A: <db:verify from='a.example'               |
+   |  A: <db:result from='a.example'               |
    |                to='c.example'                 |
    |                type='valid'/>                 |
    |                                               |
@@ -262,24 +259,11 @@ Internet-Draft                  XMPP DNA                   February 2013
    |  B: <db:result from='c.example'               |
    |                to='chatrooms.a.example'/>     |
    |                                               |
-   |  B: <db:verify from='chatrooms.a.example'     |
+   |  B: <db:result from='chatrooms.a.example'     |
    |                to='c.example'                 |
    |                type='valid'/>                 |
    |                                               |
    +-----------------------------------------------+
-
-
-
-
-
-
-
-
-
-
-Saint-Andre & Miller    Expires August 26, 2013                 [Page 5]
-
-Internet-Draft                  XMPP DNA                   February 2013
 
 
 4.  A Simple Scenario
@@ -289,6 +273,14 @@ Internet-Draft                  XMPP DNA                   February 2013
    Server A (a.example) and Server B (b.example):
 
    1.  Server A resolves the DNS domain name b.example.
+
+
+
+
+Saint-Andre & Miller    Expires October 17, 2013                [Page 5]
+
+Internet-Draft                  XMPP DNA                      April 2013
+
 
    2.  Server A opens a TCP connection to the resolved IP address.
 
@@ -330,14 +322,6 @@ Internet-Draft                  XMPP DNA                   February 2013
    o  The server administrators are running their own XMPP servers,
       rather than using hosting services.
 
-
-
-
-Saint-Andre & Miller    Expires August 26, 2013                 [Page 6]
-
-Internet-Draft                  XMPP DNA                   February 2013
-
-
    Let's consider each of these "wrinkles" in turn.
 
 5.  One-Way Authentication
@@ -346,6 +330,14 @@ Internet-Draft                  XMPP DNA                   February 2013
    negotiation (perhaps because it wishes to verify the identity of
    Server B before presenting its own credentials), Server B is unable
    to mutually authenticate Server A.  Therefore, Server B needs to
+
+
+
+Saint-Andre & Miller    Expires October 17, 2013                [Page 6]
+
+Internet-Draft                  XMPP DNA                      April 2013
+
+
    negotiate and authenticate a stream to Server A, just as Server A has
    done:
 
@@ -386,14 +378,6 @@ Internet-Draft                  XMPP DNA                   February 2013
    b.example but also a second domain c.example.  If a user of Server B
    associated with c.example wishes to communicate with a friend at
    a.example, Server B needs to send XMPP stanzas from the domain
-
-
-
-Saint-Andre & Miller    Expires August 26, 2013                 [Page 7]
-
-Internet-Draft                  XMPP DNA                   February 2013
-
-
    c.example rather than b.example.  Although Server B could open an new
    TCP connection and negotiate new XML streams for the domain pair of
    c.example and a.example, that too is wasteful.  Server B already has
@@ -402,6 +386,14 @@ Internet-Draft                  XMPP DNA                   February 2013
 
    The traditional method for doing so is the Server Dialback protocol,
    first specified in [RFC3920] and since moved to [XEP-0220].  Here,
+
+
+
+Saint-Andre & Miller    Expires October 17, 2013                [Page 7]
+
+Internet-Draft                  XMPP DNA                      April 2013
+
+
    Server B can send a <db:result/> element for the new domain pair over
    the existing stream.
 
@@ -443,18 +435,19 @@ Internet-Draft                  XMPP DNA                   February 2013
        association between its stream to Server B and the DNS domain
        name c.example.
 
-
-
-Saint-Andre & Miller    Expires August 26, 2013                 [Page 8]
-
-Internet-Draft                  XMPP DNA                   February 2013
-
-
    Now that Server A accepts the domain name association, it informs
-   Server B of that fact by sending verification of the Server Dialback
-   key over the original connection:
+   Server B of that fact:
 
-    <db:verify from='a.example' to='c.example' type='valid'/>
+    <db:result from='a.example' to='c.example' type='valid'/>
+
+
+
+
+
+
+Saint-Andre & Miller    Expires October 17, 2013                [Page 8]
+
+Internet-Draft                  XMPP DNA                      April 2013
 
 
    The parties can then terminate the second connection, since it was
@@ -497,15 +490,6 @@ Internet-Draft                  XMPP DNA                   February 2013
        association between its stream to Server A and the DNS domain
        name chatrooms.a.example.
 
-
-
-
-
-Saint-Andre & Miller    Expires August 26, 2013                 [Page 9]
-
-Internet-Draft                  XMPP DNA                   February 2013
-
-
    As before, the parties now have two TCP connections open.  So that
    they can close the now-redundant connection, Server B sends a
    dialback key to Server A over the new connection.
@@ -515,17 +499,23 @@ Internet-Draft                  XMPP DNA                   February 2013
     </db:result>
 
 
-   Server A then informs Server B that it accepts the domain name
-   association by sending verification of the dialback key over the
-   original connection:
 
-    <db:verify from='chatrooms.a.example' to='c.example' type='valid'/>
+
+Saint-Andre & Miller    Expires October 17, 2013                [Page 9]
+
+Internet-Draft                  XMPP DNA                      April 2013
+
+
+   Server A then informs Server B that it accepts the domain name
+   association:
+
+    <db:result from='chatrooms.a.example' to='c.example' type='valid'/>
 
 
    Server B can now close the connection over which it tested the domain
    name association for chatrooms.a.example.
 
-7.  Alternate Prooftypes
+7.  Alternative Prooftypes
 
    The foregoing protocol flows assumed that domain name associations
    were proved using the standard PKI prooftype specified in [RFC6120]:
@@ -541,62 +531,92 @@ Internet-Draft                  XMPP DNA                   February 2013
    mailto:hostmaster@podunk.example, or hosting.example.net does not
    want to take on the liability of holding the certificate and private
    key for example.com).  In these circumstances, prooftypes other than
-   PKIX are desirable.  Two companion documents, [XMPP-DANE] and
-   [XMPP-POSH], define alternate prooftypes:
+   PKIX are desirable.  Two alternatives have been defined so far: DANE
+   and POSH.
 
-   o  In the DANE prooftype, the server's proof consists of a PKIX
-      certificate that is compared as an exact match or a hash of either
-      the SubjectPublicKeyInfo or the full certificate, and the client's
-      verification material is obtained via secure DNS.  See the
-      accompanying [XMPP-DANE] spec for discussion and examples.
+7.1.  DANE
 
-   o  In the POSH (PKIX Over Secure HTTP) prooftype, the server's proof
-      consists of a PKIX certificate that is checked according to the
-      rules from [RFC6120] and [RFC6125], the client's verification
-      material is obtained by retrieving the PKIK certificate over HTTPS
+   In the DANE prooftype, the server's proof consists of a PKIX
+   certificate that is compared as an exact match or a hash of either
+   the SubjectPublicKeyInfo or the full certificate, and the client's
+   verification material is obtained via secure DNS.
+
+   The DANE prooftype is based on [I-D.ietf-dane-srv].  For XMPP
+   purposes, the following rules apply:
+
+   o  If there is no SRV resource record, pursue the fallback methods
+      described in [RFC6120].
+
+   o  The 'to' address of the initial stream header SHOULD be used to
+      determine the domain name of the TLS client's reference
+      identifier, whereas use of the TLS Server Name Indication is
+      OPTIONAL (as previously discussed in [RFC6120]).
+
+7.2.  POSH
 
 
 
-Saint-Andre & Miller    Expires August 26, 2013                [Page 10]
+
+Saint-Andre & Miller    Expires October 17, 2013               [Page 10]
 
-Internet-Draft                  XMPP DNA                   February 2013
+Internet-Draft                  XMPP DNA                      April 2013
 
 
-      at a well-known URI [RFC5785], and secure DNS is not necessary
-      since the HTTPS retrieval mechanism relies on the chain of trust
-      from the public key infrastructure.  See the accompanying
-      [XMPP-POSH] spec for discussion and examples.
+   In the POSH (PKIX Over Secure HTTP) prooftype, the server's proof
+   consists of a PKIX certificate that is checked according to the rules
+   from [RFC6120] and [RFC6125], the client's verification material is
+   obtained by retrieving the PKIK certificate over HTTPS at a well-
+   known URI [RFC5785], and secure DNS is not necessary since the HTTPS
+   retrieval mechanism relies on the chain of trust from the public key
+   infrastructure.
 
-8.  Virtual Hosting
+   POSH is fully defined in [I-D.miller-xmpp-posh-prooftype].
 
-   One common method for deploying XMPP services is virtual hosting:
-   e.g., the XMPP service for example.com is actually hosted at
-   hosting.example.net.  Such an arrangement is relatively convenient in
-   XMPP given the use of DNS SRV records [RFC2782], such as the
-   following pointer from example.com to hosting.example.net:
+8.  Secure Delegation and Multi-Tenancy
+
+   One common method for deploying XMPP services is multi-tenancy or
+   virtual hosting: e.g., the XMPP service for example.com is actually
+   hosted at hosting.example.net.  Such an arrangement is relatively
+   convenient in XMPP given the use of DNS SRV records [RFC2782], such
+   as the following pointer from example.com to hosting.example.net:
 
    _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
 
 
-   To improve security and limit liability, in typical deployments the
-   administrators of hosting.example.net do not wish to hold the
-   certificate and private key for example.com and the owners of
-   example.com do not wish to share their certificate and private key
-   with the administrators of hosting.example.net.  In practice this
-   means that server-to-server communications to example.com go
+   Secure connections with multi-tenancy can work using the PKIX
+   prooftype on a small scale if the provider itself wishes to host
+   several domains (e.g., several related domains such as jabber-
+   de.example and jabber-ch.example).  However, in practice the security
+   of multi-tenancy has been found to be unwieldy when the provider
+   hosts large numbers of XMPP services on behalf of multiple customers.
+   Typically there are two main reasons for this state of affairs: the
+   service provider (say, hosting.example.net) wishes to limit its
+   liability and therefore does not wish to hold the certificate and
+   private key for the customer (say, example.com) and the customer
+   wishes to improve the security of the service and therefore does not
+   wish to share its certificate and private key with service provider.
+   As a result, server-to-server communications to example.com go
    unencrypted or the communications are TLS-encrypted but the
-   certificates are not checked (which is functionally equivalent to an
-   unencrypted connection).  This is also true of client-to-server
-   communications, forcing end users to override certificate warnings or
-   configure their clients to accept certificates for
-   hosting.example.net instead of example.com.  The fundamental problem
-   here is that if DNSSEC is not used the act of delegation is
-   inherently insecure.
+   certificates are not checked (which is functionally equivalent to a
+   connection using an anonymous key exchange).  This is also true of
+   client-to-server communications, forcing end users to override
+   certificate warnings or configure their clients to accept
+   certificates for hosting.example.net instead of example.com.  The
+   fundamental problem here is that if DNSSEC is not used then the act
+   of delegation via DNS SRV records is inherently insecure.
 
-   This document does not describe how to achieve secure delegation.
-   However, [XMPP-DANE] explains how to use DNSSEC for secure delegation
-   in the PKI and DANE prooftypes and [XMPP-POSH] explains how to use
-   HTTPS redirects for secure delegation in the POSH prooftype.
+   [I-D.ietf-dane-srv] explains how to use DNSSEC for secure delegation
+   with the DANE prooftype and [I-D.miller-xmpp-posh-prooftype] explains
+   how to use HTTPS redirects for secure delegation with the POSH
+   prooftype.
+
+
+
+
+Saint-Andre & Miller    Expires October 17, 2013               [Page 11]
+
+Internet-Draft                  XMPP DNA                      April 2013
+
 
 9.  Prooftype Model
 
@@ -608,15 +628,6 @@ Internet-Draft                  XMPP DNA                   February 2013
       client's verification material against the server's proof, (3) how
       the client obtains its verification material, and (4) whether the
       mechanism depends on secure DNS.
-
-
-
-
-
-Saint-Andre & Miller    Expires August 26, 2013                [Page 11]
-
-Internet-Draft                  XMPP DNA                   February 2013
-
 
    The PKI, DANE, and POSH prooftypes adhere to this model.  In
    addition, other prooftypes are possible (examples might include PGP
@@ -630,7 +641,9 @@ Internet-Draft                  XMPP DNA                   February 2013
 10.  Security Considerations
 
    This document supplements but does not supersede the security
-   considerations provided in [RFC6120] and [RFC6125].
+   considerations of [RFC6120] and [RFC6125].  Relevant security
+   considerations can also be found in [I-D.ietf-dane-srv] and
+   [I-D.miller-xmpp-posh-prooftype].
 
 11.  IANA Considerations
 
@@ -640,8 +653,26 @@ Internet-Draft                  XMPP DNA                   February 2013
 
 12.1.  Normative References
 
+   [I-D.ietf-dane-srv]
+              Finch, T., "Using DNS-Based Authentication of Named
+              Entities (DANE) TLSA records with SRV and MX records.",
+              draft-ietf-dane-srv-02 (work in progress), February 2013.
+
+   [I-D.miller-xmpp-posh-prooftype]
+              Saint-Andre, P., "Using PKIX over Secure HTTP (POSH) as a
+              Prooftype for XMPP Domain Name Associations", draft-
+              miller-xmpp-posh-prooftype-03 (work in progress), February
+              2013.
+
    [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
               STD 13, RFC 1034, November 1987.
+
+
+
+Saint-Andre & Miller    Expires October 17, 2013               [Page 12]
+
+Internet-Draft                  XMPP DNA                      April 2013
+
 
    [RFC1035]  Mockapetris, P., "Domain names - implementation and
               specification", STD 13, RFC 1035, November 1987.
@@ -666,14 +697,6 @@ Internet-Draft                  XMPP DNA                   February 2013
               Uniform Resource Identifiers (URIs)", RFC 5785, April
               2010.
 
-
-
-
-Saint-Andre & Miller    Expires August 26, 2013                [Page 12]
-
-Internet-Draft                  XMPP DNA                   February 2013
-
-
    [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
               Protocol (XMPP): Core", RFC 6120, March 2011.
 
@@ -685,20 +708,7 @@ Internet-Draft                  XMPP DNA                   February 2013
 
    [XEP-0220]
               Miller, J., Saint-Andre, P., and P. Hancke, "Server
-              Dialback", XSF XEP 0220, August 2011.
-
-   [XMPP-DANE]
-              Miller, M. and P. Saint-Andre, "Using DNS Security
-              Extensions (DNSSEC) and DNS-based Authentication of Named
-              Entities (DANE) as a Prooftype for XMPP Domain Name
-              Associations", draft-miller-xmpp-dnssec-prooftype-04 (work
-              in progress), February 2013.
-
-   [XMPP-POSH]
-              Miller, M. and P. Saint-Andre, "Using PKIX over Secure
-              HTTP (POSH) as a Prooftype for XMPP Domain Name
-              Associations", draft-miller-xmpp-posh-prooftype-03 (work
-              in progress), February 2013.
+              Dialback", XSF XEP 0220, August 2012.
 
 12.2.  Informative References
 
@@ -713,22 +723,16 @@ Internet-Draft                  XMPP DNA                   February 2013
               Saint-Andre, P., "XMPP Protocol Flows for Inter-Domain
               Federation", XSF XEP 0238, March 2008.
 
+
+
+Saint-Andre & Miller    Expires October 17, 2013               [Page 13]
+
+Internet-Draft                  XMPP DNA                      April 2013
+
+
    [XEP-0288]
               Hancke, P. and D. Cridland, "Bidirectional Server-to-
               Server Connections", XSF XEP 0288, August 2012.
-
-
-
-
-
-
-
-
-
-Saint-Andre & Miller    Expires August 26, 2013                [Page 13]
-
-Internet-Draft                  XMPP DNA                   February 2013
-
 
 Authors' Addresses
 
@@ -776,8 +780,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-Saint-Andre & Miller    Expires August 26, 2013                [Page 14]
+Saint-Andre & Miller    Expires October 17, 2013               [Page 14]
