@@ -5,7 +5,7 @@
 XMPP                                                           M. Miller
 Internet-Draft                                            P. Saint-Andre
 Intended status: Standards Track                     Cisco Systems, Inc.
-Expires: August 26, 2013                               February 22, 2013
+Expires: November 18, 2013                                  May 17, 2013
 
 
  Using PKIX over Secure HTTP (POSH) as a Prooftype for XMPP Domain Name
@@ -36,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 26, 2013.
+   This Internet-Draft will expire on November 18, 2013.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Miller & Saint-Andre    Expires August 26, 2013                 [Page 1]
+Miller & Saint-Andre   Expires November 18, 2013                [Page 1]
 
-Internet-Draft            XMPP POSH Prooftype              February 2013
+Internet-Draft            XMPP POSH Prooftype                   May 2013
 
 
    the Trust Legal Provisions and are provided without warranty as
@@ -66,20 +66,20 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
    3.  Prooftype . . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   4.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . .   4
-     4.1.  Permanent versus Temporary Redirects  . . . . . . . . . .   6
-   5.  Order of Operations . . . . . . . . . . . . . . . . . . . . .   6
-   6.  Caching Results . . . . . . . . . . . . . . . . . . . . . . .   6
-   7.  Alternates and Roll-over  . . . . . . . . . . . . . . . . . .   7
-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
-   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
-     9.1.  The "posh._xmpp-client._tcp.json" Well-Known URI  . . . .   9
-     9.2.  The "posh._xmpp-server._tcp.json" Well-Known URI  . . . .   9
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .   9
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  10
-     10.3.  Informative References . . . . . . . . . . . . . . . . .  10
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  10
+   4.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . .   5
+     4.1.  Permanent versus Temporary Redirects  . . . . . . . . . .   8
+   5.  Order of Operations . . . . . . . . . . . . . . . . . . . . .   8
+   6.  Caching Results . . . . . . . . . . . . . . . . . . . . . . .   8
+   7.  Alternates and Roll-over  . . . . . . . . . . . . . . . . . .   8
+   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  11
+   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
+     9.1.  The "posh._xmpp-client._tcp.json" Well-Known URI  . . . .  11
+     9.2.  The "posh._xmpp-server._tcp.json" Well-Known URI  . . . .  12
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  12
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  13
+     10.3.  Informative References . . . . . . . . . . . . . . . . .  13
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  13
 
 1.  Introduction
 
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Miller & Saint-Andre    Expires August 26, 2013                 [Page 2]
+Miller & Saint-Andre   Expires November 18, 2013                [Page 2]
 
-Internet-Draft            XMPP POSH Prooftype              February 2013
+Internet-Draft            XMPP POSH Prooftype                   May 2013
 
 
 2.  Terminology
@@ -160,47 +160,97 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
    2.  If the source domain HTTPS server has a certificate for the
        requested path, it MUST respond with a success status code, with
        the message body as a JSON Web Key Set (JWK Set) [JOSE-JWK],
-       which itself contains at least one JWK of type "PKIX"
-       [JOSE-PKIX-KEY] that the XMPP server at the source domain will
+       which itself contains at least one JWK of a type appropriate for
+       the represented key (e.g., "RSA" for a PKIX certificate using a
 
 
 
-Miller & Saint-Andre    Expires August 26, 2013                 [Page 3]
+Miller & Saint-Andre   Expires November 18, 2013                [Page 3]
 
-Internet-Draft            XMPP POSH Prooftype              February 2013
+Internet-Draft            XMPP POSH Prooftype                   May 2013
 
 
-       present during the TLS negotiation phase of XMPP stream setup
-       (linebreaks and whitespace added for readability).  Here is an
-       example:
+       RSA key) that the XMPP server at the source domain will present
+       during the TLS negotiation phase of XMPP stream setup (linebreaks
+       and whitespace added for readability).  Here is an example:
 
    HTTP/1.1 200 OK
-   Content-Type: application/json
-   Content-Length: 806
+   Content-Type: application/jwk-set+json
+   Content-Length: 2785
 
    {
-     "keys":[
+     "keys": [
        {
-         "kty":"PKIX",
-         "x5c":[
-           "MIICPTCCAaYCCQDDVeBaBmWC_jANBgkqhkiG9w0BAQUFADBjMQswCQY
-            DVQQGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbn
-            ZlcjEXMBUGA1UEChMOaW0uZXhhbXBsZS5jb20xFzAVBgNVBAMTDmltL
-            mV4YW1wbGUuY29tMB4XDTEyMDYxMTIxNTQ0NFoXDTIyMDYwOTIxNTQ0
-            NFowYzELMAkGA1UEBhMCVVMxETAPBgNVBAgTCENvbG9yYWRvMQ8wDQY
-            DVQQHEwZEZW52ZXIxFzAVBgNVBAoTDmltLmV4YW1wbGUuY29tMRcwFQ
-            YDVQQDEw5pbS5leGFtcGxlLmNvbTCBnzANBgkqhkiG9w0BAQEFAAOBj
-            QAwgYkCgYEA4hoKhi_B07eQH-1NB9gWiNFDT__AbTHQOEC0AOr4Gh_o
-            9PUp7kD0gklU4uv7rSAhAyCe4WaOiQ_HShzEryGfHiZmWht0BaYmj19
-            iuPWRecZOXWqKZji9NtAxn9l3kdon_YLJcrPGyNTGK66-ggNaqy8LkQ
-            QpI4rff60yHHZ_0XkCAwEAATANBgkqhkiG9w0BAQUFAAOBgQDcwiu30
-            bSMlykWYz-tTDSlQ3wLSVB9RsR8jXmJvMo7y7icXwg54a9M3xipjZtr
-            fAhYM5I5iqUTQPki6s26n9SQpRm5bonEFDA3WGwrwma35biP9-NSBWz
-            SaDF8AztwFNKXXl6_U6hWwG05G_NdeS11gpww9NUDraJgVoDpRK04tg"
+         "kty": "RSA",
+         "kid": "im.example.com:2011-07-04",
+         "n":   "ANxwssdcU3LbODErec3owrwUhlzjtuskAn8rAcBMRPImn5xA
+                 JRX-1T5g2D7MTozWWFk4TlpgzAR5slvM0tc35qAI9I0Cqk4Z
+                 LChQrYsWuY7alTrnNXdusHUYc6Eq89DZaH2knTcp57wAXzJP
+                 IG_tpBi5F7ck9LVRvRjybix0HJ7i4YrL-GeLuSgrjO4-GDcX
+                 Ip8oV0FMKZH-NoMfUITlWYl_JcX1D0WUAiuAnvWtD4Kh_qMJ
+                 U6FZuupZGHqPdc3vrXtp27LWgxzxjFa9qnOU6y53vCCJXLLI
+                 5sy2fCwEDzLJqh2T6UItIzjrSUZMIsK8r2pXkroI0uYuNn3W
+                 y-jAzK8",
+         "e":   "AQAB",
+         "x5c": [
+           "MIIDgzCCAmugAwIBAgIBBjANBgkqhkiG9w0BAQUFADBGMQswCQYDV
+            QQGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbn
+            ZlcjETMBEGA1UEAxMKRXhhbXBsZSBDQTAeFw0xMTA3MDQwMDAwMDB
+            aFw0xMzA3MDIyMzU5NTlaMEoxCzAJBgNVBAYTAlVTMREwDwYDVQQI
+            EwhDb2xvcmFkbzEPMA0GA1UEBxMGRGVudmVyMRcwFQYDVQQDEw5pb
+            S5leGFtcGxlLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQ
+            oCggEBANxwssdcU3LbODErec3owrwUhlzjtuskAn8rAcBMRPImn5x
+            AJRX+1T5g2D7MTozWWFk4TlpgzAR5slvM0tc35qAI9I0Cqk4ZLChQ
+            rYsWuY7alTrnNXdusHUYc6Eq89DZaH2knTcp57wAXzJPIG/tpBi5F
+            7ck9LVRvRjybix0HJ7i4YrL+GeLuSgrjO4+GDcXIp8oV0FMKZH+No
+            MfUITlWYl/JcX1D0WUAiuAnvWtD4Kh/qMJU6FZuupZGHqPdc3vrXt
+            p27LWgxzxjFa9qnOU6y53vCCJXLLI5sy2fCwEDzLJqh2T6UItIzjr
+            SUZMIsK8r2pXkroI0uYuNn3Wy+jAzK8CAwEAAaN4MHYwDAYDVR0TA
+            QH/BAIwADAdBgNVHQ4EFgQUTmRcur7xqaIUoU6wjVFPFxpf3UYwCw
+            YDVR0PBAQDAgXgMCcGA1UdEQQgMB6gHAYIKwYBBQUHCAWgEAwOaW0
+            uZXhhbXBsZS5jb20wEQYJYIZIAYb4QgEBBAQDAgZAMA0GCSqGSIb3
+            DQEBBQUAA4IBAQBrtpz4USAT+gNWI8ccU9rFiP0Jr+76VCf8Leims
+            qjINfKuUFxVUK5TBcCU8pyRUdXBk5THt+LUW+bPqE4SAuKjTJ1wwm
+            e8kOqtsvrr6XDfPHyX6H7nQAaKD0VbvbHfTBKh6jNVVi+4gJACeSE
+            JdiskoNYuJAxNDI8DmN9qAxu/8dlQHlIT3NkTxMWFUdmW8rj2xdia
+            nfZEwuPXoI93jdpgvGhcSM92ahumFyEZ5ysK6KFsXyUmVuOQFaVsH
+            tSAwrSGr70ASLzsCAi7JsvzO53QFW/KddkFLvEwCh/tgKK876poBo
+            x1NI6YYuWqhcKWADOOJdSfiXeu23E25tlbDRo8",
+           "MIIDWTCCAkGgAwIBAgIBATANBgkqhkiG9w0BAQUFADBGMQswCQYDV
+            QQGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbn
+
+
+
+Miller & Saint-Andre   Expires November 18, 2013                [Page 4]
+
+Internet-Draft            XMPP POSH Prooftype                   May 2013
+
+
+            ZlcjETMBEGA1UEAxMKRXhhbXBsZSBDQTAeFw0xMTA1MDIwMDAwMDB
+            aFw0yMzA1MTYyMzU5NTlaMEYxCzAJBgNVBAYTAlVTMREwDwYDVQQI
+            EwhDb2xvcmFkbzEPMA0GA1UEBxMGRGVudmVyMRMwEQYDVQQDEwpFe
+            GFtcGxlIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQ
+            EAzNQ30X7uXTg+4jKadtRO5uQEMRMnkZvDnptbWAtx0d1PsufQ2kf
+            vog0gDhigjPEZDV9S+zm63Ia+eqJ3ROT9jDXjtF6s/IawITf5cPSN
+            xn8qP8w+vbiy0rB4W4Nk1Dwji7KJ/wKNo0mwOx/qWNjSk3yoaU4sU
+            EuIypizgLxKAr25vVvAJAxF6HAfdQoVAIdCZ/7qbBPI7aurdU/Ndm
+            bbKBK0lp8aV1MYLzz8DI0hWcBQa2+gOSUcd/yT1az7UpMjGllbnVl
+            UDxyJeCzbBaHny5NlWWHsGnsbucbM+9yeAMbRes/z0KeHxcRtomd8
+            bh7As12RIXKrk5GRoNVKAoiwLQIDAQABo1IwUDAPBgNVHRMBAf8EB
+            TADAQH/MB0GA1UdDgQWBBSyiet77RfWpH3X8NMwGFVu2ldJPTALBg
+            NVHQ8EBAMCAQYwEQYJYIZIAYb4QgEBBAQDAgAHMA0GCSqGSIb3DQE
+            BBQUAA4IBAQBd1mMx4Wx9xFLqecbjWyy7tOE2+mrWhWxg82q7z3bB
+            rHWjUGzolHe97Ch+6QI3+MPk9JQWYaMgYe11tyf0mgZ18NFQall4M
+            ho2yT+E8ju11PW+RNqUdRG6rZfdeN5Geb1o1L2g5WNTdtPXoFYgHY
+            VPQ1HmjloEic2eGnlBvOi49wAdwnASv53fgzkSJB2/GdBJ3wPIWp0
+            49/1vS5rsF5SJg+3mj3ZAuPYt80TRKbA/cjxEny5RfK+VJs3f7RQ/
+            Y3CTPxoJqskWs06/eUpjXKyzZ+MmkCs5cm1yers8goWhaI8JmLlBW
+            LQE6v8MHdbUfb4M8la5cUd2BGtTlILOVnMv"
          ]
        }
      ]
    }
+
 
 
 
@@ -216,16 +266,6 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
        server connections or "_xmpp-server" for XMPP server-to-server
        connections.  Here is an example:
 
-
-
-
-
-
-Miller & Saint-Andre    Expires August 26, 2013                 [Page 4]
-
-Internet-Draft            XMPP POSH Prooftype              February 2013
-
-
    GET /.well-known/posh._xmpp-server._tcp.json HTTP/1.1
    Host: im.example.com
 
@@ -234,6 +274,14 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
    2.  If the source domain HTTPS server has delegated to a derived
        domain, it MUST respond with one of the redirect mechanisms
        provided by HTTP (e.g., using the 302, 303, 307, or 308
+
+
+
+Miller & Saint-Andre   Expires November 18, 2013                [Page 5]
+
+Internet-Draft            XMPP POSH Prooftype                   May 2013
+
+
        response).  The 'Location' header MUST specify an HTTPS URL,
        where the hostname and port is the derived domain HTTPS server,
        and the path MUST match the pattern "_<service>._tcp.json"; where
@@ -258,46 +306,92 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
    4.  If the derived domain HTTPS server has a certificate, it MUST
        respond with a success status code, with the message body as a
        JSON Web Key Set (JWK Set) [JOSE-JWK], which itself contains at
-       least one JWK of type "PKIX" [JOSE-PKIX-KEY] that the XMPP server
-       at the derived domain will present during the TLS negotiation
-       phase of XMPP stream setup.  Here is an example:
+       least one JWK of a type appropriate for the represented key
+       (e.g., "RSA" for a PKIX certificate using a RSA key) that the
+       XMPP server at the derived domain will present during the TLS
+       negotiation phase of XMPP stream setup.  Here is an example:
 
    HTTP/1.1 200 OK
-   Content-Type: application/json
-   Content-Length: 806
+   Content-Type: application/jwk-set+json
+   Content-Length: 2742
 
    {
      "keys":[
        {
-         "kty":"PKIX",
-         "x5c":[
-           "MIICPTCCAaYCCQDDVeBaBmWC_jANBgkqhkiG9w0BAQUFADBjMQswCQY
-            DVQQGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbn
-            ZlcjEXMBUGA1UEChMOaW0uZXhhbXBsZS5jb20xFzAVBgNVBAMTDmltL
+         "kty": "RSA",
+         "kid": "hosting.example.net:2011-07-04",
+         "n":   "AM-ktWkQ8btj_HEdAA6kOpzJGgoHNZsJmxjh_PifpgAUfQeq
+         MO_YBR100IdJZRzJfULyhRwn9bikCq87WToxgPWOnd3sH3qTYiAcIR5S
+         6tBbsyp6WYmwM1yuC0vLCo6SoDzdK1SvkQKM3QWk0GFNU4l4qXYAMxaS
+         w83i6yv5DBVbST7E92vS6Gq_4pgI26l10JhybZuTEVPRUCG6pTKAXQpL
+         xmjJ5oG9M91RP17nsuQeE7Ng0Ap4BBn5hocojkfthwgbX4lqBMecpBAn
+         ky5jn6slmzS_rL-Lw-_8hUldaTPD9MHlHPrvcsRV5uw8wK5MB6QyfS6w
+         F4b0Kj2TvYceNlE",
+         "e":   "AQAB",
+         "x5c": [
+           "MIIDXzCCAkegAwIBAgIBAzANBgkqhkiG9w0BAQUFADBGMQswCQYDV
 
 
 
-Miller & Saint-Andre    Expires August 26, 2013                 [Page 5]
+Miller & Saint-Andre   Expires November 18, 2013                [Page 6]
 
-Internet-Draft            XMPP POSH Prooftype              February 2013
+Internet-Draft            XMPP POSH Prooftype                   May 2013
 
 
-            mV4YW1wbGUuY29tMB4XDTEyMDYxMTIxNTQ0NFoXDTIyMDYwOTIxNTQ0
-            NFowYzELMAkGA1UEBhMCVVMxETAPBgNVBAgTCENvbG9yYWRvMQ8wDQY
-            DVQQHEwZEZW52ZXIxFzAVBgNVBAoTDmltLmV4YW1wbGUuY29tMRcwFQ
-            YDVQQDEw5pbS5leGFtcGxlLmNvbTCBnzANBgkqhkiG9w0BAQEFAAOBj
-            QAwgYkCgYEA4hoKhi_B07eQH-1NB9gWiNFDT__AbTHQOEC0AOr4Gh_o
-            9PUp7kD0gklU4uv7rSAhAyCe4WaOiQ_HShzEryGfHiZmWht0BaYmj19
-            iuPWRecZOXWqKZji9NtAxn9l3kdon_YLJcrPGyNTGK66-ggNaqy8LkQ
-            QpI4rff60yHHZ_0XkCAwEAATANBgkqhkiG9w0BAQUFAAOBgQDcwiu30
-            bSMlykWYz-tTDSlQ3wLSVB9RsR8jXmJvMo7y7icXwg54a9M3xipjZtr
-            fAhYM5I5iqUTQPki6s26n9SQpRm5bonEFDA3WGwrwma35biP9-NSBWz
-            SaDF8AztwFNKXXl6_U6hWwG05G_NdeS11gpww9NUDraJgVoDpRK04tg"
+            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
+            LQE6v8MHdbUfb4M8la5cUd2BGtTlILOVnMv"
          ]
        }
      ]
    }
 
+
+
+
+Miller & Saint-Andre   Expires November 18, 2013                [Page 7]
+
+Internet-Draft            XMPP POSH Prooftype                   May 2013
 
 
 4.1.  Permanent versus Temporary Redirects
@@ -330,14 +424,6 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
 
    Ideally, the initiating entity relies on the expiration time of the
    certificate obtained via POSH, and not on HTTP caching mechanisms.
-
-
-
-Miller & Saint-Andre    Expires August 26, 2013                 [Page 6]
-
-Internet-Draft            XMPP POSH Prooftype              February 2013
-
-
    To that end, the HTTPS servers for source and derived domains SHOULD
    specify a 'Cache-Control' header indicating a short duration (e.g.,
    max-age=60) or "no-cache" to indicate the response (redirect or
@@ -356,77 +442,146 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
    {
      "keys":[
        {
-         "kty":"PKIX",
-         "x5c":[
-           "MIICYTCCAcqgAwIBAgIJAK_Lh7cXMZvdMA0GCSqGSIb3DQEBBQUAME
-           8xCzAJBgNVBAYTAlVTMREwDwYDVQQIEwhDb2xvcmFkbzEPMA0GA1UEB
-           xMGRGVudmVyMRwwGgYDVQQDExNob3N0aW5nLmV4YW1wbGUubmV0MB4X
-           DTEzMDIwNzE4MjY0MFoXDTIzMDIwNTE4MjY0MFowTzELMAkGA1UEBhM
-           CVVMxETAPBgNVBAgTCENvbG9yYWRvMQ8wDQYDVQQHEwZEZW52ZXIxHD
-           AaBgNVBAMTE2hvc3RpbmcuZXhhbXBsZS5uZXQwgZ8wDQYJKoZIhvcNA
-           QEBBQADgY0AMIGJAoGBAOLjqQxacJ-DQNOuVxNzoBBRyLku7V_ZEpFY
-           8SHPyrK38I7Q3lWnEpAyUanpMClDMV0B_EJQDeueJgWkyrgd6bDZLvi
-           _UtGha9E4q-IpHO6cM_cSE9d_oZuCcdGV8HHjK9m1xHUEyeTGAm1tMA
-           m7j_BNFdhETkUqTfFPggFdMhAXAgMBAAGjRTBDMEEGA1UdEQQ6MDigI
-           QYIKwYBBQUHCAWgFQwTaG9zdGluZy5leGFtcGxlLm5ldIITaG9zdGlu
-           Zy5leGFtcGxlLm5ldDANBgkqhkiG9w0BAQUFAAOBgQAaz81gC5KqFQo
-           WGf8mJz_mYx2pW6i-QeYw-BqpdAgdkrRvOHlJ4pYRhkajKfdiauvHcM
-           ZDPWuuSm7jzIEOPqZdzYXkffgfr4br5UOAmYqpikpjlSsTLd5h_38p-
-           3lz-l502wcs1xveBTYTIT13MAI844IBCZF-xDl-wpJG3kkttA"
-         ]
-       }
-       {
-         "kty":"PKIX",
-         "x5c":[
-           "MIIC-zCCAeOgAwIBAgIBAjANBgkqhkiG9w0BAQUFADBGMQswCQYDVQ
-           QGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbnZlc
-           jETMBEGA1UEAxMKRXhhbXBsZSBDQTAeFw0xMzAyMTIyMTI5MDBaFw0x
-           NDAyMTIyMTI5MDBaME8xCzAJBgNVBAYTAlVTMREwDwYDVQQIEwhDb2x
-           vcmFkbzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQDExNob3N0aW5nLm
-           V4YW1wbGUubmV0MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDi4
-           6kMWnCfg0DTrlcTc6AQUci5Lu1f2RKRWPEhz8qyt_CO0N5VpxKQMlGp
-           6TApQzFdAfxCUA3rniYFpMq4Hemw2S74v1LRoWvROKviKRzunDP3EhP
 
 
 
-Miller & Saint-Andre    Expires August 26, 2013                 [Page 7]
+Miller & Saint-Andre   Expires November 18, 2013                [Page 8]
 
-Internet-Draft            XMPP POSH Prooftype              February 2013
+Internet-Draft            XMPP POSH Prooftype                   May 2013
 
 
-           Xf6GbgnHRlfBx4yvZtcR1BMnkxgJtbTAJu4_wTRXYRE5FKk3xT4IBXT
-           IQFwIDAQABo28wbTAMBgNVHRMBAf8EAjAAMB0GA1UdDgQWBBRgaaG6v
-           5py2KwjtX-ToLKTEIqeVTALBgNVHQ8EBAMCBeAwEQYJYIZIAYb4QgEB
-           BAQDAgZAMB4GCWCGSAGG-EIBDQQRFg94Y2EgY2VydGlmaWNhdGUwDQY
-           JKoZIhvcNAQEFBQADggEBAE6Vhvd0OuMHJjyi8F8NoFSCRYOJXOry5B
-           lmU6eVwEcUQSAkHaC4Q2isWCIES58Wm5P2VVQTYBUn58H7ZR9-7looj
-           YVykwEIQmE_aaVsMM-8AwTMJ7qj7aGhXFlKT2xwiPMVq9JF_Gv43qSy
-           V9GJ3Uw5Jz6AN4WawXmlIVD0eKhPoHSDO0wfnFc8KM8mHPu7JXqIriX
-           18w4jfj3ySuHIkXeOjdbDWqZWJ7akBVf8McbB05tXP5T7sDTV-t8qH5
-           6fdnSQC-qO-sQgmWlKLFtKybT6Fa6J7ChEd_sOJNqB9SoMar5sRYyfS
-           foV0D7m_IF1MI6X95rL1YnKIGxDYWBq4ck",
-           "MIIDeTCCAmGgAwIBAgIBATANBgkqhkiG9w0BAQUFADBGMQswCQYDVQ
-           QGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbnZlc
-           jETMBEGA1UEAxMKRXhhbXBsZSBDQTAeFw0xMzAyMTIyMTI4MDBaFw0y
-           MzAyMTIyMTI4MDBaMEYxCzAJBgNVBAYTAlVTMREwDwYDVQQIEwhDb2x
-           vcmFkbzEPMA0GA1UEBxMGRGVudmVyMRMwEQYDVQQDEwpFeGFtcGxlIE
-           NBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzNQ30X7uX
-           Tg-4jKadtRO5uQEMRMnkZvDnptbWAtx0d1PsufQ2kfvog0gDhigjPEZ
-           DV9S-zm63Ia-eqJ3ROT9jDXjtF6s_IawITf5cPSNxn8qP8w-vbiy0rB
-           4W4Nk1Dwji7KJ_wKNo0mwOx_qWNjSk3yoaU4sUEuIypizgLxKAr25vV
-           vAJAxF6HAfdQoVAIdCZ_7qbBPI7aurdU_NdmbbKBK0lp8aV1MYLzz8D
-           I0hWcBQa2-gOSUcd_yT1az7UpMjGllbnVlUDxyJeCzbBaHny5NlWWHs
-           GnsbucbM-9yeAMbRes_z0KeHxcRtomd8bh7As12RIXKrk5GRoNVKAoi
-           wLQIDAQABo3IwcDAPBgNVHRMBAf8EBTADAQH_MB0GA1UdDgQWBBSyie
-           t77RfWpH3X8NMwGFVu2ldJPTALBgNVHQ8EBAMCAQYwEQYJYIZIAYb4Q
-           gEBBAQDAgAHMB4GCWCGSAGG-EIBDQQRFg94Y2EgY2VydGlmaWNhdGUw
-           DQYJKoZIhvcNAQEFBQADggEBAIE-gvYX-2MOAmL3qOraIYUb1eDeUyC
-           rxroqrI1xX3jDapMPltCxuZr8VkLljHaNpe7sLJlFWSaQHkZe4snxWL
-           SdINLrgFhxskclAlSLutPVTA4xPwo60t0hBJE0NJ8kC8gVvvlWXWAiI
-           IVszG3vLBcfxZeuOS4JsVwGbTt5uKsVIJ2VkRiBG4ey5lsS5O8u0vRf
-           ei7HFr1NzZ8y5BHoix9VLN2--n11SNicwDOo2V618B8GQnPqM2dsaDa
-           A1wIrMZeEyoRtIN25jcW-as4sS9dPJ1ueNIzrSuzlXtKYGjflaTcEfD
-           -_kImTw9tHzS57iBXHqgQTQo61pYzAZMlk9wA"
+         "kty": "RSA",
+         "kid": "hosting.example.net:2011-07-04",
+         "n":   "AM-ktWkQ8btj_HEdAA6kOpzJGgoHNZsJmxjh_PifpgAUfQeq
+                 MO_YBR100IdJZRzJfULyhRwn9bikCq87WToxgPWOnd3sH3qT
+                 YiAcIR5S6tBbsyp6WYmwM1yuC0vLCo6SoDzdK1SvkQKM3QWk
+                 0GFNU4l4qXYAMxaSw83i6yv5DBVbST7E92vS6Gq_4pgI26l1
+                 0JhybZuTEVPRUCG6pTKAXQpLxmjJ5oG9M91RP17nsuQeE7Ng
+                 0Ap4BBn5hocojkfthwgbX4lqBMecpBAnky5jn6slmzS_rL-L
+                 w-_8hUldaTPD9MHlHPrvcsRV5uw8wK5MB6QyfS6wF4b0Kj2T
+                 vYceNlE",
+         "e":   "AQAB",
+         "x5c": [
+           "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
+
+
+
+Miller & Saint-Andre   Expires November 18, 2013                [Page 9]
+
+Internet-Draft            XMPP POSH Prooftype                   May 2013
+
+
+            NVHQ8EBAMCAQYwEQYJYIZIAYb4QgEBBAQDAgAHMA0GCSqGSIb3DQE
+            BBQUAA4IBAQBd1mMx4Wx9xFLqecbjWyy7tOE2+mrWhWxg82q7z3bB
+            rHWjUGzolHe97Ch+6QI3+MPk9JQWYaMgYe11tyf0mgZ18NFQall4M
+            ho2yT+E8ju11PW+RNqUdRG6rZfdeN5Geb1o1L2g5WNTdtPXoFYgHY
+            VPQ1HmjloEic2eGnlBvOi49wAdwnASv53fgzkSJB2/GdBJ3wPIWp0
+            49/1vS5rsF5SJg+3mj3ZAuPYt80TRKbA/cjxEny5RfK+VJs3f7RQ/
+            Y3CTPxoJqskWs06/eUpjXKyzZ+MmkCs5cm1yers8goWhaI8JmLlBW
+            LQE6v8MHdbUfb4M8la5cUd2BGtTlILOVnMv"
+         ]
+       },
+       {
+         "kty": "RSA",
+         "kid": "hosting.example.net:2013-07-04",
+         "n":   "AM-ktWkQ8btj_HEdAA6kOpzJGgoHNZsJmxjh_PifpgAUfQeq
+                 MO_YBR100IdJZRzJfULyhRwn9bikCq87WToxgPWOnd3sH3qT
+                 YiAcIR5S6tBbsyp6WYmwM1yuC0vLCo6SoDzdK1SvkQKM3QWk
+                 0GFNU4l4qXYAMxaSw83i6yv5DBVbST7E92vS6Gq_4pgI26l1
+                 0JhybZuTEVPRUCG6pTKAXQpLxmjJ5oG9M91RP17nsuQeE7Ng
+                 0Ap4BBn5hocojkfthwgbX4lqBMecpBAnky5jn6slmzS_rL-L
+                 w-_8hUldaTPD9MHlHPrvcsRV5uw8wK5MB6QyfS6wF4b0Kj2T
+                 vYceNlE",
+         "e":   "AQAB",
+         "x5c": [
+           "MIIDjTCCAnWgAwIBAgIBBTANBgkqhkiG9w0BAQUFADBGMQswCQYDV
+           QQGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbnZ
+           lcjETMBEGA1UEAxMKRXhhbXBsZSBDQTAeFw0xMzA1MTcwMDAwMDBaF
+           w0xNTA1MTYyMzU5NTlaME8xCzAJBgNVBAYTAlVTMREwDwYDVQQIEwh
+           Db2xvcmFkbzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQDExNob3N0a
+           W5nLmV4YW1wbGUubmV0MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMII
+           BCgKCAQEAz6S1aRDxu2P8cR0ADqQ6nMkaCgc1mwmbGOH8+J+mABR9B
+           6ow79gFHXTQh0llHMl9QvKFHCf1uKQKrztZOjGA9Y6d3ewfepNiIBw
+           hHlLq0FuzKnpZibAzXK4LS8sKjpKgPN0rVK+RAozdBaTQYU1TiXipd
+           gAzFpLDzeLrK/kMFVtJPsT3a9Loar/imAjbqXXQmHJtm5MRU9FQIbq
+           lMoBdCkvGaMnmgb0z3VE/Xuey5B4Ts2DQCngEGfmGhyiOR+2HCBtfi
+           WoEx5ykECeTLmOfqyWbNL+sv4vD7/yFSV1pM8P0weUc+u9yxFXm7Dz
+           ArkwHpDJ9LrAXhvQqPZO9hx42UQIDAQABo30wezAMBgNVHRMBAf8EA
+           jAAMB0GA1UdDgQWBBQ/veMa6XwrIaUv8Y7PmW0RyAUm9jALBgNVHQ8
+           EBAMCBeAwLAYDVR0RBCUwI6AhBggrBgEFBQcIBaAVDBNob3N0aW5nL
+           mV4YW1wbGUubmV0MBEGCWCGSAGG+EIBAQQEAwIGQDANBgkqhkiG9w0
+           BAQUFAAOCAQEAfb3++qh/bxsVtcEWmNtj1QLTBiXC5T9U6NuWUKY3a
+           RTIsthO5yLsToUG1bbxLceVG+xPQT9uRqvV02sumiIn3gv87NU5gMR
+           b1Gy1P9N0YT5GiHCN5qCfegGH6jIokh0Js3v+ttR/rUns0/MEsr/ka
+           YQ7KRKzOdlxT+gWN9Lp0fOYdYcasDWNMTg1NZwzXKcdkhb1lRBYuP4
+           SeiJvy6ZbyUnoswthVTe0CK9+StDtJZLPSUu7TB2MwYMnv344NoTO2
+           ufRawLU0+8cJZxrXq/H/YQyoAFB9opw0wEoTIB5aZqI2em4Wjgx9sl
+           aonFlLEQysm5qJnhTGxEIDxQfqCcRfw==",
+          "MIIDWTCCAkGgAwIBAgIBATANBgkqhkiG9w0BAQUFADBGMQswCQYDVQ
+           QGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbnZl
+
+
+
+Miller & Saint-Andre   Expires November 18, 2013               [Page 10]
+
+Internet-Draft            XMPP POSH Prooftype                   May 2013
+
+
+           cjETMBEGA1UEAxMKRXhhbXBsZSBDQTAeFw0xMTA1MDIwMDAwMDBaFw
+           0yMzA1MTYyMzU5NTlaMEYxCzAJBgNVBAYTAlVTMREwDwYDVQQIEwhD
+           b2xvcmFkbzEPMA0GA1UEBxMGRGVudmVyMRMwEQYDVQQDEwpFeGFtcG
+           xlIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzNQ3
+           0X7uXTg+4jKadtRO5uQEMRMnkZvDnptbWAtx0d1PsufQ2kfvog0gDh
+           igjPEZDV9S+zm63Ia+eqJ3ROT9jDXjtF6s/IawITf5cPSNxn8qP8w+
+           vbiy0rB4W4Nk1Dwji7KJ/wKNo0mwOx/qWNjSk3yoaU4sUEuIypizgL
+           xKAr25vVvAJAxF6HAfdQoVAIdCZ/7qbBPI7aurdU/NdmbbKBK0lp8a
+           V1MYLzz8DI0hWcBQa2+gOSUcd/yT1az7UpMjGllbnVlUDxyJeCzbBa
+           Hny5NlWWHsGnsbucbM+9yeAMbRes/z0KeHxcRtomd8bh7As12RIXKr
+           k5GRoNVKAoiwLQIDAQABo1IwUDAPBgNVHRMBAf8EBTADAQH/MB0GA1
+           UdDgQWBBSyiet77RfWpH3X8NMwGFVu2ldJPTALBgNVHQ8EBAMCAQYw
+           EQYJYIZIAYb4QgEBBAQDAgAHMA0GCSqGSIb3DQEBBQUAA4IBAQBd1m
+           Mx4Wx9xFLqecbjWyy7tOE2+mrWhWxg82q7z3bBrHWjUGzolHe97Ch+
+           6QI3+MPk9JQWYaMgYe11tyf0mgZ18NFQall4Mho2yT+E8ju11PW+RN
+           qUdRG6rZfdeN5Geb1o1L2g5WNTdtPXoFYgHYVPQ1HmjloEic2eGnlB
+           vOi49wAdwnASv53fgzkSJB2/GdBJ3wPIWp049/1vS5rsF5SJg+3mj3
+           ZAuPYt80TRKbA/cjxEny5RfK+VJs3f7RQ/Y3CTPxoJqskWs06/eUpj
+           XKyzZ+MmkCs5cm1yers8goWhaI8JmLlBWLQE6v8MHdbUfb4M8la5cU
+           d2BGtTlILOVnMv"
          ]
        }
      ]
@@ -442,14 +597,6 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
    Specifically, communication via HTTPS depends on checking the
    identity of the HTTP server in accordance with [RFC2818].
 
-
-
-
-Miller & Saint-Andre    Expires August 26, 2013                 [Page 8]
-
-Internet-Draft            XMPP POSH Prooftype              February 2013
-
-
 9.  IANA Considerations
 
 9.1.  The "posh._xmpp-client._tcp.json" Well-Known URI
@@ -462,6 +609,14 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
    Change controller: IETF
 
    Specification document(s): [[ this document ]]
+
+
+
+
+Miller & Saint-Andre   Expires November 18, 2013               [Page 11]
+
+Internet-Draft            XMPP POSH Prooftype                   May 2013
+
 
 9.2.  The "posh._xmpp-server._tcp.json" Well-Known URI
 
@@ -480,31 +635,16 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
 
    [JOSE-JWK]
               Jones, M., "JSON Web Key (JWK)", draft-ietf-jose-json-web-
-              key-08 (work in progress), December 2012.
-
-   [JOSE-PKIX-KEY]
-              Miller, M., "JSON Web Key (JWK) for PKIX Certificates",
-              draft-miller-jose-pkix-key-01 (work in progress), February
-              2013.
+              key-10 (work in progress), April 2013.
 
    [XMPP-DNA]
               Saint-Andre, P. and M. Miller, "Domain Name Associations
               (DNA) in the Extensible Messaging and Presence Protocol
-              (XMPP)", draft-saintandre-xmpp-dna-01 (work in progress),
-              February 2013.
+              (XMPP)", draft-saintandre-xmpp-dna-02 (work in progress),
+              April 2013.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
-
-
-
-
-
-
-Miller & Saint-Andre    Expires August 26, 2013                 [Page 9]
-
-Internet-Draft            XMPP POSH Prooftype              February 2013
-
 
    [RFC2616]  Fielding, R., Gettys, J., Mogul, J., Frystyk, H.,
               Masinter, L., Leach, P., and T. Berners-Lee, "Hypertext
@@ -526,6 +666,14 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
 
    [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
               Verification of Domain-Based Application Service Identity
+
+
+
+Miller & Saint-Andre   Expires November 18, 2013               [Page 12]
+
+Internet-Draft            XMPP POSH Prooftype                   May 2013
+
+
               within Internet Public Key Infrastructure Using X.509
               (PKIX) Certificates in the Context of Transport Layer
               Security (TLS)", RFC 6125, March 2011.
@@ -552,16 +700,6 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
 
 Authors' Addresses
 
-
-
-
-
-
-Miller & Saint-Andre    Expires August 26, 2013                [Page 10]
-
-Internet-Draft            XMPP POSH Prooftype              February 2013
-
-
    Matthew Miller
    Cisco Systems, Inc.
    1899 Wynkoop Street, Suite 600
@@ -586,30 +724,4 @@ Internet-Draft            XMPP POSH Prooftype              February 2013
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Miller & Saint-Andre    Expires August 26, 2013                [Page 11]
+Miller & Saint-Andre   Expires November 18, 2013               [Page 13]
