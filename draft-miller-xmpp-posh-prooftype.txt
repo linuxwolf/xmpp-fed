@@ -5,7 +5,7 @@
 XMPP                                                           M. Miller
 Internet-Draft                                            P. Saint-Andre
 Intended status: Standards Track                     Cisco Systems, Inc.
-Expires: November 18, 2013                                  May 17, 2013
+Expires: November 29, 2013                                  May 28, 2013
 
 
  Using PKIX over Secure HTTP (POSH) as a Prooftype for XMPP Domain Name
@@ -36,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on November 18, 2013.
+   This Internet-Draft will expire on November 29, 2013.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Miller & Saint-Andre   Expires November 18, 2013                [Page 1]
+Miller & Saint-Andre   Expires November 29, 2013                [Page 1]
 
 Internet-Draft            XMPP POSH Prooftype                   May 2013
 
@@ -66,20 +66,21 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
    3.  Prooftype . . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   4.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . .   5
-     4.1.  Permanent versus Temporary Redirects  . . . . . . . . . .   8
-   5.  Order of Operations . . . . . . . . . . . . . . . . . . . . .   8
-   6.  Caching Results . . . . . . . . . . . . . . . . . . . . . . .   8
-   7.  Alternates and Roll-over  . . . . . . . . . . . . . . . . . .   8
-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  11
-   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
-     9.1.  The "posh._xmpp-client._tcp.json" Well-Known URI  . . . .  11
-     9.2.  The "posh._xmpp-server._tcp.json" Well-Known URI  . . . .  12
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  12
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  13
-     10.3.  Informative References . . . . . . . . . . . . . . . . .  13
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  13
+     3.1.  Possesses PKIX Certificate  . . . . . . . . . . . . . . .   4
+     3.2.  References PKIX Certificate . . . . . . . . . . . . . . .   6
+   4.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . .   6
+   5.  Order of Operations . . . . . . . . . . . . . . . . . . . . .   7
+   6.  Caching Results . . . . . . . . . . . . . . . . . . . . . . .   7
+   7.  Alternates and Roll-over  . . . . . . . . . . . . . . . . . .   7
+   8.  Use in Other Protocols  . . . . . . . . . . . . . . . . . . .  10
+   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
+   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
+     10.1.  The "posh._xmpp-client._tcp.json" Well-Known URI . . . .  10
+     10.2.  The "posh._xmpp-server._tcp.json" Well-Known URI . . . .  11
+   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  11
+     11.1.  Normative References . . . . . . . . . . . . . . . . . .  11
+     11.2.  Informative References . . . . . . . . . . . . . . . . .  12
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
 
 1.  Introduction
 
@@ -108,8 +109,7 @@ Table of Contents
 
 
 
-
-Miller & Saint-Andre   Expires November 18, 2013                [Page 2]
+Miller & Saint-Andre   Expires November 29, 2013                [Page 2]
 
 Internet-Draft            XMPP POSH Prooftype                   May 2013
 
@@ -147,32 +147,51 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
    follows.
 
    1.  The initiating entity performs an HTTPS GET at the source domain
-       to the path "/.well-known/posh._<service>._tcp.json"; where
-       "_<service>" MUST be either "_xmpp-client" for XMPP client-to-
-       server connections or "_xmpp-server" for XMPP server-to-server
-       connections.  Here is an example:
+       to the path "/.well-known/posh._<service>._>protocol>.json";
+       where "_<service>" MUST be either "_xmpp-client" for XMPP client-
+       to-server connections or "_xmpp-server" for XMPP server-to-server
+       connections, and "_<protocol>" MUST be "_tcp".
 
-   HTTP GET /.well-known/posh._xmpp-server._tcp.json HTTP/1.1
-   Host: im.example.com
-
+   2.  The source domain HTTPS server responds in one of three ways:
 
 
-   2.  If the source domain HTTPS server has a certificate for the
-       requested path, it MUST respond with a success status code, with
-       the message body as a JSON Web Key Set (JWK Set) [JOSE-JWK],
-       which itself contains at least one JWK of a type appropriate for
-       the represented key (e.g., "RSA" for a PKIX certificate using a
+       *  It possesses a PKIX certificate for the requested path.  The
+          process is detailed in Section 3.1.
+
+
+       *  It has a reference to where the PKIX certificate can be
+          obtained.  The process is detailed in Section 3.2.
 
 
 
-Miller & Saint-Andre   Expires November 18, 2013                [Page 3]
+
+Miller & Saint-Andre   Expires November 29, 2013                [Page 3]
 
 Internet-Draft            XMPP POSH Prooftype                   May 2013
 
 
-       RSA key) that the XMPP server at the source domain will present
-       during the TLS negotiation phase of XMPP stream setup (linebreaks
-       and whitespace added for readability).  Here is an example:
+       *  It does not have any PKIX certificate for the requested path.
+          The HTTPS service responds with a client error status code
+          (e.g., 404).
+
+3.1.  Possesses PKIX Certificate
+
+   If the source domain HTTPS server possesses the certificate
+   information, it responds to the HTTPS GET with a success status code
+   and the message body set to a JSON Web Key (JWK) set [JOSE-JWK].  The
+   JWK set MUST contain at least one JWK with the following information:
+
+   o  The "kty" field set to the appropriate key type (e.g., "RSA" for a
+      certificate using a RSA key).
+
+
+   o  The required fields for the key type (e.g., "n" and "e" for a
+      certificate using a RSA key).
+
+
+   o  The "x5c" field set to the certificate chain.
+
+   Example Content Response
 
    HTTP/1.1 200 OK
    Content-Type: application/jwk-set+json
@@ -199,6 +218,14 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
             aFw0xMzA3MDIyMzU5NTlaMEoxCzAJBgNVBAYTAlVTMREwDwYDVQQI
             EwhDb2xvcmFkbzEPMA0GA1UEBxMGRGVudmVyMRcwFQYDVQQDEw5pb
             S5leGFtcGxlLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQ
+
+
+
+Miller & Saint-Andre   Expires November 29, 2013                [Page 4]
+
+Internet-Draft            XMPP POSH Prooftype                   May 2013
+
+
             oCggEBANxwssdcU3LbODErec3owrwUhlzjtuskAn8rAcBMRPImn5x
             AJRX+1T5g2D7MTozWWFk4TlpgzAR5slvM0tc35qAI9I0Cqk4ZLChQ
             rYsWuY7alTrnNXdusHUYc6Eq89DZaH2knTcp57wAXzJPIG/tpBi5F
@@ -218,14 +245,6 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
             x1NI6YYuWqhcKWADOOJdSfiXeu23E25tlbDRo8",
            "MIIDWTCCAkGgAwIBAgIBATANBgkqhkiG9w0BAQUFADBGMQswCQYDV
             QQGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbn
-
-
-
-Miller & Saint-Andre   Expires November 18, 2013                [Page 4]
-
-Internet-Draft            XMPP POSH Prooftype                   May 2013
-
-
             ZlcjETMBEGA1UEAxMKRXhhbXBsZSBDQTAeFw0xMTA1MDIwMDAwMDB
             aFw0yMzA1MTYyMzU5NTlaMEYxCzAJBgNVBAYTAlVTMREwDwYDVQQI
             EwhDb2xvcmFkbzEPMA0GA1UEBxMGRGVudmVyMRMwEQYDVQQDEwpFe
@@ -253,148 +272,41 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
 
 
 
-
-4.  Secure Delegation
-
-   When PKIX Over Secure HTTP (POSH) is the DNA prooftype, it is
-   possible to use HTTPS redirects in determining if a domain is
-   securely delegated, as follows:
-
-   1.  The initiating entity performs an HTTPS GET at the source domain
-       to the path "/.well-known/posh._<service>._tcp.json"; where
-       "_<service>" MUST be either "_xmpp-client" for XMPP client-to-
-       server connections or "_xmpp-server" for XMPP server-to-server
-       connections.  Here is an example:
-
-   GET /.well-known/posh._xmpp-server._tcp.json HTTP/1.1
-   Host: im.example.com
+   The initiating entity uses the provided certificate to verify the TLS
+   connection.  The TLS certificate MUST match the POSH certificate,
 
 
 
-   2.  If the source domain HTTPS server has delegated to a derived
-       domain, it MUST respond with one of the redirect mechanisms
-       provided by HTTP (e.g., using the 302, 303, 307, or 308
-
-
-
-Miller & Saint-Andre   Expires November 18, 2013                [Page 5]
+Miller & Saint-Andre   Expires November 29, 2013                [Page 5]
 
 Internet-Draft            XMPP POSH Prooftype                   May 2013
 
 
-       response).  The 'Location' header MUST specify an HTTPS URL,
-       where the hostname and port is the derived domain HTTPS server,
-       and the path MUST match the pattern "_<service>._tcp.json"; where
-       "_<service>" MUST be identical to the "_<service>" portion of the
-       original request (line breaks added for readability).  Here is an
-       example:
+   such as comparing a cryptographic hash of the DER encoding of the
+   certificates.
+
+   The initiating entity MAY verify the certificate chain provided in
+   the JWK, but it SHOULD consider the final issuer certificate to be a
+   trust anchor for the purposes of this verification only.  Once
+   verified, the initiating entity MUST NOT continue to treat this final
+   issuer certificate as a trust anchor.
+
+3.2.  References PKIX Certificate
+
+   If the source domain HTTPS server has a reference to the certificate
+   information, it responds to the HTTPS GET with a redirect status code
+   (e.g., 302, 303, 307, or 308), and include a 'Location' header which
+   MUST specify an HTTPS URL.
+
+   Example Redirect Response
 
    HTTP/1.1 302 Found
    Location: https://hosting.example.net/.well-known
              /posh._xmpp-server._tcp.json
 
 
-
-   3.  The initiating entity performs an HTTPS GET to the URL specified
-       in the 'Location' header.  Here is an example:
-
-   GET /.well-known/posh._xmpp-server._tcp.json HTTP/1.1
-   Host: hosting.example.net
-
-
-
-   4.  If the derived domain HTTPS server has a certificate, it MUST
-       respond with a success status code, with the message body as a
-       JSON Web Key Set (JWK Set) [JOSE-JWK], which itself contains at
-       least one JWK of a type appropriate for the represented key
-       (e.g., "RSA" for a PKIX certificate using a RSA key) that the
-       XMPP server at the derived domain will present during the TLS
-       negotiation phase of XMPP stream setup.  Here is an example:
-
-   HTTP/1.1 200 OK
-   Content-Type: application/jwk-set+json
-   Content-Length: 2742
-
-   {
-     "keys":[
-       {
-         "kty": "RSA",
-         "kid": "hosting.example.net:2011-07-04",
-         "n":   "AM-ktWkQ8btj_HEdAA6kOpzJGgoHNZsJmxjh_PifpgAUfQeq
-         MO_YBR100IdJZRzJfULyhRwn9bikCq87WToxgPWOnd3sH3qTYiAcIR5S
-         6tBbsyp6WYmwM1yuC0vLCo6SoDzdK1SvkQKM3QWk0GFNU4l4qXYAMxaS
-         w83i6yv5DBVbST7E92vS6Gq_4pgI26l10JhybZuTEVPRUCG6pTKAXQpL
-         xmjJ5oG9M91RP17nsuQeE7Ng0Ap4BBn5hocojkfthwgbX4lqBMecpBAn
-         ky5jn6slmzS_rL-Lw-_8hUldaTPD9MHlHPrvcsRV5uw8wK5MB6QyfS6w
-         F4b0Kj2TvYceNlE",
-         "e":   "AQAB",
-         "x5c": [
-           "MIIDXzCCAkegAwIBAgIBAzANBgkqhkiG9w0BAQUFADBGMQswCQYDV
-
-
-
-Miller & Saint-Andre   Expires November 18, 2013                [Page 6]
-
-Internet-Draft            XMPP POSH Prooftype                   May 2013
-
-
-            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
-            LQE6v8MHdbUfb4M8la5cUd2BGtTlILOVnMv"
-         ]
-       }
-     ]
-   }
-
-
-
-
-Miller & Saint-Andre   Expires November 18, 2013                [Page 7]
-
-Internet-Draft            XMPP POSH Prooftype                   May 2013
-
-
-4.1.  Permanent versus Temporary Redirects
+   The client follows the redirect and performs actions appropriate to
+   the new response, whether it is a possession or reference.
 
    Care needs to be taken with which redirect mechanism is used for
    delegation.  Clients might remember the redirected location in place
@@ -406,6 +318,25 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
    (Temporary Redirect).  Clients MAY treat any redirect as temporary,
    ignoring the specific semantics for 301 (Moved Permanently) or 308
    (Permanent Redirect) [HTTP-STATUS-308].
+
+4.  Secure Delegation
+
+   The delegation from the source domain to the delegated domain can be
+   considered secure if the TLS certificate offered matches the POSH
+   certificate, regardless of how the POSH certificates are obtained.
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre   Expires November 29, 2013                [Page 6]
+
+Internet-Draft            XMPP POSH Prooftype                   May 2013
+
 
 5.  Order of Operations
 
@@ -433,23 +364,15 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
 
    To indicate alternate PKIX certificates, such as when an existing
    certificate will soon expire, the returned JWK Set can contain
-   multiple "PKIX" JWK objects.  The JWK Set SHOULD be ordered with the
-   most relevant certificate first as determined by the XMPP server
-   operator (e.g., the certificate soonest to expire), followed by the
-   next most relevant certificate (e.g., the renewed certificate).  Here
-   is an example:
+   multiple JWK objects.  The JWK Set SHOULD be ordered with the most
+   relevant certificate first as determined by the XMPP server operator
+   (e.g., the renewed certificate), followed by the next most relevant
+   certificate (e.g., the certificate soonest to expire).  Here is an
+   example:
 
    {
      "keys":[
        {
-
-
-
-Miller & Saint-Andre   Expires November 18, 2013                [Page 8]
-
-Internet-Draft            XMPP POSH Prooftype                   May 2013
-
-
          "kty": "RSA",
          "kid": "hosting.example.net:2011-07-04",
          "n":   "AM-ktWkQ8btj_HEdAA6kOpzJGgoHNZsJmxjh_PifpgAUfQeq
@@ -463,6 +386,14 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
          "e":   "AQAB",
          "x5c": [
            "MIIDXzCCAkegAwIBAgIBAzANBgkqhkiG9w0BAQUFADBGMQswCQYDV
+
+
+
+Miller & Saint-Andre   Expires November 29, 2013                [Page 7]
+
+Internet-Draft            XMPP POSH Prooftype                   May 2013
+
+
             QQGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbn
             ZlcjETMBEGA1UEAxMKRXhhbXBsZSBDQTAeFw0xMTA3MDQxOTUyMDB
             aFw0xMzA3MDMxOTUyMDBaME8xCzAJBgNVBAYTAlVTMREwDwYDVQQI
@@ -498,14 +429,6 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
             UDxyJeCzbBaHny5NlWWHsGnsbucbM+9yeAMbRes/z0KeHxcRtomd8
             bh7As12RIXKrk5GRoNVKAoiwLQIDAQABo1IwUDAPBgNVHRMBAf8EB
             TADAQH/MB0GA1UdDgQWBBSyiet77RfWpH3X8NMwGFVu2ldJPTALBg
-
-
-
-Miller & Saint-Andre   Expires November 18, 2013                [Page 9]
-
-Internet-Draft            XMPP POSH Prooftype                   May 2013
-
-
             NVHQ8EBAMCAQYwEQYJYIZIAYb4QgEBBAQDAgAHMA0GCSqGSIb3DQE
             BBQUAA4IBAQBd1mMx4Wx9xFLqecbjWyy7tOE2+mrWhWxg82q7z3bB
             rHWjUGzolHe97Ch+6QI3+MPk9JQWYaMgYe11tyf0mgZ18NFQall4M
@@ -519,6 +442,14 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
        {
          "kty": "RSA",
          "kid": "hosting.example.net:2013-07-04",
+
+
+
+Miller & Saint-Andre   Expires November 29, 2013                [Page 8]
+
+Internet-Draft            XMPP POSH Prooftype                   May 2013
+
+
          "n":   "AM-ktWkQ8btj_HEdAA6kOpzJGgoHNZsJmxjh_PifpgAUfQeq
                  MO_YBR100IdJZRzJfULyhRwn9bikCq87WToxgPWOnd3sH3qT
                  YiAcIR5S6tBbsyp6WYmwM1yuC0vLCo6SoDzdK1SvkQKM3QWk
@@ -554,14 +485,6 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
            aonFlLEQysm5qJnhTGxEIDxQfqCcRfw==",
           "MIIDWTCCAkGgAwIBAgIBATANBgkqhkiG9w0BAQUFADBGMQswCQYDVQ
            QGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbnZl
-
-
-
-Miller & Saint-Andre   Expires November 18, 2013               [Page 10]
-
-Internet-Draft            XMPP POSH Prooftype                   May 2013
-
-
            cjETMBEGA1UEAxMKRXhhbXBsZSBDQTAeFw0xMTA1MDIwMDAwMDBaFw
            0yMzA1MTYyMzU5NTlaMEYxCzAJBgNVBAYTAlVTMREwDwYDVQQIEwhD
            b2xvcmFkbzEPMA0GA1UEBxMGRGVudmVyMRMwEQYDVQQDEwpFeGFtcG
@@ -575,6 +498,14 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
            k5GRoNVKAoiwLQIDAQABo1IwUDAPBgNVHRMBAf8EBTADAQH/MB0GA1
            UdDgQWBBSyiet77RfWpH3X8NMwGFVu2ldJPTALBgNVHQ8EBAMCAQYw
            EQYJYIZIAYb4QgEBBAQDAgAHMA0GCSqGSIb3DQEBBQUAA4IBAQBd1m
+
+
+
+Miller & Saint-Andre   Expires November 29, 2013                [Page 9]
+
+Internet-Draft            XMPP POSH Prooftype                   May 2013
+
+
            Mx4Wx9xFLqecbjWyy7tOE2+mrWhWxg82q7z3bBrHWjUGzolHe97Ch+
            6QI3+MPk9JQWYaMgYe11tyf0mgZ18NFQall4Mho2yT+E8ju11PW+RN
            qUdRG6rZfdeN5Geb1o1L2g5WNTdtPXoFYgHYVPQ1HmjloEic2eGnlB
@@ -588,18 +519,34 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
    }
 
 
-8.  Security Considerations
+8.  Use in Other Protocols
+
+   While this documents assumes the use of XMPP, it is possible to use
+   it for other SRV-based protocols where verification not otherwise
+   possible.  For other SRV-based protocols, substitute the protocol's
+   service and protocol types in place of "_xmpp-client._tcp" (or
+   "_xmpp-server._tcp") in the initial HTTPS GET request.  For instance,
+   to use POSH to verify a IMAP server for the domain "example.com", the
+   HTTPS GET request is:
+
+   GET /.well-known/posh._imap._tcp.json HTTP/1.1
+   Host: example.com
+
+
+
+9.  Security Considerations
 
    This document supplements but does not supersede the security
    considerations provided in [RFC2616], [RFC2818], [RFC6120], and
-   [RFC6125].
+   [RFC6125].  Specifically, communication via HTTPS depends on checking
+   the identity of the HTTP server in accordance with [RFC2818].
 
-   Specifically, communication via HTTPS depends on checking the
-   identity of the HTTP server in accordance with [RFC2818].
+   Additionally, the security of POSH benefits from other HTTP hardening
+   protocols, such as HSTS [RFC6797] and key pinning [KEY-PINNING].
 
-9.  IANA Considerations
+10.  IANA Considerations
 
-9.1.  The "posh._xmpp-client._tcp.json" Well-Known URI
+10.1.  The "posh._xmpp-client._tcp.json" Well-Known URI
 
    This specification registers the "posh._xmpp-client._tcp.json" well-
    known URI in the Well-Known URI Registry as defined by [RFC5785].
@@ -608,17 +555,16 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
 
    Change controller: IETF
 
-   Specification document(s): [[ this document ]]
 
 
-
-
-Miller & Saint-Andre   Expires November 18, 2013               [Page 11]
+Miller & Saint-Andre   Expires November 29, 2013               [Page 10]
 
 Internet-Draft            XMPP POSH Prooftype                   May 2013
 
 
-9.2.  The "posh._xmpp-server._tcp.json" Well-Known URI
+   Specification document(s): [[ this document ]]
+
+10.2.  The "posh._xmpp-server._tcp.json" Well-Known URI
 
    This specification registers the "posh._xmpp-server._tcp.json" well-
    known URI in the Well-Known URI Registry as defined by [RFC5785].
@@ -629,13 +575,13 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
 
    Specification document(s): [[ this document ]]
 
-10.  References
+11.  References
 
-10.1.  Normative References
+11.1.  Normative References
 
    [JOSE-JWK]
               Jones, M., "JSON Web Key (JWK)", draft-ietf-jose-json-web-
-              key-10 (work in progress), April 2013.
+              key-11 (work in progress), May 2013.
 
    [XMPP-DNA]
               Saint-Andre, P. and M. Miller, "Domain Name Associations
@@ -664,39 +610,45 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
    [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
               Protocol (XMPP): Core", RFC 6120, March 2011.
 
-   [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
-              Verification of Domain-Based Application Service Identity
 
 
 
-Miller & Saint-Andre   Expires November 18, 2013               [Page 12]
+Miller & Saint-Andre   Expires November 29, 2013               [Page 11]
 
 Internet-Draft            XMPP POSH Prooftype                   May 2013
 
 
+   [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
+              Verification of Domain-Based Application Service Identity
               within Internet Public Key Infrastructure Using X.509
               (PKIX) Certificates in the Context of Transport Layer
               Security (TLS)", RFC 6125, March 2011.
 
-10.2.  Informative References
+11.2.  Informative References
 
    [HTTP-STATUS-308]
               Reschke, J., "The Hypertext Transfer Protocol (HTTP)
               Status Code 308 (Permanent Redirect)", draft-reschke-http-
               status-308-07 (work in progress), March 2012.
 
+   [KEY-PINNING]
+              Evans, C., Palmer, C., and R. Sleevi, "Public Key Pinning
+              Extension for HTTP", draft-ietf-websec-key-pinning-04
+              (work in progress), December 2012.
+
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "DNS Security Introduction and Requirements", RFC
               4033, May 2005.
+
+   [RFC6555]  Wing, D. and A. Yourtchenko, "Happy Eyeballs: Success with
+              Dual-Stack Hosts", RFC 6555, April 2012.
 
    [RFC6698]  Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
               of Named Entities (DANE) Transport Layer Security (TLS)
               Protocol: TLSA", RFC 6698, August 2012.
 
-10.3.  Informative References
-
-   [RFC6555]  Wing, D. and A. Yourtchenko, "Happy Eyeballs: Success with
-              Dual-Stack Hosts", RFC 6555, April 2012.
+   [RFC6797]  Hodges, J., Jackson, C., and A. Barth, "HTTPS Strict
+              Transport Security (HSTS)", RFC 6797, November 2012.
 
 Authors' Addresses
 
@@ -707,6 +659,19 @@ Authors' Addresses
    USA
 
    Email: mamille2@cisco.com
+
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre   Expires November 29, 2013               [Page 12]
+
+Internet-Draft            XMPP POSH Prooftype                   May 2013
 
 
    Peter Saint-Andre
@@ -724,4 +689,39 @@ Authors' Addresses
 
 
 
-Miller & Saint-Andre   Expires November 18, 2013               [Page 13]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre   Expires November 29, 2013               [Page 13]
