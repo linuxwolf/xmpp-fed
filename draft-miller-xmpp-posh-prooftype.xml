@@ -48,7 +48,8 @@
   <middle>
     <section title="Introduction" anchor="intro">
       <t>The <xref target="XMPP-DNA"/> specification defines a framework for secure delegation and strong domain name associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP).  This document defines a DNA prooftype using PKIX certificates obtained over secure HTTP ("POSH"), as well as a secure delegation method, based on HTTPS redirects, that is appropriate for use with the POSH prooftype.</t>
-      <t>The rationale for POSH is driven by current operational realities.  It is effectively impossible for a hosting service to provide and maintain PKIX certificates <xref target="RFC5280"/> that include the appropriate identifiers <xref target="RFC6125"/> for each hosted domain.  It is true that DNS-based technologies are emerging for secure delegation, in the form of DNS Security (<xref target="RFC4033"/> and <xref target="RFC6698"/>); however, these technologies are not yet widely deployed and might not be deployed in the near future for domains outside the most common top-level domains (e.g., ".COM", ".NET", ".EDU").  Because the XMPP community wishes to deploy secure delegation and strong domain name associations as widely and as quickly as possible, this document specifies how to use secure HTTP (<xref target="RFC2616"/> and <xref target="RFC2818"/>) and PKIX certificates <xref target="RFC5280"/> to verify that a domain is delegated to a hosting provider and also establish a strong assocation between a domain name and an XML stream.</t>
+      <t>The rationale for POSH is driven by current operational realities.  It is effectively impossible for a hosting service to provide and maintain PKIX certificates <xref target="RFC5280"/> that include the appropriate identifiers <xref target="RFC6125"/> for each hosted domain.  It is true that DNS-based technologies are emerging for secure delegation, in the form of DNS Security (<xref target="RFC4033"/> and <xref target="RFC6698"/>); however, these technologies are not yet widely deployed and might not be deployed in the near future for domains outside the most common top-level domains (e.g., ".COM", ".NET", ".EDU").  Because the XMPP community wishes to deploy secure delegation and strong domain name associations as widely and as quickly as possible, this document specifies how to use secure HTTP (<xref target="RFC2616"/> and <xref target="RFC2818"/>) and PKIX certificates <xref target="RFC5280"/> to verify that a domain is delegated to a hosting provider and also establish a strong assocation between a domain name and an XML stream. (Although this document talks about PKIX certificates, those certificates are actually used in the JSON representation, see <xref target='JOSE-JWK'/>.)</t>
+      <t>Although this document focuses on XMPP, the same principles might apply to any protocol that uses DNS SRV records or their functional equivalent; see <xref target='not-xmpp'/> for further discussion.</t>
     </section>
     <section title="Terminology" anchor="terms">
       <t>This document inherits XMPP terminology from <xref target="RFC6120"/> and security terminology from <xref target="RFC5280"/>.  The terms "source domain", "derived domain", "reference identifier", and "presented identifier" are used as defined in the "CertID" specification <xref target="RFC6125"/>.</t>
@@ -56,7 +57,7 @@
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>.</t>
     </section>
     <section title="Prooftype" anchor="prooftype">
-      <t>POSH stands for PKIX Over Secure HTTP: the server's proof consist of a PKIX certificate <xref target="RFC5280"/>, the certificate is checked according to the rules from <xref target="RFC6120"/> and <xref target="RFC6125"/>, the client obtains its verification material by retrieving the certificate over HTTPS (<xref target="RFC2616"/> and <xref target="RFC2818"/>) from a well-known URI <xref target="RFC5785"/>, and secure DNS is not necessary since the HTTPS retrieval mechanism relies on the chain of trust based on the public key infrastructure.</t>
+      <t>POSH stands for PKIX Over Secure HTTP: the server's proof consists of a PKIX certificate <xref target="RFC5280"/>, the certificate is checked according to the rules from <xref target="RFC6120"/> and <xref target="RFC6125"/>, the client obtains its verification material by retrieving the certificate over HTTPS (<xref target="RFC2616"/> and <xref target="RFC2818"/>) from a well-known URI <xref target="RFC5785"/>, and secure DNS is not necessary since the HTTPS retrieval mechanism relies on the chain of trust based on the public key infrastructure.</t>
       <t>The process for retrieving a PKIX certificate over secure HTTP is as follows.</t>
       <t>
         <!--
@@ -67,26 +68,27 @@ HTTP GET /.well-known/posh._xmpp-server._tcp.json HTTP/1.1
 Host: im.example.com
               ]]></artwork></figure>
           <vspace blankLines="1"/></t>
-          <t>If the source domain HTTPS server has a certificate for the requested path, it MUST respond with a success status code, with the message body as a JSON Web Key Set (JWK Set) <xref target="JOSE-JWK"/>, which itself contains at least one JWK of a type appropriate for the represented key (e.g., "RSA" for a PKIX certificate using a RSA key) that the XMPP server at the source domain will present during the TLS negotiation phase of XMPP stream setup (linebreaks and whitespace added for readability).  Here is an example:
+          <t>If the source domain HTTPS server has a certificate for the requested path, it MUST respond with a success status code, with the message body as a JSON Web Key Set (JWK Set) <xref target="JOSE-JWK"/>, which itself contains at least one JWK of a type appropriate for the represented key (e.g., "RSA" for a PKIX certificate using an RSA key) that the XMPP server at the source domain will present during the TLS negotiation phase of XMPP stream setup (linebreaks and whitespace added for readability).  Here is an example:
           <vspace blankLines="1"/></t>
         </list>
       -->
         <list style="numbers">
-          <t>The initiating entity performs an HTTPS GET at the source domain to the path "/.well-known/posh._&lt;service&gt;._&gt;protocol&gt;.json"; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections, and "_&lt;protocol&gt;" MUST be "_tcp".</t>
+          <t>The initiating entity performs an HTTPS GET at the source domain to the path "/.well-known/posh._&lt;service&gt;._&gt;protocol&gt;.json"; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections, and "_&lt;protocol&gt;" MUST be "_tcp".<vspace blankLines='1'/></t>
           <t>The source domain HTTPS server responds in one of three ways:<vspace blankLines="1"/>
             <list style="symbols">
               <t>It possesses a PKIX certificate for the requested path. The process is detailed in <xref target="prooftype-possess"/>.<vspace blankLines="1"/></t>
-              <t>It has a reference to where the PKIX certificate can be obtained. The process is detailed in <xref target="prooftype-ref"/>.</t>
+              <t>It has a reference to where the PKIX certificate can be obtained. The process is detailed in <xref target="prooftype-ref"/>.<vspace blankLines='1'/></t>
               <t>It does not have any PKIX certificate for the requested path. The HTTPS service responds with a client error status code (e.g., 404).</t>
             </list>
           </t>
         </list>
       </t>
       <section title="Possesses PKIX Certificate" anchor="prooftype-possess">
-        <t>If the source domain HTTPS server possesses the certificate information, it responds to the HTTPS GET with a success status code and the message body set to a JSON Web Key (JWK) set <xref target="JOSE-JWK"/>. The JWK set MUST contain at least one JWK with the following information:
+        <t>If the source domain HTTPS server possesses the certificate information, it responds to the HTTPS GET with a success status code and the message body set to a JSON Web Key (JWK) set <xref target="JOSE-JWK"/>. The JWK set MUST contain at least one JWK with the following information:</t>
+        <t>
           <list style="symbols">
-            <t>The "kty" field set to the appropriate key type (e.g., "RSA" for a certificate using a RSA key).<vspace blankLines="1"/></t>
-            <t>The required fields for the key type (e.g., "n" and "e" for a certificate using a RSA key).<vspace blankLines="1"/></t>
+            <t>The "kty" field set to the appropriate key type (e.g., "RSA" for a certificate using an RSA key).<vspace blankLines="1"/></t>
+            <t>The required fields for the key type (e.g., "n" and "e" for a certificate using an RSA key).<vspace blankLines="1"/></t>
             <t>The "x5c" field set to the certificate chain.</t>
           </list>
         </t>
@@ -167,6 +169,7 @@ Content-Length: 2785
           </figure>
         </t>
         <t>The initiating entity uses the provided certificate to verify the TLS connection. The TLS certificate MUST match the POSH certificate, such as comparing a cryptographic hash of the DER encoding of the certificates.</t>
+        <t>[[ AUTHOR NOTE: WHY ARE WE TALKING ABOUT DER ENCODING HERE? ]]</t>
         <t>The initiating entity MAY verify the certificate chain provided in the JWK, but it SHOULD consider the final issuer certificate to be a trust anchor for the purposes of this verification only. Once verified, the initiating entity MUST NOT continue to treat this final issuer certificate as a trust anchor.</t>
       </section>
       <section title="References PKIX Certificate" anchor="prooftype-ref">
@@ -182,12 +185,13 @@ Location: https://hosting.example.net/.well-known
           </figure>
         </t>
         <t>The client follows the redirect and performs actions appropriate to the new response, whether it is a possession or reference.</t>
-        <t>Care needs to be taken with which redirect mechanism is used for delegation. Clients might remember the redirected location in place of the original, which can lead to verification mismatches when a source domain is migrated to a different delegated domain.</t>
+        <t>Care needs to be taken regarding the redirect mechanism is used for delegation. Clients might remember the redirected location in place of the original, which can lead to verification mismatches when a source domain is migrated to a different delegated domain.</t>
         <t>To mitigate this concern, source domains SHOULD use only temporary redirect mechanisms, such as HTTP status codes 302 (Found) and 307 (Temporary Redirect). Clients MAY treat any redirect as temporary, ignoring the specific semantics for 301 (Moved Permanently) or 308 (Permanent Redirect) <xref target="HTTP-STATUS-308"/>.</t>
+        <t>Additional security mechanisms might also be advisable, such as HTTP Strict Transport Security <xref target='RFC6797'/> and key pinning <xref target='KEYPIN'/>.</t>
       </section>
     </section>
     <section title="Secure Delegation" anchor="delegation">
-      <t>The delegation from the source domain to the delegated domain can be considered secure if the TLS certificate offered matches the POSH certificate, regardless of how the POSH certificates are obtained.</t>
+      <t>The delegation from the source domain to the delegated domain can be considered secure if the certificate offered by the TLS server (application server) matches the POSH certificate, regardless of how the POSH certificates are obtained.</t>
       <!--
       <t>When PKIX Over Secure HTTP (POSH) is the DNA prooftype, it is possible to use HTTPS redirects in determining if a domain is securely delegated, as follows:</t>
       <t>
@@ -211,7 +215,7 @@ GET /.well-known/posh._xmpp-server._tcp.json HTTP/1.1
 Host: hosting.example.net
               ]]></artwork></figure>
           <vspace blankLines="1"/></t>
-          <t>If the derived domain HTTPS server has a certificate, it MUST respond with a success status code, with the message body as a JSON Web Key Set (JWK Set) <xref target="JOSE-JWK"/>, which itself contains at least one JWK of a type appropriate for the represented key (e.g., "RSA" for a PKIX certificate using a RSA key) that the XMPP server at the derived domain will present during the TLS negotiation phase of XMPP stream setup.  Here is an example:
+          <t>If the derived domain HTTPS server has a certificate, it MUST respond with a success status code, with the message body as a JSON Web Key Set (JWK Set) <xref target="JOSE-JWK"/>, which itself contains at least one JWK of a type appropriate for the represented key (e.g., "RSA" for a PKIX certificate using an RSA key) that the XMPP server at the derived domain will present during the TLS negotiation phase of XMPP stream setup.  Here is an example:
             <figure><artwork><![CDATA[
 HTTP/1.1 200 OK
 Content-Type: application/jwk-set+json
@@ -422,7 +426,7 @@ Content-Length: 2742
       </figure>
     </section>
     <section title="Use in Other Protocols" anchor="not-xmpp">
-      <t>While this documents assumes the use of XMPP, it is possible to use it for other SRV-based protocols where verification not otherwise possible. For other SRV-based protocols, substitute the protocol's service and protocol types in place of "_xmpp-client._tcp" (or "_xmpp-server._tcp") in the initial HTTPS GET request. For instance, to use POSH to verify a IMAP server for the domain "example.com", the HTTPS GET request is:
+      <t>While this documents assumes the use of POSH only in relation to XMPP, it is possible to use it for other SRV-based protocols where verification not otherwise possible. For other SRV-based protocols, substitute the protocol's service and protocol types in place of "_xmpp-client._tcp" (or "_xmpp-server._tcp") in the initial HTTPS GET request. For instance, to use POSH to verify a IMAP server for the domain "example.com", the HTTPS GET request is:
         <figure>
           <artwork><![CDATA[
 GET /.well-known/posh._imap._tcp.json HTTP/1.1
@@ -434,7 +438,7 @@ Host: example.com
     </section>
     <section title="Security Considerations" anchor="security">
       <t>This document supplements but does not supersede the security considerations provided in <xref target="RFC2616"/>, <xref target="RFC2818"/>, <xref target="RFC6120"/>, and <xref target="RFC6125"/>. Specifically, communication via HTTPS depends on checking the identity of the HTTP server in accordance with <xref target="RFC2818"/>.</t>
-      <t>Additionally, the security of POSH benefits from other HTTP hardening protocols, such as HSTS <xref target="RFC6797"/> and key pinning <xref target="KEY-PINNING"/>.</t>
+      <t>Additionally, the security of POSH benefits from other HTTP hardening protocols, such as HSTS <xref target="RFC6797"/> and key pinning <xref target="KEYPIN"/>.</t>
     </section>
     <section title="IANA Considerations" anchor="iana">
       <section title="The &quot;posh._xmpp-client._tcp.json&quot; Well-Known URI" anchor="iana-posh-client">
@@ -484,8 +488,8 @@ Host: example.com
           </author>
           <date month="April" year="2013"/>
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-saintandre-xmpp-dna-02"/>
-        <format type="TXT" target="http://tools.ietf.org/html/draft-sainandre-xmpp-dna-02.txt"/>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-xmpp-dna-02"/>
+        <format type="TXT" target="http://tools.ietf.org/html/draft-ietf-xmpp-dna-02.txt"/>
       </reference>
       <reference anchor="RFC2119">
         <front>
@@ -747,7 +751,7 @@ Host: example.com
         <seriesInfo name="Internet-Draft" value="draft-reschke-http-status-308-07"/>
         <format type="TXT" target="http://tools.ietf.org/html/draft-reschke-http-status-308-07.txt"/>
       </reference>
-      <reference anchor="KEY-PINNING">
+      <reference anchor="KEYPIN">
         <front>
           <title>Public Key Pinning Extension for HTTP</title>
           <author initials="C." surname="Evans" fullname="Chris Evans">
@@ -862,5 +866,8 @@ Host: example.com
         <format type='TXT' target='http://www.rfc-editor.org/rfc/rfc6797.txt' />
       </reference>
     </references>
+    <section title="Acknowledgements" anchor="acks">
+      <t>Thanks to Dave Cridland, Max Pritikin, and Joe Salowey for their feedback.</t>
+    </section>
   </back>
 </rfc>
