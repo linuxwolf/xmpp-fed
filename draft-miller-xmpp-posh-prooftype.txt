@@ -5,7 +5,7 @@
 XMPP                                                           M. Miller
 Internet-Draft                                            P. Saint-Andre
 Intended status: Standards Track                     Cisco Systems, Inc.
-Expires: November 29, 2013                                  May 28, 2013
+Expires: December 05, 2013                                 June 03, 2013
 
 
  Using PKIX over Secure HTTP (POSH) as a Prooftype for XMPP Domain Name
@@ -36,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on November 29, 2013.
+   This Internet-Draft will expire on December 05, 2013.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Miller & Saint-Andre   Expires November 29, 2013                [Page 1]
+Miller & Saint-Andre   Expires December 05, 2013                [Page 1]
 
-Internet-Draft            XMPP POSH Prooftype                   May 2013
+Internet-Draft            XMPP POSH Prooftype                  June 2013
 
 
    the Trust Legal Provisions and are provided without warranty as
@@ -68,19 +68,20 @@ Table of Contents
    3.  Prooftype . . . . . . . . . . . . . . . . . . . . . . . . . .   3
      3.1.  Possesses PKIX Certificate  . . . . . . . . . . . . . . .   4
      3.2.  References PKIX Certificate . . . . . . . . . . . . . . .   6
-   4.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . .   6
+   4.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . .   7
    5.  Order of Operations . . . . . . . . . . . . . . . . . . . . .   7
    6.  Caching Results . . . . . . . . . . . . . . . . . . . . . . .   7
    7.  Alternates and Roll-over  . . . . . . . . . . . . . . . . . .   7
    8.  Use in Other Protocols  . . . . . . . . . . . . . . . . . . .  10
    9.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
-   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
-     10.1.  The "posh._xmpp-client._tcp.json" Well-Known URI . . . .  10
+   10. IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
+     10.1.  The "posh._xmpp-client._tcp.json" Well-Known URI . . . .  11
      10.2.  The "posh._xmpp-server._tcp.json" Well-Known URI . . . .  11
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  11
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  11
      11.2.  Informative References . . . . . . . . . . . . . . . . .  12
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
+   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  13
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  13
 
 1.  Introduction
 
@@ -105,14 +106,21 @@ Table of Contents
    HTTP ([RFC2616] and [RFC2818]) and PKIX certificates [RFC5280] to
    verify that a domain is delegated to a hosting provider and also
    establish a strong assocation between a domain name and an XML
-   stream.
 
 
 
-Miller & Saint-Andre   Expires November 29, 2013                [Page 2]
+Miller & Saint-Andre   Expires December 05, 2013                [Page 2]
 
-Internet-Draft            XMPP POSH Prooftype                   May 2013
+Internet-Draft            XMPP POSH Prooftype                  June 2013
 
+
+   stream.  (Although this document talks about PKIX certificates, those
+   certificates are actually used in the JSON representation, see
+   [JOSE-JWK].)
+
+   Although this document focuses on XMPP, the same principles might
+   apply to any protocol that uses DNS SRV records or their functional
+   equivalent; see Section 8 for further discussion.
 
 2.  Terminology
 
@@ -135,7 +143,7 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
 
 3.  Prooftype
 
-   POSH stands for PKIX Over Secure HTTP: the server's proof consist of
+   POSH stands for PKIX Over Secure HTTP: the server's proof consists of
    a PKIX certificate [RFC5280], the certificate is checked according to
    the rules from [RFC6120] and [RFC6125], the client obtains its
    verification material by retrieving the certificate over HTTPS
@@ -147,12 +155,19 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
    follows.
 
    1.  The initiating entity performs an HTTPS GET at the source domain
-       to the path "/.well-known/posh._<service>._>protocol>.json";
-       where "_<service>" MUST be either "_xmpp-client" for XMPP client-
-       to-server connections or "_xmpp-server" for XMPP server-to-server
-       connections, and "_<protocol>" MUST be "_tcp".
+       to the path "/.well-known/posh.{service}.{protocol}.json"; where
+       "{service}" MUST be either "_xmpp-client" for XMPP client-to-
+       server connections or "_xmpp-server" for XMPP server-to-server
+       connections, and "{protocol}" MUST be "_tcp".
+
 
    2.  The source domain HTTPS server responds in one of three ways:
+
+
+
+Miller & Saint-Andre   Expires December 05, 2013                [Page 3]
+
+Internet-Draft            XMPP POSH Prooftype                  June 2013
 
 
        *  It possesses a PKIX certificate for the requested path.  The
@@ -161,13 +176,6 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
 
        *  It has a reference to where the PKIX certificate can be
           obtained.  The process is detailed in Section 3.2.
-
-
-
-
-Miller & Saint-Andre   Expires November 29, 2013                [Page 3]
-
-Internet-Draft            XMPP POSH Prooftype                   May 2013
 
 
        *  It does not have any PKIX certificate for the requested path.
@@ -182,11 +190,11 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
    JWK set MUST contain at least one JWK with the following information:
 
    o  The "kty" field set to the appropriate key type (e.g., "RSA" for a
-      certificate using a RSA key).
+      certificate using an RSA key).
 
 
    o  The required fields for the key type (e.g., "n" and "e" for a
-      certificate using a RSA key).
+      certificate using an RSA key).
 
 
    o  The "x5c" field set to the certificate chain.
@@ -210,6 +218,14 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
                  U6FZuupZGHqPdc3vrXtp27LWgxzxjFa9qnOU6y53vCCJXLLI
                  5sy2fCwEDzLJqh2T6UItIzjrSUZMIsK8r2pXkroI0uYuNn3W
                  y-jAzK8",
+
+
+
+Miller & Saint-Andre   Expires December 05, 2013                [Page 4]
+
+Internet-Draft            XMPP POSH Prooftype                  June 2013
+
+
          "e":   "AQAB",
          "x5c": [
            "MIIDgzCCAmugAwIBAgIBBjANBgkqhkiG9w0BAQUFADBGMQswCQYDV
@@ -218,14 +234,6 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
             aFw0xMzA3MDIyMzU5NTlaMEoxCzAJBgNVBAYTAlVTMREwDwYDVQQI
             EwhDb2xvcmFkbzEPMA0GA1UEBxMGRGVudmVyMRcwFQYDVQQDEw5pb
             S5leGFtcGxlLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQ
-
-
-
-Miller & Saint-Andre   Expires November 29, 2013                [Page 4]
-
-Internet-Draft            XMPP POSH Prooftype                   May 2013
-
-
             oCggEBANxwssdcU3LbODErec3owrwUhlzjtuskAn8rAcBMRPImn5x
             AJRX+1T5g2D7MTozWWFk4TlpgzAR5slvM0tc35qAI9I0Cqk4ZLChQ
             rYsWuY7alTrnNXdusHUYc6Eq89DZaH2knTcp57wAXzJPIG/tpBi5F
@@ -266,6 +274,14 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
             Y3CTPxoJqskWs06/eUpjXKyzZ+MmkCs5cm1yers8goWhaI8JmLlBW
             LQE6v8MHdbUfb4M8la5cUd2BGtTlILOVnMv"
          ]
+
+
+
+Miller & Saint-Andre   Expires December 05, 2013                [Page 5]
+
+Internet-Draft            XMPP POSH Prooftype                  June 2013
+
+
        }
      ]
    }
@@ -273,17 +289,7 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
 
 
    The initiating entity uses the provided certificate to verify the TLS
-   connection.  The TLS certificate MUST match the POSH certificate,
-
-
-
-Miller & Saint-Andre   Expires November 29, 2013                [Page 5]
-
-Internet-Draft            XMPP POSH Prooftype                   May 2013
-
-
-   such as comparing a cryptographic hash of the DER encoding of the
-   certificates.
+   connection.  The TLS certificate MUST match the POSH certificate.
 
    The initiating entity MAY verify the certificate chain provided in
    the JWK, but it SHOULD consider the final issuer certificate to be a
@@ -308,7 +314,7 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
    The client follows the redirect and performs actions appropriate to
    the new response, whether it is a possession or reference.
 
-   Care needs to be taken with which redirect mechanism is used for
+   Care needs to be taken regarding the redirect mechanism is used for
    delegation.  Clients might remember the redirected location in place
    of the original, which can lead to verification mismatches when a
    source domain is migrated to a different delegated domain.
@@ -319,24 +325,28 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
    ignoring the specific semantics for 301 (Moved Permanently) or 308
    (Permanent Redirect) [HTTP-STATUS-308].
 
+   To protect against circular references, clients MUST NOT follow an
+   infinite number of redirects.  It is RECOMMENDED that clients follow
+   no more than 5 redirects.
+
+
+
+
+
+Miller & Saint-Andre   Expires December 05, 2013                [Page 6]
+
+Internet-Draft            XMPP POSH Prooftype                  June 2013
+
+
+   Additional security mechanisms might also be advisable, such as HTTP
+   Strict Transport Security [RFC6797] and key pinning [KEYPIN].
+
 4.  Secure Delegation
 
    The delegation from the source domain to the delegated domain can be
-   considered secure if the TLS certificate offered matches the POSH
-   certificate, regardless of how the POSH certificates are obtained.
-
-
-
-
-
-
-
-
-
-Miller & Saint-Andre   Expires November 29, 2013                [Page 6]
-
-Internet-Draft            XMPP POSH Prooftype                   May 2013
-
+   considered secure if the certificate offered by the TLS server
+   (application server) matches the POSH certificate, regardless of how
+   the POSH certificates are obtained.
 
 5.  Order of Operations
 
@@ -376,6 +386,14 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
          "kty": "RSA",
          "kid": "hosting.example.net:2011-07-04",
          "n":   "AM-ktWkQ8btj_HEdAA6kOpzJGgoHNZsJmxjh_PifpgAUfQeq
+
+
+
+Miller & Saint-Andre   Expires December 05, 2013                [Page 7]
+
+Internet-Draft            XMPP POSH Prooftype                  June 2013
+
+
                  MO_YBR100IdJZRzJfULyhRwn9bikCq87WToxgPWOnd3sH3qT
                  YiAcIR5S6tBbsyp6WYmwM1yuC0vLCo6SoDzdK1SvkQKM3QWk
                  0GFNU4l4qXYAMxaSw83i6yv5DBVbST7E92vS6Gq_4pgI26l1
@@ -386,14 +404,6 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
          "e":   "AQAB",
          "x5c": [
            "MIIDXzCCAkegAwIBAgIBAzANBgkqhkiG9w0BAQUFADBGMQswCQYDV
-
-
-
-Miller & Saint-Andre   Expires November 29, 2013                [Page 7]
-
-Internet-Draft            XMPP POSH Prooftype                   May 2013
-
-
             QQGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbn
             ZlcjETMBEGA1UEAxMKRXhhbXBsZSBDQTAeFw0xMTA3MDQxOTUyMDB
             aFw0xMzA3MDMxOTUyMDBaME8xCzAJBgNVBAYTAlVTMREwDwYDVQQI
@@ -432,6 +442,14 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
             NVHQ8EBAMCAQYwEQYJYIZIAYb4QgEBBAQDAgAHMA0GCSqGSIb3DQE
             BBQUAA4IBAQBd1mMx4Wx9xFLqecbjWyy7tOE2+mrWhWxg82q7z3bB
             rHWjUGzolHe97Ch+6QI3+MPk9JQWYaMgYe11tyf0mgZ18NFQall4M
+
+
+
+Miller & Saint-Andre   Expires December 05, 2013                [Page 8]
+
+Internet-Draft            XMPP POSH Prooftype                  June 2013
+
+
             ho2yT+E8ju11PW+RNqUdRG6rZfdeN5Geb1o1L2g5WNTdtPXoFYgHY
             VPQ1HmjloEic2eGnlBvOi49wAdwnASv53fgzkSJB2/GdBJ3wPIWp0
             49/1vS5rsF5SJg+3mj3ZAuPYt80TRKbA/cjxEny5RfK+VJs3f7RQ/
@@ -442,14 +460,6 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
        {
          "kty": "RSA",
          "kid": "hosting.example.net:2013-07-04",
-
-
-
-Miller & Saint-Andre   Expires November 29, 2013                [Page 8]
-
-Internet-Draft            XMPP POSH Prooftype                   May 2013
-
-
          "n":   "AM-ktWkQ8btj_HEdAA6kOpzJGgoHNZsJmxjh_PifpgAUfQeq
                  MO_YBR100IdJZRzJfULyhRwn9bikCq87WToxgPWOnd3sH3qT
                  YiAcIR5S6tBbsyp6WYmwM1yuC0vLCo6SoDzdK1SvkQKM3QWk
@@ -488,6 +498,14 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
            cjETMBEGA1UEAxMKRXhhbXBsZSBDQTAeFw0xMTA1MDIwMDAwMDBaFw
            0yMzA1MTYyMzU5NTlaMEYxCzAJBgNVBAYTAlVTMREwDwYDVQQIEwhD
            b2xvcmFkbzEPMA0GA1UEBxMGRGVudmVyMRMwEQYDVQQDEwpFeGFtcG
+
+
+
+Miller & Saint-Andre   Expires December 05, 2013                [Page 9]
+
+Internet-Draft            XMPP POSH Prooftype                  June 2013
+
+
            xlIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzNQ3
            0X7uXTg+4jKadtRO5uQEMRMnkZvDnptbWAtx0d1PsufQ2kfvog0gDh
            igjPEZDV9S+zm63Ia+eqJ3ROT9jDXjtF6s/IawITf5cPSNxn8qP8w+
@@ -498,14 +516,6 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
            k5GRoNVKAoiwLQIDAQABo1IwUDAPBgNVHRMBAf8EBTADAQH/MB0GA1
            UdDgQWBBSyiet77RfWpH3X8NMwGFVu2ldJPTALBgNVHQ8EBAMCAQYw
            EQYJYIZIAYb4QgEBBAQDAgAHMA0GCSqGSIb3DQEBBQUAA4IBAQBd1m
-
-
-
-Miller & Saint-Andre   Expires November 29, 2013                [Page 9]
-
-Internet-Draft            XMPP POSH Prooftype                   May 2013
-
-
            Mx4Wx9xFLqecbjWyy7tOE2+mrWhWxg82q7z3bBrHWjUGzolHe97Ch+
            6QI3+MPk9JQWYaMgYe11tyf0mgZ18NFQall4Mho2yT+E8ju11PW+RN
            qUdRG6rZfdeN5Geb1o1L2g5WNTdtPXoFYgHYVPQ1HmjloEic2eGnlB
@@ -521,13 +531,13 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
 
 8.  Use in Other Protocols
 
-   While this documents assumes the use of XMPP, it is possible to use
-   it for other SRV-based protocols where verification not otherwise
-   possible.  For other SRV-based protocols, substitute the protocol's
-   service and protocol types in place of "_xmpp-client._tcp" (or
-   "_xmpp-server._tcp") in the initial HTTPS GET request.  For instance,
-   to use POSH to verify a IMAP server for the domain "example.com", the
-   HTTPS GET request is:
+   While this documents assumes the use of POSH only in relation to
+   XMPP, it is possible to use it for other SRV-based protocols where
+   verification not otherwise possible.  For other SRV-based protocols,
+   substitute the protocol's service and protocol types in place of
+   "_xmpp-client._tcp" (or "_xmpp-server._tcp") in the initial HTTPS GET
+   request.  For instance, to use POSH to verify a IMAP server for the
+   domain "example.com", the HTTPS GET request is:
 
    GET /.well-known/posh._imap._tcp.json HTTP/1.1
    Host: example.com
@@ -542,7 +552,15 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
    the identity of the HTTP server in accordance with [RFC2818].
 
    Additionally, the security of POSH benefits from other HTTP hardening
-   protocols, such as HSTS [RFC6797] and key pinning [KEY-PINNING].
+   protocols, such as HSTS [RFC6797] and key pinning [KEYPIN].
+
+
+
+
+Miller & Saint-Andre   Expires December 05, 2013               [Page 10]
+
+Internet-Draft            XMPP POSH Prooftype                  June 2013
+
 
 10.  IANA Considerations
 
@@ -554,13 +572,6 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
    URI suffix: posh._xmpp-client._tcp.json
 
    Change controller: IETF
-
-
-
-Miller & Saint-Andre   Expires November 29, 2013               [Page 10]
-
-Internet-Draft            XMPP POSH Prooftype                   May 2013
-
 
    Specification document(s): [[ this document ]]
 
@@ -586,8 +597,8 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
    [XMPP-DNA]
               Saint-Andre, P. and M. Miller, "Domain Name Associations
               (DNA) in the Extensible Messaging and Presence Protocol
-              (XMPP)", draft-saintandre-xmpp-dna-02 (work in progress),
-              April 2013.
+              (XMPP)", draft-ietf-xmpp-dna-02 (work in progress), April
+              2013.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
@@ -597,6 +608,15 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
               Transfer Protocol -- HTTP/1.1", RFC 2616, June 1999.
 
    [RFC2818]  Rescorla, E., "HTTP Over TLS", RFC 2818, May 2000.
+
+
+
+
+
+Miller & Saint-Andre   Expires December 05, 2013               [Page 11]
+
+Internet-Draft            XMPP POSH Prooftype                  June 2013
+
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
@@ -609,14 +629,6 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
 
    [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
               Protocol (XMPP): Core", RFC 6120, March 2011.
-
-
-
-
-Miller & Saint-Andre   Expires November 29, 2013               [Page 11]
-
-Internet-Draft            XMPP POSH Prooftype                   May 2013
-
 
    [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
               Verification of Domain-Based Application Service Identity
@@ -631,8 +643,7 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
               Status Code 308 (Permanent Redirect)", draft-reschke-http-
               status-308-07 (work in progress), March 2012.
 
-   [KEY-PINNING]
-              Evans, C., Palmer, C., and R. Sleevi, "Public Key Pinning
+   [KEYPIN]   Evans, C., Palmer, C., and R. Sleevi, "Public Key Pinning
               Extension for HTTP", draft-ietf-websec-key-pinning-04
               (work in progress), December 2012.
 
@@ -650,6 +661,24 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
    [RFC6797]  Hodges, J., Jackson, C., and A. Barth, "HTTPS Strict
               Transport Security (HSTS)", RFC 6797, November 2012.
 
+
+
+
+
+
+
+
+
+Miller & Saint-Andre   Expires December 05, 2013               [Page 12]
+
+Internet-Draft            XMPP POSH Prooftype                  June 2013
+
+
+Appendix A.  Acknowledgements
+
+   Thanks to Dave Cridland, Max Pritikin, and Joe Salowey for their
+   feedback.
+
 Authors' Addresses
 
    Matthew Miller
@@ -659,19 +688,6 @@ Authors' Addresses
    USA
 
    Email: mamille2@cisco.com
-
-
-
-
-
-
-
-
-
-
-Miller & Saint-Andre   Expires November 29, 2013               [Page 12]
-
-Internet-Draft            XMPP POSH Prooftype                   May 2013
 
 
    Peter Saint-Andre
@@ -708,20 +724,4 @@ Internet-Draft            XMPP POSH Prooftype                   May 2013
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Miller & Saint-Andre   Expires November 29, 2013               [Page 13]
+Miller & Saint-Andre   Expires December 05, 2013               [Page 13]

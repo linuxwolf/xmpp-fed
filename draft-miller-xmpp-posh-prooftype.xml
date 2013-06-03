@@ -73,7 +73,7 @@ Host: im.example.com
         </list>
       -->
         <list style="numbers">
-          <t>The initiating entity performs an HTTPS GET at the source domain to the path "/.well-known/posh._&lt;service&gt;._&gt;protocol&gt;.json"; where "_&lt;service&gt;" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections, and "_&lt;protocol&gt;" MUST be "_tcp".<vspace blankLines='1'/></t>
+          <t>The initiating entity performs an HTTPS GET at the source domain to the path "/.well-known/posh.{service}.{protocol}.json"; where "{service}" MUST be either "_xmpp-client" for XMPP client-to-server connections or "_xmpp-server" for XMPP server-to-server connections, and "{protocol}" MUST be "_tcp".<vspace blankLines='1'/></t>
           <t>The source domain HTTPS server responds in one of three ways:<vspace blankLines="1"/>
             <list style="symbols">
               <t>It possesses a PKIX certificate for the requested path. The process is detailed in <xref target="prooftype-possess"/>.<vspace blankLines="1"/></t>
@@ -168,8 +168,7 @@ Content-Length: 2785
 ]]></artwork>
           </figure>
         </t>
-        <t>The initiating entity uses the provided certificate to verify the TLS connection. The TLS certificate MUST match the POSH certificate, such as comparing a cryptographic hash of the DER encoding of the certificates.</t>
-        <t>[[ AUTHOR NOTE: WHY ARE WE TALKING ABOUT DER ENCODING HERE? ]]</t>
+        <t>The initiating entity uses the provided certificate to verify the TLS connection. The TLS certificate MUST match the POSH certificate.</t>
         <t>The initiating entity MAY verify the certificate chain provided in the JWK, but it SHOULD consider the final issuer certificate to be a trust anchor for the purposes of this verification only. Once verified, the initiating entity MUST NOT continue to treat this final issuer certificate as a trust anchor.</t>
       </section>
       <section title="References PKIX Certificate" anchor="prooftype-ref">
@@ -187,6 +186,7 @@ Location: https://hosting.example.net/.well-known
         <t>The client follows the redirect and performs actions appropriate to the new response, whether it is a possession or reference.</t>
         <t>Care needs to be taken regarding the redirect mechanism is used for delegation. Clients might remember the redirected location in place of the original, which can lead to verification mismatches when a source domain is migrated to a different delegated domain.</t>
         <t>To mitigate this concern, source domains SHOULD use only temporary redirect mechanisms, such as HTTP status codes 302 (Found) and 307 (Temporary Redirect). Clients MAY treat any redirect as temporary, ignoring the specific semantics for 301 (Moved Permanently) or 308 (Permanent Redirect) <xref target="HTTP-STATUS-308"/>.</t>
+        <t>To protect against circular references, clients MUST NOT follow an infinite number of redirects. It is RECOMMENDED that clients follow no more than 5 redirects.</t>
         <t>Additional security mechanisms might also be advisable, such as HTTP Strict Transport Security <xref target='RFC6797'/> and key pinning <xref target='KEYPIN'/>.</t>
       </section>
     </section>
