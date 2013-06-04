@@ -5,7 +5,7 @@
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="4"?>
-<rfc category="std" docName="draft-miller-xmpp-posh-prooftype-03" ipr="trust200902">
+<rfc category="std" docName="draft-miller-posh-00" ipr="trust200902">
   <front>
     <title abbrev="POSH">PKIX over Secure HTTP (POSH)</title>
     <author initials="M." surname="Miller" fullname="Matthew Miller">
@@ -194,10 +194,16 @@ Location: https://hosting.example.net/.well-known
           </figure>
         </t>
         <t>The client follows the redirect and performs actions appropriate to the new response, whether it is a possession or reference.</t>
-        <t>Care needs to be taken regarding the redirect mechanism is used for delegation.  Clients might remember the redirected location in place of the original, which can lead to verification mismatches when a source domain is migrated to a different delegated domain.</t>
-        <t>To mitigate this concern, source domains SHOULD use only temporary redirect mechanisms, such as HTTP status codes 302 (Found) and 307 (Temporary Redirect). Clients MAY treat any redirect as temporary, ignoring the specific semantics for 301 (Moved Permanently) or 308 (Permanent Redirect) <xref target="HTTP-STATUS-308"/>.</t>
-        <t>To protect against circular references, clients MUST NOT follow an infinite number of redirects.  It is RECOMMENDED that clients follow no more than 5 redirects.</t>
-        <t>Additional security mechanisms might also be advisable, such as HTTP Strict Transport Security <xref target='RFC6797'/> and key pinning <xref target='KEYPIN'/>.</t>
+        <section title="Redirect Status Codes" anchor="prooftype-ref-statuscodes">
+          <t>Care needs to be taken regarding the redirect mechanism is used for delegation.  Clients might remember the redirected location in place of the original, which can lead to verification mismatches when a source domain is migrated to a different delegated domain.</t>
+          <t>To mitigate this concern, source domains SHOULD use only temporary redirect mechanisms, such as HTTP status codes 302 (Found) and 307 (Temporary Redirect). Clients MAY treat any redirect as temporary, ignoring the specific semantics for 301 (Moved Permanently) or 308 (Permanent Redirect) <xref target="HTTP-STATUS-308"/>.</t>
+        </section>
+        <section title="Redirect Depth" anchor="prooftype-ref-depth">
+          <t>To protect against circular references, clients MUST NOT follow an infinite number of redirects.  It is RECOMMENDED that clients follow no more than 10 redirects, although applications or implementations can require fewer redirects be followed.</t>
+        </section>
+      </section>
+      <section title="Additional Security Mechanisms" anchor="prooftype-more-sec">
+        <t>POSH can benefit from additional HTTPS security mechanisms, such as HTTP Strict Transport Security <xref target='RFC6797'/> and key pinning <xref target='KEYPIN'/>, especially if the TLS client shares some information with a common HTTPS implementation (e.g., platform-default web browser).</t>
       </section>
     </section>
 
