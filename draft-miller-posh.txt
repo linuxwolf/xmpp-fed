@@ -1,11 +1,10 @@
 
 
 
-
-XMPP                                                           M. Miller
+Network Working Group                                          M. Miller
 Internet-Draft                                            P. Saint-Andre
 Intended status: Standards Track                     Cisco Systems, Inc.
-Expires: December 06, 2013                                 June 04, 2013
+Expires: December 6, 2013                                   June 4, 2013
 
 
                       PKIX over Secure HTTP (POSH)
@@ -19,10 +18,10 @@ Abstract
    server's end-entity certificate over secure HTTP as an alternative to
    standard Public Key Infrastructure using X.509 (PKIX) and DNS-Based
    Authentication of Named Entities (DANE).  The second method enables a
-   source domain to secure delegate an application to a derived domain
+   source domain to securely delegate an application to a derived domain
    using HTTPS redirects.
 
-Status of This Memo
+Status of this Memo
 
    This Internet-Draft is submitted in full conformance with the
    provisions of BCP 78 and BCP 79.
@@ -37,7 +36,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 06, 2013.
+   This Internet-Draft will expire on December 6, 2013.
 
 Copyright Notice
 
@@ -53,7 +52,7 @@ Copyright Notice
 
 
 
-Miller & Saint-Andre   Expires December 06, 2013                [Page 1]
+Miller & Saint-Andre    Expires December 6, 2013                [Page 1]
 
 Internet-Draft                    POSH                         June 2013
 
@@ -62,58 +61,79 @@ Internet-Draft                    POSH                         June 2013
    the Trust Legal Provisions and are provided without warranty as
    described in the Simplified BSD License.
 
+
 Table of Contents
 
-   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
-   3.  Obtaining Verification Materials  . . . . . . . . . . . . . .   3
-     3.1.  Source Domain Possesses PKIX Certificate  . . . . . . . .   5
-     3.2.  Source Domain References PKIX Certificate . . . . . . . .   7
-       3.2.1.  Redirect Status Codes . . . . . . . . . . . . . . . .   7
-       3.2.2.  Redirect Depth  . . . . . . . . . . . . . . . . . . .   7
-     3.3.  Additional Security Mechanisms  . . . . . . . . . . . . .   8
-   4.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . .   8
-   5.  Order of Operations . . . . . . . . . . . . . . . . . . . . .   8
-   6.  Caching Results . . . . . . . . . . . . . . . . . . . . . . .   8
-   7.  Alternates and Roll-over  . . . . . . . . . . . . . . . . . .   8
-   8.  Security Considerations . . . . . . . . . . . . . . . . . . .  11
-   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
-     9.1.  The "posh._xmpp-client._tcp.json" Well-Known URI  . . . .  11
-     9.2.  The "posh._xmpp-server._tcp.json" Well-Known URI  . . . .  12
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  12
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  13
-   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  13
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
+   1.  Introduction . . . . . . . . . . . . . . . . . . . . . . . . .  3
+   2.  Terminology  . . . . . . . . . . . . . . . . . . . . . . . . .  4
+   3.  Obtaining Verification Materials . . . . . . . . . . . . . . .  4
+     3.1.  Source Domain Possesses PKIX Certificate . . . . . . . . .  5
+     3.2.  Source Domain References PKIX Certificate  . . . . . . . .  7
+       3.2.1.  Redirect Status Codes  . . . . . . . . . . . . . . . .  8
+       3.2.2.  Redirect Depth . . . . . . . . . . . . . . . . . . . .  8
+     3.3.  Additional Security Mechanisms . . . . . . . . . . . . . .  8
+   4.  Secure Delegation  . . . . . . . . . . . . . . . . . . . . . .  8
+   5.  Order of Operations  . . . . . . . . . . . . . . . . . . . . .  8
+   6.  Caching Results  . . . . . . . . . . . . . . . . . . . . . . .  9
+   7.  Alternates and Roll-over . . . . . . . . . . . . . . . . . . .  9
+   8.  Security Considerations  . . . . . . . . . . . . . . . . . . . 12
+   9.  IANA Considerations  . . . . . . . . . . . . . . . . . . . . . 12
+     9.1.  The "posh._xmpp-client._tcp.json" Well-Known URI . . . . . 12
+     9.2.  The "posh._xmpp-server._tcp.json" Well-Known URI . . . . . 12
+   10. References . . . . . . . . . . . . . . . . . . . . . . . . . . 13
+     10.1. Normative References . . . . . . . . . . . . . . . . . . . 13
+     10.2. Informative References . . . . . . . . . . . . . . . . . . 13
+   Appendix A.  Acknowledgements  . . . . . . . . . . . . . . . . . . 14
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 14
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre    Expires December 6, 2013                [Page 2]
+
+Internet-Draft                    POSH                         June 2013
+
 
 1.  Introduction
 
    Channel encryption with TLS depends on proper checking of the
-   server's identity, as specified in [RFC2818] or [RFC6125] for Public
-   Key Infrastructure using X.509 (PKIX) [RFC5280] and in [RFC6698] for
-   DNS-Based Authentication of Named Entities (DANE).  However, in
-   multi-tenanted environments it is effectively impossible for a
-   hosting service to offer the correct PKIX certificates on behalf of a
-   hosted domain, since neither party wants the hosting service to hold
-   the hosted domain's private keys.  As a result, typically the hosting
-   service offers its own PKIX certificate (say, for
-   hosting.example.net), which means that TLS clients need to "just
-   know" that the hosted domain (say, foo.example.com) is offered at the
-   hosting service rather than the hosted domain.  Further background
-   information on this problem can be found in [XMPP-DNA].
+   server's identity, as specified in [RFC6125] or its application-
+   specific equivalent for Public Key Infrastructure using X.509 (PKIX)
+   [RFC5280] and in [RFC6698] for DNS-Based Authentication of Named
+   Entities (DANE).  However, in multi-tenanted environments it is
+   effectively impossible for a hosting service to offer the correct
+   PKIX certificates on behalf of a hosted domain, since neither party
+   wants the hosting service to hold the hosted domain's private keys.
+   As a result, typically the hosting service offers its own PKIX
+   certificate (say, for hosting.example.net), which means that TLS
+   clients need to "just know" that the hosted domain (say,
+   foo.example.com) is offered at the hosting service rather than the
+   hosted domain.  Further background information on this problem can be
+   found in [XMPP-DNA].
 
    This situation is clearly insecure.  It is true that DNS-based
    technologies are emerging for secure delegation, in the form of DNS
    SRV records [RFC2782] or their functional equivalent when DNS
    Security [RFC4033] is used, along with DNS-Based Authentication of
-
-
-
-Miller & Saint-Andre   Expires December 06, 2013                [Page 2]
-
-Internet-Draft                    POSH                         June 2013
-
-
    Named Entities (DANE) [RFC6698].  However, these technologies are not
    yet widely deployed and might not be deployed in the near future for
    domains outside the most common top-level domains.  Hosting services
@@ -122,7 +142,8 @@ Internet-Draft                    POSH                         June 2013
    checking on the Internet today.
 
    POSH (PKIX Over Secure HTTP) provides two interconnected methods for
-   solving the problem with application protocols other than HTTP:
+   solving the problem, at least with application protocols other than
+   HTTP:
 
    1.  A TLS client retrieves the material to be used in checking the
        TLS server's identity by requesting it from a well-known HTTPS
@@ -131,8 +152,22 @@ Internet-Draft                    POSH                         June 2013
        JOSE WG.
 
    2.  If a hosted domain securely delegates an application to a hosting
-       service, it redirects requests for the well-known HTTPS URI to an
-       HTTPS URI at the hosting service.
+       service, it redirects all requests for the well-known HTTPS URI
+       to an HTTPS URI at the hosting service.
+
+   The discussion venue for this document is the posh@ietf.org mailing
+   list; visit https://www.ietf.org/mailman/listinfo/posh for
+   subscription information and discussion archives.
+
+
+
+
+
+
+Miller & Saint-Andre    Expires December 6, 2013                [Page 3]
+
+Internet-Draft                    POSH                         June 2013
+
 
 2.  Terminology
 
@@ -155,24 +190,22 @@ Internet-Draft                    POSH                         June 2013
    "OPTIONAL" in this document are to be interpreted as described in
    [RFC2119].
 
+
 3.  Obtaining Verification Materials
 
-   Server identity checking (see [RFC6125] involves three different
-   aspects: a proof of the TLS server's identity (in PKIX, this takes
-   the form of a PKIX certificate), rules for checking the certificate
-   (which vary by application protocol, although [RFC6125] attempts to
-   harmonize those rules), and the materials that a TLS client uses to
+   Server identity checking (see [RFC6125]) involves three different
+   aspects:
 
-
-
-Miller & Saint-Andre   Expires December 06, 2013                [Page 3]
-
-Internet-Draft                    POSH                         June 2013
-
-
-   verify the TLS server's identity or check the TLS server's proof (in
-   PKIX, this takes the form of chaining the end-entity certificate back
-   to a trusted root).
+   1.  A proof of the TLS server's identity (in PKIX, this takes the
+       form of a PKIX certificate [RFC5280]).
+   2.  Rules for checking the certificate (which vary by application
+       protocol, although [RFC6125] attempts to harmonize those rules).
+   3.  The materials that a TLS client uses to verify the TLS server's
+       identity or check the TLS server's proof (in PKIX, this takes the
+       form of chaining the end-entity certificate back to a trusted
+       root and performing all validity checks as described in
+       [RFC5280], [RFC6125], and the relevant application protocol
+       specification).
 
    When POSH is used, the first two aspects remain the same: the TLS
    server proves it identity by presenting a PKIX certificate [RFC5280]
@@ -185,46 +218,39 @@ Internet-Draft                    POSH                         June 2013
    HTTPS retrieval mechanism relies on the chain of trust based on the
    public key infrastructure.)
 
+
+
+Miller & Saint-Andre    Expires December 6, 2013                [Page 4]
+
+Internet-Draft                    POSH                         June 2013
+
+
    The process for retrieving a PKIX certificate over secure HTTP is as
    follows.
 
    1.  The TLS client performs an HTTPS GET at the source domain to the
        path "/.well-known/posh.{service}.{protocol}.json".  For example,
        if the application protocol is XMPP then the "{service}" is
-       either "_xmpp-client" for XMPP client-to-server connections or
-       "_xmpp-server" for XMPP server-to-server connections, and the
-       "{protocol}" is "_tcp"; thus if an XMPP client were to use POSH
-       to verify an XMPP server for the domain "im.example.com", the
-       HTTPS GET request would be as follows:
-
+       either "_xmpp-client" for XMPP client-to-server connections, and
+       the "{protocol}" is "_tcp"; thus if an XMPP client were to use
+       POSH to verify an XMPP server for the domain "im.example.com",
+       the HTTPS GET request would be as follows:
 
 
    GET /.well-known/posh._xmpp-client._tcp.json HTTP/1.1
    Host: im.example.com
 
 
-
    2.  The source domain HTTPS server responds in one of three ways:
 
+       *  If it possesses a PKIX certificate for the requested path, it
+          responds as detailed in Section 3.1.
 
-       *  It possesses a PKIX certificate for the requested path.  The
-          process is detailed in Section 3.1.
+       *  If it has a reference to where the PKIX certificate can be
+          obtained, it responds as detailed in Section 3.2.
 
-
-       *  It has a reference to where the PKIX certificate can be
-          obtained.  The process is detailed in Section 3.2.
-
-
-       *  It does not have any PKIX certificate for the requested path.
-          The HTTPS service responds with a client error status code
-          (e.g., 404).
-
-
-
-Miller & Saint-Andre   Expires December 06, 2013                [Page 4]
-
-Internet-Draft                    POSH                         June 2013
-
+       *  If it does not have any PKIX certificate for the requested
+          path, it responds with a client error status code (e.g., 404).
 
 3.1.  Source Domain Possesses PKIX Certificate
 
@@ -236,10 +262,8 @@ Internet-Draft                    POSH                         June 2013
    o  The "kty" field set to the appropriate key type (e.g., "RSA" for a
       certificate using an RSA key).
 
-
    o  The required fields for the key type (e.g., "n" and "e" for a
       certificate using an RSA key).
-
 
    o  The "x5c" field set to the certificate chain.
 
@@ -248,6 +272,14 @@ Internet-Draft                    POSH                         June 2013
    HTTP/1.1 200 OK
    Content-Type: application/jwk-set+json
    Content-Length: 2785
+
+
+
+
+Miller & Saint-Andre    Expires December 6, 2013                [Page 5]
+
+Internet-Draft                    POSH                         June 2013
+
 
    {
      "keys": [
@@ -274,14 +306,6 @@ Internet-Draft                    POSH                         June 2013
             AJRX+1T5g2D7MTozWWFk4TlpgzAR5slvM0tc35qAI9I0Cqk4ZLChQ
             rYsWuY7alTrnNXdusHUYc6Eq89DZaH2knTcp57wAXzJPIG/tpBi5F
             7ck9LVRvRjybix0HJ7i4YrL+GeLuSgrjO4+GDcXIp8oV0FMKZH+No
-
-
-
-Miller & Saint-Andre   Expires December 06, 2013                [Page 5]
-
-Internet-Draft                    POSH                         June 2013
-
-
             MfUITlWYl/JcX1D0WUAiuAnvWtD4Kh/qMJU6FZuupZGHqPdc3vrXt
             p27LWgxzxjFa9qnOU6y53vCCJXLLI5sy2fCwEDzLJqh2T6UItIzjr
             SUZMIsK8r2pXkroI0uYuNn3Wy+jAzK8CAwEAAaN4MHYwDAYDVR0TA
@@ -305,6 +329,14 @@ Internet-Draft                    POSH                         June 2013
             vog0gDhigjPEZDV9S+zm63Ia+eqJ3ROT9jDXjtF6s/IawITf5cPSN
             xn8qP8w+vbiy0rB4W4Nk1Dwji7KJ/wKNo0mwOx/qWNjSk3yoaU4sU
             EuIypizgLxKAr25vVvAJAxF6HAfdQoVAIdCZ/7qbBPI7aurdU/Ndm
+
+
+
+Miller & Saint-Andre    Expires December 6, 2013                [Page 6]
+
+Internet-Draft                    POSH                         June 2013
+
+
             bbKBK0lp8aV1MYLzz8DI0hWcBQa2+gOSUcd/yT1az7UpMjGllbnVl
             UDxyJeCzbBaHny5NlWWHsGnsbucbM+9yeAMbRes/z0KeHxcRtomd8
             bh7As12RIXKrk5GRoNVKAoiwLQIDAQABo1IwUDAPBgNVHRMBAf8EB
@@ -323,20 +355,11 @@ Internet-Draft                    POSH                         June 2013
    }
 
 
-
    The TLS client uses the provided certificate to verify the TLS
    connection to the TLS server.  In order for the TLS client to verify
    the identity of the TLS server, it MUST ensure that the PKIX
    certificate presented by the TLS server during the TLS negotiation
    matches the certificate that it obtained via POSH.
-
-
-
-
-Miller & Saint-Andre   Expires December 06, 2013                [Page 6]
-
-Internet-Draft                    POSH                         June 2013
-
 
    The TLS client MAY verify the certificate chain provided in the JWK,
    but it SHOULD consider the final issuer certificate to be a trust
@@ -348,18 +371,27 @@ Internet-Draft                    POSH                         June 2013
 
    If the source domain HTTPS server has a reference to the certificate
    information, it responds to the HTTPS GET with a redirect status code
-   (e.g., 302, 303, 307, or 308), and include a 'Location' header which
-   MUST specify an HTTPS URL.
+   (e.g., 302, 303, 307, or 308), and includes a 'Location' header,
+   which MUST specify an HTTPS URL.
 
    Example Redirect Response
 
    HTTP/1.1 302 Found
    Location: https://hosting.example.net/.well-known
-             /posh._xmpp-server._tcp.json
+             /posh._xmpp-client._tcp.json
+
+   The client follows the redirect, the HTTPS server for the URI at
+   which the client has been redirected responds to the request, and the
+   client performs actions appropriate to the new response (whether it
+   is a possession, a reference, or another redirect).
 
 
-   The client follows the redirect and performs actions appropriate to
-   the new response, whether it is a possession or reference.
+
+
+Miller & Saint-Andre    Expires December 6, 2013                [Page 7]
+
+Internet-Draft                    POSH                         June 2013
+
 
 3.2.1.  Redirect Status Codes
 
@@ -371,7 +403,7 @@ Internet-Draft                    POSH                         June 2013
    To mitigate this concern, source domains SHOULD use only temporary
    redirect mechanisms, such as HTTP status codes 302 (Found) and 307
    (Temporary Redirect).  Clients MAY treat any redirect as temporary,
-   ignoring the specific semantics for 301 (Moved Permanently) or 308
+   ignoring the specific semantics for 301 (Moved Permanently) and 308
    (Permanent Redirect) [HTTP-STATUS-308].
 
 3.2.2.  Redirect Depth
@@ -379,20 +411,7 @@ Internet-Draft                    POSH                         June 2013
    To protect against circular references, clients MUST NOT follow an
    infinite number of redirects.  It is RECOMMENDED that clients follow
    no more than 10 redirects, although applications or implementations
-   can require fewer redirects be followed.
-
-
-
-
-
-
-
-
-
-Miller & Saint-Andre   Expires December 06, 2013                [Page 7]
-
-Internet-Draft                    POSH                         June 2013
-
+   can require that fewer redirects be followed.
 
 3.3.  Additional Security Mechanisms
 
@@ -401,6 +420,7 @@ Internet-Draft                    POSH                         June 2013
    especially if the TLS client shares some information with a common
    HTTPS implementation (e.g., platform-default web browser).
 
+
 4.  Secure Delegation
 
    The delegation from the source domain to the delegated domain can be
@@ -408,11 +428,12 @@ Internet-Draft                    POSH                         June 2013
    matches the POSH certificate, regardless of how the POSH certificates
    are obtained.
 
+
 5.  Order of Operations
 
    POSH processes MUST be complete before the end of the TLS handshake
    for the application protocol, so that the TLS client can perform
-   verification of reference identities.  Ideally a TLS client ought to
+   verification of reference identifiers.  Ideally a TLS client ought to
    perform the POSH processes in parallel with other application-level
    negotiation; this is sometimes called the "happy eyeballs" approach,
    similar to [RFC6555] for IPv4 and IPv6.  However, a TLS client might
@@ -421,20 +442,28 @@ Internet-Draft                    POSH                         June 2013
    client might not open the socket connection until it retrieves the
    PKIX certificates via POSH.
 
+
+
+Miller & Saint-Andre    Expires December 6, 2013                [Page 8]
+
+Internet-Draft                    POSH                         June 2013
+
+
 6.  Caching Results
 
    Ideally, the TLS client relies on the expiration time of the
    certificate obtained via POSH, and not on HTTP caching mechanisms.
    To that end, the HTTPS servers for source and derived domains SHOULD
    specify a 'Cache-Control' header indicating a short duration (e.g.,
-   max-age=60) or "no-cache" to indicate the response (redirect or
+   max-age=60) or "no-cache" to indicate that the response (redirect or
    content) is not appropriate to cache at the HTTP level.
+
 
 7.  Alternates and Roll-over
 
    To indicate alternate PKIX certificates (such as when an existing
-   certificate will soon expire), the returned JWK Set MAY contain
-   multiple JWK objects.  The JWK Set SHOULD be ordered with the most
+   certificate will soon expire), the returned JWK set MAY contain
+   multiple JWK objects.  The JWK set SHOULD be ordered with the most
    relevant certificate first as determined by the application service
    operator (e.g., the renewed certificate), followed by the next most
    relevant certificate (e.g., the certificate soonest to expire).  Here
@@ -442,14 +471,6 @@ Internet-Draft                    POSH                         June 2013
 
    {
      "keys":[
-
-
-
-Miller & Saint-Andre   Expires December 06, 2013                [Page 8]
-
-Internet-Draft                    POSH                         June 2013
-
-
        {
          "kty": "RSA",
          "kid": "hosting.example.net:2011-07-04",
@@ -476,6 +497,14 @@ Internet-Draft                    POSH                         June 2013
             MRU9FQIbqlMoBdCkvGaMnmgb0z3VE/Xuey5B4Ts2DQCngEGfmGhyi
             OR+2HCBtfiWoEx5ykECeTLmOfqyWbNL+sv4vD7/yFSV1pM8P0weUc
             +u9yxFXm7DzArkwHpDJ9LrAXhvQqPZO9hx42UQIDAQABo08wTTAMB
+
+
+
+Miller & Saint-Andre    Expires December 6, 2013                [Page 9]
+
+Internet-Draft                    POSH                         June 2013
+
+
             gNVHRMBAf8EAjAAMB0GA1UdDgQWBBQ/veMa6XwrIaUv8Y7PmW0RyA
             Um9jALBgNVHQ8EBAMCBeAwEQYJYIZIAYb4QgEBBAQDAgZAMA0GCSq
             GSIb3DQEBBQUAA4IBAQA7V50iyHg8+l2UBkFa8l6APKQ5zL2qN8d3
@@ -498,14 +527,6 @@ Internet-Draft                    POSH                         June 2013
             bbKBK0lp8aV1MYLzz8DI0hWcBQa2+gOSUcd/yT1az7UpMjGllbnVl
             UDxyJeCzbBaHny5NlWWHsGnsbucbM+9yeAMbRes/z0KeHxcRtomd8
             bh7As12RIXKrk5GRoNVKAoiwLQIDAQABo1IwUDAPBgNVHRMBAf8EB
-
-
-
-Miller & Saint-Andre   Expires December 06, 2013                [Page 9]
-
-Internet-Draft                    POSH                         June 2013
-
-
             TADAQH/MB0GA1UdDgQWBBSyiet77RfWpH3X8NMwGFVu2ldJPTALBg
             NVHQ8EBAMCAQYwEQYJYIZIAYb4QgEBBAQDAgAHMA0GCSqGSIb3DQE
             BBQUAA4IBAQBd1mMx4Wx9xFLqecbjWyy7tOE2+mrWhWxg82q7z3bB
@@ -532,6 +553,14 @@ Internet-Draft                    POSH                         June 2013
          "x5c": [
            "MIIDjTCCAnWgAwIBAgIBBTANBgkqhkiG9w0BAQUFADBGMQswCQYDV
            QQGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbnZ
+
+
+
+Miller & Saint-Andre    Expires December 6, 2013               [Page 10]
+
+Internet-Draft                    POSH                         June 2013
+
+
            lcjETMBEGA1UEAxMKRXhhbXBsZSBDQTAeFw0xMzA1MTcwMDAwMDBaF
            w0xNTA1MTYyMzU5NTlaME8xCzAJBgNVBAYTAlVTMREwDwYDVQQIEwh
            Db2xvcmFkbzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQDExNob3N0a
@@ -554,14 +583,6 @@ Internet-Draft                    POSH                         June 2013
            ufRawLU0+8cJZxrXq/H/YQyoAFB9opw0wEoTIB5aZqI2em4Wjgx9sl
            aonFlLEQysm5qJnhTGxEIDxQfqCcRfw==",
           "MIIDWTCCAkGgAwIBAgIBATANBgkqhkiG9w0BAQUFADBGMQswCQYDVQ
-
-
-
-Miller & Saint-Andre   Expires December 06, 2013               [Page 10]
-
-Internet-Draft                    POSH                         June 2013
-
-
            QGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbnZl
            cjETMBEGA1UEAxMKRXhhbXBsZSBDQTAeFw0xMTA1MDIwMDAwMDBaFw
            0yMzA1MTYyMzU5NTlaMEYxCzAJBgNVBAYTAlVTMREwDwYDVQQIEwhD
@@ -589,6 +610,13 @@ Internet-Draft                    POSH                         June 2013
    }
 
 
+
+
+Miller & Saint-Andre    Expires December 6, 2013               [Page 11]
+
+Internet-Draft                    POSH                         June 2013
+
+
 8.  Security Considerations
 
    This document supplements but does not supersede the security
@@ -600,23 +628,19 @@ Internet-Draft                    POSH                         June 2013
    Additionally, the security of POSH can benefit from other HTTP
    hardening protocols, such as HSTS [RFC6797] and key pinning [KEYPIN].
 
+
 9.  IANA Considerations
 
    Protocols that use POSH MUST register an appropriate well-known URI
-   (or URIs) with the IANA.  The following section registers two such
-   URIs for XMPP.
+   or URIs [RFC5785] with the IANA.  The IANA registration policy
+   [RFC5226] is Specification Required.
+
+   The following sections register two such URIs for XMPP.
 
 9.1.  The "posh._xmpp-client._tcp.json" Well-Known URI
 
    This specification registers the "posh._xmpp-client._tcp.json" well-
    known URI in the Well-Known URI Registry as defined by [RFC5785].
-
-
-
-Miller & Saint-Andre   Expires December 06, 2013               [Page 11]
-
-Internet-Draft                    POSH                         June 2013
-
 
    URI suffix: posh._xmpp-client._tcp.json
 
@@ -635,19 +659,26 @@ Internet-Draft                    POSH                         June 2013
 
    Specification document(s): [[ this document ]]
 
+
 10.  References
+
+
+
+
+
+
+
+Miller & Saint-Andre    Expires December 6, 2013               [Page 12]
+
+Internet-Draft                    POSH                         June 2013
+
 
 10.1.  Normative References
 
    [JOSE-JWK]
-              Jones, M., "JSON Web Key (JWK)", draft-ietf-jose-json-web-
-              key-11 (work in progress), May 2013.
-
-   [XMPP-DNA]
-              Saint-Andre, P. and M. Miller, "Domain Name Associations
-              (DNA) in the Extensible Messaging and Presence Protocol
-              (XMPP)", draft-ietf-xmpp-dna-02 (work in progress), April
-              2013.
+              Jones, M., "JSON Web Key (JWK)",
+              draft-ietf-jose-json-web-key-11 (work in progress),
+              May 2013.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
@@ -664,18 +695,8 @@ Internet-Draft                    POSH                         June 2013
               (CRL) Profile", RFC 5280, May 2008.
 
    [RFC5785]  Nottingham, M. and E. Hammer-Lahav, "Defining Well-Known
-              Uniform Resource Identifiers (URIs)", RFC 5785, April
-              2010.
-
-
-
-Miller & Saint-Andre   Expires December 06, 2013               [Page 12]
-
-Internet-Draft                    POSH                         June 2013
-
-
-   [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
-              Protocol (XMPP): Core", RFC 6120, March 2011.
+              Uniform Resource Identifiers (URIs)", RFC 5785,
+              April 2010.
 
    [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
               Verification of Domain-Based Application Service Identity
@@ -687,8 +708,9 @@ Internet-Draft                    POSH                         June 2013
 
    [HTTP-STATUS-308]
               Reschke, J., "The Hypertext Transfer Protocol (HTTP)
-              Status Code 308 (Permanent Redirect)", draft-reschke-http-
-              status-308-07 (work in progress), March 2012.
+              Status Code 308 (Permanent Redirect)",
+              draft-reschke-http-status-308-07 (work in progress),
+              March 2012.
 
    [KEYPIN]   Evans, C., Palmer, C., and R. Sleevi, "Public Key Pinning
               Extension for HTTP", draft-ietf-websec-key-pinning-04
@@ -699,8 +721,23 @@ Internet-Draft                    POSH                         June 2013
               February 2000.
 
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
-              Rose, "DNS Security Introduction and Requirements", RFC
-              4033, May 2005.
+
+
+
+Miller & Saint-Andre    Expires December 6, 2013               [Page 13]
+
+Internet-Draft                    POSH                         June 2013
+
+
+              Rose, "DNS Security Introduction and Requirements",
+              RFC 4033, May 2005.
+
+   [RFC5226]  Narten, T. and H. Alvestrand, "Guidelines for Writing an
+              IANA Considerations Section in RFCs", BCP 26, RFC 5226,
+              May 2008.
+
+   [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
+              Protocol (XMPP): Core", RFC 6120, March 2011.
 
    [RFC6555]  Wing, D. and A. Yourtchenko, "Happy Eyeballs: Success with
               Dual-Stack Hosts", RFC 6555, April 2012.
@@ -712,22 +749,17 @@ Internet-Draft                    POSH                         June 2013
    [RFC6797]  Hodges, J., Jackson, C., and A. Barth, "HTTPS Strict
               Transport Security (HSTS)", RFC 6797, November 2012.
 
+   [XMPP-DNA]
+              Saint-Andre, P. and M. Miller, "Domain Name Associations
+              (DNA) in the Extensible Messaging and Presence Protocol
+              (XMPP)", draft-ietf-xmpp-dna-02 (work in progress),
+              April 2013.
+
+
 Appendix A.  Acknowledgements
 
    Thanks to Dave Cridland, Max Pritikin, and Joe Salowey for their
    feedback.
-
-
-
-
-
-
-
-
-
-Miller & Saint-Andre   Expires December 06, 2013               [Page 13]
-
-Internet-Draft                    POSH                         June 2013
 
 
 Authors' Addresses
@@ -739,6 +771,18 @@ Authors' Addresses
    USA
 
    Email: mamille2@cisco.com
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre    Expires December 6, 2013               [Page 14]
+
+Internet-Draft                    POSH                         June 2013
 
 
    Peter Saint-Andre
@@ -780,4 +824,17 @@ Authors' Addresses
 
 
 
-Miller & Saint-Andre   Expires December 06, 2013               [Page 14]
+
+
+
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre    Expires December 6, 2013               [Page 15]
+
