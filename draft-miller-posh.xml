@@ -5,7 +5,7 @@
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="4"?>
-<rfc category="std" docName="draft-miller-posh-00" ipr="trust200902">
+<rfc category="std" docName="draft-miller-posh-01" ipr="trust200902">
   <front>
     <title abbrev="POSH">PKIX over Secure HTTP (POSH)</title>
     <author initials="M." surname="Miller" fullname="Matthew Miller">
@@ -359,32 +359,35 @@ Location: https://hosting.example.net/.well-known
       </figure>
     </section>
 
+    <section title="IANA Considerations" anchor="iana">
+      <t>This document registers a well-known URI <xref target='RFC5785'/> for protocols that use POSH.  The completed template follows.</t>
+      <t>
+        <list style='empty'>
+          <t>
+            <list style='hanging'>
+              <t hangText='URI suffix:'>posh.</t>
+              <t hangText='Change controller:'>IETF</t>
+              <t hangText='Specification document:'>[[ this document ]]</t>
+              <t hangText='Related information:'>The "posh." string is merely a prefix and protocols that use POSH need to register particular URIs that are prefixed with the "posh." string.</t>
+            </list>
+          </t>
+        </list>
+      </t>
+      <t>Note that the registered URI is "posh." (with a trailing dot).  This is merely a prefix for protocols that use POSH, which themselves are responsible for registering an appropriate well-known URI or URIs <xref target='RFC5785'/> with the IANA.  The URIs registered by such protocols SHOULD begin with "posh." and end with ".json" (indicating a media type of application/json <xref target='RFC4627'/>).  For POSH-using protocols that have registered a service name with the IANA in accordance with <xref target='RFC6335'/>, the part of the well-known URI between "posh." and ".json" SHOULD be the service name (as an example, the well-known URI for XMPP server-to-server connections would be "posh.xmpp-server.json" since <xref target='RFC6120'/> registered a service name of "xmpp-server").  For POSH-using protocols that have not registered a service name with IANA, the part of the well-known URI between "posh." and ".json" can be any unique string or identifier for the protocol (as an example, the well-known URI for the mythical "example" service could be "posh.example.json").</t>
+      <t>As explained in <xref target='RFC5785'/>, the IANA registration policy <xref target='RFC5226'/> for such well-known URIs is Specification Required.</t>  
+    </section>
+
     <section title="Security Considerations" anchor="security">
       <t>This document supplements but does not supersede the security considerations provided in specifications for application protocols that decide to use POSH (e.g., <xref target="RFC6120"/> and <xref target="RFC6125"/> for XMPP).  Specifically, communication via HTTPS depends on checking the identity of the HTTP server in accordance with <xref target="RFC2818"/>.</t>
       <t>Additionally, the security of POSH can benefit from other HTTP hardening protocols, such as HSTS <xref target="RFC6797"/> and key pinning <xref target="KEYPIN"/>.</t>
     </section>
 
-    <section title="IANA Considerations" anchor="iana">
-      <t>Protocols that use POSH MUST register an appropriate well-known URI or URIs <xref target='RFC5785'/> with the IANA.  The IANA registration policy <xref target='RFC5226'/> is Specification Required.</t>
-      <t>The following sections register two such URIs for XMPP.</t>
-      <section title="The &quot;posh._xmpp-client._tcp.json&quot; Well-Known URI" anchor="iana-posh-client">
-        <t>This specification registers the "posh._xmpp-client._tcp.json" well-known URI in the Well-Known URI Registry as defined by <xref target="RFC5785"/>.</t>
-        <t>URI suffix: posh._xmpp-client._tcp.json</t>
-        <t>Change controller: IETF</t>
-        <t>Specification document(s): [[ this document ]]</t>
-      </section>
-      <section title="The &quot;posh._xmpp-server._tcp.json&quot; Well-Known URI" anchor="iana-posh-server">
-        <t>This specification registers the "posh._xmpp-server._tcp.json" well-known URI in the Well-Known URI Registry as defined by <xref target="RFC5785"/>.</t>
-        <t>URI suffix: posh._xmpp-server._tcp.json</t>
-        <t>Change controller: IETF</t>
-        <t>Specification document(s): [[ this document ]]</t>
-      </section>
-    </section>
-
   </middle>
 
   <back>
+
     <references title="Normative References">
+
       <reference anchor="JOSE-JWK">
         <front>
           <title>JSON Web Key (JWK)</title>
@@ -399,6 +402,7 @@ Location: https://hosting.example.net/.well-known
         <seriesInfo name="Internet-Draft" value="draft-ietf-jose-json-web-key-11"/>
         <format type="TXT" target="http://tools.ietf.org/html/draft-ietf-jose-json-web-key-11.txt"/>
       </reference>
+
       <reference anchor="RFC2119">
         <front>
           <title abbrev="RFC Key Words">Key words for use in RFCs to Indicate Requirement Levels</title>
@@ -427,6 +431,7 @@ Location: https://hosting.example.net/.well-known
         <seriesInfo name="BCP" value="14"/>
         <seriesInfo name="RFC" value="2119"/>
       </reference>
+
       <reference anchor="RFC2616">
         <front>
           <title abbrev="HTTP/1.1">Hypertext Transfer Protocol -- HTTP/1.1</title>
@@ -549,6 +554,7 @@ Location: https://hosting.example.net/.well-known
         <format type="HTML" octets="636125" target="http://xml.resource.org/public/rfc/html/rfc2616.html"/>
         <format type="XML" octets="493420" target="http://xml.resource.org/public/rfc/xml/rfc2616.xml"/>
       </reference>
+
       <reference anchor="RFC2818">
         <front>
           <title>HTTP Over TLS</title>
@@ -563,6 +569,19 @@ Location: https://hosting.example.net/.well-known
         <seriesInfo name="RFC" value="2818"/>
         <format type="TXT" octets="15170" target="http://www.rfc-editor.org/rfc/rfc2818.txt"/>
       </reference>
+
+<reference anchor='RFC4627'>
+<front>
+<title>The application/json Media Type for JavaScript Object Notation (JSON)</title>
+<author initials='D.' surname='Crockford' fullname='D. Crockford'>
+<organization /></author>
+<date year='2006' month='July' />
+<abstract>
+<t>JavaScript Object Notation (JSON) is a lightweight, text-based, language-independent data interchange format.  It was derived from the ECMAScript Programming Language Standard.  JSON defines a small set of formatting rules for the portable representation of structured data.  This memo provides information for the Internet community.</t></abstract></front>
+<seriesInfo name='RFC' value='4627' />
+<format type='TXT' octets='16319' target='http://www.rfc-editor.org/rfc/rfc4627.txt' />
+</reference>
+
       <reference anchor="RFC5280">
         <front>
           <title>Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile</title>
@@ -592,6 +611,7 @@ Location: https://hosting.example.net/.well-known
         <seriesInfo name="RFC" value="5280"/>
         <format type="TXT" octets="352580" target="ftp://ftp.isi.edu/in-notes/rfc5280.txt"/>
       </reference>
+
       <reference anchor="RFC5785">
         <front>
           <title>Defining Well-Known Uniform Resource Identifiers (URIs)</title>
@@ -609,6 +629,7 @@ Location: https://hosting.example.net/.well-known
         <seriesInfo name="RFC" value="5785"/>
         <format type="TXT" octets="13779" target="http://www.rfc-editor.org/rfc/rfc5785.txt"/>
       </reference>
+
       <reference anchor="RFC6125">
         <front>
           <title>Representation and Verification of Domain-Based Application Service Identity within Internet Public Key Infrastructure Using X.509 (PKIX) Certificates in the Context of Transport Layer Security (TLS)</title>
@@ -629,9 +650,11 @@ Location: https://hosting.example.net/.well-known
         <seriesInfo name="RFC" value="6125"/>
         <format type="TXT" target="http://tools.ietf.org/rfc/rfc6125.txt"/>
       </reference>
+
     </references>
 
     <references title="Informative References">
+
       <reference anchor="HTTP-STATUS-308">
         <front>
           <title>The Hypertext Transfer Protocol (HTTP) Status Code 308 (Permanent Redirect)</title>
@@ -646,6 +669,7 @@ Location: https://hosting.example.net/.well-known
         <seriesInfo name="Internet-Draft" value="draft-reschke-http-status-308-07"/>
         <format type="TXT" target="http://tools.ietf.org/html/draft-reschke-http-status-308-07.txt"/>
       </reference>
+
       <reference anchor="KEYPIN">
         <front>
           <title>Public Key Pinning Extension for HTTP</title>
@@ -672,6 +696,7 @@ Location: https://hosting.example.net/.well-known
         <seriesInfo name="Internet-Draft" value="draft-ietf-websec-key-pinning-04"/>
         <format type="TXT" target="http://tools.ietf.org/html/draft-ietf-websec-key-pinning-04.txt"/>
       </reference>
+
 <reference anchor='RFC2782'>
 <front>
 <title abbrev='DNS SRV RR'>A DNS RR for specifying the location of services (DNS SRV)</title>
@@ -714,6 +739,7 @@ Location: https://hosting.example.net/.well-known
 <seriesInfo name='RFC' value='2782' />
 <format type='TXT' octets='24013' target='http://www.rfc-editor.org/rfc/rfc2782.txt' />
 </reference>
+
       <reference anchor="RFC4033">
         <front>
           <title>DNS Security Introduction and Requirements</title>
@@ -752,6 +778,7 @@ Location: https://hosting.example.net/.well-known
         <seriesInfo name="RFC" value="4033"/>
         <format type="TXT" target="http://tools.ietf.org/rfc/rfc4033.txt"/>
       </reference>
+
 <reference anchor='RFC5226'>
 <front>
 <title>Guidelines for Writing an IANA Considerations Section in RFCs</title>
@@ -766,6 +793,7 @@ Location: https://hosting.example.net/.well-known
 <seriesInfo name='RFC' value='5226' />
 <format type='TXT' octets='66160' target='http://www.rfc-editor.org/rfc/rfc5226.txt' />
 </reference>
+
       <reference anchor="RFC6120">
         <front>
           <title>Extensible Messaging and Presence Protocol (XMPP): Core</title>
@@ -780,6 +808,28 @@ Location: https://hosting.example.net/.well-known
         <seriesInfo name="RFC" value="6120"/>
         <format type="TXT" target="http://tools.ietf.org/rfc/rfc6120.txt"/>
       </reference>
+
+<reference anchor='RFC6335'>
+<front>
+<title>Internet Assigned Numbers Authority (IANA) Procedures for the Management of the Service Name and Transport Protocol Port Number Registry</title>
+<author initials='M.' surname='Cotton' fullname='M. Cotton'>
+<organization /></author>
+<author initials='L.' surname='Eggert' fullname='L. Eggert'>
+<organization /></author>
+<author initials='J.' surname='Touch' fullname='J. Touch'>
+<organization /></author>
+<author initials='M.' surname='Westerlund' fullname='M. Westerlund'>
+<organization /></author>
+<author initials='S.' surname='Cheshire' fullname='S. Cheshire'>
+<organization /></author>
+<date year='2011' month='August' />
+<abstract>
+<t>This document defines the procedures that the Internet Assigned Numbers Authority (IANA) uses when handling assignment and other requests related to the Service Name and Transport Protocol Port Number registry. It also discusses the rationale and principles behind these procedures and how they facilitate the long-term sustainability of the registry.&lt;/t>&lt;t> This document updates IANA's procedures by obsoleting the previous UDP and TCP port assignment procedures defined in Sections 8 and 9.1 of the IANA Allocation Guidelines, and it updates the IANA service name and port assignment procedures for UDP-Lite, the Datagram Congestion Control Protocol (DCCP), and the Stream Control Transmission Protocol (SCTP). It also updates the DNS SRV specification to clarify what a service name is and how it is registered. This memo documents an Internet Best Current Practice.</t></abstract></front>
+<seriesInfo name='BCP' value='165' />
+<seriesInfo name='RFC' value='6335' />
+<format type='TXT' octets='79088' target='http://www.rfc-editor.org/rfc/rfc6335.txt' />
+</reference>
+
       <reference anchor='RFC6555'>
         <front>
           <title>Happy Eyeballs: Success with Dual-Stack Hosts</title>
@@ -793,6 +843,7 @@ Location: https://hosting.example.net/.well-known
         <seriesInfo name='RFC' value='6555' />
         <format type='TXT' octets='34048' target='http://www.rfc-editor.org/rfc/rfc6555.txt' />
       </reference>
+
       <reference anchor='RFC6698'>
         <front>
           <title>The DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol: TLSA</title>
@@ -810,6 +861,7 @@ Location: https://hosting.example.net/.well-known
         <seriesInfo name='RFC' value='6698' />
         <format type='TXT' octets='84034' target='http://www.rfc-editor.org/rfc/rfc6698.txt' />
       </reference>
+
       <reference anchor='RFC6797'>
         <front>
           <title>HTTPS Strict Transport Security (HSTS)</title>
@@ -830,6 +882,7 @@ Location: https://hosting.example.net/.well-known
         <seriesInfo name='RFC' value='6797' />
         <format type='TXT' target='http://www.rfc-editor.org/rfc/rfc6797.txt' />
       </reference>
+
       <reference anchor="XMPP-DNA">
         <front>
           <title>Domain Name Associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP)</title>
@@ -850,6 +903,7 @@ Location: https://hosting.example.net/.well-known
         <seriesInfo name="Internet-Draft" value="draft-ietf-xmpp-dna-02"/>
         <format type="TXT" target="http://tools.ietf.org/html/draft-ietf-xmpp-dna-02.txt"/>
       </reference>
+
     </references>
 
     <section title="Acknowledgements" anchor="acks">
