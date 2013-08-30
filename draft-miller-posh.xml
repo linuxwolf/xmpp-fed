@@ -120,7 +120,7 @@ Content-Length: 2785
   "keys": [
     {
       "kty": "RSA",
-      "kid": "im.example.com:2011-07-04",
+      "kid": "c8fb8b80-1193-11e3-b2b1-835742119fe8",
       "n":   "ANxwssdcU3LbODErec3owrwUhlzjtuskAn8rAcBMRPImn5xA
               JRX-1T5g2D7MTozWWFk4TlpgzAR5slvM0tc35qAI9I0Cqk4Z
               LChQrYsWuY7alTrnNXdusHUYc6Eq89DZaH2knTcp57wAXzJP
@@ -189,18 +189,23 @@ Content-Length: 2785
       </section>
 
       <section title="Source Domain References PKIX Certificate" anchor="prooftype-ref">
-        <t>If the source domain HTTPS server has a reference to the certificate information, it responds to the HTTPS GET with a redirect status code (e.g., 302, 303, 307, or 308), and includes a 'Location' header, which MUST specify an HTTPS URL.</t>
+        <t>If the source domain HTTPS server has a reference to the certificate information, it responds to the HTTPS GET with a JSON document. The document contains a "url" property whose value is the HTTPS URL of where to obtain the actual JWK set.</t>
         <t>
           <figure>
-            <preamble>Example Redirect Response</preamble>
+            <preamble>Example Reference Response</preamble>
             <artwork><![CDATA[
-HTTP/1.1 302 Found
-Location: https://hosting.example.net/.well-known
-          /posh._xmpp-client._tcp.json
+HTTP/1.1 200 Ok
+Content-Type: application/json
+Content-Length: 78
+
+{
+  "url":"https://hosting.example.com/.well-known/
+         posh._xmpp-client._tcp.json"
+}
               ]]></artwork>
           </figure>
         </t>
-        <t>The client follows the redirect, the HTTPS server for the URI at which the client has been redirected responds to the request, and the client performs actions appropriate to the new response (whether it is a possession, a reference, or another redirect).</t>
+        <t>The client follows the "url", the HTTPS server for the URI at which the client has been redirected responds to the request, and the client performs actions appropriate to the new response (whether it is a possession, a reference, or another redirect).</t>
 
         <section title="Redirect Status Codes" anchor="prooftype-ref-statuscodes">
           <t>Care needs to be taken regarding the redirect mechanism is used for delegation.  Clients might remember the redirected location in place of the original, which can lead to verification mismatches when a source domain is migrated to a different delegated domain.</t>
@@ -237,7 +242,7 @@ Location: https://hosting.example.net/.well-known
   "keys":[
     {
       "kty": "RSA",
-      "kid": "hosting.example.net:2011-07-04",
+      "kid": "cfc0ca70-1193-11e3-b2b1-835742119fe8",
       "n":   "AM-ktWkQ8btj_HEdAA6kOpzJGgoHNZsJmxjh_PifpgAUfQeq
               MO_YBR100IdJZRzJfULyhRwn9bikCq87WToxgPWOnd3sH3qT
               YiAcIR5S6tBbsyp6WYmwM1yuC0vLCo6SoDzdK1SvkQKM3QWk
@@ -296,7 +301,7 @@ Location: https://hosting.example.net/.well-known
     },
     {
       "kty": "RSA",
-      "kid": "hosting.example.net:2013-07-04",
+      "kid": "dbc28570-1193-11e3-b2b1-835742119fe8",
       "n":   "AM-ktWkQ8btj_HEdAA6kOpzJGgoHNZsJmxjh_PifpgAUfQeq
               MO_YBR100IdJZRzJfULyhRwn9bikCq87WToxgPWOnd3sH3qT
               YiAcIR5S6tBbsyp6WYmwM1yuC0vLCo6SoDzdK1SvkQKM3QWk
