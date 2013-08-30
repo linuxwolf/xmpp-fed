@@ -678,7 +678,7 @@ Internet-Draft                    POSH                       August 2013
 
    [JOSE-JWK]
               Jones, M., "JSON Web Key (JWK)", draft-ietf-jose-json-web-
-              key-11 (work in progress), May 2013.
+              key-14 (work in progress), July 2013.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
