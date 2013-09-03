@@ -41,22 +41,29 @@
     <keyword>Jabber</keyword>
     <keyword>federation</keyword>
     <abstract>
-      <t>This document defines two methods that make it easier to deploy certificates for proper server identity checking in application protocols.  The first method enables a TLS client to obtain a TLS server's end-entity certificate over secure HTTP as an alternative to standard Public Key Infrastructure using X.509 (PKIX) and DNS-Based Authentication of Named Entities (DANE).  The second method enables a source domain to securely delegate an application to a derived domain using HTTPS redirects.</t>
+      <t>Experience has shown that it is extremely difficult to deploy proper PKIX certificates for TLS in multi-tenanted environments, since certification authorities will not issue certificates for hosted domains to hosting services, hosted domains do not want hosting services to hold their private keys, and hosting services wish to avoid liability for holding those keys.  As a result, domains hosted in multi-tenanted environments often deploy non-HTTP applications such as email and instant messaging using certificates that identify the hosting service, not the hosted domain.  Such deployments force end users and peer services to accept the improper certificate, with obvious security implications.  This document defines two methods that make it easier to deploy certificates for proper server identity checking in non-HTTP application protocols.  The first method enables the TLS client associated with a user agent or peer application server to obtain the end-entity certificate of a hosted domain over secure HTTP as an alternative to standard PKIX techniques.  The second method enables a hosted domain to securely delegate an non-HTTP application to a hosting service using redirects directly in HTTPS or indirectly within a file served over HTTPS.</t>
     </abstract>
   </front>
 
   <middle>
 
     <section title="Introduction" anchor="intro">
-      <t>Channel encryption with TLS depends on proper checking of the server's identity, as specified in <xref target='RFC6125'/> or its application-specific equivalent for Public Key Infrastructure using X.509 (PKIX) <xref target='RFC5280'/> and in <xref target='RFC6698'/> for DNS-Based Authentication of Named Entities (DANE).  However, in multi-tenanted environments it is effectively impossible for a hosting service to offer the correct PKIX certificates on behalf of a hosted domain, since neither party wants the hosting service to hold the hosted domain's private keys.  As a result, typically the hosting service offers its own PKIX certificate (say, for hosting.example.net), which means that TLS clients need to "just know" that the hosted domain (say, foo.example.com) is offered at the hosting service rather than the hosted domain.  Further background information on this problem can be found in <xref target='XMPP-DNA'/>.</t>
-      <t>This situation is clearly insecure.  It is true that DNS-based technologies are emerging for secure delegation, in the form of DNS SRV records <xref target='RFC2782'/> or their functional equivalent when DNS Security <xref target="RFC4033"/> is used, along with DNS-Based Authentication of Named Entities (DANE) <xref target="RFC6698"/>.  However, these technologies are not yet widely deployed and might not be deployed in the near future for domains outside the most common top-level domains.  Hosting services and hosted domains need a method that can be deployed more quickly to overcome the lack of secure delegation and proper server identity checking on the Internet today.</t>
-      <t>POSH (PKIX Over Secure HTTP) provides two interconnected methods for solving the problem, at least with application protocols other than HTTP:</t>
+      <t>Imagine that you work on the operations team of a hosting company that provides the "foo" service (or email or instant messaging or social networking service) for ten thousand different customer organizations.  Each customer wants their service to be identified by the customer's domain name (e.g., foo.example.com), not the hosting company's domain name (e.g., hosting.example.net).</t>
+      <t>In order to properly secure each customer's "foo" service via Transport Layer Security (TLS) <xref target='RFC5246'/>, you need to obtain PKIX certificates <xref target='RFC5280'/> containing identifiers such as foo.example.com, as explained in the "CertID" specification <xref target='RFC6125'/>.  Unfortunately, you can't obtain such certificates because:</t>
       <t>
-        <list style='numbers'>
-          <t>A TLS client retrieves the material to be used in checking the TLS server's identity by requesting it from a well-known HTTPS URI, where the response contains one or more certificates formatted as a JSON Web Key set <xref target='JOSE-JWK'/> defined within the JOSE WG.<vspace blankLines='1'/></t>
-          <t>If a hosted domain securely delegates an application to a hosting service, it redirects all requests for the well-known HTTPS URI to an HTTPS URI at the hosting service.</t>
+        <list style='symbols'>
+          <t>Certification authorities won't issue such certificates to you because you work for the hosting company, not the customer organization.</t>
+          <t>Customers won't obtain such certificates and then give them (plus the associated private keys) to you because their legal department is worried about liability.</t>
+          <t>You don't want to install such certificates on your servers anyway because your legal department is worried about liability, too.</t>
         </list>
       </t>
+      <t>Given your inability to deploy public keys / certificates containing the right identifiers, your back-up approach was always to use a certificate containing hosting.example.net as the identifier.  However, more and more customers and end users are complaining about warning messages in user agents and the inherent security issues involved with taking a "leap of faith" to accept the identity mismatch between the source domain (foo.example.com) and the delegated domain (hosting.example.net).</t>
+      <t>This situation is both insecure and unsustainable.  You have investigated the possibility of using DNS Security <xref target="RFC4033"/> and DNS-Based Authentication of Named Entities (DANE) <xref target="RFC6698"/> to solve the problem.  However, your customers and your operations team have told you that they will not be able to deploy DNSSEC and DANE for several years at least (e.g., customers in one of your major geographical markets are not yet able to use DNS SRV <xref target='RFC2782'/> records for the "foo" service, let alone the new TLSA records for DANE).  The product managers in your company are pushing you to find a method that can be deployed more quickly to overcome the lack of proper server identity checking for your hosted customers.</t>
+      <t>One possible approach is to ask each customer to provide the public key / certificate for the "foo" service at a special HTTPS URI on their website ("https://foo.example.com/.well-known/posh.foo.json" is one possibility).  This could be a public key that you generate for the customer, but because the customer hosts it via HTTPS, any user agent can find that public key and check it against the public key you provide during TLS negotiation for the "foo" service (as one added benefit, the customer never needs to hand you a private key).  Alternatively, the customer can redirect requests for that special HTTPS URI to an HTTPS URI at your own website, thus making it explicit that they have delegated the "foo" service to you.</t>
+      <t>The approach sketched out above, called POSH ("PKIX Over Secure HTTP"), is explained in the remainder of this document.</t>
+    </section>
+
+    <section title="Discussion Venue" anchor="discuss">
       <t>The discussion venue for this document is the posh@ietf.org mailing list; visit https://www.ietf.org/mailman/listinfo/posh for subscription information and discussion archives.</t>
     </section>
 
@@ -584,6 +591,20 @@ Location: https://hosting.example.net/.well-known
 <format type='TXT' octets='16319' target='http://www.rfc-editor.org/rfc/rfc4627.txt' />
 </reference>
 
+<reference anchor='RFC5246'>
+<front>
+<title>The Transport Layer Security (TLS) Protocol Version 1.2</title>
+<author initials='T.' surname='Dierks' fullname='T. Dierks'>
+<organization /></author>
+<author initials='E.' surname='Rescorla' fullname='E. Rescorla'>
+<organization /></author>
+<date year='2008' month='August' />
+<abstract>
+<t>This document specifies Version 1.2 of the Transport Layer Security (TLS) protocol.  The TLS protocol provides communications security over the Internet.  The protocol allows client/server applications to communicate in a way that is designed to prevent eavesdropping, tampering, or message forgery. [STANDARDS-TRACK]</t></abstract></front>
+<seriesInfo name='RFC' value='5246' />
+<format type='TXT' octets='222395' target='http://www.rfc-editor.org/rfc/rfc5246.txt' />
+</reference>
+
       <reference anchor="RFC5280">
         <front>
           <title>Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile</title>
@@ -883,27 +904,6 @@ Location: https://hosting.example.net/.well-known
         </front>
         <seriesInfo name='RFC' value='6797' />
         <format type='TXT' target='http://www.rfc-editor.org/rfc/rfc6797.txt' />
-      </reference>
-
-      <reference anchor="XMPP-DNA">
-        <front>
-          <title>Domain Name Associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP)</title>
-          <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
-            <organization>Cisco</organization>
-            <address>
-              <email>psaintan@cisco.com</email>
-            </address>
-          </author>
-          <author initials="M." surname="Miller" fullname="Matthew Miller">
-            <organization>Cisco</organization>
-            <address>
-              <email>mamille2@cisco.com</email>
-            </address>
-          </author>
-          <date month="April" year="2013"/>
-        </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-xmpp-dna-02"/>
-        <format type="TXT" target="http://tools.ietf.org/html/draft-ietf-xmpp-dna-02.txt"/>
       </reference>
 
     </references>
