@@ -48,6 +48,7 @@
   <middle>
 
     <section title="Introduction" anchor="intro">
+      <t>We start with a thought experiment.</t>
       <t>Imagine that you work on the operations team of a hosting company that provides the "foo" service (or email or instant messaging or social networking service) for ten thousand different customer organizations.  Each customer wants their service to be identified by the customer's domain name (e.g., foo.example.com), not the hosting company's domain name (e.g., hosting.example.net).</t>
       <t>In order to properly secure each customer's "foo" service via Transport Layer Security (TLS) <xref target='RFC5246'/>, you need to obtain PKIX certificates <xref target='RFC5280'/> containing identifiers such as foo.example.com, as explained in the "CertID" specification <xref target='RFC6125'/>.  Unfortunately, you can't obtain such certificates because:</t>
       <t>
@@ -58,7 +59,7 @@
         </list>
       </t>
       <t>Given your inability to deploy public keys / certificates containing the right identifiers, your back-up approach was always to use a certificate containing hosting.example.net as the identifier.  However, more and more customers and end users are complaining about warning messages in user agents and the inherent security issues involved with taking a "leap of faith" to accept the identity mismatch between the source domain (foo.example.com) and the delegated domain (hosting.example.net).</t>
-      <t>This situation is both insecure and unsustainable.  You have investigated the possibility of using DNS Security <xref target="RFC4033"/> and DNS-Based Authentication of Named Entities (DANE) <xref target="RFC6698"/> to solve the problem.  However, your customers and your operations team have told you that they will not be able to deploy DNSSEC and DANE for several years at least (e.g., customers in one of your major geographical markets are not yet able to use DNS SRV <xref target='RFC2782'/> records for the "foo" service, let alone the new TLSA records for DANE).  The product managers in your company are pushing you to find a method that can be deployed more quickly to overcome the lack of proper server identity checking for your hosted customers.</t>
+      <t>This situation is both insecure and unsustainable.  You have investigated the possibility of using DNS Security <xref target="RFC4033"/> and DNS-Based Authentication of Named Entities (DANE) <xref target="RFC6698"/> to solve the problem.  However, your customers and your operations team have told you that they will not be able to deploy DNSSEC and DANE for several years at least.  The product managers in your company are pushing you to find a method that can be deployed more quickly to overcome the lack of proper server identity checking for your hosted customers.</t>
       <t>One possible approach is to ask each customer to provide the public key / certificate for the "foo" service at a special HTTPS URI on their website ("https://foo.example.com/.well-known/posh.foo.json" is one possibility).  This could be a public key that you generate for the customer, but because the customer hosts it via HTTPS, any user agent can find that public key and check it against the public key you provide during TLS negotiation for the "foo" service (as one added benefit, the customer never needs to hand you a private key).  Alternatively, the customer can redirect requests for that special HTTPS URI to an HTTPS URI at your own website, thus making it explicit that they have delegated the "foo" service to you.</t>
       <t>The approach sketched out above, called POSH ("PKIX Over Secure HTTP"), is explained in the remainder of this document.</t>
     </section>
@@ -69,7 +70,6 @@
 
     <section title="Terminology" anchor="terms">
       <t>This document inherits security terminology from <xref target="RFC5280"/>.  The terms "source domain", "derived domain", "reference identifier", and "presented identifier" are used as defined in the "CertID" specification <xref target="RFC6125"/>.</t>
-      <t>This document uses the Extensible Messaging and Presence Protocol (XMPP) <xref target='RFC6120'/> in its examples.  Whether connections are made from an XMPP client to an XMPP server (based on a DNS SRV record of "_xmpp-client._tcp") or between XMPP servers ("_xmpp-server._tcp"), the XMPP initiating entity acts as a TLS client and the XMPP receiving entity acts as a TLS server.  Therefore, to simplify discussion this document uses "_xmpp-client._tcp" to describe both cases, unless otherwise indicated.</t>
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>.</t>
     </section>
 
@@ -690,21 +690,6 @@ Content-Length: 78
 
     <references title="Informative References">
 
-      <reference anchor="HTTP-STATUS-308">
-        <front>
-          <title>The Hypertext Transfer Protocol (HTTP) Status Code 308 (Permanent Redirect)</title>
-          <author initials="J." surname="Reschke" fullname="Julian F. Reschke">
-            <organization>greenbytes GmbH</organization>
-            <address>
-              <email>julian.reschke@greenbytes.de</email>
-            </address>
-          </author>
-          <date month="March" year="2012"/>
-        </front>
-        <seriesInfo name="Internet-Draft" value="draft-reschke-http-status-308-07"/>
-        <format type="TXT" target="http://tools.ietf.org/html/draft-reschke-http-status-308-07.txt"/>
-      </reference>
-
       <reference anchor="KEYPIN">
         <front>
           <title>Public Key Pinning Extension for HTTP</title>
@@ -864,20 +849,6 @@ Content-Length: 78
 <seriesInfo name='RFC' value='6335' />
 <format type='TXT' octets='79088' target='http://www.rfc-editor.org/rfc/rfc6335.txt' />
 </reference>
-
-      <reference anchor='RFC6555'>
-        <front>
-          <title>Happy Eyeballs: Success with Dual-Stack Hosts</title>
-          <author initials='D.' surname='Wing' fullname='D. Wing'><organization /></author>
-          <author initials='A.' surname='Yourtchenko' fullname='A. Yourtchenko'><organization /></author>
-          <date year='2012' month='April' />
-          <abstract>
-            <t>When a server's IPv4 path and protocol are working, but the server's IPv6 path and protocol are not working, a dual-stack client application experiences significant connection delay compared to an IPv4-only client.  This is undesirable because it causes the dual- stack client to have a worse user experience.  This document specifies requirements for algorithms that reduce this user-visible delay and provides an algorithm. [STANDARDS-TRACK]</t>
-          </abstract>
-        </front>
-        <seriesInfo name='RFC' value='6555' />
-        <format type='TXT' octets='34048' target='http://www.rfc-editor.org/rfc/rfc6555.txt' />
-      </reference>
 
       <reference anchor='RFC6698'>
         <front>
