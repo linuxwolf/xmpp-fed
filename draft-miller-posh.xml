@@ -227,7 +227,7 @@ Content-Length: 78
       <section title="Performing Verification" anchor="prooftype-verify">
         <t>The TLS client compares the PKIX information obtained from the TLS server against each JWK object in the POSH results, until a match is found or the collection of POSH verification materials is exhausted.  If none of the JWK objects match the TLS server PKIX information, the TLS client SHOULD reject the connection.</t>
         <t>The TLS client SHOULD compare the fingerprint of the PKIX certificate from the TLS server against the "x5t" field of the JWK object (note the "x5t" field is the base64url encoding of the fingerprint).  If the "x5c" field is present instead of the "x5t" field, the TLS client generates a fingerprint of the first array element, by performing a SHA-1 hash over the PKIX certificate's DER encoding.</t>
-        <t>The TLS client MAY verify the certificate chain provided in the "x5c" field of the JWK object, but it SHOULD NOT implicitly consider the final issuer certificate included to be a trust anchor itself; the TLS client only uses the end entity certificate information for verification.</t>
+        <t>The TLS client MAY verify the certificate chain provided in the "x5c" field of the JWK object, but it MUST NOT implicitly consider the final certificate in the "x5c" field to be a trust anchor itself; the TLS client only uses the end entity certificate information for verification.</t>
       </section>
     </section>
 
@@ -923,7 +923,7 @@ Content-Length: 78
     </references>
 
     <section title="Acknowledgements" anchor="acks">
-      <t>Many thanks to Philipp Hancke and Tobias Markmann for their implementation feedback.  Thanks also to Dave Cridland, Max Pritikin, and Joe Salowey for their input on the specification.</t>
+      <t>Many thanks to Philipp Hancke, Joe Hildebrand, and Tobias Markmann for their implementation feedback.  Thanks also to Dave Cridland, Max Pritikin, and Joe Salowey for their input on the specification.</t>
     </section>
 
   </back>

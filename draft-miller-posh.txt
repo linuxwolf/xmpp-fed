@@ -438,8 +438,8 @@ Internet-Draft                    POSH                    September 2013
    SHA-1 hash over the PKIX certificate's DER encoding.
 
    The TLS client MAY verify the certificate chain provided in the "x5c"
-   field of the JWK object, but it SHOULD NOT implicitly consider the
-   final issuer certificate included to be a trust anchor itself; the
+   field of the JWK object, but it MUST NOT implicitly consider the
+   final certificate in the "x5c" field to be a trust anchor itself; the
    TLS client only uses the end entity certificate information for
    verification.
 
@@ -811,9 +811,9 @@ Internet-Draft                    POSH                    September 2013
 
 Appendix A.  Acknowledgements
 
-   Many thanks to Philipp Hancke and Tobias Markmann for their
-   implementation feedback.  Thanks also to Dave Cridland, Max Pritikin,
-   and Joe Salowey for their input on the specification.
+   Many thanks to Philipp Hancke, Joe Hildebrand, and Tobias Markmann
+   for their implementation feedback.  Thanks also to Dave Cridland, Max
+   Pritikin, and Joe Salowey for their input on the specification.
 
 Authors' Addresses
 
