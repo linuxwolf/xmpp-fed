@@ -53,8 +53,8 @@
       <t>In order to properly secure each customer's "foo" service via Transport Layer Security (TLS) <xref target='RFC5246'/>, you need to obtain PKIX certificates <xref target='RFC5280'/> containing identifiers such as foo.example.com, as explained in the "CertID" specification <xref target='RFC6125'/>.  Unfortunately, you can't obtain such certificates because:</t>
       <t>
         <list style='symbols'>
-          <t>Certification authorities won't issue such certificates to you because you work for the hosting company, not the customer organization.</t>
-          <t>Customers won't obtain such certificates and then give them (plus the associated private keys) to you because their legal department is worried about liability.</t>
+          <t>Certification authorities won't issue such certificates to you because you work for the hosting company, not the customer organization.<vspace blankLines='1'/></t>
+          <t>Customers won't obtain such certificates and then give them (plus the associated private keys) to you because their legal department is worried about liability.<vspace blankLines='1'/></t>
           <t>You don't want to install such certificates on your servers anyway because your legal department is worried about liability, too.</t>
         </list>
       </t>
@@ -77,12 +77,12 @@
       <t>Server identity checking (see <xref target='RFC6125'/>) involves three different aspects:</t>
       <t>
         <list style='numbers'>
-          <t>A proof of the TLS server's identity (in PKIX, this takes the form of a PKIX certificate <xref target='RFC5280'/>).</t>
-          <t>Rules for checking the certificate (which vary by application protocol, although <xref target='RFC6125'/> attempts to harmonize those rules).</t>
+          <t>A proof of the TLS server's identity (in PKIX, this takes the form of a PKIX certificate <xref target='RFC5280'/>).<vspace blankLines='1'/></t>
+          <t>Rules for checking the certificate (which vary by application protocol, although <xref target='RFC6125'/> attempts to harmonize those rules).<vspace blankLines='1'/></t>
           <t>The materials that a TLS client uses to verify the TLS server's identity or check the TLS server's proof (in PKIX, this takes the form of chaining the end-entity certificate back to a trusted root and performing all validity checks as described in <xref target='RFC5280'/>, <xref target='RFC6125'/>, and the relevant application protocol specification).</t>
         </list>
       </t>
-      <t>When POSH is used, the first two aspects remain the same: the TLS server proves it identity by presenting a PKIX certificate <xref target="RFC5280"/> and the certificate is checked according to the rules defined in the appropriate application protocol specification (such as <xref target="RFC6120"/> for XMPP).  However, the TLS client obtains the material it will use to verify the server's proof by retrieving a JSON Web Key (JWK) set <xref target='JOSE-JWK'/> over HTTPS (<xref target="RFC2616"/> and <xref target="RFC2818"/>) from a well-known URI <xref target="RFC5785"/>.  (In this case, secure DNS is not necessary since the HTTPS retrieval mechanism relies on the chain of trust based on the public key infrastructure.)</t>
+      <t>When POSH is used, the first two aspects remain the same: the TLS server proves it identity by presenting a PKIX certificate <xref target="RFC5280"/> and the certificate is checked according to the rules defined in the appropriate application protocol specification (such as <xref target="RFC6120"/> for XMPP).  However, the TLS client obtains the materials it will use to verify the server's proof by retrieving a JSON Web Key (JWK) set <xref target='JOSE-JWK'/> over HTTPS (<xref target="RFC2616"/> and <xref target="RFC2818"/>) from a well-known URI <xref target="RFC5785"/>.  (In this case, secure DNS is not necessary since the HTTPS retrieval mechanism relies on a chain of trust based on the public key infrastructure.)</t>
       <t>The process for retrieving a PKIX certificate over secure HTTP is as follows.</t>
       <t>
         <list style="numbers">
@@ -113,7 +113,7 @@ Host: foo.example.com
         <t>
           <list style="symbols">
             <t>The "kty" field set to the appropriate key type used for TLS connections (e.g., "RSA" for a certificate using an RSA key).<vspace blankLines="1"/></t>
-            <t>The required parameters for the key type (e.g., "n" and "e" for a certificate using an RSA key).<vspace blankLines="1"/></t>
+            <t>The required parameters for the key type (e.g., "n" and "e" for a certificate using an RSA key).</t>
           </list>
         </t>
         <t>Additionally, each JWK object MUST possess one of the following:</t>
@@ -123,6 +123,7 @@ Host: foo.example.com
             <t>The "x5c" field set to the certificate chain, as per section 3.7 of <xref target="JOSE-JWK"/>.</t>
           </list>
         </t>
+        <t>The following example illustrates the usage described above.</t>
         <t>
           <figure>
               <preamble>Example Content Response</preamble>
@@ -205,7 +206,7 @@ Content-Length: 2785
       </section>
 
       <section title="Source Domain References PKIX Certificate" anchor="prooftype-ref">
-        <t>If the source domain HTTPS server has a reference to the certificate information, it responds to the HTTPS GET with a JSON document.  The document contains a "url" property whose value is the HTTPS URL of where to obtain the actual JWK set.</t>
+        <t>If the source domain HTTPS server has a reference to the certificate information, it responds to the HTTPS GET with a JSON document.  The document contains a "url" property whose value is the HTTPS URL where TLS clients can obtain the actual JWK set.</t>
         <t>
           <figure>
             <preamble>Example Reference Response</preamble>
@@ -222,6 +223,7 @@ Content-Length: 78
           </figure>
         </t>
         <t>The client performs an HTTPS GET for the URL specified in the "url" property value.  The HTTPS server for the URI at which the client has been redirected responds to the request with a JWK set.  The content retrieved from the "url" location MUST NOT itself be a reference (e.g., containing only the "url" property and no "keys" property), in order to prevent circular references.</t>
+        <t>Note: The JSON document returned by the source domain HTTPS server MUST contain either a reference or a JSON Web Key set, but not both.</t>
       </section>
       
       <section title="Performing Verification" anchor="prooftype-verify">
@@ -239,7 +241,7 @@ Content-Length: 78
     </section>
 
     <section title="Order of Operations" anchor="order">
-      <t>POSH processes MUST be complete before any application-level data is exchanged, so that the TLS client can perform verification of reference identifiers.  The TLS client SHOULD perform all POSH retrievals before opening any socket connections to the application protocol server.  For application protocols that use DNS SRV, the POSH processes ideally ought to be done in parallel with resolving the SRV records and the addresses of any targets.</t>
+      <t>POSH processes MUST be complete before any application-level data is exchanged, so that the TLS client can perform verification of reference identifiers.  The TLS client SHOULD perform all POSH retrievals before opening any socket connections to the application protocol server.  For application protocols that use DNS SRV, the POSH processes ideally ought to be done in parallel with resolving the SRV records and the addresses of any targets, similar to the "happy eyeballs" approach for IPv4 and IPv6 <xref target='RFC6555'/>.</t>
     </section>
 
     <section title="Caching Results" anchor="caching">
@@ -387,20 +389,20 @@ Content-Length: 78
               <t hangText='URI suffix:'>posh.</t>
               <t hangText='Change controller:'>IETF</t>
               <t hangText='Specification document:'>[[ this document ]]</t>
-              <t hangText='Related information:'>The "posh." string is merely a prefix and protocols that use POSH need to register particular URIs that are prefixed with the "posh." string.</t>
+              <t hangText='Related information:'>Because the "posh." string is merely a prefix, protocols that use POSH need to register particular URIs that are prefixed with the "posh." string.</t>
             </list>
           </t>
         </list>
       </t>
       <t>Note that the registered URI is "posh." (with a trailing dot).  This is merely a prefix to be placed at the front of well-known URIs <xref target='RFC5785'/> registered by protocols that use POSH, which themselves are responsible for the relevant registrations with the IANA.  The URIs registered by such protocols SHOULD begin with "posh." and end with ".json" (indicating a media type of application/json <xref target='RFC4627'/>).</t>
-      <t>For POSH-using protocols that rely on DNS SRV records <xref target='RFC2782'/>, the part of the well-known URI between "posh." and ".json" SHOULD be "{service}.{proto}", where the "{service}" is the DNS SRV "Service" prepended by the underscore character "_" and the "{proto}" is the DNS SRV "Proto" also prepended by the underscore character "_".  As an example, the well-known URI for XMPP server-to-server connections would be "posh._xmpp-server._tcp.json" since <xref target='RFC6120'/> registered a service name of "xmpp-server" and uses TCP as the underlying transport protocol.</t>  
-      <t>For other POSH-using protocols, the part of the well-known URI between "posh." and ".json" can be any unique string or identifier for the protocol, which might be a service name registered with the IANA in accordance with <xref target='RFC6335'/> or might be an unregistered name.  As an example, the well-known URI for the mythical "example" service could be "posh.example.json".</t>
+      <t>For POSH-using protocols that rely on DNS SRV records <xref target='RFC2782'/>, the part of the well-known URI between "posh." and ".json" SHOULD be "{service}.{proto}", where the "{service}" is the DNS SRV "Service" prepended by the underscore character "_" and the "{proto}" is the DNS SRV "Proto" also prepended by the underscore character "_".  As an example, the well-known URI for XMPP server-to-server connections would be "posh._xmpp-server._tcp.json" since XMPP <xref target='RFC6120'/> registers a service name of "xmpp-server" and uses TCP as the underlying transport protocol.</t>  
+      <t>For other POSH-using protocols, the part of the well-known URI between "posh." and ".json" can be any unique string or identifier for the protocol, which might be a service name registered with the IANA in accordance with <xref target='RFC6335'/> or which might be an unregistered name.  As an example, the well-known URI for the mythical "Foo" service could be "posh.foo.json".</t>
       <t>Note: As explained in <xref target='RFC5785'/>, the IANA registration policy <xref target='RFC5226'/> for well-known URIs is Specification Required.</t>  
     </section>
 
     <section title="Security Considerations" anchor="security">
-      <t>This document supplements but does not supersede the security considerations provided in specifications for application protocols that decide to use POSH (e.g., <xref target="RFC6120"/> and <xref target="RFC6125"/> for XMPP).  Specifically, communication via HTTPS depends on checking the identity of the HTTP server in accordance with <xref target="RFC2818"/>.</t>
-      <t>Additionally, the security of POSH can benefit from other HTTP hardening protocols, such as HSTS <xref target="RFC6797"/> and key pinning <xref target="KEYPIN"/>.</t>
+      <t>This document supplements but does not supersede the security considerations provided in specifications for application protocols that decide to use POSH (e.g., <xref target="RFC6120"/> and <xref target="RFC6125"/> for XMPP).  Specifically, the security of requests and responses sent via HTTPS depends on checking the identity of the HTTP server in accordance with <xref target="RFC2818"/>.  Additionally, the security of POSH can benefit from other HTTP hardening protocols, such as HSTS <xref target="RFC6797"/> and key pinning <xref target="KEYPIN"/>.</t>
+      <t>Note well that POSH is used by a TLS client to obtain the public key of a TLS server to which it might connect for a particular application protocol such as IMAP or XMPP.  POSH does not enable a hosted domain to transfer private keys to a hosting service via HTTPS.  POSH also does not enable a TLS server to engage in certificate enrollment with a certification authority via HTTPS, as is done in Enrollment over Secure Transport <xref target='EST'/>.</t>
     </section>
 
   </middle>
@@ -690,6 +692,26 @@ Content-Length: 78
 
     <references title="Informative References">
 
+<reference anchor='EST'>
+<front>
+<title>Enrollment over Secure Transport</title>
+<author initials='M' surname='Pritikin' fullname='Max Pritikin'>
+    <organization />
+</author>
+<author initials='P' surname='Yee' fullname='Peter Yee'>
+    <organization />
+</author>
+<author initials='D' surname='Harkins' fullname='Dan Harkins'>
+    <organization />
+</author>
+<date month='August' day='13' year='2013' />
+<abstract><t>This document profiles certificate enrollment for clients using Certificate Management over CMS (CMC) messages over a secure transport.  This profile, called Enrollment over Secure Transport (EST), describes a simple yet functional certificate management protocol targeting Public Key Infrastructure (PKI) clients that need to acquire client certificates and associated Certification Authority (CA) certificate(s).  It also supports client-generated public/ private key pairs as well as key pairs generated by the CA.</t></abstract>
+</front>
+<seriesInfo name='Internet-Draft' value='draft-ietf-pkix-est-09' />
+<format type='TXT'
+        target='http://www.ietf.org/internet-drafts/draft-ietf-pkix-est-09.txt' />
+</reference>
+
       <reference anchor="KEYPIN">
         <front>
           <title>Public Key Pinning Extension for HTTP</title>
@@ -850,6 +872,20 @@ Content-Length: 78
 <format type='TXT' octets='79088' target='http://www.rfc-editor.org/rfc/rfc6335.txt' />
 </reference>
 
+<reference anchor='RFC6555'>
+<front>
+<title>Happy Eyeballs: Success with Dual-Stack Hosts</title>
+<author initials='D.' surname='Wing' fullname='D. Wing'>
+<organization /></author>
+<author initials='A.' surname='Yourtchenko' fullname='A. Yourtchenko'>
+<organization /></author>
+<date year='2012' month='April' />
+<abstract>
+<t>When a server's IPv4 path and protocol are working, but the server's IPv6 path and protocol are not working, a dual-stack client application experiences significant connection delay compared to an IPv4-only client.  This is undesirable because it causes the dual- stack client to have a worse user experience.  This document specifies requirements for algorithms that reduce this user-visible delay and provides an algorithm. [STANDARDS-TRACK]</t></abstract></front>
+<seriesInfo name='RFC' value='6555' />
+<format type='TXT' octets='34048' target='http://www.rfc-editor.org/rfc/rfc6555.txt' />
+</reference>
+
       <reference anchor='RFC6698'>
         <front>
           <title>The DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol: TLSA</title>
@@ -892,7 +928,7 @@ Content-Length: 78
     </references>
 
     <section title="Acknowledgements" anchor="acks">
-      <t>Thanks to Dave Cridland, Max Pritikin, and Joe Salowey for their feedback.</t>
+      <t>Many thanks to Philipp Hancke and Tobias Markmann for their implementation feedback.  Thanks also to Dave Cridland, Max Pritikin, and Joe Salowey for their input on the specification.</t>
     </section>
 
   </back>
