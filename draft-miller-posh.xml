@@ -55,7 +55,7 @@
         <list style='symbols'>
           <t>Certification authorities won't issue such certificates to you because you work for the hosting company, not the customer organization.<vspace blankLines='1'/></t>
           <t>Customers won't obtain such certificates and then give them (plus the associated private keys) to you because their legal department is worried about liability.<vspace blankLines='1'/></t>
-          <t>You don't want to install such certificates on your servers anyway because your legal department is worried about liability, too.</t>
+          <t>You don't want to install such certificates (plus the associated private keys) on your servers anyway because your legal department is worried about liability, too.</t>
         </list>
       </t>
       <t>Given your inability to deploy public keys / certificates containing the right identifiers, your back-up approach was always to use a certificate containing hosting.example.net as the identifier.  However, more and more customers and end users are complaining about warning messages in user agents and the inherent security issues involved with taking a "leap of faith" to accept the identity mismatch between the source domain (foo.example.com) and the delegated domain (hosting.example.net).</t>
@@ -82,11 +82,11 @@
           <t>The materials that a TLS client uses to verify the TLS server's identity or check the TLS server's proof (in PKIX, this takes the form of chaining the end-entity certificate back to a trusted root and performing all validity checks as described in <xref target='RFC5280'/>, <xref target='RFC6125'/>, and the relevant application protocol specification).</t>
         </list>
       </t>
-      <t>When POSH is used, the first two aspects remain the same: the TLS server proves it identity by presenting a PKIX certificate <xref target="RFC5280"/> and the certificate is checked according to the rules defined in the appropriate application protocol specification (such as <xref target="RFC6120"/> for XMPP).  However, the TLS client obtains the materials it will use to verify the server's proof by retrieving a JSON Web Key (JWK) set <xref target='JOSE-JWK'/> over HTTPS (<xref target="RFC2616"/> and <xref target="RFC2818"/>) from a well-known URI <xref target="RFC5785"/>.  (In this case, secure DNS is not necessary since the HTTPS retrieval mechanism relies on a chain of trust based on the public key infrastructure.)</t>
+      <t>When POSH is used, the first two aspects remain the same: the TLS server proves it identity by presenting a PKIX certificate <xref target="RFC5280"/> and the certificate is checked according to the rules defined in the appropriate application protocol specification (such as <xref target="RFC6120"/> for XMPP).  However, the TLS client obtains the materials it will use to verify the server's proof by retrieving a JSON Web Key (JWK) set <xref target='JOSE-JWK'/> over HTTPS (<xref target="RFC2616"/> and <xref target="RFC2818"/>) from a well-known URI <xref target="RFC5785"/>.</t>
       <t>The process for retrieving a PKIX certificate over secure HTTP is as follows.</t>
       <t>
         <list style="numbers">
-          <t>The TLS client performs an HTTPS GET at the source domain to the path "/.well-known/posh.{servicedesc}.json".  The value of "{servicedesc}" is application-specific; see <xref target="iana"/> for more details.  For example, if the application protocol is some hypothetical "Foo" service, then "{servicedesc}" could be "foo"; thus if a Foo client were to use POSH to verify a Foo server for the domain "foo.example.com", the HTTPS GET request would be as follows:
+          <t>The TLS client performs an HTTPS GET at the source domain to the path "/.well-known/posh.{servicedesc}.json".  The value of "{servicedesc}" is application-specific; see <xref target="iana"/> of this document for more details.  For example, if the application protocol is some hypothetical "Foo" service, then "{servicedesc}" could be "foo"; thus if a Foo client were to use POSH to verify a Foo server for the domain "foo.example.com", the HTTPS GET request would be as follows:
           <vspace blankLines='1'/>
           <figure>
             <artwork><![CDATA[
@@ -116,7 +116,7 @@ Host: foo.example.com
             <t>The required parameters for the key type (e.g., "n" and "e" for a certificate using an RSA key).</t>
           </list>
         </t>
-        <t>Additionally, each JWK object MUST possess one of the following:</t>
+        <t>Additionally, each JWK object MUST possess at least one of the following:</t>
         <t>
           <list style="symbols">
             <t>The "x5t" field set to the certificate thumbprint, as per section 3.6 of <xref target="JOSE-JWK"/>.<vspace blankLines="1"/></t>
@@ -201,12 +201,10 @@ Content-Length: 2785
 ]]></artwork>
           </figure>
         </t>
-        <t>The TLS client uses the provided certificate to verify the TLS connection to the TLS server.  In order for the TLS client to verify the identity of the TLS server, it MUST ensure that the PKIX certificate presented by the TLS server during the TLS negotiation matches the certificate that it obtained via POSH.</t>
-        <t>The TLS client MAY verify the certificate chain provided in the JWK, but it SHOULD consider the final issuer certificate to be a trust anchor for the purposes of this verification only.  Once it has verified the identity of the TLS server, the TLS client MUST NOT continue to treat this final issuer certificate as a trust anchor.</t>
       </section>
 
       <section title="Source Domain References PKIX Certificate" anchor="prooftype-ref">
-        <t>If the source domain HTTPS server has a reference to the certificate information, it responds to the HTTPS GET with a JSON document.  The document contains a "url" property whose value is the HTTPS URL where TLS clients can obtain the actual JWK set.</t>
+        <t>If the source domain HTTPS server has a reference to the certificate information, it responds to the HTTPS GET with a JSON document.  The document contains a "url" field whose value is the HTTPS URL where TLS clients can obtain the actual JWK set.</t>
         <t>
           <figure>
             <preamble>Example Reference Response</preamble>
@@ -222,17 +220,14 @@ Content-Length: 78
               ]]></artwork>
           </figure>
         </t>
-        <t>The client performs an HTTPS GET for the URL specified in the "url" property value.  The HTTPS server for the URI at which the client has been redirected responds to the request with a JWK set.  The content retrieved from the "url" location MUST NOT itself be a reference (e.g., containing only the "url" property and no "keys" property), in order to prevent circular references.</t>
-        <t>Note: The JSON document returned by the source domain HTTPS server MUST contain either a reference or a JSON Web Key set, but not both.</t>
+        <t>The client performs an HTTPS GET for the URL specified in the "url" field value.  The HTTPS server for the URI at which the client has been redirected responds to the request with a JWK set.  The content retrieved from the "url" location MUST NOT itself be a reference (e.g., containing only the "url" field and no "keys" field), in order to prevent circular references.</t>
+        <t>Note: The JSON document returned by the source domain HTTPS server MUST contain either a reference or a JSON Web Key set, but MUST NOT contain both.</t>
       </section>
       
       <section title="Performing Verification" anchor="prooftype-verify">
         <t>The TLS client compares the PKIX information obtained from the TLS server against each JWK object in the POSH results, until a match is found or the collection of POSH verification materials is exhausted.  If none of the JWK objects match the TLS server PKIX information, the TLS client SHOULD reject the connection.</t>
         <t>The TLS client SHOULD compare the fingerprint of the PKIX certificate from the TLS server against the "x5t" field of the JWK object (note the "x5t" field is the base64url encoding of the fingerprint).  If the "x5c" field is present instead of the "x5t" field, the TLS client generates a fingerprint of the first array element, by performing a SHA-1 hash over the PKIX certificate's DER encoding.</t>
-      </section>
-
-      <section title="Additional Security Mechanisms" anchor="prooftype-more-sec">
-        <t>POSH can benefit from additional HTTPS security mechanisms, such as HTTP Strict Transport Security <xref target='RFC6797'/> and key pinning <xref target='KEYPIN'/>, especially if the TLS client shares some information with a common HTTPS implementation (e.g., platform-default web browser).</t>
+        <t>The TLS client MAY verify the certificate chain provided in the "x5c" field of the JWK object, but it SHOULD NOT implicitly consider the final issuer certificate included to be a trust anchor itself; the TLS client only uses the end entity certificate information for verification.</t>
       </section>
     </section>
 
@@ -241,7 +236,7 @@ Content-Length: 78
     </section>
 
     <section title="Order of Operations" anchor="order">
-      <t>POSH processes MUST be complete before any application-level data is exchanged, so that the TLS client can perform verification of reference identifiers.  The TLS client SHOULD perform all POSH retrievals before opening any socket connections to the application protocol server.  For application protocols that use DNS SRV, the POSH processes ideally ought to be done in parallel with resolving the SRV records and the addresses of any targets, similar to the "happy eyeballs" approach for IPv4 and IPv6 <xref target='RFC6555'/>.</t>
+      <t>In order for the TLS client to perform verification of reference identifiers without potentially compromising data, POSH processes MUST be complete before any application-level data is exchanged for the source domain.  The TLS client SHOULD perform all POSH retrievals before opening any socket connections to the application protocol server.  For application protocols that use DNS SRV, the POSH processes ideally ought to be done in parallel with resolving the SRV records and the addresses of any targets, similar to the "happy eyeballs" approach for IPv4 and IPv6 <xref target='RFC6555'/>.</t>
     </section>
 
     <section title="Caching Results" anchor="caching">
@@ -394,14 +389,14 @@ Content-Length: 78
           </t>
         </list>
       </t>
-      <t>Note that the registered URI is "posh." (with a trailing dot).  This is merely a prefix to be placed at the front of well-known URIs <xref target='RFC5785'/> registered by protocols that use POSH, which themselves are responsible for the relevant registrations with the IANA.  The URIs registered by such protocols SHOULD begin with "posh." and end with ".json" (indicating a media type of application/json <xref target='RFC4627'/>).</t>
+      <t>Note that the registered URI is "posh." (with a trailing dot).  This is merely a prefix to be placed at the front of well-known URIs <xref target='RFC5785'/> registered by protocols that use POSH, which themselves are responsible for the relevant registrations with the IANA.  The URIs registered by such protocols SHOULD begin with "posh." and end with ".json" (indicating a media type of application/json <xref target='RFC4627'/> or application/jwk-set+json <xref target='JOSE-JWK'/>).</t>
       <t>For POSH-using protocols that rely on DNS SRV records <xref target='RFC2782'/>, the part of the well-known URI between "posh." and ".json" SHOULD be "{service}.{proto}", where the "{service}" is the DNS SRV "Service" prepended by the underscore character "_" and the "{proto}" is the DNS SRV "Proto" also prepended by the underscore character "_".  As an example, the well-known URI for XMPP server-to-server connections would be "posh._xmpp-server._tcp.json" since XMPP <xref target='RFC6120'/> registers a service name of "xmpp-server" and uses TCP as the underlying transport protocol.</t>  
       <t>For other POSH-using protocols, the part of the well-known URI between "posh." and ".json" can be any unique string or identifier for the protocol, which might be a service name registered with the IANA in accordance with <xref target='RFC6335'/> or which might be an unregistered name.  As an example, the well-known URI for the mythical "Foo" service could be "posh.foo.json".</t>
       <t>Note: As explained in <xref target='RFC5785'/>, the IANA registration policy <xref target='RFC5226'/> for well-known URIs is Specification Required.</t>  
     </section>
 
     <section title="Security Considerations" anchor="security">
-      <t>This document supplements but does not supersede the security considerations provided in specifications for application protocols that decide to use POSH (e.g., <xref target="RFC6120"/> and <xref target="RFC6125"/> for XMPP).  Specifically, the security of requests and responses sent via HTTPS depends on checking the identity of the HTTP server in accordance with <xref target="RFC2818"/>.  Additionally, the security of POSH can benefit from other HTTP hardening protocols, such as HSTS <xref target="RFC6797"/> and key pinning <xref target="KEYPIN"/>.</t>
+      <t>This document supplements but does not supersede the security considerations provided in specifications for application protocols that decide to use POSH (e.g., <xref target="RFC6120"/> and <xref target="RFC6125"/> for XMPP).  Specifically, the security of requests and responses sent via HTTPS depends on checking the identity of the HTTP server in accordance with <xref target="RFC2818"/>.  Additionally, the security of POSH can benefit from other HTTP hardening protocols, such as HSTS <xref target="RFC6797"/> and key pinning <xref target="KEYPIN"/>, especially if the TLS client shares some information with a common HTTPS implementation (e.g., platform-default web browser).</t>
       <t>Note well that POSH is used by a TLS client to obtain the public key of a TLS server to which it might connect for a particular application protocol such as IMAP or XMPP.  POSH does not enable a hosted domain to transfer private keys to a hosting service via HTTPS.  POSH also does not enable a TLS server to engage in certificate enrollment with a certification authority via HTTPS, as is done in Enrollment over Secure Transport <xref target='EST'/>.</t>
     </section>
 
