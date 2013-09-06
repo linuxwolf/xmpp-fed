@@ -79,7 +79,7 @@ Table of Contents
    2.  Discussion Venue  . . . . . . . . . . . . . . . . . . . . . .   4
    3.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   4
    4.  Obtaining Verification Materials  . . . . . . . . . . . . . .   4
-     4.1.  Source Domain Possesses PKIX Certificate  . . . . . . . .   6
+     4.1.  Source Domain Possesses PKIX Certificate  . . . . . . . .   5
      4.2.  Source Domain References PKIX Certificate . . . . . . . .   8
      4.3.  Performing Verification . . . . . . . . . . . . . . . . .   8
      4.4.  Additional Security Mechanisms  . . . . . . . . . . . . .   9
@@ -241,16 +241,17 @@ Internet-Draft                    POSH                    September 2013
    follows.
 
    1.  The TLS client performs an HTTPS GET at the source domain to the
-       path "/.well-known/posh.{service}.{protocol}.json".  For example,
-       if the application protocol is XMPP then the "{service}" is
-       either "_xmpp-client" for XMPP client-to-server connections, and
-       the "{protocol}" is "_tcp"; thus if an XMPP client were to use
-       POSH to verify an XMPP server for the domain "im.example.com",
-       the HTTPS GET request would be as follows:
+       path "/.well-known/posh.{servicedesc}.json".  The value of
+       "{servicedesc}" is application-specific; see Section 9 for more
+       details.  For example, if the application protocol is some
+       hypothetical "Foo" service, then "{servicedesc}" could be "foo";
+       thus if a Foo client were to use POSH to verify a Foo server for
+       the domain "foo.example.com", the HTTPS GET request would be as
+       follows:
 
 
-   GET /.well-known/posh._xmpp-client._tcp.json HTTP/1.1
-   Host: im.example.com
+   GET /.well-known/posh.foo.json HTTP/1.1
+   Host: foo.example.com
 
 
 
@@ -269,11 +270,10 @@ Internet-Draft                    POSH                    September 2013
           path, it responds with a client error status code (e.g., 404).
 
 
+4.1.  Source Domain Possesses PKIX Certificate
 
-
-
-
-
+   If the source domain HTTPS server possesses the certificate
+   information, it responds to the HTTPS GET with a success status code
 
 
 
@@ -282,10 +282,6 @@ Miller & Saint-Andre     Expires March 10, 2014                 [Page 5]
 Internet-Draft                    POSH                    September 2013
 
 
-4.1.  Source Domain Possesses PKIX Certificate
-
-   If the source domain HTTPS server possesses the certificate
-   information, it responds to the HTTPS GET with a success status code
    and the message body set to a JSON Web Key (JWK) set [JOSE-JWK].  The
    JWK set MUST contain at least one JWK object.
 
@@ -303,6 +299,7 @@ Internet-Draft                    POSH                    September 2013
 
    o  The "x5t" field set to the certificate thumbprint, as per section
       3.6 of [JOSE-JWK].
+
 
    o  The "x5c" field set to the certificate chain, as per section 3.7
       of [JOSE-JWK].
@@ -330,6 +327,9 @@ Internet-Draft                    POSH                    September 2013
          "x5t": "UpjRI_A3afKE8_AIeTZ5o1dECTY",
          "x5c": [
            "MIIDgzCCAmugAwIBAgIBBjANBgkqhkiG9w0BAQUFADBGMQswCQYDV
+            QQGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbn
+            ZlcjETMBEGA1UEAxMKRXhhbXBsZSBDQTAeFw0xMTA3MDQwMDAwMDB
+            aFw0xMzA3MDIyMzU5NTlaMEoxCzAJBgNVBAYTAlVTMREwDwYDVQQI
 
 
 
@@ -338,9 +338,6 @@ Miller & Saint-Andre     Expires March 10, 2014                 [Page 6]
 Internet-Draft                    POSH                    September 2013
 
 
-            QQGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbn
-            ZlcjETMBEGA1UEAxMKRXhhbXBsZSBDQTAeFw0xMTA3MDQwMDAwMDB
-            aFw0xMzA3MDIyMzU5NTlaMEoxCzAJBgNVBAYTAlVTMREwDwYDVQQI
             EwhDb2xvcmFkbzEPMA0GA1UEBxMGRGVudmVyMRcwFQYDVQQDEw5pb
             S5leGFtcGxlLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQ
             oCggEBANxwssdcU3LbODErec3owrwUhlzjtuskAn8rAcBMRPImn5x
@@ -389,6 +386,9 @@ Internet-Draft                    POSH                    September 2013
 
 
 
+
+
+
 Miller & Saint-Andre     Expires March 10, 2014                 [Page 7]
 
 Internet-Draft                    POSH                    September 2013
@@ -421,7 +421,7 @@ Internet-Draft                    POSH                    September 2013
 
    {
      "url":"https://hosting.example.com/.well-known/
-            posh._xmpp-client._tcp.json"
+            posh.foo.json"
    }
 
 
@@ -471,16 +471,13 @@ Internet-Draft                    POSH                    September 2013
 
 6.  Order of Operations
 
-   POSH processes MUST be complete before the end of the TLS handshake
-   for the application protocol, so that the TLS client can perform
-   verification of reference identifiers.  Ideally a TLS client ought to
-   perform the POSH processes in parallel with other application-level
-   negotiation; this is sometimes called the "happy eyeballs" approach,
-   similar to [RFC6555] for IPv4 and IPv6.  However, a TLS client might
-   delay as much of the application-level negotiation in order to gather
-   all of the POSH-based verification material.  For instance, a TLS
-   client might not open the socket connection until it retrieves the
-   PKIX certificates via POSH.
+   POSH processes MUST be complete before any application-level data is
+   exchanged, so that the TLS client can perform verification of
+   reference identifiers.  The TLS client SHOULD perform all POSH
+   retrievals before opening any socket connections to the application
+   protocol server.  For application protocols that use DNS SRV, the
+   POSH processes ideally ought to be done in parallel with resolving
+   the SRV records and the addresses of any targets.
 
 7.  Caching Results
 
@@ -498,6 +495,9 @@ Internet-Draft                    POSH                    September 2013
    multiple JWK objects.  The JWK set SHOULD be ordered with the most
    relevant certificate first as determined by the application service
    operator (e.g., the renewed certificate), followed by the next most
+   relevant certificate (e.g., the certificate soonest to expire).  Here
+   is an example:
+
 
 
 
@@ -505,9 +505,6 @@ Miller & Saint-Andre     Expires March 10, 2014                 [Page 9]
 
 Internet-Draft                    POSH                    September 2013
 
-
-   relevant certificate (e.g., the certificate soonest to expire).  Here
-   is an example:
 
    {
      "keys":[
@@ -554,6 +551,9 @@ Internet-Draft                    POSH                    September 2013
             EwhDb2xvcmFkbzEPMA0GA1UEBxMGRGVudmVyMRMwEQYDVQQDEwpFe
             GFtcGxlIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQ
             EAzNQ30X7uXTg+4jKadtRO5uQEMRMnkZvDnptbWAtx0d1PsufQ2kf
+            vog0gDhigjPEZDV9S+zm63Ia+eqJ3ROT9jDXjtF6s/IawITf5cPSN
+            xn8qP8w+vbiy0rB4W4Nk1Dwji7KJ/wKNo0mwOx/qWNjSk3yoaU4sU
+            EuIypizgLxKAr25vVvAJAxF6HAfdQoVAIdCZ/7qbBPI7aurdU/Ndm
 
 
 
@@ -562,9 +562,6 @@ Miller & Saint-Andre     Expires March 10, 2014                [Page 10]
 Internet-Draft                    POSH                    September 2013
 
 
-            vog0gDhigjPEZDV9S+zm63Ia+eqJ3ROT9jDXjtF6s/IawITf5cPSN
-            xn8qP8w+vbiy0rB4W4Nk1Dwji7KJ/wKNo0mwOx/qWNjSk3yoaU4sU
-            EuIypizgLxKAr25vVvAJAxF6HAfdQoVAIdCZ/7qbBPI7aurdU/Ndm
             bbKBK0lp8aV1MYLzz8DI0hWcBQa2+gOSUcd/yT1az7UpMjGllbnVl
             UDxyJeCzbBaHny5NlWWHsGnsbucbM+9yeAMbRes/z0KeHxcRtomd8
             bh7As12RIXKrk5GRoNVKAoiwLQIDAQABo1IwUDAPBgNVHRMBAf8EB
@@ -610,6 +607,9 @@ Internet-Draft                    POSH                    September 2013
            EBAMCBeAwLAYDVR0RBCUwI6AhBggrBgEFBQcIBaAVDBNob3N0aW5nL
            mV4YW1wbGUubmV0MBEGCWCGSAGG+EIBAQQEAwIGQDANBgkqhkiG9w0
            BAQUFAAOCAQEAfb3++qh/bxsVtcEWmNtj1QLTBiXC5T9U6NuWUKY3a
+           RTIsthO5yLsToUG1bbxLceVG+xPQT9uRqvV02sumiIn3gv87NU5gMR
+           b1Gy1P9N0YT5GiHCN5qCfegGH6jIokh0Js3v+ttR/rUns0/MEsr/ka
+           YQ7KRKzOdlxT+gWN9Lp0fOYdYcasDWNMTg1NZwzXKcdkhb1lRBYuP4
 
 
 
@@ -618,9 +618,6 @@ Miller & Saint-Andre     Expires March 10, 2014                [Page 11]
 Internet-Draft                    POSH                    September 2013
 
 
-           RTIsthO5yLsToUG1bbxLceVG+xPQT9uRqvV02sumiIn3gv87NU5gMR
-           b1Gy1P9N0YT5GiHCN5qCfegGH6jIokh0Js3v+ttR/rUns0/MEsr/ka
-           YQ7KRKzOdlxT+gWN9Lp0fOYdYcasDWNMTg1NZwzXKcdkhb1lRBYuP4
            SeiJvy6ZbyUnoswthVTe0CK9+StDtJZLPSUu7TB2MwYMnv344NoTO2
            ufRawLU0+8cJZxrXq/H/YQyoAFB9opw0wEoTIB5aZqI2em4Wjgx9sl
            aonFlLEQysm5qJnhTGxEIDxQfqCcRfw==",
@@ -665,6 +662,9 @@ Internet-Draft                    POSH                    September 2013
 
       Specification document:  [[ this document ]]
 
+      Related information:  The "posh."  string is merely a prefix and
+            protocols that use POSH need to register particular URIs
+            that are prefixed with the "posh."  string.
 
 
 
@@ -673,10 +673,6 @@ Miller & Saint-Andre     Expires March 10, 2014                [Page 12]
 
 Internet-Draft                    POSH                    September 2013
 
-
-      Related information:  The "posh."  string is merely a prefix and
-            protocols that use POSH need to register particular URIs
-            that are prefixed with the "posh."  string.
 
    Note that the registered URI is "posh."  (with a trailing dot).  This
    is merely a prefix to be placed at the front of well-known URIs
@@ -721,7 +717,11 @@ Internet-Draft                    POSH                    September 2013
 11.1.  Normative References
 
    [JOSE-JWK]
+              Jones, M., "JSON Web Key (JWK)", draft-ietf-jose-json-web-
+              key-14 (work in progress), July 2013.
 
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119, March 1997.
 
 
 
@@ -729,12 +729,6 @@ Miller & Saint-Andre     Expires March 10, 2014                [Page 13]
 
 Internet-Draft                    POSH                    September 2013
 
-
-              Jones, M., "JSON Web Key (JWK)", draft-ietf-jose-json-web-
-              key-14 (work in progress), July 2013.
-
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119, March 1997.
 
    [RFC2616]  Fielding, R., Gettys, J., Mogul, J., Frystyk, H.,
               Masinter, L., Leach, P., and T. Berners-Lee, "Hypertext
@@ -778,6 +772,12 @@ Internet-Draft                    POSH                    September 2013
               specifying the location of services (DNS SRV)", RFC 2782,
               February 2000.
 
+   [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
+              Rose, "DNS Security Introduction and Requirements", RFC
+              4033, May 2005.
+
+
+
 
 
 
@@ -785,10 +785,6 @@ Miller & Saint-Andre     Expires March 10, 2014                [Page 14]
 
 Internet-Draft                    POSH                    September 2013
 
-
-   [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
-              Rose, "DNS Security Introduction and Requirements", RFC
-              4033, May 2005.
 
    [RFC5226]  Narten, T. and H. Alvestrand, "Guidelines for Writing an
               IANA Considerations Section in RFCs", BCP 26, RFC 5226,
@@ -829,19 +825,6 @@ Authors' Addresses
    Email: mamille2@cisco.com
 
 
-
-
-
-
-
-
-
-
-Miller & Saint-Andre     Expires March 10, 2014                [Page 15]
-
-Internet-Draft                    POSH                    September 2013
-
-
    Peter Saint-Andre
    Cisco Systems, Inc.
    1899 Wynkoop Street, Suite 600
@@ -853,43 +836,4 @@ Internet-Draft                    POSH                    September 2013
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Miller & Saint-Andre     Expires March 10, 2014                [Page 16]
+Miller & Saint-Andre     Expires March 10, 2014                [Page 15]
