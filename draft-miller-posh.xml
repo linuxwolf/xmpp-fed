@@ -104,15 +104,23 @@ Host: im.example.com
             </list>
           </t>
         </list>
+        <vspace blankLines="1"/>
       </t>
 
       <section title="Source Domain Possesses PKIX Certificate" anchor="prooftype-possess">
-        <t>If the source domain HTTPS server possesses the certificate information, it responds to the HTTPS GET with a success status code and the message body set to a JSON Web Key (JWK) set <xref target="JOSE-JWK"/>. The JWK set MUST contain at least one JWK with the following information:</t>
+        <t>If the source domain HTTPS server possesses the certificate information, it responds to the HTTPS GET with a success status code and the message body set to a JSON Web Key (JWK) set <xref target="JOSE-JWK"/>. The JWK set MUST contain at least one JWK object.</t>
+        <t>Each included JWK object MUST possess the following information:</t>
         <t>
           <list style="symbols">
-            <t>The "kty" field set to the appropriate key type (e.g., "RSA" for a certificate using an RSA key).<vspace blankLines="1"/></t>
-            <t>The required fields for the key type (e.g., "n" and "e" for a certificate using an RSA key).<vspace blankLines="1"/></t>
-            <t>The "x5c" field set to the certificate chain.</t>
+            <t>The "kty" field set to the appropriate key type used for TLS connections (e.g., "RSA" for a certificate using an RSA key).<vspace blankLines="1"/></t>
+            <t>The required parameters for the key type (e.g., "n" and "e" for a certificate using an RSA key).<vspace blankLines="1"/></t>
+          </list>
+        </t>
+        <t>Additionally, each JWK object MUST possess one of the following:</t>
+        <t>
+          <list style="symbols">
+            <t>The "x5t" field set to the certificate thumbprint, as per section 3.6 of <xref target="JOSE-JWK"/>.</t>
+            <t>The "x5c" field set to the certificate chain, as per section 3.7 of <xref target="JOSE-JWK"/>.</t>
           </list>
         </t>
         <t>
@@ -137,6 +145,7 @@ Content-Length: 2785
               5sy2fCwEDzLJqh2T6UItIzjrSUZMIsK8r2pXkroI0uYuNn3W
               y-jAzK8",
       "e":   "AQAB",
+      "x5t": "UpjRI_A3afKE8_AIeTZ5o1dECTY",
       "x5c": [
         "MIIDgzCCAmugAwIBAgIBBjANBgkqhkiG9w0BAQUFADBGMQswCQYDV
          QQGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbn
@@ -212,16 +221,12 @@ Content-Length: 78
               ]]></artwork>
           </figure>
         </t>
-        <t>The client follows the "url", the HTTPS server for the URI at which the client has been redirected responds to the request, and the client performs actions appropriate to the new response (whether it is a possession, a reference, or another redirect).</t>
-
-        <section title="Redirect Status Codes" anchor="prooftype-ref-statuscodes">
-          <t>Care needs to be taken regarding the redirect mechanism is used for delegation.  Clients might remember the redirected location in place of the original, which can lead to verification mismatches when a source domain is migrated to a different delegated domain.</t>
-          <t>To mitigate this concern, source domains SHOULD use only temporary redirect mechanisms, such as HTTP status codes 302 (Found) and 307 (Temporary Redirect).  Clients MAY treat any redirect as temporary, ignoring the specific semantics for 301 (Moved Permanently) and 308 (Permanent Redirect) <xref target="HTTP-STATUS-308"/>.</t>
-        </section>
-
-        <section title="Redirect Depth" anchor="prooftype-ref-depth">
-          <t>To protect against circular references, clients MUST NOT follow an infinite number of redirects.  It is RECOMMENDED that clients follow no more than 10 redirects, although applications or implementations can require that fewer redirects be followed.</t>
-        </section>
+        <t>The client performs an HTTPS GET for the URL specified in the "url" property value. The HTTPS server for the URI at which the client has been redirected responds to the request with a JWK set.  The content retrieved from the "url" location MUST NOT itself be a reference (e.g., containing only the "url" property and no "keys" property), in order to prevent circular references.</t>
+      </section>
+      
+      <section title="Performing Verification" anchor="prooftype-verify">
+        <t>The TLS client compares the PKIX information obtained from the TLS server against each JWK object in the POSH results, until a match is found or the collection of POSH verification materials is exhausted. If none of the JWK objects match the TLS server PKIX information, the TLS client SHOULD reject the connection.</t>
+        <t>The TLS client SHOULD compare the fingerprint of the PKIX certificate from the TLS server against the "x5t" field of the JWK object (note the "x5t" field is the base64url encoding of the fingerprint).  If the "x5c" field is present instead of the "x5t" field, the TLS client generates a fingerprint of the first array element, by performing a SHA-1 hash over the PKIX certificate's DER encoding.</t>
       </section>
 
       <section title="Additional Security Mechanisms" anchor="prooftype-more-sec">
@@ -259,6 +264,7 @@ Content-Length: 78
               w-_8hUldaTPD9MHlHPrvcsRV5uw8wK5MB6QyfS6wF4b0Kj2T
               vYceNlE",
       "e":   "AQAB",
+      "x5t": "Ae0sLVtm78VT-mQXJQop-ENOM6o",
       "x5c": [
         "MIIDXzCCAkegAwIBAgIBAzANBgkqhkiG9w0BAQUFADBGMQswCQYDV
          QQGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbn
@@ -318,6 +324,7 @@ Content-Length: 78
               w-_8hUldaTPD9MHlHPrvcsRV5uw8wK5MB6QyfS6wF4b0Kj2T
               vYceNlE",
       "e":   "AQAB",
+      "x5t": "lYZC2n9TBpOaUsBclEIacQTKToA",
       "x5c": [
         "MIIDjTCCAnWgAwIBAgIBBTANBgkqhkiG9w0BAQUFADBGMQswCQYDV
         QQGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbnZ
