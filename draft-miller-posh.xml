@@ -237,6 +237,54 @@ Content-Length: 78
 
     <section title="Order of Operations" anchor="order">
       <t>In order for the TLS client to perform verification of reference identifiers without potentially compromising data, POSH processes MUST be complete before any application-level data is exchanged for the source domain.  The TLS client SHOULD perform all POSH retrievals before opening any socket connections to the application protocol server.  For application protocols that use DNS SRV, the POSH processes ideally ought to be done in parallel with resolving the SRV records and the addresses of any targets, similar to the "happy eyeballs" approach for IPv4 and IPv6 <xref target='RFC6555'/>.</t>
+      <t>The following diagram illustrates the possession flow:<vspace blankLines="1"/>
+        <figure>
+          <artwork><![CDATA[
+Client                 Domain                 Server
+------                 ------                 ------
+  |                      |                      |
+  |    Request POSH      |                      |
+  |--------------------->|                      |
+  |                      |                      |
+  |   Return POSH keys   |                      |
+  |<---------------------|                      |
+  |                      |                      |
+  |              Service TLS Handshake          |
+  |<===========================================>|
+  |                      |                      |
+  |                 Service Data                |
+  |<===========================================>|
+  |                      |                      |
+          ]]></artwork>
+        </figure>
+      </t>
+      <t>While the following diagram illustrates the reference flow:<vspace blankLines="1"/>
+        <figure>
+          <artwork><![CDATA[
+Client                 Domain                 Server
+------                 ------                 ------
+  |                      |                      |
+  |    Request POSH      |                      |
+  |--------------------->|                      |
+  |                      |                      |
+  |   Return POSH url    |                      |
+  |<---------------------|                      |
+  |                      |                      |
+  |                  Request POSH               |
+  |-------------------------------------------->|
+  |                      |                      |
+  |                Return POSH keys             |
+  |<--------------------------------------------|
+  |                      |                      |
+  |             Service TLS Handshake           |
+  |<===========================================>|
+  |                      |                      |
+  |                 Service Data                |
+  |<===========================================>|
+  |                      |                      |
+          ]]></artwork>
+        </figure>
+      </t>
     </section>
 
     <section title="Caching Results" anchor="caching">

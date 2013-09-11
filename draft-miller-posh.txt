@@ -84,15 +84,15 @@ Table of Contents
      4.3.  Performing Verification . . . . . . . . . . . . . . . . .   8
    5.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . .   9
    6.  Order of Operations . . . . . . . . . . . . . . . . . . . . .   9
-   7.  Caching Results . . . . . . . . . . . . . . . . . . . . . . .   9
-   8.  Alternates and Roll-over  . . . . . . . . . . . . . . . . . .   9
-   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  12
-   10. Security Considerations . . . . . . . . . . . . . . . . . . .  13
-   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
-     11.1.  Normative References . . . . . . . . . . . . . . . . . .  13
-     11.2.  Informative References . . . . . . . . . . . . . . . . .  14
-   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  15
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
+   7.  Caching Results . . . . . . . . . . . . . . . . . . . . . . .  10
+   8.  Alternates and Roll-over  . . . . . . . . . . . . . . . . . .  10
+   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  13
+   10. Security Considerations . . . . . . . . . . . . . . . . . . .  14
+   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  14
+     11.1.  Normative References . . . . . . . . . . . . . . . . . .  14
+     11.2.  Informative References . . . . . . . . . . . . . . . . .  15
+   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  16
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  16
 
 1.  Introduction
 
@@ -469,6 +469,60 @@ Internet-Draft                    POSH                    September 2013
    records and the addresses of any targets, similar to the "happy
    eyeballs" approach for IPv4 and IPv6 [RFC6555].
 
+   The following diagram illustrates the possession flow:
+
+
+   Client                 Domain                 Server
+   ------                 ------                 ------
+     |                      |                      |
+     |    Request POSH      |                      |
+     |--------------------->|                      |
+     |                      |                      |
+     |   Return POSH keys   |                      |
+     |<---------------------|                      |
+     |                      |                      |
+     |              Service TLS Handshake          |
+     |<===========================================>|
+     |                      |                      |
+     |                 Service Data                |
+     |<===========================================>|
+     |                      |                      |
+
+
+   While the following diagram illustrates the reference flow:
+
+
+   Client                 Domain                 Server
+   ------                 ------                 ------
+     |                      |                      |
+     |    Request POSH      |                      |
+     |--------------------->|                      |
+     |                      |                      |
+
+
+
+Miller & Saint-Andre     Expires March 15, 2014                 [Page 9]
+
+Internet-Draft                    POSH                    September 2013
+
+
+     |   Return POSH url    |                      |
+     |<---------------------|                      |
+     |                      |                      |
+     |                  Request POSH               |
+     |-------------------------------------------->|
+     |                      |                      |
+     |                Return POSH keys             |
+     |<--------------------------------------------|
+     |                      |                      |
+     |             Service TLS Handshake           |
+     |<===========================================>|
+     |                      |                      |
+     |                 Service Data                |
+     |<===========================================>|
+     |                      |                      |
+
+
 7.  Caching Results
 
    Ideally, the TLS client relies on the expiration time of the
@@ -498,16 +552,16 @@ Internet-Draft                    POSH                    September 2013
                  YiAcIR5S6tBbsyp6WYmwM1yuC0vLCo6SoDzdK1SvkQKM3QWk
                  0GFNU4l4qXYAMxaSw83i6yv5DBVbST7E92vS6Gq_4pgI26l1
                  0JhybZuTEVPRUCG6pTKAXQpLxmjJ5oG9M91RP17nsuQeE7Ng
+                 0Ap4BBn5hocojkfthwgbX4lqBMecpBAnky5jn6slmzS_rL-L
+                 w-_8hUldaTPD9MHlHPrvcsRV5uw8wK5MB6QyfS6wF4b0Kj2T
 
 
 
-Miller & Saint-Andre     Expires March 15, 2014                 [Page 9]
+Miller & Saint-Andre     Expires March 15, 2014                [Page 10]
 
 Internet-Draft                    POSH                    September 2013
 
 
-                 0Ap4BBn5hocojkfthwgbX4lqBMecpBAnky5jn6slmzS_rL-L
-                 w-_8hUldaTPD9MHlHPrvcsRV5uw8wK5MB6QyfS6wF4b0Kj2T
                  vYceNlE",
          "e":   "AQAB",
          "x5t": "Ae0sLVtm78VT-mQXJQop-ENOM6o",
@@ -554,16 +608,16 @@ Internet-Draft                    POSH                    September 2013
             ho2yT+E8ju11PW+RNqUdRG6rZfdeN5Geb1o1L2g5WNTdtPXoFYgHY
             VPQ1HmjloEic2eGnlBvOi49wAdwnASv53fgzkSJB2/GdBJ3wPIWp0
             49/1vS5rsF5SJg+3mj3ZAuPYt80TRKbA/cjxEny5RfK+VJs3f7RQ/
+            Y3CTPxoJqskWs06/eUpjXKyzZ+MmkCs5cm1yers8goWhaI8JmLlBW
+            LQE6v8MHdbUfb4M8la5cUd2BGtTlILOVnMv"
 
 
 
-Miller & Saint-Andre     Expires March 15, 2014                [Page 10]
+Miller & Saint-Andre     Expires March 15, 2014                [Page 11]
 
 Internet-Draft                    POSH                    September 2013
 
 
-            Y3CTPxoJqskWs06/eUpjXKyzZ+MmkCs5cm1yers8goWhaI8JmLlBW
-            LQE6v8MHdbUfb4M8la5cUd2BGtTlILOVnMv"
          ]
        },
        {
@@ -610,16 +664,16 @@ Internet-Draft                    POSH                    September 2013
            b2xvcmFkbzEPMA0GA1UEBxMGRGVudmVyMRMwEQYDVQQDEwpFeGFtcG
            xlIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzNQ3
            0X7uXTg+4jKadtRO5uQEMRMnkZvDnptbWAtx0d1PsufQ2kfvog0gDh
+           igjPEZDV9S+zm63Ia+eqJ3ROT9jDXjtF6s/IawITf5cPSNxn8qP8w+
+           vbiy0rB4W4Nk1Dwji7KJ/wKNo0mwOx/qWNjSk3yoaU4sUEuIypizgL
 
 
 
-Miller & Saint-Andre     Expires March 15, 2014                [Page 11]
+Miller & Saint-Andre     Expires March 15, 2014                [Page 12]
 
 Internet-Draft                    POSH                    September 2013
 
 
-           igjPEZDV9S+zm63Ia+eqJ3ROT9jDXjtF6s/IawITf5cPSNxn8qP8w+
-           vbiy0rB4W4Nk1Dwji7KJ/wKNo0mwOx/qWNjSk3yoaU4sUEuIypizgL
            xKAr25vVvAJAxF6HAfdQoVAIdCZ/7qbBPI7aurdU/NdmbbKBK0lp8a
            V1MYLzz8DI0hWcBQa2+gOSUcd/yT1az7UpMjGllbnVlUDxyJeCzbBa
            Hny5NlWWHsGnsbucbM+9yeAMbRes/z0KeHxcRtomd8bh7As12RIXKr
@@ -666,16 +720,16 @@ Internet-Draft                    POSH                    September 2013
 
    For POSH-using protocols that rely on DNS SRV records [RFC2782], the
    part of the well-known URI between "posh."  and ".json" SHOULD be
+   "{service}.{proto}", where the "{service}" is the DNS SRV "Service"
+   prepended by the underscore character "_" and the "{proto}" is the
 
 
 
-Miller & Saint-Andre     Expires March 15, 2014                [Page 12]
+Miller & Saint-Andre     Expires March 15, 2014                [Page 13]
 
 Internet-Draft                    POSH                    September 2013
 
 
-   "{service}.{proto}", where the "{service}" is the DNS SRV "Service"
-   prepended by the underscore character "_" and the "{proto}" is the
    DNS SRV "Proto" also prepended by the underscore character "_".  As
    an example, the well-known URI for XMPP server-to-server connections
    would be "posh._xmpp-server._tcp.json" since XMPP [RFC6120] registers
@@ -721,17 +775,16 @@ Internet-Draft                    POSH                    September 2013
               Jones, M., "JSON Web Key (JWK)", draft-ietf-jose-json-web-
               key-14 (work in progress), July 2013.
 
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119, March 1997.
 
 
 
 
-Miller & Saint-Andre     Expires March 15, 2014                [Page 13]
+Miller & Saint-Andre     Expires March 15, 2014                [Page 14]
 
 Internet-Draft                    POSH                    September 2013
 
-
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119, March 1997.
 
    [RFC2616]  Fielding, R., Gettys, J., Mogul, J., Frystyk, H.,
               Masinter, L., Leach, P., and T. Berners-Lee, "Hypertext
@@ -778,17 +831,16 @@ Internet-Draft                    POSH                    September 2013
               Rose, "DNS Security Introduction and Requirements", RFC
               4033, May 2005.
 
-
-
-
-Miller & Saint-Andre     Expires March 15, 2014                [Page 14]
-
-Internet-Draft                    POSH                    September 2013
-
-
    [RFC5226]  Narten, T. and H. Alvestrand, "Guidelines for Writing an
               IANA Considerations Section in RFCs", BCP 26, RFC 5226,
               May 2008.
+
+
+
+Miller & Saint-Andre     Expires March 15, 2014                [Page 15]
+
+Internet-Draft                    POSH                    September 2013
+
 
    [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
               Protocol (XMPP): Core", RFC 6120, March 2011.
@@ -836,4 +888,8 @@ Authors' Addresses
 
 
 
-Miller & Saint-Andre     Expires March 15, 2014                [Page 15]
+
+
+
+
+Miller & Saint-Andre     Expires March 15, 2014                [Page 16]
