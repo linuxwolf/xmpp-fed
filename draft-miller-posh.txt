@@ -549,10 +549,10 @@ Internet-Draft                    POSH                    September 2013
    is merely a prefix to be placed at the front of well-known URIs
    [RFC5785] registered by protocols that use POSH, which themselves are
    responsible for the relevant registrations with the IANA.  The URIs
-   registered by such protocols SHOULD begin with "posh."  and end with
-   ".json" (indicating a media type of application/json [RFC4627] or
-   application/jwk-set+json [JOSE-JWK]).
-
+   registered by such protocols SHOULD match the URI template [RFC6570]
+   path "/.well-known/posh.{servicedesc}.json"; that is, begin with
+   "posh."  and end with ".json" (indicating a media type of application
+   /json [RFC4627] or application/jwk-set+json [JOSE-JWK]).
 
 
 
@@ -563,7 +563,7 @@ Internet-Draft                    POSH                    September 2013
 
 
    For POSH-using protocols that rely on DNS SRV records [RFC2782], the
-   part of the well-known URI between "posh."  and ".json" SHOULD be
+   "{servicedesc}" part of the well-known URI SHOULD be
    "{service}.{proto}", where the "{service}" is the DNS SRV "Service"
    prepended by the underscore character "_" and the "{proto}" is the
    DNS SRV "Proto" also prepended by the underscore character "_".  As
@@ -572,12 +572,12 @@ Internet-Draft                    POSH                    September 2013
    a service name of "xmpp-server" and uses TCP as the underlying
    transport protocol.
 
-   For other POSH-using protocols, the part of the well-known URI
-   between "posh."  and ".json" can be any unique string or identifier
-   for the protocol, which might be a service name registered with the
-   IANA in accordance with [RFC6335] or which might be an unregistered
-   name.  As an example, the well-known URI for the mythical "Foo"
-   service could be "posh.foo.json".
+   For other POSH-using protocols, the "{servicedesc}" part of the well-
+   known URI can be any unique string or identifier for the protocol,
+   which might be a service name registered with the IANA in accordance
+   with [RFC6335] or which might be an unregistered name.  As an
+   example, the well-known URI for the mythical "Foo" service could be
+   "posh.foo.json".
 
    Note: As explained in [RFC5785], the IANA registration policy
    [RFC5226] for well-known URIs is Specification Required.
@@ -698,6 +698,9 @@ Internet-Draft                    POSH                    September 2013
    [RFC6555]  Wing, D. and A. Yourtchenko, "Happy Eyeballs: Success with
               Dual-Stack Hosts", RFC 6555, April 2012.
 
+   [RFC6570]  Gregorio, J., Fielding, R., Hadley, M., Nottingham, M.,
+              and D. Orchard, "URI Template", RFC 6570, March 2012.
+
    [RFC6698]  Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
               of Named Entities (DANE) Transport Layer Security (TLS)
               Protocol: TLSA", RFC 6698, August 2012.
@@ -713,13 +716,10 @@ Appendix A.  Acknowledgements
 
 Authors' Addresses
 
-   Matthew Miller
-   Cisco Systems, Inc.
-   1899 Wynkoop Street, Suite 600
-   Denver, CO  80202
-   USA
 
-   Email: mamille2@cisco.com
+
+
+
 
 
 
@@ -730,6 +730,15 @@ Miller & Saint-Andre     Expires March 15, 2014                [Page 13]
 Internet-Draft                    POSH                    September 2013
 
 
+   Matthew Miller
+   Cisco Systems, Inc.
+   1899 Wynkoop Street, Suite 600
+   Denver, CO  80202
+   USA
+
+   Email: mamille2@cisco.com
+
+
    Peter Saint-Andre
    Cisco Systems, Inc.
    1899 Wynkoop Street, Suite 600
@@ -737,15 +746,6 @@ Internet-Draft                    POSH                    September 2013
    USA
 
    Email: psaintan@cisco.com
-
-
-
-
-
-
-
-
-
 
 
 

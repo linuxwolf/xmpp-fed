@@ -293,9 +293,9 @@ Client                 Domain                 Server
           </t>
         </list>
       </t>
-      <t>Note that the registered URI is "posh." (with a trailing dot).  This is merely a prefix to be placed at the front of well-known URIs <xref target='RFC5785'/> registered by protocols that use POSH, which themselves are responsible for the relevant registrations with the IANA.  The URIs registered by such protocols SHOULD begin with "posh." and end with ".json" (indicating a media type of application/json <xref target='RFC4627'/> or application/jwk-set+json <xref target='JOSE-JWK'/>).</t>
-      <t>For POSH-using protocols that rely on DNS SRV records <xref target='RFC2782'/>, the part of the well-known URI between "posh." and ".json" SHOULD be "{service}.{proto}", where the "{service}" is the DNS SRV "Service" prepended by the underscore character "_" and the "{proto}" is the DNS SRV "Proto" also prepended by the underscore character "_".  As an example, the well-known URI for XMPP server-to-server connections would be "posh._xmpp-server._tcp.json" since XMPP <xref target='RFC6120'/> registers a service name of "xmpp-server" and uses TCP as the underlying transport protocol.</t>  
-      <t>For other POSH-using protocols, the part of the well-known URI between "posh." and ".json" can be any unique string or identifier for the protocol, which might be a service name registered with the IANA in accordance with <xref target='RFC6335'/> or which might be an unregistered name.  As an example, the well-known URI for the mythical "Foo" service could be "posh.foo.json".</t>
+      <t>Note that the registered URI is "posh." (with a trailing dot).  This is merely a prefix to be placed at the front of well-known URIs <xref target='RFC5785'/> registered by protocols that use POSH, which themselves are responsible for the relevant registrations with the IANA.  The URIs registered by such protocols SHOULD match the URI template <xref target="RFC6570"/> path "/.well-known/posh.{servicedesc}.json"; that is, begin with "posh." and end with ".json" (indicating a media type of application/json <xref target='RFC4627'/> or application/jwk-set+json <xref target='JOSE-JWK'/>).</t>
+      <t>For POSH-using protocols that rely on DNS SRV records <xref target='RFC2782'/>, the "{servicedesc}" part of the well-known URI SHOULD be "{service}.{proto}", where the "{service}" is the DNS SRV "Service" prepended by the underscore character "_" and the "{proto}" is the DNS SRV "Proto" also prepended by the underscore character "_".  As an example, the well-known URI for XMPP server-to-server connections would be "posh._xmpp-server._tcp.json" since XMPP <xref target='RFC6120'/> registers a service name of "xmpp-server" and uses TCP as the underlying transport protocol.</t>  
+      <t>For other POSH-using protocols, the "{servicedesc}" part of the well-known URI can be any unique string or identifier for the protocol, which might be a service name registered with the IANA in accordance with <xref target='RFC6335'/> or which might be an unregistered name.  As an example, the well-known URI for the mythical "Foo" service could be "posh.foo.json".</t>
       <t>Note: As explained in <xref target='RFC5785'/>, the IANA registration policy <xref target='RFC5226'/> for well-known URIs is Specification Required.</t>  
     </section>
 
@@ -785,6 +785,27 @@ Client                 Domain                 Server
 <format type='TXT' octets='34048' target='http://www.rfc-editor.org/rfc/rfc6555.txt' />
 </reference>
 
+<reference anchor='RFC6570'>
+
+<front>
+<title>URI Template</title>
+<author initials='J.' surname='Gregorio' fullname='J. Gregorio'>
+<organization /></author>
+<author initials='R.' surname='Fielding' fullname='R. Fielding'>
+<organization /></author>
+<author initials='M.' surname='Hadley' fullname='M. Hadley'>
+<organization /></author>
+<author initials='M.' surname='Nottingham' fullname='M. Nottingham'>
+<organization /></author>
+<author initials='D.' surname='Orchard' fullname='D. Orchard'>
+<organization /></author>
+<date year='2012' month='March' />
+<abstract>
+<t>A URI Template is a compact sequence of characters for describing a range of Uniform Resource Identifiers through variable expansion.  This specification defines the URI Template syntax and the process for expanding a URI Template into a URI reference, along with guidelines for the use of URI Templates on the Internet. [STANDARDS-TRACK]</t></abstract></front>
+
+<seriesInfo name='RFC' value='6570' />
+<format type='TXT' octets='79813' target='http://www.rfc-editor.org/rfc/rfc6570.txt' />
+</reference>
       <reference anchor='RFC6698'>
         <front>
           <title>The DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol: TLSA</title>
