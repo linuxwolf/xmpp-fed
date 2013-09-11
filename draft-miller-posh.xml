@@ -113,16 +113,12 @@ Host: foo.example.com
         <t>
           <list style="symbols">
             <t>The "kty" field set to the appropriate key type used for TLS connections (e.g., "RSA" for a certificate using an RSA key).<vspace blankLines="1"/></t>
-            <t>The required parameters for the key type (e.g., "n" and "e" for a certificate using an RSA key).</t>
+            <t>The required public parameters for the key type (e.g., "n" and "e" for a certificate using an RSA key).</t>
           </list>
         </t>
-        <t>Additionally, each JWK object MUST possess at least one of the following:</t>
-        <t>
-          <list style="symbols">
-            <t>The "x5t" field set to the certificate thumbprint, as per section 3.6 of <xref target="JOSE-JWK"/>.<vspace blankLines="1"/></t>
-            <t>The "x5c" field set to the certificate chain, as per section 3.7 of <xref target="JOSE-JWK"/>.</t>
-          </list>
-        </t>
+        <t>Additionally, each JWK object MUST possess the "x5t" field set to the certificate thumbprint, as per section 3.6 of <xref target="JOSE-JWK"/>.</t>
+        <t>Each JWK object MUST NOT possess the private parameters for the key type (e.g., "d", "p", "q" for a certificate using an RSA key).</t>
+        <t>Each JWK object MAY possess other parameters as desired by application servers (e.g., the "x5c" field containing the entire X.509 certificate chain, as per section 3.7 of <xref target="JOSE-JWK"/>).</t>
         <t>The following example illustrates the usage described above.</t>
         <t>
           <figure>
@@ -146,54 +142,7 @@ Content-Length: 2785
               5sy2fCwEDzLJqh2T6UItIzjrSUZMIsK8r2pXkroI0uYuNn3W
               y-jAzK8",
       "e":   "AQAB",
-      "x5t": "UpjRI_A3afKE8_AIeTZ5o1dECTY",
-      "x5c": [
-        "MIIDgzCCAmugAwIBAgIBBjANBgkqhkiG9w0BAQUFADBGMQswCQYDV
-         QQGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbn
-         ZlcjETMBEGA1UEAxMKRXhhbXBsZSBDQTAeFw0xMTA3MDQwMDAwMDB
-         aFw0xMzA3MDIyMzU5NTlaMEoxCzAJBgNVBAYTAlVTMREwDwYDVQQI
-         EwhDb2xvcmFkbzEPMA0GA1UEBxMGRGVudmVyMRcwFQYDVQQDEw5pb
-         S5leGFtcGxlLmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQ
-         oCggEBANxwssdcU3LbODErec3owrwUhlzjtuskAn8rAcBMRPImn5x
-         AJRX+1T5g2D7MTozWWFk4TlpgzAR5slvM0tc35qAI9I0Cqk4ZLChQ
-         rYsWuY7alTrnNXdusHUYc6Eq89DZaH2knTcp57wAXzJPIG/tpBi5F
-         7ck9LVRvRjybix0HJ7i4YrL+GeLuSgrjO4+GDcXIp8oV0FMKZH+No
-         MfUITlWYl/JcX1D0WUAiuAnvWtD4Kh/qMJU6FZuupZGHqPdc3vrXt
-         p27LWgxzxjFa9qnOU6y53vCCJXLLI5sy2fCwEDzLJqh2T6UItIzjr
-         SUZMIsK8r2pXkroI0uYuNn3Wy+jAzK8CAwEAAaN4MHYwDAYDVR0TA
-         QH/BAIwADAdBgNVHQ4EFgQUTmRcur7xqaIUoU6wjVFPFxpf3UYwCw
-         YDVR0PBAQDAgXgMCcGA1UdEQQgMB6gHAYIKwYBBQUHCAWgEAwOaW0
-         uZXhhbXBsZS5jb20wEQYJYIZIAYb4QgEBBAQDAgZAMA0GCSqGSIb3
-         DQEBBQUAA4IBAQBrtpz4USAT+gNWI8ccU9rFiP0Jr+76VCf8Leims
-         qjINfKuUFxVUK5TBcCU8pyRUdXBk5THt+LUW+bPqE4SAuKjTJ1wwm
-         e8kOqtsvrr6XDfPHyX6H7nQAaKD0VbvbHfTBKh6jNVVi+4gJACeSE
-         JdiskoNYuJAxNDI8DmN9qAxu/8dlQHlIT3NkTxMWFUdmW8rj2xdia
-         nfZEwuPXoI93jdpgvGhcSM92ahumFyEZ5ysK6KFsXyUmVuOQFaVsH
-         tSAwrSGr70ASLzsCAi7JsvzO53QFW/KddkFLvEwCh/tgKK876poBo
-         x1NI6YYuWqhcKWADOOJdSfiXeu23E25tlbDRo8",
-        "MIIDWTCCAkGgAwIBAgIBATANBgkqhkiG9w0BAQUFADBGMQswCQYDV
-         QQGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbn
-         ZlcjETMBEGA1UEAxMKRXhhbXBsZSBDQTAeFw0xMTA1MDIwMDAwMDB
-         aFw0yMzA1MTYyMzU5NTlaMEYxCzAJBgNVBAYTAlVTMREwDwYDVQQI
-         EwhDb2xvcmFkbzEPMA0GA1UEBxMGRGVudmVyMRMwEQYDVQQDEwpFe
-         GFtcGxlIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQ
-         EAzNQ30X7uXTg+4jKadtRO5uQEMRMnkZvDnptbWAtx0d1PsufQ2kf
-         vog0gDhigjPEZDV9S+zm63Ia+eqJ3ROT9jDXjtF6s/IawITf5cPSN
-         xn8qP8w+vbiy0rB4W4Nk1Dwji7KJ/wKNo0mwOx/qWNjSk3yoaU4sU
-         EuIypizgLxKAr25vVvAJAxF6HAfdQoVAIdCZ/7qbBPI7aurdU/Ndm
-         bbKBK0lp8aV1MYLzz8DI0hWcBQa2+gOSUcd/yT1az7UpMjGllbnVl
-         UDxyJeCzbBaHny5NlWWHsGnsbucbM+9yeAMbRes/z0KeHxcRtomd8
-         bh7As12RIXKrk5GRoNVKAoiwLQIDAQABo1IwUDAPBgNVHRMBAf8EB
-         TADAQH/MB0GA1UdDgQWBBSyiet77RfWpH3X8NMwGFVu2ldJPTALBg
-         NVHQ8EBAMCAQYwEQYJYIZIAYb4QgEBBAQDAgAHMA0GCSqGSIb3DQE
-         BBQUAA4IBAQBd1mMx4Wx9xFLqecbjWyy7tOE2+mrWhWxg82q7z3bB
-         rHWjUGzolHe97Ch+6QI3+MPk9JQWYaMgYe11tyf0mgZ18NFQall4M
-         ho2yT+E8ju11PW+RNqUdRG6rZfdeN5Geb1o1L2g5WNTdtPXoFYgHY
-         VPQ1HmjloEic2eGnlBvOi49wAdwnASv53fgzkSJB2/GdBJ3wPIWp0
-         49/1vS5rsF5SJg+3mj3ZAuPYt80TRKbA/cjxEny5RfK+VJs3f7RQ/
-         Y3CTPxoJqskWs06/eUpjXKyzZ+MmkCs5cm1yers8goWhaI8JmLlBW
-         LQE6v8MHdbUfb4M8la5cUd2BGtTlILOVnMv"
-      ]
+      "x5t": "UpjRI_A3afKE8_AIeTZ5o1dECTY"
     }
   ]
 }
@@ -225,9 +174,9 @@ Content-Length: 78
       </section>
       
       <section title="Performing Verification" anchor="prooftype-verify">
-        <t>The TLS client compares the PKIX information obtained from the TLS server against each JWK object in the POSH results, until a match is found or the collection of POSH verification materials is exhausted.  If none of the JWK objects match the TLS server PKIX information, the TLS client SHOULD reject the connection.</t>
-        <t>The TLS client SHOULD compare the fingerprint of the PKIX certificate from the TLS server against the "x5t" field of the JWK object (note the "x5t" field is the base64url encoding of the fingerprint).  If the "x5c" field is present instead of the "x5t" field, the TLS client generates a fingerprint of the first array element, by performing a SHA-1 hash over the PKIX certificate's DER encoding.</t>
-        <t>The TLS client MAY verify the certificate chain provided in the "x5c" field of the JWK object, but it MUST NOT implicitly consider the final certificate in the "x5c" field to be a trust anchor itself; the TLS client only uses the end entity certificate information for verification.</t>
+        <t>The TLS client compares the PKIX information obtained from the TLS server against each JWK object in the POSH results, until a match is found or the collection of POSH verification materials is exhausted.  If none of the JWK objects match the TLS server PKIX information, the TLS client SHOULD reject the connection (the TLS client might still accept the connection if other verification schemes are successful).</t>
+        <t>The TLS client SHOULD compare the fingerprint of the PKIX certificate from the TLS server against the "x5t" field of the JWK object (note the "x5t" field is the base64url encoding of the fingerprint).</t>
+        <t>The TLS client MAY verify the certificate chain provided in the "x5c" field of the JWK object (if present), but it MUST NOT implicitly consider the final certificate in the "x5c" field to be a trust anchor itself; the TLS client only uses the end entity certificate information for verification.</t>
       </section>
     </section>
 
@@ -309,53 +258,7 @@ Client                 Domain                 Server
               w-_8hUldaTPD9MHlHPrvcsRV5uw8wK5MB6QyfS6wF4b0Kj2T
               vYceNlE",
       "e":   "AQAB",
-      "x5t": "Ae0sLVtm78VT-mQXJQop-ENOM6o",
-      "x5c": [
-        "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
-         LQE6v8MHdbUfb4M8la5cUd2BGtTlILOVnMv"
-      ]
+      "x5t": "Ae0sLVtm78VT-mQXJQop-ENOM6o"
     },
     {
       "kty": "RSA",
@@ -369,54 +272,7 @@ Client                 Domain                 Server
               w-_8hUldaTPD9MHlHPrvcsRV5uw8wK5MB6QyfS6wF4b0Kj2T
               vYceNlE",
       "e":   "AQAB",
-      "x5t": "lYZC2n9TBpOaUsBclEIacQTKToA",
-      "x5c": [
-        "MIIDjTCCAnWgAwIBAgIBBTANBgkqhkiG9w0BAQUFADBGMQswCQYDV
-        QQGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbnZ
-        lcjETMBEGA1UEAxMKRXhhbXBsZSBDQTAeFw0xMzA1MTcwMDAwMDBaF
-        w0xNTA1MTYyMzU5NTlaME8xCzAJBgNVBAYTAlVTMREwDwYDVQQIEwh
-        Db2xvcmFkbzEPMA0GA1UEBxMGRGVudmVyMRwwGgYDVQQDExNob3N0a
-        W5nLmV4YW1wbGUubmV0MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMII
-        BCgKCAQEAz6S1aRDxu2P8cR0ADqQ6nMkaCgc1mwmbGOH8+J+mABR9B
-        6ow79gFHXTQh0llHMl9QvKFHCf1uKQKrztZOjGA9Y6d3ewfepNiIBw
-        hHlLq0FuzKnpZibAzXK4LS8sKjpKgPN0rVK+RAozdBaTQYU1TiXipd
-        gAzFpLDzeLrK/kMFVtJPsT3a9Loar/imAjbqXXQmHJtm5MRU9FQIbq
-        lMoBdCkvGaMnmgb0z3VE/Xuey5B4Ts2DQCngEGfmGhyiOR+2HCBtfi
-        WoEx5ykECeTLmOfqyWbNL+sv4vD7/yFSV1pM8P0weUc+u9yxFXm7Dz
-        ArkwHpDJ9LrAXhvQqPZO9hx42UQIDAQABo30wezAMBgNVHRMBAf8EA
-        jAAMB0GA1UdDgQWBBQ/veMa6XwrIaUv8Y7PmW0RyAUm9jALBgNVHQ8
-        EBAMCBeAwLAYDVR0RBCUwI6AhBggrBgEFBQcIBaAVDBNob3N0aW5nL
-        mV4YW1wbGUubmV0MBEGCWCGSAGG+EIBAQQEAwIGQDANBgkqhkiG9w0
-        BAQUFAAOCAQEAfb3++qh/bxsVtcEWmNtj1QLTBiXC5T9U6NuWUKY3a
-        RTIsthO5yLsToUG1bbxLceVG+xPQT9uRqvV02sumiIn3gv87NU5gMR
-        b1Gy1P9N0YT5GiHCN5qCfegGH6jIokh0Js3v+ttR/rUns0/MEsr/ka
-        YQ7KRKzOdlxT+gWN9Lp0fOYdYcasDWNMTg1NZwzXKcdkhb1lRBYuP4
-        SeiJvy6ZbyUnoswthVTe0CK9+StDtJZLPSUu7TB2MwYMnv344NoTO2
-        ufRawLU0+8cJZxrXq/H/YQyoAFB9opw0wEoTIB5aZqI2em4Wjgx9sl
-        aonFlLEQysm5qJnhTGxEIDxQfqCcRfw==",
-       "MIIDWTCCAkGgAwIBAgIBATANBgkqhkiG9w0BAQUFADBGMQswCQYDVQ
-        QGEwJVUzERMA8GA1UECBMIQ29sb3JhZG8xDzANBgNVBAcTBkRlbnZl
-        cjETMBEGA1UEAxMKRXhhbXBsZSBDQTAeFw0xMTA1MDIwMDAwMDBaFw
-        0yMzA1MTYyMzU5NTlaMEYxCzAJBgNVBAYTAlVTMREwDwYDVQQIEwhD
-        b2xvcmFkbzEPMA0GA1UEBxMGRGVudmVyMRMwEQYDVQQDEwpFeGFtcG
-        xlIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzNQ3
-        0X7uXTg+4jKadtRO5uQEMRMnkZvDnptbWAtx0d1PsufQ2kfvog0gDh
-        igjPEZDV9S+zm63Ia+eqJ3ROT9jDXjtF6s/IawITf5cPSNxn8qP8w+
-        vbiy0rB4W4Nk1Dwji7KJ/wKNo0mwOx/qWNjSk3yoaU4sUEuIypizgL
-        xKAr25vVvAJAxF6HAfdQoVAIdCZ/7qbBPI7aurdU/NdmbbKBK0lp8a
-        V1MYLzz8DI0hWcBQa2+gOSUcd/yT1az7UpMjGllbnVlUDxyJeCzbBa
-        Hny5NlWWHsGnsbucbM+9yeAMbRes/z0KeHxcRtomd8bh7As12RIXKr
-        k5GRoNVKAoiwLQIDAQABo1IwUDAPBgNVHRMBAf8EBTADAQH/MB0GA1
-        UdDgQWBBSyiet77RfWpH3X8NMwGFVu2ldJPTALBgNVHQ8EBAMCAQYw
-        EQYJYIZIAYb4QgEBBAQDAgAHMA0GCSqGSIb3DQEBBQUAA4IBAQBd1m
-        Mx4Wx9xFLqecbjWyy7tOE2+mrWhWxg82q7z3bBrHWjUGzolHe97Ch+
-        6QI3+MPk9JQWYaMgYe11tyf0mgZ18NFQall4Mho2yT+E8ju11PW+RN
-        qUdRG6rZfdeN5Geb1o1L2g5WNTdtPXoFYgHYVPQ1HmjloEic2eGnlB
-        vOi49wAdwnASv53fgzkSJB2/GdBJ3wPIWp049/1vS5rsF5SJg+3mj3
-        ZAuPYt80TRKbA/cjxEny5RfK+VJs3f7RQ/Y3CTPxoJqskWs06/eUpj
-        XKyzZ+MmkCs5cm1yers8goWhaI8JmLlBWLQE6v8MHdbUfb4M8la5cU
-        d2BGtTlILOVnMv"
-      ]
+      "x5t": "lYZC2n9TBpOaUsBclEIacQTKToA"
     }
   ]
 }        ]]></artwork>
