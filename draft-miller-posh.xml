@@ -153,7 +153,7 @@ Content-Length: 2785
       </section>
 
       <section title="Source Domain References PKIX Certificate" anchor="prooftype-ref">
-        <t>If the source domain HTTPS server has a reference to the certificate information, it responds to the HTTPS GET with a JSON document.  The document contains a "url" field whose value is the HTTPS URL where TLS clients can obtain the actual JWK set.</t>
+        <t>If the source domain HTTPS server has a reference to the certificate information, it responds to the HTTPS GET with a JSON document.  The document MUST contain a "url" field whose value is the HTTPS URL where TLS clients can obtain the actual JWK set, and SHOULD contain an "expires" field whose value is the number of seconds after which the TLS client ought to consider the delegation to be stale.</t>
         <t>
           <figure>
             <preamble>Example Reference Response</preamble>
@@ -164,13 +164,15 @@ Content-Length: 78
 
 {
   "url":"https://hosting.example.com/.well-known/
-         posh.foo.json"
+         posh.foo.json",
+  "expires":"86400"
 }
               ]]></artwork>
           </figure>
         </t>
         <t>The client performs an HTTPS GET for the URL specified in the "url" field value.  The HTTPS server for the URI at which the client has been redirected responds to the request with a JWK set.  The content retrieved from the "url" location MUST NOT itself be a reference (e.g., containing only the "url" field and no "keys" field), in order to prevent circular references.</t>
-        <t>Note: The JSON document returned by the source domain HTTPS server MUST contain either a reference or a JSON Web Key set, but MUST NOT contain both.</t>
+        <t><list style='empty'><t>Note: The JSON document returned by the source domain HTTPS server MUST contain either a reference or a JSON Web Key set, but MUST NOT contain both.</t></list></t>
+        <t>The "expires" value is a hint regarding the expiration of the source domain's delegation of service to the delegated domain.  If no "expires" field is included, a TLS client SHOULD apply a reasonable default value, such as 24 hours (86400 seconds).  If the value of the "expires" field is significantly longer or shorter than the TLS client's reasonable default value, the client MAY ignore the hint and instead apply its own default.  The TLS client MUST follow either its own default value or the source domain's hint, in preference to the expiration date of the delegated domain's certificate (since the latter does not govern the act of delegation and is not under the control of the source domain).</t>
       </section>
       
       <section title="Performing Verification" anchor="prooftype-verify">
@@ -302,6 +304,7 @@ Client                 Domain                 Server
     <section title="Security Considerations" anchor="security">
       <t>This document supplements but does not supersede the security considerations provided in specifications for application protocols that decide to use POSH (e.g., <xref target="RFC6120"/> and <xref target="RFC6125"/> for XMPP).  Specifically, the security of requests and responses sent via HTTPS depends on checking the identity of the HTTP server in accordance with <xref target="RFC2818"/>.  Additionally, the security of POSH can benefit from other HTTP hardening protocols, such as HSTS <xref target="RFC6797"/> and key pinning <xref target="KEYPIN"/>, especially if the TLS client shares some information with a common HTTPS implementation (e.g., platform-default web browser).</t>
       <t>Note well that POSH is used by a TLS client to obtain the public key of a TLS server to which it might connect for a particular application protocol such as IMAP or XMPP.  POSH does not enable a hosted domain to transfer private keys to a hosting service via HTTPS.  POSH also does not enable a TLS server to engage in certificate enrollment with a certification authority via HTTPS, as is done in Enrollment over Secure Transport <xref target='EST'/>.</t>
+      <t>A web server at the source domain might redirect an HTTPS request to another URL.  The location provided in the redirect response MUST specify an HTTPS URL.  Source domains SHOULD use only temporary redirect mechanisms, such as HTTP status codes 302 (Found) and 307 (Temporary Redirect).  Clients MAY treat any redirect as temporary, ignoring the specific semantics for 301 (Moved Permanently) and 308 (Permanent Redirect) <xref target='HTTP-STATUS-308'/>.  To protect against circular references, clients MUST NOT follow an infinite number of redirects.  It is RECOMMENDED that clients follow no more than 10 redirects, although applications or implementations can require that fewer redirects be followed.</t>
     </section>
 
   </middle>
@@ -609,6 +612,20 @@ Client                 Domain                 Server
 <seriesInfo name='Internet-Draft' value='draft-ietf-pkix-est-09' />
 <format type='TXT'
         target='http://www.ietf.org/internet-drafts/draft-ietf-pkix-est-09.txt' />
+</reference>
+
+<reference anchor='HTTP-STATUS-308'>
+<front>
+<title>The Hypertext Transfer Protocol (HTTP) Status Code 308 (Permanent Redirect)</title>
+<author initials='J' surname='Reschke' fullname='Julian Reschke'>
+    <organization />
+</author>
+<date month='March' day='26' year='2012' />
+<abstract><t>This document specifies the additional HyperText Transfer Protocol (HTTP) Status Code 308 (Permanent Redirect).</t></abstract>
+</front>
+<seriesInfo name='Internet-Draft' value='draft-reschke-http-status-308-07' />
+<format type='TXT'
+        target='http://www.ietf.org/internet-drafts/draft-reschke-http-status-308-07.txt' />
 </reference>
 
       <reference anchor="KEYPIN">
