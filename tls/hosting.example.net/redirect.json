@@ -1,0 +1,5 @@
+{
+  "url":"https://hosting.example.net/
+         .well-known/posh._xmpp-server._tcp.json",
+  "expires":86400
+}
