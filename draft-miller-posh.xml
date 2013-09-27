@@ -108,15 +108,15 @@ Host: foo.example.com
       </t>
 
       <section title="Source Domain Possesses PKIX Certificate" anchor="prooftype-possess">
-        <t>If the source domain HTTPS server possesses the certificate information, it responds to the HTTPS GET with a success status code and the message body set to a JSON Web Key (JWK) set <xref target="JOSE-JWK"/>.  The JWK set MUST contain at least one JWK object.</t>
+        <t>If the source domain HTTPS server possesses the certificate information, it responds to the HTTPS GET with a success status code and the message body set to a JSON Web Key (JWK) set <xref target="JOSE-JWK"/>.  The JWK set MUST contain at least one JWK object, and MUST contain an "expires" field whose value is the number of seconds after which the TLS client ought to consider the key information to be stale.</t>
         <t>Each included JWK object MUST possess the following information:</t>
         <t>
           <list style="symbols">
             <t>The "kty" field set to the appropriate key type used for TLS connections (e.g., "RSA" for a certificate using an RSA key).<vspace blankLines="1"/></t>
-            <t>The required public parameters for the key type (e.g., "n" and "e" for a certificate using an RSA key).</t>
+            <t>The required public parameters for the key type (e.g., "n" and "e" for a certificate using an RSA key).<vspace blankLines="1"/></t>
+            <t>The "x5t" field set to the certificate thumbprint, as described in section 3.6 of <xref target="JOSE-JWK"/>.</t>
           </list>
         </t>
-        <t>Additionally, each JWK object MUST possess the "x5t" field set to the certificate thumbprint, as per section 3.6 of <xref target="JOSE-JWK"/>.</t>
         <t>Each JWK object MUST NOT possess the private parameters for the key type (e.g., "d", "p", "q" for a certificate using an RSA key).</t>
         <t>Each JWK object MAY possess other parameters as desired by application servers (e.g., the "x5c" field containing the entire X.509 certificate chain, as per section 3.7 of <xref target="JOSE-JWK"/>).</t>
         <t>The following example illustrates the usage described above.</t>
@@ -131,29 +131,31 @@ Content-Length: 2785
 {
   "keys": [
     {
-      "kty": "RSA",
-      "kid": "c8fb8b80-1193-11e3-b2b1-835742119fe8",
-      "n":   "ANxwssdcU3LbODErec3owrwUhlzjtuskAn8rAcBMRPImn5xA
-              JRX-1T5g2D7MTozWWFk4TlpgzAR5slvM0tc35qAI9I0Cqk4Z
-              LChQrYsWuY7alTrnNXdusHUYc6Eq89DZaH2knTcp57wAXzJP
-              IG_tpBi5F7ck9LVRvRjybix0HJ7i4YrL-GeLuSgrjO4-GDcX
-              Ip8oV0FMKZH-NoMfUITlWYl_JcX1D0WUAiuAnvWtD4Kh_qMJ
-              U6FZuupZGHqPdc3vrXtp27LWgxzxjFa9qnOU6y53vCCJXLLI
-              5sy2fCwEDzLJqh2T6UItIzjrSUZMIsK8r2pXkroI0uYuNn3W
-              y-jAzK8",
-      "e":   "AQAB",
-      "x5t": "UpjRI_A3afKE8_AIeTZ5o1dECTY"
+      "kty":"RSA",
+      "kid":"c8fb8b80-1193-11e3-b2b1-835742119fe8",
+      "n":"ANxwssdcU3LbODErec3owrwUhlzjtuskAn8rAcBMRPImn5xA
+           JRX-1T5g2D7MTozWWFk4TlpgzAR5slvM0tc35qAI9I0Cqk4Z
+           LChQrYsWuY7alTrnNXdusHUYc6Eq89DZaH2knTcp57wAXzJP
+           IG_tpBi5F7ck9LVRvRjybix0HJ7i4YrL-GeLuSgrjO4-GDcX
+           Ip8oV0FMKZH-NoMfUITlWYl_JcX1D0WUAiuAnvWtD4Kh_qMJ
+           U6FZuupZGHqPdc3vrXtp27LWgxzxjFa9qnOU6y53vCCJXLLI
+           5sy2fCwEDzLJqh2T6UItIzjrSUZMIsK8r2pXkroI0uYuNn3W
+           y-jAzK8",
+      "e":"AQAB",
+      "x5t":"UpjRI_A3afKE8_AIeTZ5o1dECTY"
     }
-  ]
+  ],
+  "expires": 604800
 }
 
 ]]></artwork>
           </figure>
         </t>
+        <t>The "expires" value is a hint regarding the expiration of the keying materials.  If no "expires" field is included, a TLS client SHOULD consider these verification materials invalid.  See <xref target='caching'/> for how to reconcile this "expires" field with the reference's "expires" field.</t>
       </section>
 
       <section title="Source Domain References PKIX Certificate" anchor="prooftype-ref">
-        <t>If the source domain HTTPS server has a reference to the certificate information, it responds to the HTTPS GET with a JSON document.  The document MUST contain a "url" field whose value is the HTTPS URL where TLS clients can obtain the actual JWK set, and SHOULD contain an "expires" field whose value is the number of seconds after which the TLS client ought to consider the delegation to be stale.</t>
+        <t>If the source domain HTTPS server has a reference to the certificate information, it responds to the HTTPS GET with a JSON document.  The document MUST contain a "url" field whose value is the HTTPS URL where TLS clients can obtain the actual JWK set, and MUST contain an "expires" field whose value is the number of seconds after which the TLS client ought to consider the delegation to be stale.</t>
         <t>
           <figure>
             <preamble>Example Reference Response</preamble>
@@ -165,14 +167,14 @@ Content-Length: 78
 {
   "url":"https://hosting.example.com/.well-known/
          posh.foo.json",
-  "expires":"86400"
+  "expires":86400
 }
               ]]></artwork>
           </figure>
         </t>
         <t>The client performs an HTTPS GET for the URL specified in the "url" field value.  The HTTPS server for the URI at which the client has been redirected responds to the request with a JWK set.  The content retrieved from the "url" location MUST NOT itself be a reference (e.g., containing only the "url" field and no "keys" field), in order to prevent circular references.</t>
-        <t><list style='empty'><t>Note: The JSON document returned by the source domain HTTPS server MUST contain either a reference or a JSON Web Key set, but MUST NOT contain both.</t></list></t>
-        <t>The "expires" value is a hint regarding the expiration of the source domain's delegation of service to the delegated domain.  If no "expires" field is included, a TLS client SHOULD apply a reasonable default value, such as 24 hours (86400 seconds).  If the value of the "expires" field is significantly longer or shorter than the TLS client's reasonable default value, the client MAY ignore the hint and instead apply its own default.  The TLS client MUST follow either its own default value or the source domain's hint, in preference to the expiration date of the delegated domain's certificate (since the latter does not govern the act of delegation and is not under the control of the source domain).</t>
+        <t><list style='empty'><t>Note: The JSON document returned by the source domain HTTPS server MUST contain either a reference or a JWK-set, but MUST NOT contain both.</t></list></t>
+        <t>The "expires" value is a hint regarding the expiration of the source domain's delegation of service to the delegated domain.  If no "expires" field is included, a TLS client SHOULD consider the delegation invalid.  See <xref target='caching'/> for how to reconcile this "expires" field with the JWK-set's "expires" field.</t>
       </section>
       
       <section title="Performing Verification" anchor="prooftype-verify">
@@ -188,7 +190,8 @@ Content-Length: 78
 
     <section title="Order of Operations" anchor="order">
       <t>In order for the TLS client to perform verification of reference identifiers without potentially compromising data, POSH processes MUST be complete before any application-level data is exchanged for the source domain.  The TLS client SHOULD perform all POSH retrievals before opening any socket connections to the application protocol server.  For application protocols that use DNS SRV, the POSH processes ideally ought to be done in parallel with resolving the SRV records and the addresses of any targets, similar to the "happy eyeballs" approach for IPv4 and IPv6 <xref target='RFC6555'/>.</t>
-      <t>The following diagram illustrates the possession flow:<vspace blankLines="1"/>
+      <t>The following diagram illustrates the possession flow:<vspace blankLines="1"/></t>
+      <t>
         <figure>
           <artwork><![CDATA[
 Client                 Domain                 Server
@@ -209,7 +212,8 @@ Client                 Domain                 Server
           ]]></artwork>
         </figure>
       </t>
-      <t>While the following diagram illustrates the reference flow:<vspace blankLines="1"/>
+      <t>While the following diagram illustrates the reference flow:<vspace blankLines="1"/></t>
+      <t>
         <figure>
           <artwork><![CDATA[
 Client                 Domain                 Server
@@ -239,7 +243,8 @@ Client                 Domain                 Server
     </section>
 
     <section title="Caching Results" anchor="caching">
-      <t>Ideally, the TLS client relies on the expiration time of the certificate obtained via POSH, and not on HTTP caching mechanisms.  To that end, the HTTPS servers for source and derived domains SHOULD specify a 'Cache-Control' header indicating a short duration (e.g., max-age=60) or "no-cache" to indicate that the response (redirect or content) is not appropriate to cache at the HTTP level.</t>
+      <t>The TLS client MUST NOT cache results (reference or content) indefinitely.  If the source domain returns a reference, the TLS client MUST use the lower of the two values when determining how long to cache results.  Once it considers the results stale, it SHOULD perform the entire POSH process starting with the HTTPS GET to the source domain.  The TLS client MAY use a lower value than any provided in the "expires" field(s), or not cache results at all.</t>
+      <t>The TLS client SHOULD NOT rely on HTTP caching mechanisms, instead using the expiration hints provided in the resulting documents.  To that end, the HTTPS servers for source and derived domains SHOULD specify a 'Cache-Control' header indicating a very short duration (e.g., max-age=60) or "no-cache" to indicate that the response (redirect, reference, or content) is not appropriate to cache at the HTTP level.</t>
     </section>
 
     <section title="Alternates and Roll-over" anchor="rollover">
