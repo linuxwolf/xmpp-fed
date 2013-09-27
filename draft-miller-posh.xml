@@ -4,7 +4,7 @@
 <?rfc strict="yes"?>
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
-<?rfc tocdepth="4"?>
+<?rfc tocdepth="2"?>
 <rfc category="std" docName="draft-miller-posh-02" ipr="trust200902">
   <front>
     <title abbrev="POSH">PKIX over Secure HTTP (POSH)</title>
@@ -108,7 +108,7 @@ Host: foo.example.com
       </t>
 
       <section title="Source Domain Possesses PKIX Certificate" anchor="prooftype-possess">
-        <t>If the source domain HTTPS server possesses the certificate information, it responds to the HTTPS GET with a success status code and the message body set to a JSON Web Key (JWK) set <xref target="JOSE-JWK"/>.  The JWK set MUST contain at least one JWK object, and MUST contain an "expires" field whose value is the number of seconds after which the TLS client ought to consider the key information to be stale.</t>
+        <t>If the source domain HTTPS server possesses the certificate information, it responds to the HTTPS GET with a success status code and the message body set to a JSON Web Key (JWK) set <xref target="JOSE-JWK"/>.  The JWK set MUST contain at least one JWK object, and MUST contain an "expires" field whose value is the number of seconds after which the TLS client ought to consider the key information to be stale (further explained under <xref target='caching'/>).</t>
         <t>Each included JWK object MUST possess the following information:</t>
         <t>
           <list style="symbols">
@@ -155,7 +155,7 @@ Content-Length: 2785
       </section>
 
       <section title="Source Domain References PKIX Certificate" anchor="prooftype-ref">
-        <t>If the source domain HTTPS server has a reference to the certificate information, it responds to the HTTPS GET with a JSON document.  The document MUST contain a "url" field whose value is the HTTPS URL where TLS clients can obtain the actual JWK set, and MUST contain an "expires" field whose value is the number of seconds after which the TLS client ought to consider the delegation to be stale.</t>
+        <t>If the source domain HTTPS server has a reference to the certificate information, it responds to the HTTPS GET with a JSON document.  The document MUST contain a "url" field whose value is the HTTPS URL where TLS clients can obtain the actual JWK set, and MUST contain an "expires" field whose value is the number of seconds after which the TLS client ought to consider the delegation to be stale (further explained under <xref target='caching'/>).</t>
         <t>
           <figure>
             <preamble>Example Reference Response</preamble>
@@ -165,16 +165,16 @@ Content-Type: application/json
 Content-Length: 78
 
 {
-  "url":"https://hosting.example.com/.well-known/
-         posh.foo.json",
+  "url":"https://hosting.example.net/.well-known/posh.foo.json",
   "expires":86400
 }
               ]]></artwork>
           </figure>
         </t>
-        <t>The client performs an HTTPS GET for the URL specified in the "url" field value.  The HTTPS server for the URI at which the client has been redirected responds to the request with a JWK set.  The content retrieved from the "url" location MUST NOT itself be a reference (e.g., containing only the "url" field and no "keys" field), in order to prevent circular references.</t>
+        <t>The client performs an HTTPS GET for the URL specified in the "url" field value.  The HTTPS server for the URI to which the client has been redirected responds to the request with a JWK set.  The content retrieved from the "url" location MUST NOT itself be a reference (i.e., containing a "url" fields instead of a "keys" field), in order to prevent circular delegations.</t>
         <t><list style='empty'><t>Note: The JSON document returned by the source domain HTTPS server MUST contain either a reference or a JWK-set, but MUST NOT contain both.</t></list></t>
-        <t>The "expires" value is a hint regarding the expiration of the source domain's delegation of service to the delegated domain.  If no "expires" field is included, a TLS client SHOULD consider the delegation invalid.  See <xref target='caching'/> for how to reconcile this "expires" field with the JWK-set's "expires" field.</t>
+        <t><list style='empty'><t>Note: See <xref target='security'/> for discussion about HTTPS redirects.</t></list></t>
+        <t>The "expires" value is a hint regarding the expiration of the source domain's delegation of service to the delegated domain.  If no "expires" field is included, a TLS client SHOULD consider the delegation invalid.  See <xref target='caching'/> for guidelines about reconciling this "expires" field with the JWK-set's "expires" field.</t>
       </section>
       
       <section title="Performing Verification" anchor="prooftype-verify">
@@ -243,8 +243,8 @@ Client                 Domain                 Server
     </section>
 
     <section title="Caching Results" anchor="caching">
-      <t>The TLS client MUST NOT cache results (reference or content) indefinitely.  If the source domain returns a reference, the TLS client MUST use the lower of the two values when determining how long to cache results.  Once it considers the results stale, it SHOULD perform the entire POSH process starting with the HTTPS GET to the source domain.  The TLS client MAY use a lower value than any provided in the "expires" field(s), or not cache results at all.</t>
-      <t>The TLS client SHOULD NOT rely on HTTP caching mechanisms, instead using the expiration hints provided in the resulting documents.  To that end, the HTTPS servers for source and derived domains SHOULD specify a 'Cache-Control' header indicating a very short duration (e.g., max-age=60) or "no-cache" to indicate that the response (redirect, reference, or content) is not appropriate to cache at the HTTP level.</t>
+      <t>The TLS client MUST NOT cache results (reference or JWK-set) indefinitely.  If the source domain returns a reference, the TLS client MUST use the lower of the two "expires" values when determining how long to cache results (i.e., if the reference "expires" value is lower than the JWK-set "expires" value, honor the reference "expires" value).  Once the TLS client considers the results stale, it SHOULD perform the entire POSH process again starting with the HTTPS GET to the source domain.  The TLS client MAY use a lower value than any provided in the "expires" field(s), or not cache results at all.</t>
+      <t>The TLS client SHOULD NOT rely on HTTP caching mechanisms, instead using the expiration hints provided in the POSH reference or JWK-set documents.  To that end, the HTTPS servers for source and derived domains SHOULD specify a 'Cache-Control' header indicating a very short duration (e.g., max-age=60) or "no-cache" to indicate that the response (redirect, reference, or content) is not appropriate to cache at the HTTP level.</t>
     </section>
 
     <section title="Alternates and Roll-over" anchor="rollover">
@@ -327,10 +327,10 @@ Client                 Domain                 Server
               <email>mbj@microsoft.com</email>
             </address>
           </author>
-          <date month="July" year="2013"/>
+          <date day="15" month="September" year="2013"/>
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-jose-json-web-key-14"/>
-        <format type="TXT" target="http://tools.ietf.org/html/draft-ietf-jose-json-web-key-14.txt"/>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-jose-json-web-key-16"/>
+        <format type="TXT" target="http://tools.ietf.org/html/draft-ietf-jose-json-web-key-16.txt"/>
       </reference>
 
       <reference anchor="RFC2119">
@@ -634,31 +634,24 @@ Client                 Domain                 Server
 </reference>
 
       <reference anchor="KEYPIN">
-        <front>
-          <title>Public Key Pinning Extension for HTTP</title>
-          <author initials="C." surname="Evans" fullname="Chris Evans">
-            <organization>Google, Inc.</organization>
-            <address>
-              <email>cevans@google.com</email>
-            </address>
-          </author>
-          <author initials="C." surname="Palmer" fullname="Chris Palmer">
-            <organization>Google, Inc.</organization>
-            <address>
-              <email>palmer@google.com</email>
-            </address>
-          </author>
-          <author initials="R." surname="Sleevi" fullname="Ryan Palmer">
-            <organization>Google, Inc.</organization>
-            <address>
-              <email>sleevi@google.com</email>
-            </address>
-          </author>
-          <date month="December" year="2012"/>
-        </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-websec-key-pinning-04"/>
-        <format type="TXT" target="http://tools.ietf.org/html/draft-ietf-websec-key-pinning-04.txt"/>
-      </reference>
+<front>
+<title>Public Key Pinning Extension for HTTP</title>
+<author initials='C' surname='Evans' fullname='Chris Evans'>
+    <organization />
+</author>
+<author initials='C' surname='Palmer' fullname='Chris Palmer'>
+    <organization />
+</author>
+<author initials='R' surname='Sleevi' fullname='Ryan Sleevi'>
+    <organization />
+</author>
+<date month='July' day='11' year='2013' />
+<abstract><t>This memo describes an extension to the HTTP protocol allowing web host operators to instruct user agents (UAs) to remember ("pin") the hosts' cryptographic identities for a given period of time.  During that time, UAs will require that the host present a certificate chain including at least one Subject Public Key Info structure whose fingerprint matches one of the pinned fingerprints for that host.  By effectively reducing the number of authorities who can authenticate the domain during the lifetime of the pin, pinning may reduce the incidence of man-in-the-middle attacks due to compromised Certification Authorities.</t></abstract>
+</front>
+<seriesInfo name='Internet-Draft' value='draft-ietf-websec-key-pinning-08' />
+<format type='TXT'
+        target='http://www.ietf.org/internet-drafts/draft-ietf-websec-key-pinning-08.txt' />
+</reference>
 
 <reference anchor='RFC2782'>
 <front>
