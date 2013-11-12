@@ -5,7 +5,7 @@
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="2"?>
-<rfc category="std" docName="draft-miller-posh-02" ipr="trust200902">
+<rfc category="std" docName="draft-miller-posh-03" ipr="trust200902">
   <front>
     <title abbrev="POSH">PKIX over Secure HTTP (POSH)</title>
     <author initials="M." surname="Miller" fullname="Matthew Miller">
@@ -41,7 +41,7 @@
     <keyword>Jabber</keyword>
     <keyword>federation</keyword>
     <abstract>
-      <t>Experience has shown that it is extremely difficult to deploy proper PKIX certificates for TLS in multi-tenanted environments, since certification authorities will not issue certificates for hosted domains to hosting services, hosted domains do not want hosting services to hold their private keys, and hosting services wish to avoid liability for holding those keys.  As a result, domains hosted in multi-tenanted environments often deploy non-HTTP applications such as email and instant messaging using certificates that identify the hosting service, not the hosted domain.  Such deployments force end users and peer services to accept a certificate with an improper identifier, resulting in obvious security implications.  This document defines two methods that make it easier to deploy certificates for proper server identity checking in non-HTTP application protocols.  The first method enables the TLS client associated with a user agent or peer application server to obtain the end-entity certificate of a hosted domain over secure HTTP as an alternative to standard PKIX techniques.  The second method enables a hosted domain to securely delegate a non-HTTP application to a hosting service using redirects provided by HTTPS itself or by a pointer in a file served over HTTPS at the hosted domain.</t>
+      <t>Experience has shown that it is extremely difficult to deploy proper PKIX certificates for TLS in multi-tenanted environments, since certification authorities will not issue certificates for hosted domains to hosting services, hosted domains do not want hosting services to hold their private keys, and hosting services wish to avoid liability for holding those keys.  As a result, domains hosted in multi-tenanted environments often deploy non-HTTP applications such as email and instant messaging using certificates that identify the hosting service, not the hosted domain.  Such deployments force end users and peer services to accept a certificate with an improper identifier, resulting in obvious security implications.  This document defines two methods that make it easier to deploy certificates for proper server identity checking in non-HTTP application protocols.  The first method enables the TLS client associated with a user agent or peer application server to obtain the end-entity certificate of a hosted domain over secure HTTP as an alternative to standard PKIX techniques.  The second method enables a hosted domain to securely delegate a non-HTTP application to a hosting service using redirects provided by HTTPS itself or by a pointer in a file served over HTTPS at the hosted domain.  While this approach is developed for use in the Extensible Messaging and Presence Protocol (XMPP) as a Domain Name Association prooftype, it can be applied to any non-HTTP application protocol.</t>
     </abstract>
   </front>
 
@@ -61,7 +61,7 @@
       <t>Given your inability to deploy public keys / certificates containing the right identifiers, your back-up approach was always to use a certificate containing hosting.example.net as the identifier.  However, more and more customers and end users are complaining about warning messages in user agents and the inherent security issues involved with taking a "leap of faith" to accept the identity mismatch between the source domain (foo.example.com) and the delegated domain (hosting.example.net).</t>
       <t>This situation is both insecure and unsustainable.  You have investigated the possibility of using DNS Security <xref target="RFC4033"/> and DNS-Based Authentication of Named Entities (DANE) <xref target="RFC6698"/> to solve the problem.  However, your customers and your operations team have told you that they will not be able to deploy DNSSEC and DANE for several years at least.  The product managers in your company are pushing you to find a method that can be deployed more quickly to overcome the lack of proper server identity checking for your hosted customers.</t>
       <t>One possible approach is to ask each customer to provide the public key / certificate for the "foo" service at a special HTTPS URI on their website ("https://foo.example.com/.well-known/posh.foo.json" is one possibility).  This could be a public key that you generate for the customer, but because the customer hosts it via HTTPS, any user agent can find that public key and check it against the public key you provide during TLS negotiation for the "foo" service (as one added benefit, the customer never needs to hand you a private key).  Alternatively, the customer can redirect requests for that special HTTPS URI to an HTTPS URI at your own website, thus making it explicit that they have delegated the "foo" service to you.</t>
-      <t>The approach sketched out above, called POSH ("PKIX Over Secure HTTP"), is explained in the remainder of this document.</t>
+      <t>The approach sketched out above, called POSH ("PKIX Over Secure HTTP"), is explained in the remainder of this document.  While this approach is developed for use in the Extensible Messaging and Presence Protocol (XMPP) as a prooftype for Domain Name Associations (DNA) <xref target="XMPP-DNA"/>, it can be applied to any non-HTTP application protocol.</t>
     </section>
 
     <section title="Discussion Venue" anchor="discuss">
@@ -598,7 +598,6 @@ Client                 Domain                 Server
     </references>
 
     <references title="Informative References">
-
 <reference anchor='EST'>
 <front>
 <title>Enrollment over Secure Transport</title>
@@ -653,6 +652,23 @@ Client                 Domain                 Server
         target='http://www.ietf.org/internet-drafts/draft-ietf-websec-key-pinning-08.txt' />
 </reference>
 
+			<reference anchor="XMPP-DNA">
+				<front>
+					<title>Domain Name Associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP)</title>
+					<author initials="P" surname="Saint-Andre" fullname="Peter Saint-Andre">
+						<organization/>
+					</author>
+					<author initials="M" surname="Miller" fullname="Matthew Miller">
+						<organization/>
+					</author>
+					<date month="October" day="20" year="2013"/>
+					<abstract>
+						<t>This document improves the security of the Extensible Messaging and Presence Protocol (XMPP) in two ways.  First, it specifies how "prooftypes" can establish a strong association between a domain name and an XML stream.  Second, it describes how to securely delegate a source domain to a derived domain, which is especially important in virtual hosting environments.</t>
+					</abstract>
+				</front>
+				<seriesInfo name="Internet-Draft" value="draft-ietf-xmpp-dna-04"/>
+				<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-xmpp-dna-04.txt"/>
+			</reference>
 <reference anchor='RFC2782'>
 <front>
 <title abbrev='DNS SRV RR'>A DNS RR for specifying the location of services (DNS SRV)</title>
@@ -863,7 +879,7 @@ Client                 Domain                 Server
     </references>
 
     <section title="Acknowledgements" anchor="acks">
-      <t>Many thanks to Philipp Hancke, Joe Hildebrand, and Tobias Markmann for their implementation feedback.  Thanks also to Dave Cridland, Max Pritikin, and Joe Salowey for their input on the specification.</t>
+      <t>Many thanks to Philipp Hancke, Joe Hildebrand, and Tobias Markmann for their implementation feedback.  Thanks also to Dave Cridland, Chris Newton, Max Pritikin, and Joe Salowey for their input on the specification.</t>
     </section>
 
   </back>
