@@ -5,22 +5,15 @@
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="2"?>
-<rfc category="std" docName="draft-saintandre-xmpp-dna-02" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-xmpp-dna-05" ipr="trust200902">
 
   <front>
     <title abbrev="XMPP DNA">Domain Name Associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP)</title>
 
     <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
-      <organization>Cisco Systems, Inc.</organization>
+      <organization>&amp;yet</organization>
       <address>
-        <postal>
-          <street>1899 Wynkoop Street, Suite 600</street>
-          <city>Denver</city>
-          <region>CO</region>
-          <code>80202</code>
-          <country>USA</country>
-        </postal>
-        <email>psaintan@cisco.com</email>
+        <email>ietf@stpeter.im</email>
       </address>
     </author>
 
@@ -56,8 +49,16 @@
   <middle>
 
     <section title="Introduction" anchor="intro">
-      <t>The need to establish a strong association between a domain name and an XML stream arises in both client-to-server and server-to-server communication using the Extensible Messaging and Presence Protocol (XMPP), because XMPP servers are typically identified by DNS domain names.  However, a client or peer server needs to verify the identity of a server to which it connects.  To date, such verification has been established based on information obtained from the Domain Name System (DNS), the Public Key Infrastructure (PKI), or similar sources.  This document (1) generalizes the model currently in use so that additional prooftypes can be defined, (2) provides a basis for modernizing some prooftypes to reflect progress in underlying technologies such as DNS Security <xref target="RFC4033"/>, and (3) describes the flow of operations for establishing a domain name association.</t>
-      <t>Furthermore, the process for resolving the domain name of an XMPP service into the IP address at which an XML stream will be negotiated (defined in <xref target='RFC6120'/>) can involve delegation of a source domain (say, example.com) to a derived domain (say, hosting.example.net).  If such delegation is not done in a secure manner, then the domain name association cannot be authenticated.  Therefore, this document provides guidelines for defining secure delegation methods.</t>
+      <t>The need to establish a strong association between a domain name and an XML stream arises in both client-to-server and server-to-server communication using the Extensible Messaging and Presence Protocol (XMPP) <xref target='RFC6120'/>.  Because XMPP servers are typically identified by DNS domain names, a client or peer server needs to verify the identity of a server to which it connects.</t>
+      <t>To date, such verification has been established based on information obtained from the Domain Name System (DNS), the Public Key Infrastructure (PKI), or similar sources.  In relation to such associations, this document does the following:</t>
+      <t>
+        <list style='numbers'>
+          <t>Generalizes the model currently in use so that additional prooftypes can be defined</t>
+          <t>Provides a basis for modernizing some prooftypes to reflect progress in underlying technologies such as DNS Security <xref target="RFC4033"/></t>
+          <t>Describes the flow of operations for establishing a domain name association (DNA)</t>
+        </list>
+      </t>
+      <t>This document also provides guidelines for secure delegation.  The need for secure delegation arises because the process for resolving the domain name of an XMPP service into the IP address at which an XML stream will be negotiated (defined in <xref target='RFC6120'/>) can involve delegation of a source domain (say, example.com) to a derived domain (say, hosting.example.net) using technologies such as DNS SRV records <xref target='RFC2782'/>.  If such delegation is not done in a secure manner, then the domain name association cannot be authenticated.</t>
     </section>
 
     <section title="Terminology" anchor="terms">
@@ -65,7 +66,7 @@
     </section>
 
     <section title="Flow Chart" anchor="flow">
-      <t>The following flow chart illustrates the protocol flow for establishing domain name associations between Server A and Server B, as described in the remaining sections of this document.</t>
+      <t>The following flow chart illustrates the protocol flow for establishing domain name associations between Server 1 and Server 2, as described in the remaining sections of this document.</t>
       <figure>
         <artwork><![CDATA[
                     |
@@ -160,9 +161,9 @@
 +-----------SUBSEQUENT CONNECTION---------------+
 |                                               |
 |  B: <stream from='c.example'                  |
-|             to='chatrooms.a.example'>         |
+|             to='rooms.a.example'>             |
 |                                               |
-|  A: <stream from='chatrooms.a.example'        |
+|  A: <stream from='rooms.a.example'            |
 |             to='c.example'>                   |
 |                                               |
 +-----------------------------------------------+
@@ -177,9 +178,9 @@
 +-----------DIALBACK OPTIMIZATION---------------+
 |                                               |
 |  B: <db:result from='c.example'               |
-|                to='chatrooms.a.example'/>     |
+|                to='rooms.a.example'/>         |
 |                                               |
-|  B: <db:result from='chatrooms.a.example'     |
+|  B: <db:result from='rooms.a.example'         |
 |                to='c.example'                 |
 |                type='valid'/>                 |
 |                                               |
@@ -189,30 +190,32 @@
     </section>
 
     <section title="A Simple Scenario" anchor="simple">
-      <t>To illustrate the problem, consider the simplified order of events (see <xref target='RFC6120'/> for details) in establishing an XML stream between Server A (a.example) and Server B (b.example):</t>
+      <t>To illustrate the problem, consider the simplified order of events (see <xref target='RFC6120'/> for details) in establishing an XML stream between Server 1 (a.example) and Server 2 (b.example):</t>
       <t>
         <list style='numbers'>
-          <t>Server A resolves the DNS domain name b.example.</t>
-          <t>Server A opens a TCP connection to the resolved IP address.</t>
+          <t>Server 1 resolves the DNS domain name b.example.<vspace blankLines='1'/></t>
+          <t>Server 1 opens a TCP connection to the resolved IP address.<vspace blankLines='1'/></t>
           <t>
-            Server A sends an initial stream header to Server B, asserting that it is a.example:
+            Server 1 sends an initial stream header to Server 2, asserting that it is a.example:
             <vspace blankLines='1'/>
             &lt;stream:stream from='a.example' to='b.example'&gt;
+            <vspace blankLines='1'/>
           </t>
           <t>
-            Server B sends a response stream header to Server A, asserting that it is b.example:
+            Server 2 sends a response stream header to Server 1, asserting that it is b.example:
             <vspace blankLines='1'/>
             &lt;stream:stream from='b.example' to='a.example'&gt;
+            <vspace blankLines='1'/>
           </t>
-          <t>The servers attempt TLS negotiation, during which Server B (acting as a TLS server) presents a PKIX certificate proving that it is b.example and Server A (acting as a TLS client) presents a PKIX certificate proving that it is a.example.</t>
-          <t>Server A checks the PKIX certificate that Server B provided and Server B checks the PKIX certificate that Server A provided; if these proofs are consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, each server accepts that there is a strong domain name association between its stream to the other party and the DNS domain name of the other party.</t>
+          <t>The servers attempt TLS negotiation, during which Server 2 (acting as a TLS server) presents a PKIX certificate proving that it is b.example and Server 1 (acting as a TLS client) presents a PKIX certificate proving that it is a.example.<vspace blankLines='1'/></t>
+          <t>Server 1 checks the PKIX certificate that Server 2 provided and Server 2 checks the PKIX certificate that Server 1 provided; if these proofs are consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, each server accepts that there is a strong domain name association between its stream to the other party and the DNS domain name of the other party.</t>
         </list>
       </t>
       <t>Several simplifying assumptions underlie the happy scenario just outlined:</t>
       <t>
         <list style='symbols'>
-          <t>Server A presents a PKIX certificate during TLS negotiation, which enables the parties to complete mutual authentication.</t>
-          <t>There are no additional domains associated with Server A and Server B (say, a subdomain chatrooms.a.example on Server A or a second domain c.example on Server B).</t>
+          <t>Server 1 presents a PKIX certificate during TLS negotiation, which enables the parties to complete mutual authentication.</t>
+          <t>There are no additional domains associated with Server 1 and Server 2 (say, a subdomain rooms.a.example on Server 1 or a second domain c.example on Server 2).</t>
           <t>The server administrators are able to obtain PKIX certificates in the first place.</t>
           <t>The server administrators are running their own XMPP servers, rather than using hosting services.</t>
         </list>
@@ -221,32 +224,34 @@
     </section>
 
     <section title="One-Way Authentication" anchor="oneway">
-      <t>If Server A does not present its PKIX certificate during TLS negotiation (perhaps because it wishes to verify the identity of Server B before presenting its own credentials), Server B is unable to mutually authenticate Server A.  Therefore, Server B needs to negotiate and authenticate a stream to Server A, just as Server A has done:</t>
+      <t>If Server 1 does not present its PKIX certificate during TLS negotiation (perhaps because it wishes to verify the identity of Server 2 before presenting its own credentials), Server 2 is unable to mutually authenticate Server 1.  Therefore, Server 2 needs to negotiate and authenticate a stream to Server 1, just as Server 1 has done:</t>
       <t>
         <list style='numbers'>
-          <t>Server B resolves the DNS domain name a.example.</t>
-          <t>Server B opens a TCP connection to the resolved IP address.</t>
+          <t>Server 2 resolves the DNS domain name a.example.<vspace blankLines='1'/></t>
+          <t>Server 2 opens a TCP connection to the resolved IP address.<vspace blankLines='1'/></t>
           <t>
-            Server B sends an initial stream header to Server A, asserting that it is b.example:
+            Server 2 sends an initial stream header to Server 1, asserting that it is b.example:
             <vspace blankLines='1'/>
             &lt;stream:stream from='b.example' to='a.example'&gt;
+            <vspace blankLines='1'/>
           </t>
           <t>
-            Server A sends a response stream header to Server B, asserting that it is a.example:
+            Server 1 sends a response stream header to Server 2, asserting that it is a.example:
             <vspace blankLines='1'/>
             &lt;stream:stream from='a.example' to='b.example'&gt;
+            <vspace blankLines='1'/>
           </t>
-          <t>The servers attempt TLS negotiation, during which Server A (acting as a TLS server) presents a PKIX certificate proving that it is a.example.</t>
-          <t>Server B checks the PKIX certificate that Server A provided; if it is consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, Server B accepts that there is a strong domain name association between its stream to Server A and the DNS domain name a.example.</t>
+          <t>The servers attempt TLS negotiation, during which Server 1 (acting as a TLS server) presents a PKIX certificate proving that it is a.example.<vspace blankLines='1'/></t>
+          <t>Server 2 checks the PKIX certificate that Server 1 provided; if it is consistent with the XMPP profile <xref target='RFC6120'/> of the matching rules from <xref target='RFC6125'/>, Server 2 accepts that there is a strong domain name association between its stream to Server 1 and the DNS domain name a.example.</t>
         </list>
       </t>
-      <t>Unfortunately, now the servers are using two TCP connections instead of one, which is somewhat wasteful.  However, there are ways to tie the authentication achieved on the second TCP connection to the first TCP connection; see <xref target='XEP-0288'/> for further discussion.</t>
+      <t>At this point the servers are using two TCP connections instead of one, which is somewhat wasteful.  However, there are ways to tie the authentication achieved on the second TCP connection to the first TCP connection; see <xref target='XEP-0288'/> for further discussion.</t>
     </section>
 
     <section title="Piggybacking" anchor="piggybacking">
       <section title="Assertion" anchor="piggybacking-assertion">
-        <t>Consider the common scenario in which Server B hosts not only b.example but also a second domain c.example.  If a user of Server B associated with c.example wishes to communicate with a friend at a.example, Server B needs to send XMPP stanzas from the domain c.example rather than b.example.  Although Server B could open an new TCP connection and negotiate new XML streams for the domain pair of c.example and a.example, that too is wasteful.  Server B already has a connection to a.example, so how can it assert that it would like to add a new domain pair to the existing connection?</t>
-        <t>The traditional method for doing so is the Server Dialback protocol, first specified in <xref target='RFC3920'/> and since moved to <xref target='XEP-0220'/>.  Here, Server B can send a &lt;db:result/&gt; element for the new domain pair over the existing stream.</t>
+        <t>Consider the common scenario in which Server 2 hosts not only b.example but also a second domain c.example (a "multi-tenanted" environment).  If a user of Server 2 associated with c.example wishes to communicate with a friend at a.example, Server 2 needs to send XMPP stanzas from the domain c.example rather than b.example.  Although Server 2 could open an new TCP connection and negotiate new XML streams for the domain pair of c.example and a.example, that too is wasteful.  Server 2 already has a connection to a.example, so how can it assert that it would like to add a new domain pair to the existing connection?</t>
+        <t>The traditional method for doing so is the Server Dialback protocol, first specified in <xref target='RFC3920'/> and since moved to <xref target='XEP-0220'/>.  Here, Server 2 can send a &lt;db:result/&gt; element for the new domain pair over the existing stream.</t>
         <figure>
           <artwork><![CDATA[
     <db:result from='c.example' to='a.example'>
@@ -254,88 +259,98 @@
     </db:result>
           ]]></artwork>
         </figure>
-        <t>This element functions as Server B's assertion that it is (also) c.example, and thus is functionally equivalent to the 'from' address of an initial stream header as previously described.</t>
-        <t>In response to this assertion, Server A needs to obtain some kind of proof that Server B really is also c.example.  It can do the same thing that it did before:</t>
+        <t>This element functions as Server 2's assertion that it is (also) c.example, and thus is functionally equivalent to the 'from' address of an initial stream header as previously described.</t>
+        <t>In response to this assertion, Server 1 needs to obtain some kind of proof that Server 2 really is also c.example.  It can do the same thing that it did before:</t>
         <t>
           <list style='numbers'>
-            <t>Server A resolves the DNS domain name c.example.</t>
-            <t>Server A opens a TCP connection to the resolved IP address (which might be the same IP address as for b.example).</t>
+            <t>Server 1 resolves the DNS domain name c.example.<vspace blankLines='1'/></t>
+            <t>Server 1 opens a TCP connection to the resolved IP address (which might be the same IP address as for b.example).<vspace blankLines='1'/></t>
             <t>
-              Server A sends an initial stream header to Server B, asserting that it is a.example:
+              Server 1 sends an initial stream header to Server 2, asserting that it is a.example:
               <vspace blankLines='1'/>
               &lt;stream:stream from='a.example' to='c.example'&gt;
+              <vspace blankLines='1'/>
             </t>
             <t>
-              Server B sends a response stream header to Server A, asserting that it is c.example:
+              Server 2 sends a response stream header to Server 1, asserting that it is c.example:
               <vspace blankLines='1'/>
               &lt;stream:stream from='c.example' to='a.example'&gt;
+              <vspace blankLines='1'/>
             </t>
-            <t>The servers attempt TLS negotiation, during which Server B (acting as a TLS server) presents a PKIX certificate proving that it is c.example.</t>
-            <t>Server A checks the PKIX certificate that Server B provided; if it is consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, Server A accepts that there is a strong domain name association between its stream to Server B and the DNS domain name c.example.</t>
+            <t>The servers attempt TLS negotiation, during which Server 2 (acting as a TLS server) presents a PKIX certificate proving that it is c.example.<vspace blankLines='1'/></t>
+            <t>Server 1 checks the PKIX certificate that Server 2 provided; if it is consistent with the XMPP profile <xref target='RFC6120'/> of the matching rules from <xref target='RFC6125'/>, Server 1 accepts that there is a strong domain name association between its stream to Server 2 and the DNS domain name c.example.</t>
           </list>
         </t>
-        <t>Now that Server A accepts the domain name association, it informs Server B of that fact:</t>
+        <t>Now that Server 1 accepts the domain name association, it informs Server 2 of that fact:</t>
         <figure>
           <artwork><![CDATA[
     <db:result from='a.example' to='c.example' type='valid'/>
           ]]></artwork>
         </figure>
-        <t>The parties can then terminate the second connection, since it was used only for Server A to associate a stream over the same IP:port combination with the domain name c.example (dialback key links the original stream to the new association).</t>
+        <t>The parties can then terminate the second connection, since it was used only for Server 1 to associate a stream over the same IP:port combination with the domain name c.example (the dialback key links the original stream to the new association).</t>
       </section>
       <section title="Supposition" anchor="piggybacking-supposition">
-        <t>Piggybacking can also occur in the other direction.  Consider the common scenario in which Server A provides XMPP services not only for a.example but also for a subdomain such as a groupchat service at chatrooms.a.example (see <xref target='XEP-0045'/>).  If a user from c.example at Server B wishes to join a room on the groupchat sevice, Server B needs to send XMPP stanzas from the domain c.example to the domain chatrooms.a.example rather than a.example.  Therefore, Server B needs to negotiate and authenticate a stream to chatrooms.a.example:</t>
+        <t>Piggybacking can also occur in the other direction.  Consider the common scenario in which Server 1 provides XMPP services not only for a.example but also for a subdomain such as a groupchat service at rooms.a.example (see <xref target='XEP-0045'/>).  If a user from c.example at Server 2 wishes to join a room on the groupchat sevice, Server 2 needs to send XMPP stanzas from the domain c.example to the domain rooms.a.example rather than a.example.  Therefore, Server 2 needs to negotiate and authenticate a stream to rooms.a.example:</t>
         <t>
           <list style='numbers'>
-            <t>Server B resolves the DNS domain name chatrooms.a.example.</t>
-            <t>Server B opens a TCP connection to the resolved IP address.</t>
+            <t>Server 2 resolves the DNS domain name rooms.a.example.<vspace blankLines='1'/></t>
+            <t>Server 2 opens a TCP connection to the resolved IP address.<vspace blankLines='1'/></t>
             <t>
-              Server B sends an initial stream header to Server A acting as chatrooms.a.example, asserting that it is b.example:
+              Server 2 sends an initial stream header to Server 1 acting as rooms.a.example, asserting that it is b.example:
               <vspace blankLines='1'/>
-              &lt;stream:stream from='b.example' to='chatrooms.a.example'&gt;
+              &lt;stream:stream from='b.example' to='rooms.a.example'&gt;
+              <vspace blankLines='1'/>
             </t>
             <t>
-              Server A sends a response stream header to Server B, asserting that it is chatrooms.a.example:
+              Server 1 sends a response stream header to Server 2, asserting that it is rooms.a.example:
               <vspace blankLines='1'/>
-              &lt;stream:stream from='chatrooms.a.example' to='b.example'&gt;
+              &lt;stream:stream from='rooms.a.example' to='b.example'&gt;
+              <vspace blankLines='1'/>
             </t>
-            <t>The servers attempt TLS negotiation, during which Server A (acting as a TLS server) presents a PKIX certificate proving that it is chatrooms.a.example.</t>
-            <t>Server B checks the PKIX certificate that Server A provided; if it is consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, Server B accepts that there is a strong domain name association between its stream to Server A and the DNS domain name chatrooms.a.example.</t>
+            <t>The servers attempt TLS negotiation, during which Server 1 (acting as a TLS server) presents a PKIX certificate proving that it is rooms.a.example.<vspace blankLines='1'/></t>
+            <t>Server 2 checks the PKIX certificate that Server 1 provided; if it is consistent with the XMPP profile <xref target='RFC6120'/> of the matching rules from <xref target='RFC6125'/>, Server 2 accepts that there is a strong domain name association between its stream to Server 1 and the DNS domain name rooms.a.example.</t>
           </list>
         </t>
-        <t>As before, the parties now have two TCP connections open.  So that they can close the now-redundant connection, Server B sends a dialback key to Server A over the new connection.</t>
+        <t>As before, the parties now have two TCP connections open.  So that they can close the now-redundant connection, Server 2 sends a dialback key to Server 1 over the new connection.</t>
         <figure>
           <artwork><![CDATA[
-    <db:result from='c.example' to='chatrooms.a.example'>
+    <db:result from='c.example' to='rooms.a.example'>
       some-dialback-key
     </db:result>
           ]]></artwork>
         </figure>
-        <t>Server A then informs Server B that it accepts the domain name association:</t>
+        <t>Server 1 then informs Server 2 that it accepts the domain name association:</t>
         <figure>
           <artwork><![CDATA[
-    <db:result from='chatrooms.a.example' to='c.example' type='valid'/>
+    <db:result from='rooms.a.example' to='c.example' type='valid'/>
           ]]></artwork>
         </figure>
-        <t>Server B can now close the connection over which it tested the domain name association for chatrooms.a.example.</t>
+        <t>Server 2 can now close the connection over which it tested the domain name association for rooms.a.example.</t>
       </section>
     </section>
 
     <section title="Alternative Prooftypes" anchor="alternatives">
-      <t>The foregoing protocol flows assumed that domain name associations were proved using the standard PKI prooftype specified in <xref target="RFC6120"/>: that is, the server's proof consists of a PKIX certificate that is checked according to a profile of the matching rules from <xref target="RFC6125"/>, the client's verification material is obtained out of band in the form of a trusted root, and secure DNS is not necessary.</t>
-      <t>However, sometimes XMPP server administrators are unable or unwilling to obtain valid PKIX certificates for their servers (e.g., the administrator of im.cs.podunk.example can't receive certification authority verification messages sent to mailto:hostmaster@podunk.example, or hosting.example.net does not want to take on the liability of holding the certificate and private key for example.com).  In these circumstances, prooftypes other than PKIX are desirable.  Two alternatives have been defined so far: DANE and POSH.</t>
+      <t>The foregoing protocol flows assumed that domain name associations were proved using the standard PKI prooftype specified in <xref target="RFC6120"/>: that is, the server's proof consists of a PKIX certificate that is checked according to the XMPP profile <xref target='RFC6120'/> of the matching rules from <xref target="RFC6125"/>, the client's verification material is obtained out of band in the form of a trusted root, and secure DNS is not necessary.</t>
+      <t>However, sometimes XMPP server administrators are unable or unwilling to obtain valid PKIX certificates for their servers.  As one example, a certificate authority (CA) might try to send email messages to authoritative mailbox names <xref target='RFC2142'/>, but the administrator of a subsidiary service such as im.cs.podunk.example can't receive email sent to mailto:hostmaster@podunk.example.  As another example, a hosting provider such as hosting.example.net might not want to take on the liability of holding the certificate and private key for a tenant such as example.com (or the tenant might not want the hosting provider to hold its certificate and private key).  In these circumstances, prooftypes other than PKIX are desirable.  As described below, two alternatives have been defined so far: DNS-Based Authentication of Named Entities (DANE) and and PKIX Over Secure HTTP (POSH).</t>
       <section title="DANE" anchor="alternatives-dane">
         <t>In the DANE prooftype, the server's proof consists of a PKIX certificate that is compared as an exact match or a hash of either the SubjectPublicKeyInfo or the full certificate, and the client's verification material is obtained via secure DNS.</t>
-        <t>The DANE prooftype is based on <xref target='I-D.ietf-dane-srv'/>.  For XMPP purposes, the following rules apply:</t>
+        <t>The DANE prooftype makes use of the DNS-Based Authentication of Named Entities <xref target='RFC6698'/>, specifically the use of DANE with DNS SRV records <xref target='I-D.ietf-dane-srv'/>.  For XMPP purposes, the following rules apply:</t>
         <t>
           <list style='symbols'>
             <t>If there is no SRV resource record, pursue the fallback methods described in <xref target='RFC6120'/>.</t>
-            <t>The 'to' address of the initial stream header SHOULD be used to determine the domain name of the TLS client's reference identifier, whereas use of the TLS Server Name Indication is OPTIONAL (as previously discussed in <xref target='RFC6120'/>).</t>
+            <t>Use the 'to' address of the initial stream header to determine the domain name of the TLS client's reference identifier (since use of the TLS Server Name Indication is purely discretionary in XMPP, as mentioned in <xref target='RFC6120'/>).</t>
           </list>
         </t>
       </section>
       <section title="POSH" anchor="alternatives-posh">
-        <t>In the POSH (PKIX Over Secure HTTP) prooftype, the server's proof consists of a PKIX certificate that is checked according to the rules from <xref target="RFC6120"/> and <xref target="RFC6125"/>, the client's verification material is obtained by retrieving the PKIK certificate over HTTPS at a well-known URI <xref target="RFC5785"/>, and secure DNS is not necessary since the HTTPS retrieval mechanism relies on the chain of trust from the public key infrastructure.</t>
-        <t>POSH is fully defined in <xref target='I-D.miller-xmpp-posh-prooftype'/>.</t>
+        <t>In the POSH prooftype, the server's proof consists of a PKIX certificate that is checked according to the rules from <xref target="RFC6120"/> and <xref target="RFC6125"/>, the client's verification material is obtained by retrieving the PKIK certificate over HTTPS at a well-known URI <xref target="RFC5785"/>, and secure DNS is not necessary since the HTTPS retrieval mechanism relies on the chain of trust from the public key infrastructure.</t>
+        <t>POSH is defined in <xref target='I-D.ietf-xmpp-posh'/>.  For XMPP purposes, the well-known URIs <xref target='RFC5785'/> to be used are:</t>
+        <t>
+          <list style='symbols'>
+            <t>"/.well-known/posh._xmpp-client._tcp.json" for client-to-server connections</t>
+            <t>"/.well-known/posh._xmpp-server._tcp.json" for server-to-server connections</t>
+          </list>
+        </t>
       </section>
     </section>
 
@@ -346,62 +361,83 @@
 _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
         ]]></artwork>
       </figure>
-      <t>Secure connections with multi-tenancy can work using the PKIX prooftype on a small scale if the provider itself wishes to host several domains (e.g., several related domains such as jabber-de.example and jabber-ch.example).  However, in practice the security of multi-tenancy has been found to be unwieldy when the provider hosts large numbers of XMPP services on behalf of multiple customers.  Typically there are two main reasons for this state of affairs: the service provider (say, hosting.example.net) wishes to limit its liability and therefore does not wish to hold the certificate and private key for the customer (say, example.com) and the customer wishes to improve the security of the service and therefore does not wish to share its certificate and private key with service provider.  As a result, server-to-server communications to example.com go unencrypted or the communications are TLS-encrypted but the certificates are not checked (which is functionally equivalent to a connection using an anonymous key exchange).  This is also true of client-to-server communications, forcing end users to override certificate warnings or configure their clients to accept certificates for hosting.example.net instead of example.com.  The fundamental problem here is that if DNSSEC is not used then the act of delegation via DNS SRV records is inherently insecure.</t>
-      <t><xref target='I-D.ietf-dane-srv'/> explains how to use DNSSEC for secure delegation with the DANE prooftype and <xref target='I-D.miller-xmpp-posh-prooftype'/> explains how to use HTTPS redirects for secure delegation with the POSH prooftype.</t>
+      <t>Secure connections with multi-tenancy can work using the PKIX prooftype on a small scale if the provider itself wishes to host several domains (e.g., several related domains such as jabber-de.example and jabber-ch.example).  However, in practice the security of multi-tenancy has been found to be unwieldy when the provider hosts large numbers of XMPP services on behalf of multiple tenants.  Typically there are two main reasons for this state of affairs: the service provider (say, hosting.example.net) wishes to limit its liability and therefore does not wish to hold the certificate and private key for the tenant (say, example.com) and the tenant wishes to improve the security of the service and therefore does not wish to share its certificate and private key with service provider.  As a result, server-to-server communications to example.com go unencrypted or the communications are TLS-encrypted but the certificates are not checked (which is functionally equivalent to a connection using an anonymous key exchange).  This is also true of client-to-server communications, forcing end users to override certificate warnings or configure their clients to accept certificates for hosting.example.net instead of example.com.  The fundamental problem here is that if DNSSEC is not used then the act of delegation via DNS SRV records is inherently insecure.</t>
+      <t>The specification for use of SRV and MX records with DANE <xref target='I-D.ietf-dane-srv'/> explains how to use DNSSEC for secure delegation with the DANE prooftype, and the POSH specification <xref target='I-D.ietf-xmpp-posh'/> explains how to use HTTPS redirects for secure delegation with the POSH prooftype.</t>
     </section>
 
     <section title="Prooftype Model" anchor="model">
-      <t>In general, a DNA prooftype conforms to the following definition:</t>
+      <t>In general, a domain name association (DNA) prooftype conforms to the following definition:</t>
       <t>
         <list style="hanging">
           <t hangText="prooftype:">A mechanism for proving an association between a domain name and an XML stream, where the mechanism defines (1) the nature of the server's proof, (2) the matching rules for comparing the client's verification material against the server's proof, (3) how the client obtains its verification material, and (4) whether the mechanism depends on secure DNS.</t>
         </list>
       </t>
       <t>The PKI, DANE, and POSH prooftypes adhere to this model.  In addition, other prooftypes are possible (examples might include PGP keys rather than PKIX certificates, or a token mechanism such as Kerberos or OAuth).</t>
-      <t>Some prooftypes depend on (or are enhanced by) secure DNS and therefore also need to describe how secure delegation occurs for that prooftype.</t>
-    </section>
-
-    <section title="Security Considerations" anchor="security">
-      <t>This document supplements but does not supersede the security considerations of <xref target="RFC6120"/> and <xref target="RFC6125"/>.  Relevant security considerations can also be found in <xref target='I-D.ietf-dane-srv'/> and <xref target='I-D.miller-xmpp-posh-prooftype'/>.</t>
+      <t>Some prooftypes depend on (or are enhanced by) secure DNS and thus also need to describe how they ensure secure delegation.</t>
     </section>
 
     <section title="IANA Considerations" anchor="iana">
-      <t>This document has no actions for the IANA.</t>
+      <t>The POSH specification <xref target='I-D.ietf-xmpp-posh'/> provides guidelines for registering the well-known URIs <xref target='RFC5785'/> of protocols that make use of POSH. This specification registers two such URIs, for which the completed registration templates follow.</t>
+      <section title="Well-Known URI for xmpp-client Service" anchor="iana-client">
+        <t>This specification registers the well-known URI "posh._xmpp-client._tcp.json" in the Well-Known URI Registry as defined by <xref target="RFC5785"/>.</t>
+        <t>URI suffix: posh._xmpp-client._tcp.json</t>
+        <t>Change controller: IETF</t>
+        <t>Specification document(s): [[ this document ]]</t>
+      </section>
+      <section title="Well-Known URI for xmpp-server Service" anchor="iana-server">
+        <t>This specification registers the well-known URI "posh._xmpp-server._tcp.json" in the Well-Known URI Registry as defined by <xref target="RFC5785"/>.</t>
+        <t>URI suffix: posh._xmpp-server._tcp.json</t>
+        <t>Change controller: IETF</t>
+        <t>Specification document(s): [[ this document ]]</t>
+      </section>
     </section>
+
+    <section title="Security Considerations" anchor="security">
+      <t>This document supplements but does not supersede the security considerations of <xref target="RFC6120"/> and <xref target="RFC6125"/>.  Relevant security considerations can also be found in <xref target='I-D.ietf-dane-srv'/> and <xref target='I-D.ietf-xmpp-posh'/>.</t>
+    </section>
+
   </middle>
 
   <back>
 
     <references title="Normative References">
-
-<reference anchor='I-D.ietf-dane-srv'>
-<front>
-<title>Using DNS-Based Authentication of Named Entities (DANE) TLSA records with SRV and MX records.</title>
-<author initials='T' surname='Finch' fullname='Tony Finch'>
-    <organization />
-</author>
-<date month='February' day='25' year='2013' />
-<abstract><t>The DANE specification [RFC6698] describes how to use TLSA resource records in the DNS to associate a server's host name with its TLS certificate.  The association is secured with DNSSEC.  Some application protocols can use SRV records [RFC2782] to indirectly name the server hosts for a service domain.  (SMTP uses MX records for the same purpose.)  This specification gives generic instructions for how these application protocols locate and use TLSA records. Separate documents give the details that are specific to particular application protocols.</t></abstract>
-</front>
-<seriesInfo name='Internet-Draft' value='draft-ietf-dane-srv-02' />
-<format type='TXT'
-        target='http://www.ietf.org/internet-drafts/draft-ietf-dane-srv-02.txt' />
-</reference>
-
-<reference anchor='I-D.miller-xmpp-posh-prooftype'>
-<front>
-<title>Using PKIX over Secure HTTP (POSH) as a Prooftype for XMPP Domain Name Associations</title>
-<author initials='P' surname='Saint-Andre' fullname='Peter Saint-Andre'>
-    <organization />
-</author>
-<date month='February' day='22' year='2013' />
-<abstract><t>This document defines a prooftype involving PKIX over Secure HTTP (POSH) for associating a domain name with an XML stream in the Extensible Messaging and Presence Protocol (XMPP).  It also defines a method involving HTTPS redirects (appropriate for use with the POSH prooftype) for securely delegating a source domain to a derived domain in XMPP.</t></abstract>
-</front>
-<seriesInfo name='Internet-Draft' value='draft-miller-xmpp-posh-prooftype-03' />
-<format type='TXT'
-        target='http://www.ietf.org/internet-drafts/draft-miller-xmpp-posh-prooftype-03.txt' />
-</reference>
-
+      <reference anchor="I-D.ietf-dane-srv">
+        <front>
+          <title>Using DNS-Based Authentication of Named Entities (DANE) TLSA records with SRV and MX records.</title>
+          <author initials="T" surname="Finch" fullname="Tony Finch">
+            <organization/>
+          </author>
+          <author initials="M" surname="Miller" fullname="Matthew Miller">
+            <organization/>
+          </author>
+          <author initials="P" surname="Saint-Andre" fullname="Peter Saint-Andre">
+            <organization/>
+          </author>
+          <date month="December" day="19" year="2013"/>
+          <abstract>
+            <t>The DANE specification (RFC 6698) describes how to use TLSA resource records in the DNS to associate a server's host name with its TLS certificate.  The association is secured with DNSSEC.  Some application protocols use SRV records (RFC 2782) to indirectly name the server hosts for a service domain (SMTP uses MX records for the same purpose).  This specification gives generic instructions for how these application protocols locate and use TLSA records when technologies such as SRV records are used.  Separate documents give the details that are specific to particular application protocols.</t>
+          </abstract>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-dane-srv-03"/>
+        <format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-dane-srv-03.txt"/>
+      </reference>
+      <reference anchor="I-D.ietf-xmpp-posh">
+        <front>
+          <title>PKIX over Secure HTTP (POSH)</title>
+          <author initials="M" surname="Miller" fullname="Matthew Miller">
+            <organization/>
+          </author>
+          <author initials="P" surname="Saint-Andre" fullname="Peter Saint-Andre">
+            <organization/>
+          </author>
+          <date month="February" year="2014"/>
+          <abstract>
+            <t>Experience has shown that it is extremely difficult to deploy proper PKIX certificates for TLS in multi-tenanted environments, since certification authorities will not issue certificates for hosted domains to hosting services, hosted domains do not want hosting services to hold their private keys, and hosting services wish to avoid liability for holding those keys.  As a result, domains hosted in multi-tenanted environments often deploy non-HTTP applications such as email and instant messaging using certificates that identify the hosting service, not the hosted domain.  Such deployments force end users and peer services to accept a certificate with an improper identifier, resulting in obvious security implications.  This document defines two methods that make it easier to deploy certificates for proper server identity checking in non-HTTP application protocols.  The first method enables the TLS client associated with a user agent or peer application server to obtain the end-entity certificate of a hosted domain over secure HTTP as an alternative to standard PKIX techniques.  The second method enables a hosted domain to securely delegate a non-HTTP application to a hosting service using redirects provided by HTTPS itself or by a pointer in a file served over HTTPS at the hosted domain.  While this approach is developed for use in the Extensible Messaging and Presence Protocol (XMPP) as a Domain Name Association prooftype, it can be applied to any non-HTTP application protocol.</t>
+          </abstract>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-xmpp-posh-00"/>
+        <format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-xmpp-posh-00.txt"/>
+      </reference>
       <reference anchor="RFC1034">
         <front>
           <title abbrev="Domain Concepts and Facilities">Domain names - concepts and facilities</title>
@@ -414,6 +450,7 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
         <seriesInfo name="RFC" value="1034"/>
         <format type="TXT" octets="129180" target="http://www.rfc-editor.org/rfc/rfc1034.txt"/>
       </reference>
+
       <reference anchor="RFC1035">
         <front>
           <title abbrev="Domain Implementation and Specification">Domain names - implementation and specification</title>
@@ -629,6 +666,20 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
         <format type="TXT" target="http://tools.ietf.org/rfc/rfc6125.txt"/>
       </reference>
 
+<reference anchor='RFC6698'>
+<front>
+<title>The DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol: TLSA</title>
+<author initials='P.' surname='Hoffman' fullname='P. Hoffman'>
+<organization /></author>
+<author initials='J.' surname='Schlyter' fullname='J. Schlyter'>
+<organization /></author>
+<date year='2012' month='August' />
+<abstract>
+<t>Encrypted communication on the Internet often uses Transport Layer Security (TLS), which depends on third parties to certify the keys used.  This document improves on that situation by enabling the administrators of domain names to specify the keys used in that domain's TLS servers.  This requires matching improvements in TLS client software, but no change in TLS server software. [STANDARDS-TRACK]</t></abstract></front>
+<seriesInfo name='RFC' value='6698' />
+<format type='TXT' octets='84034' target='http://www.rfc-editor.org/rfc/rfc6698.txt' />
+</reference>
+
       <reference anchor="XEP-0220">
         <front>
           <title>Server Dialback</title>
@@ -648,7 +699,7 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
               <email>fippo@goodadvice.pages.de</email>
             </address>
           </author>
-          <date month="August" year="2012"/>
+          <date day="27" month="September" year="2013"/>
         </front>
         <seriesInfo name="XSF XEP" value="0220"/>
         <format type="HTML" target="http://xmpp.org/extensions/xep-0220.html#appendix-authorinfo"/>
@@ -657,6 +708,36 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
     </references>
 
     <references title="Informative References">
+
+<reference anchor='RFC2142'>
+<front>
+<title abbrev='Mailbox Names'>MAILBOX NAMES FOR COMMON SERVICES, ROLES AND FUNCTIONS</title>
+<author initials='D.' surname='Crocker' fullname='Dave Crocker'>
+<organization>Internet Mail Consortium</organization>
+<address>
+<postal>
+<street>127 Segre Ave.</street>
+<street>Santa Cruz</street>
+<country>CA</country></postal>
+<phone>+1 408 246 8253</phone>
+<email>dcrocker@imc.org</email></address></author>
+<date year='1997' month='May' />
+<area>Applications</area>
+<keyword>mail</keyword>
+<abstract>
+<t>
+   This specification enumerates and describes Internet mail addresses
+   (mailbox name @ host reference) to be used when contacting personnel
+   at an organization.  Mailbox names are provided for both operations
+   and business functions.  Additional mailbox names and aliases are not
+   prohibited, but organizations which support email exchanges with the
+   Internet are encouraged to support AT LEAST each mailbox name for
+   which the associated function exists within the organization.
+</t></abstract></front>
+<seriesInfo name='RFC' value='2142' />
+<format type='TXT' octets='12195' target='http://www.rfc-editor.org/rfc/rfc2142.txt' />
+<format type='XML' octets='16712' target='http://xml.resource.org/public/rfc/xml/rfc2142.xml' />
+</reference>
 
       <reference anchor="RFC3920">
         <front>
@@ -737,7 +818,7 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
               <email>dave.cridland@isode.com</email>
             </address>
           </author>
-          <date day="21" month="August" year="2012"/>
+          <date day="26" month="September" year="2013"/>
         </front>
         <seriesInfo name="XSF XEP" value="0288"/>
         <format type="HTML" target="http://xmpp.org/extensions/xep-0288.html"/>

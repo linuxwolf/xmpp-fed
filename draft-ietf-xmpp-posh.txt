@@ -2,14 +2,15 @@
 
 
 
-Network Working Group                                          M. Miller
-Internet-Draft                                            P. Saint-Andre
-Intended status: Standards Track                     Cisco Systems, Inc.
-Expires: May 16, 2014                                  November 12, 2013
+XMPP Working Group                                             M. Miller
+Internet-Draft                                       Cisco Systems, Inc.
+Intended status: Standards Track                          P. Saint-Andre
+Expires: December 6, 2014                                           &yet
+                                                            June 4, 2014
 
 
                       PKIX over Secure HTTP (POSH)
-                          draft-miller-posh-03
+                        draft-ietf-xmpp-posh-00
 
 Abstract
 
@@ -47,27 +48,24 @@ Status of This Memo
    working documents as Internet-Drafts.  The list of current Internet-
    Drafts is at http://datatracker.ietf.org/drafts/current/.
 
-
-
-
-
-
-
-Miller & Saint-Andre      Expires May 16, 2014                  [Page 1]
-
-Internet-Draft                    POSH                     November 2013
-
-
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
+
+
+
+Miller & Saint-Andre    Expires December 6, 2014                [Page 1]
+
+Internet-Draft                    POSH                         June 2014
+
+
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on May 16, 2014.
+   This Internet-Draft will expire on December 6, 2014.
 
 Copyright Notice
 
-   Copyright (c) 2013 IETF Trust and the persons identified as the
+   Copyright (c) 2014 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -82,7 +80,7 @@ Copyright Notice
 
 Table of Contents
 
-   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Discussion Venue  . . . . . . . . . . . . . . . . . . . . . .   4
    3.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   4
    4.  Obtaining Verification Materials  . . . . . . . . . . . . . .   4
@@ -101,19 +99,6 @@ Table of Contents
    Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  15
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
 
-
-
-
-
-
-
-
-
-Miller & Saint-Andre      Expires May 16, 2014                  [Page 2]
-
-Internet-Draft                    POSH                     November 2013
-
-
 1.  Introduction
 
    We start with a thought experiment.
@@ -121,6 +106,14 @@ Internet-Draft                    POSH                     November 2013
    Imagine that you work on the operations team of a hosting company
    that provides the "foo" service (or email or instant messaging or
    social networking service) for ten thousand different customer
+
+
+
+Miller & Saint-Andre    Expires December 6, 2014                [Page 2]
+
+Internet-Draft                    POSH                         June 2014
+
+
    organizations.  Each customer wants their service to be identified by
    the customer's domain name (e.g., foo.example.com), not the hosting
    company's domain name (e.g., hosting.example.net).
@@ -155,21 +148,6 @@ Internet-Draft                    POSH                     November 2013
    mismatch between the source domain (foo.example.com) and the
    delegated domain (hosting.example.net).
 
-
-
-
-
-
-
-
-
-
-
-Miller & Saint-Andre      Expires May 16, 2014                  [Page 3]
-
-Internet-Draft                    POSH                     November 2013
-
-
    This situation is both insecure and unsustainable.  You have
    investigated the possibility of using DNS Security [RFC4033] and DNS-
    Based Authentication of Named Entities (DANE) [RFC6698] to solve the
@@ -184,6 +162,14 @@ Internet-Draft                    POSH                     November 2013
    their website ("https://foo.example.com/.well-known/posh.foo.json" is
    one possibility).  This could be a public key that you generate for
    the customer, but because the customer hosts it via HTTPS, any user
+
+
+
+Miller & Saint-Andre    Expires December 6, 2014                [Page 3]
+
+Internet-Draft                    POSH                         June 2014
+
+
    agent can find that public key and check it against the public key
    you provide during TLS negotiation for the "foo" service (as one
    added benefit, the customer never needs to hand you a private key).
@@ -218,14 +204,6 @@ Internet-Draft                    POSH                     November 2013
 
 4.  Obtaining Verification Materials
 
-
-
-
-Miller & Saint-Andre      Expires May 16, 2014                  [Page 4]
-
-Internet-Draft                    POSH                     November 2013
-
-
    Server identity checking (see [RFC6125]) involves three different
    aspects:
 
@@ -240,6 +218,14 @@ Internet-Draft                    POSH                     November 2013
    3.  The materials that a TLS client uses to verify the TLS server's
        identity or check the TLS server's proof (in PKIX, this takes the
        form of chaining the end-entity certificate back to a trusted
+
+
+
+Miller & Saint-Andre    Expires December 6, 2014                [Page 4]
+
+Internet-Draft                    POSH                         June 2014
+
+
        root and performing all validity checks as described in
        [RFC5280], [RFC6125], and the relevant application protocol
        specification).
@@ -266,20 +252,13 @@ Internet-Draft                    POSH                     November 2013
        request would be as follows:
 
 
+
    GET /.well-known/posh.foo.json HTTP/1.1
    Host: foo.example.com
 
 
-
    2.  The source domain HTTPS server responds in one of three ways:
 
-
-
-
-
-Miller & Saint-Andre      Expires May 16, 2014                  [Page 5]
-
-Internet-Draft                    POSH                     November 2013
 
 
        *  If it possesses a PKIX certificate for the requested path, it
@@ -292,6 +271,15 @@ Internet-Draft                    POSH                     November 2013
 
        *  If it does not have any PKIX certificate for the requested
           path, it responds with a client error status code (e.g., 404).
+
+
+
+
+
+
+Miller & Saint-Andre    Expires December 6, 2014                [Page 5]
+
+Internet-Draft                    POSH                         June 2014
 
 
 4.1.  Source Domain Possesses PKIX Certificate
@@ -326,17 +314,31 @@ Internet-Draft                    POSH                     November 2013
 
    The following example illustrates the usage described above.
 
-   Example Content Response
 
 
 
 
 
 
-Miller & Saint-Andre      Expires May 16, 2014                  [Page 6]
+
+
+
+
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre    Expires December 6, 2014                [Page 6]
 
-Internet-Draft                    POSH                     November 2013
+Internet-Draft                    POSH                         June 2014
 
+
+   Example Content Response
 
    HTTP/1.1 200 OK
    Content-Type: application/jwk-set+json
@@ -363,7 +365,6 @@ Internet-Draft                    POSH                     November 2013
    }
 
 
-
    The "expires" value is a hint regarding the expiration of the keying
    materials.  If no "expires" field is included, a TLS client SHOULD
    consider these verification materials invalid.  See Section 7 for how
@@ -380,7 +381,6 @@ Internet-Draft                    POSH                     November 2013
    TLS client ought to consider the delegation to be stale (further
    explained under Section 7).
 
-   Example Reference Response
 
 
 
@@ -389,10 +389,12 @@ Internet-Draft                    POSH                     November 2013
 
 
 
-Miller & Saint-Andre      Expires May 16, 2014                  [Page 7]
+Miller & Saint-Andre    Expires December 6, 2014                [Page 7]
 
-Internet-Draft                    POSH                     November 2013
+Internet-Draft                    POSH                         June 2014
 
+
+   Example Reference Response
 
    HTTP/1.1 200 Ok
    Content-Type: application/json
@@ -402,7 +404,6 @@ Internet-Draft                    POSH                     November 2013
      "url":"https://hosting.example.net/.well-known/posh.foo.json",
      "expires":86400
    }
-
 
    The client performs an HTTPS GET for the URL specified in the "url"
    field value.  The HTTPS server for the URI to which the client has
@@ -444,10 +445,9 @@ Internet-Draft                    POSH                     November 2013
 
 
 
-
-Miller & Saint-Andre      Expires May 16, 2014                  [Page 8]
+Miller & Saint-Andre    Expires December 6, 2014                [Page 8]
 
-Internet-Draft                    POSH                     November 2013
+Internet-Draft                    POSH                         June 2014
 
 
 5.  Secure Delegation
@@ -488,8 +488,22 @@ Internet-Draft                    POSH                     November 2013
      |<===========================================>|
      |                      |                      |
 
-
    While the following diagram illustrates the reference flow:
+
+
+
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre    Expires December 6, 2014                [Page 9]
+
+Internet-Draft                    POSH                         June 2014
 
 
    Client                 Domain                 Server
@@ -498,14 +512,6 @@ Internet-Draft                    POSH                     November 2013
      |    Request POSH      |                      |
      |--------------------->|                      |
      |                      |                      |
-
-
-
-Miller & Saint-Andre      Expires May 16, 2014                  [Page 9]
-
-Internet-Draft                    POSH                     November 2013
-
-
      |   Return POSH url    |                      |
      |<---------------------|                      |
      |                      |                      |
@@ -521,7 +527,6 @@ Internet-Draft                    POSH                     November 2013
      |                 Service Data                |
      |<===========================================>|
      |                      |                      |
-
 
 7.  Caching Results
 
@@ -549,18 +554,18 @@ Internet-Draft                    POSH                     November 2013
    To indicate alternate PKIX certificates (such as when an existing
    certificate will soon expire), the returned JWK set MAY contain
    multiple JWK objects.  The JWK set SHOULD be ordered with the most
+
+
+
+Miller & Saint-Andre    Expires December 6, 2014               [Page 10]
+
+Internet-Draft                    POSH                         June 2014
+
+
    relevant certificate first as determined by the application service
    operator (e.g., the renewed certificate), followed by the next most
    relevant certificate (e.g., the certificate soonest to expire).  Here
    is an example:
-
-
-
-
-Miller & Saint-Andre      Expires May 16, 2014                 [Page 10]
-
-Internet-Draft                    POSH                     November 2013
-
 
    {
      "keys":[
@@ -595,7 +600,6 @@ Internet-Draft                    POSH                     November 2013
      ]
    }
 
-
 9.  IANA Considerations
 
    This document registers a well-known URI [RFC5785] for protocols that
@@ -607,20 +611,18 @@ Internet-Draft                    POSH                     November 2013
 
       Change controller:  IETF
 
+
+
+Miller & Saint-Andre    Expires December 6, 2014               [Page 11]
+
+Internet-Draft                    POSH                         June 2014
+
+
       Specification document:  [[ this document ]]
 
-
-
-
-
-Miller & Saint-Andre      Expires May 16, 2014                 [Page 11]
-
-Internet-Draft                    POSH                     November 2013
-
-
       Related information:  Because the "posh." string is merely a
-            prefix, protocols that use POSH need to register particular
-            URIs that are prefixed with the "posh." string.
+         prefix, protocols that use POSH need to register particular
+         URIs that are prefixed with the "posh." string.
 
    Note that the registered URI is "posh." (with a trailing dot).  This
    is merely a prefix to be placed at the front of well-known URIs
@@ -664,21 +666,21 @@ Internet-Draft                    POSH                     November 2013
    information with a common HTTPS implementation (e.g., platform-
    default web browser).
 
+
+
+
+Miller & Saint-Andre    Expires December 6, 2014               [Page 12]
+
+Internet-Draft                    POSH                         June 2014
+
+
    Note well that POSH is used by a TLS client to obtain the public key
    of a TLS server to which it might connect for a particular
-
-
-
-Miller & Saint-Andre      Expires May 16, 2014                 [Page 12]
-
-Internet-Draft                    POSH                     November 2013
-
-
    application protocol such as IMAP or XMPP.  POSH does not enable a
    hosted domain to transfer private keys to a hosting service via
    HTTPS.  POSH also does not enable a TLS server to engage in
    certificate enrollment with a certification authority via HTTPS, as
-   is done in Enrollment over Secure Transport [EST].
+   is done in Enrollment over Secure Transport [RFC7030].
 
    A web server at the source domain might redirect an HTTPS request to
    another URL.  The location provided in the redirect response MUST
@@ -698,7 +700,7 @@ Internet-Draft                    POSH                     November 2013
 
    [JOSE-JWK]
               Jones, M., "JSON Web Key (JWK)", draft-ietf-jose-json-web-
-              key-16 (work in progress), September 2013.
+              key-20 (work in progress), January 2014.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
@@ -723,11 +725,9 @@ Internet-Draft                    POSH                     November 2013
 
 
 
-
-
-Miller & Saint-Andre      Expires May 16, 2014                 [Page 13]
+Miller & Saint-Andre    Expires December 6, 2014               [Page 13]
 
-Internet-Draft                    POSH                     November 2013
+Internet-Draft                    POSH                         June 2014
 
 
    [RFC5785]  Nottingham, M. and E. Hammer-Lahav, "Defining Well-Known
@@ -742,24 +742,20 @@ Internet-Draft                    POSH                     November 2013
 
 11.2.  Informative References
 
-   [EST]      Pritikin, M., Yee, P., and D. Harkins, "Enrollment over
-              Secure Transport", draft-ietf-pkix-est-09 (work in
-              progress), August 2013.
-
    [HTTP-STATUS-308]
               Reschke, J., "The Hypertext Transfer Protocol (HTTP)
               Status Code 308 (Permanent Redirect)", draft-reschke-http-
               status-308-07 (work in progress), March 2012.
 
    [KEYPIN]   Evans, C., Palmer, C., and R. Sleevi, "Public Key Pinning
-              Extension for HTTP", draft-ietf-websec-key-pinning-08
-              (work in progress), July 2013.
+              Extension for HTTP", draft-ietf-websec-key-pinning-09
+              (work in progress), November 2013.
 
    [XMPP-DNA]
               Saint-Andre, P. and M. Miller, "Domain Name Associations
               (DNA) in the Extensible Messaging and Presence Protocol
-              (XMPP)", draft-ietf-xmpp-dna-04 (work in progress),
-              October 2013.
+              (XMPP)", draft-ietf-xmpp-dna-05 (work in progress),
+              February 2014.
 
    [RFC2782]  Gulbrandsen, A., Vixie, P., and L. Esibov, "A DNS RR for
               specifying the location of services (DNS SRV)", RFC 2782,
@@ -778,17 +774,17 @@ Internet-Draft                    POSH                     November 2013
 
    [RFC6335]  Cotton, M., Eggert, L., Touch, J., Westerlund, M., and S.
               Cheshire, "Internet Assigned Numbers Authority (IANA)
-
-
-
-Miller & Saint-Andre      Expires May 16, 2014                 [Page 14]
-
-Internet-Draft                    POSH                     November 2013
-
-
               Procedures for the Management of the Service Name and
               Transport Protocol Port Number Registry", BCP 165, RFC
               6335, August 2011.
+
+
+
+
+Miller & Saint-Andre    Expires December 6, 2014               [Page 14]
+
+Internet-Draft                    POSH                         June 2014
+
 
    [RFC6555]  Wing, D. and A. Yourtchenko, "Happy Eyeballs: Success with
               Dual-Stack Hosts", RFC 6555, April 2012.
@@ -802,6 +798,9 @@ Internet-Draft                    POSH                     November 2013
 
    [RFC6797]  Hodges, J., Jackson, C., and A. Barth, "HTTPS Strict
               Transport Security (HSTS)", RFC 6797, November 2012.
+
+   [RFC7030]  Pritikin, M., Yee, P., and D. Harkins, "Enrollment over
+              Secure Transport", RFC 7030, October 2013.
 
 Appendix A.  Acknowledgements
 
@@ -822,12 +821,9 @@ Authors' Addresses
 
 
    Peter Saint-Andre
-   Cisco Systems, Inc.
-   1899 Wynkoop Street, Suite 600
-   Denver, CO  80202
-   USA
+   &yet
 
-   Email: psaintan@cisco.com
+   Email: ietf@stpeter.im
 
 
 
@@ -837,4 +833,8 @@ Authors' Addresses
 
 
 
-Miller & Saint-Andre      Expires May 16, 2014                 [Page 15]
+
+
+
+
+Miller & Saint-Andre    Expires December 6, 2014               [Page 15]

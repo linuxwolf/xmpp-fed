@@ -5,7 +5,7 @@
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="2"?>
-<rfc category="std" docName="draft-miller-posh-03" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-xmpp-posh-00" ipr="trust200902">
   <front>
     <title abbrev="POSH">PKIX over Secure HTTP (POSH)</title>
     <author initials="M." surname="Miller" fullname="Matthew Miller">
@@ -22,20 +22,14 @@
       </address>
     </author>
     <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
-      <organization>Cisco Systems, Inc.</organization>
+      <organization>&amp;yet</organization>
       <address>
-        <postal>
-          <street>1899 Wynkoop Street, Suite 600</street>
-          <city>Denver</city>
-          <region>CO</region>
-          <code>80202</code>
-          <country>USA</country>
-        </postal>
-        <email>psaintan@cisco.com</email>
+        <email>ietf@stpeter.im</email>
       </address>
     </author>
     <date/>
-    <area>SEC</area>
+    <area>RAI</area>
+    <workgroup>XMPP Working Group</workgroup>
     <keyword>Internet-Draft</keyword>
     <keyword>Extensible Messaging and Presence Protocol</keyword>
     <keyword>Jabber</keyword>
@@ -308,7 +302,7 @@ Client                 Domain                 Server
 
     <section title="Security Considerations" anchor="security">
       <t>This document supplements but does not supersede the security considerations provided in specifications for application protocols that decide to use POSH (e.g., <xref target="RFC6120"/> and <xref target="RFC6125"/> for XMPP).  Specifically, the security of requests and responses sent via HTTPS depends on checking the identity of the HTTP server in accordance with <xref target="RFC2818"/>.  Additionally, the security of POSH can benefit from other HTTP hardening protocols, such as HSTS <xref target="RFC6797"/> and key pinning <xref target="KEYPIN"/>, especially if the TLS client shares some information with a common HTTPS implementation (e.g., platform-default web browser).</t>
-      <t>Note well that POSH is used by a TLS client to obtain the public key of a TLS server to which it might connect for a particular application protocol such as IMAP or XMPP.  POSH does not enable a hosted domain to transfer private keys to a hosting service via HTTPS.  POSH also does not enable a TLS server to engage in certificate enrollment with a certification authority via HTTPS, as is done in Enrollment over Secure Transport <xref target='EST'/>.</t>
+      <t>Note well that POSH is used by a TLS client to obtain the public key of a TLS server to which it might connect for a particular application protocol such as IMAP or XMPP.  POSH does not enable a hosted domain to transfer private keys to a hosting service via HTTPS.  POSH also does not enable a TLS server to engage in certificate enrollment with a certification authority via HTTPS, as is done in Enrollment over Secure Transport <xref target='RFC7030'/>.</t>
       <t>A web server at the source domain might redirect an HTTPS request to another URL.  The location provided in the redirect response MUST specify an HTTPS URL.  Source domains SHOULD use only temporary redirect mechanisms, such as HTTP status codes 302 (Found) and 307 (Temporary Redirect).  Clients MAY treat any redirect as temporary, ignoring the specific semantics for 301 (Moved Permanently) and 308 (Permanent Redirect) <xref target='HTTP-STATUS-308'/>.  To protect against circular references, clients MUST NOT follow an infinite number of redirects.  It is RECOMMENDED that clients follow no more than 10 redirects, although applications or implementations can require that fewer redirects be followed.</t>
     </section>
 
@@ -322,15 +316,16 @@ Client                 Domain                 Server
         <front>
           <title>JSON Web Key (JWK)</title>
           <author initials="M" surname="Jones" fullname="Michael Jones">
-            <organization>Microsoft</organization>
-            <address>
-              <email>mbj@microsoft.com</email>
-            </address>
+            <organization/>
           </author>
-          <date day="15" month="September" year="2013"/>
+          <date month="January" day="20" year="2014"/>
+          <abstract>
+            <t>A JSON Web Key (JWK) is a JavaScript Object Notation (JSON) data structure that represents a cryptographic key.  This specification also defines a JSON Web Key Set (JWK Set) JSON data structure for representing a set of JWKs.  Cryptographic algorithms and identifiers for use with this specification are described in the separate JSON Web Algorithms (JWA) specification and IANA registries defined by that specification.</t>
+          </abstract>
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-jose-json-web-key-16"/>
-        <format type="TXT" target="http://tools.ietf.org/html/draft-ietf-jose-json-web-key-16.txt"/>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-jose-json-web-key-20"/>
+        <format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-jose-json-web-key-20.txt"/>
+        <format type="PDF" target="http://www.ietf.org/internet-drafts/draft-ietf-jose-json-web-key-20.pdf"/>
       </reference>
 
       <reference anchor="RFC2119">
@@ -598,25 +593,6 @@ Client                 Domain                 Server
     </references>
 
     <references title="Informative References">
-<reference anchor='EST'>
-<front>
-<title>Enrollment over Secure Transport</title>
-<author initials='M' surname='Pritikin' fullname='Max Pritikin'>
-    <organization />
-</author>
-<author initials='P' surname='Yee' fullname='Peter Yee'>
-    <organization />
-</author>
-<author initials='D' surname='Harkins' fullname='Dan Harkins'>
-    <organization />
-</author>
-<date month='August' day='13' year='2013' />
-<abstract><t>This document profiles certificate enrollment for clients using Certificate Management over CMS (CMC) messages over a secure transport.  This profile, called Enrollment over Secure Transport (EST), describes a simple yet functional certificate management protocol targeting Public Key Infrastructure (PKI) clients that need to acquire client certificates and associated Certification Authority (CA) certificate(s).  It also supports client-generated public/ private key pairs as well as key pairs generated by the CA.</t></abstract>
-</front>
-<seriesInfo name='Internet-Draft' value='draft-ietf-pkix-est-09' />
-<format type='TXT'
-        target='http://www.ietf.org/internet-drafts/draft-ietf-pkix-est-09.txt' />
-</reference>
 
 <reference anchor='HTTP-STATUS-308'>
 <front>
@@ -633,24 +609,25 @@ Client                 Domain                 Server
 </reference>
 
       <reference anchor="KEYPIN">
-<front>
-<title>Public Key Pinning Extension for HTTP</title>
-<author initials='C' surname='Evans' fullname='Chris Evans'>
-    <organization />
-</author>
-<author initials='C' surname='Palmer' fullname='Chris Palmer'>
-    <organization />
-</author>
-<author initials='R' surname='Sleevi' fullname='Ryan Sleevi'>
-    <organization />
-</author>
-<date month='July' day='11' year='2013' />
-<abstract><t>This memo describes an extension to the HTTP protocol allowing web host operators to instruct user agents (UAs) to remember ("pin") the hosts' cryptographic identities for a given period of time.  During that time, UAs will require that the host present a certificate chain including at least one Subject Public Key Info structure whose fingerprint matches one of the pinned fingerprints for that host.  By effectively reducing the number of authorities who can authenticate the domain during the lifetime of the pin, pinning may reduce the incidence of man-in-the-middle attacks due to compromised Certification Authorities.</t></abstract>
-</front>
-<seriesInfo name='Internet-Draft' value='draft-ietf-websec-key-pinning-08' />
-<format type='TXT'
-        target='http://www.ietf.org/internet-drafts/draft-ietf-websec-key-pinning-08.txt' />
-</reference>
+        <front>
+          <title>Public Key Pinning Extension for HTTP</title>
+          <author initials="C" surname="Evans" fullname="Chris Evans">
+            <organization/>
+          </author>
+          <author initials="C" surname="Palmer" fullname="Chris Palmer">
+            <organization/>
+          </author>
+          <author initials="R" surname="Sleevi" fullname="Ryan Sleevi">
+            <organization/>
+          </author>
+          <date month="November" day="26" year="2013"/>
+          <abstract>
+            <t>This memo describes an extension to the HTTP protocol allowing web host operators to instruct user agents (UAs) to remember ("pin") the hosts' cryptographic identities for a given period of time.  During that time, UAs will require that the host present a certificate chain including at least one Subject Public Key Info structure whose fingerprint matches one of the pinned fingerprints for that host.  By effectively reducing the number of authorities who can authenticate the domain during the lifetime of the pin, pinning may reduce the incidence of man-in-the-middle attacks due to compromised Certification Authorities.</t>
+          </abstract>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-websec-key-pinning-09"/>
+        <format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-websec-key-pinning-09.txt"/>
+      </reference>
 
 			<reference anchor="XMPP-DNA">
 				<front>
@@ -661,13 +638,13 @@ Client                 Domain                 Server
 					<author initials="M" surname="Miller" fullname="Matthew Miller">
 						<organization/>
 					</author>
-					<date month="October" day="20" year="2013"/>
+					<date month="February" year="2014"/>
 					<abstract>
 						<t>This document improves the security of the Extensible Messaging and Presence Protocol (XMPP) in two ways.  First, it specifies how "prooftypes" can establish a strong association between a domain name and an XML stream.  Second, it describes how to securely delegate a source domain to a derived domain, which is especially important in virtual hosting environments.</t>
 					</abstract>
 				</front>
-				<seriesInfo name="Internet-Draft" value="draft-ietf-xmpp-dna-04"/>
-				<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-xmpp-dna-04.txt"/>
+				<seriesInfo name="Internet-Draft" value="draft-ietf-xmpp-dna-05"/>
+				<format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-xmpp-dna-05.txt"/>
 			</reference>
 <reference anchor='RFC2782'>
 <front>
@@ -876,6 +853,26 @@ Client                 Domain                 Server
         <format type='TXT' target='http://www.rfc-editor.org/rfc/rfc6797.txt' />
       </reference>
 
+      <reference anchor="RFC7030">
+        <front>
+          <title>Enrollment over Secure Transport</title>
+          <author initials="M." surname="Pritikin" fullname="M. Pritikin">
+            <organization/>
+          </author>
+          <author initials="P." surname="Yee" fullname="P. Yee">
+            <organization/>
+          </author>
+          <author initials="D." surname="Harkins" fullname="D. Harkins">
+            <organization/>
+          </author>
+          <date year="2013" month="October"/>
+          <abstract>
+            <t>This document profiles certificate enrollment for clients using Certificate Management over CMS (CMC) messages over a secure transport.  This profile, called Enrollment over Secure Transport (EST), describes a simple, yet functional, certificate management protocol targeting Public Key Infrastructure (PKI) clients that need to acquire client certificates and associated Certification Authority (CA) certificates.  It also supports client-generated public/private key pairs as well as key pairs generated by the CA.</t>
+          </abstract>
+        </front>
+        <seriesInfo name="RFC" value="7030"/>
+        <format type="TXT" octets="123989" target="http://www.rfc-editor.org/rfc/rfc7030.txt"/>
+      </reference>
     </references>
 
     <section title="Acknowledgements" anchor="acks">
