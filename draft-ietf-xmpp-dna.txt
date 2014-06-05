@@ -846,8 +846,11 @@ Authors' Addresses
 
    Peter Saint-Andre
    &yet
+   P.O. Box 787
+   Parker, CO  80134
+   USA
 
-   Email: ietf@stpeter.im
+   Email: peter@andyet.com
 
 
    Matthew Miller
@@ -857,9 +860,6 @@ Authors' Addresses
    USA
 
    Email: mamille2@cisco.com
-
-
-
 
 
 
