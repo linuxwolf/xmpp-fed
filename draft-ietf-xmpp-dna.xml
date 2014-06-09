@@ -69,7 +69,7 @@
     </section>
 
     <section title="Terminology" anchor="terms">
-      <t>This document inherits XMPP terminology from <xref target="RFC6120"/> and <xref target="XEP-0220"/>, DNS terminology from <xref target="RFC1034"/>, <xref target="RFC1035"/>, <xref target="RFC2782"/> and <xref target="RFC4033"/>, and security terminology from <xref target="RFC4949"/> and <xref target="RFC5280"/>.  The terms "source domain", "derived domain", "reference identity", and "presented identity" are used as defined in the "CertID" specification <xref target="RFC6125"/>.  The terms "permissive federation", "verified federation", and "encrypted federation" are derived from <xref target="XEP-0238"/>, although we substitute the term "authenticated federation" for the term "trusted federation" from that document.</t>
+      <t>This document inherits XMPP terminology from <xref target="RFC6120"/> and <xref target="XEP-0220"/>, DNS terminology from <xref target="RFC1034"/>, <xref target="RFC1035"/>, <xref target="RFC2782"/> and <xref target="RFC4033"/>, and security terminology from <xref target="RFC4949"/> and <xref target="RFC5280"/>.  The terms "source domain", "derived domain", "reference identity", and "presented identity" are used as defined in the "CertID" specification <xref target="RFC6125"/>.</t>
     </section>
 
     <section title="Flow Chart" anchor="flow">
@@ -793,21 +793,6 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
         </front>
         <seriesInfo name="XSF XEP" value="0045"/>
         <format type="HTML" target="http://xmpp.org/extensions/xep-0045.html"/>
-      </reference>
-
-      <reference anchor="XEP-0238">
-        <front>
-          <title>XMPP Protocol Flows for Inter-Domain Federation</title>
-          <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
-            <organization/>
-            <address>
-              <email>stpeter@jabber.org</email>
-            </address>
-          </author>
-          <date day="31" month="March" year="2008"/>
-        </front>
-        <seriesInfo name="XSF XEP" value="0238"/>
-        <format type="HTML" target="http://xmpp.org/extensions/xep-0238.html"/>
       </reference>
 
       <reference anchor="XEP-0288">
