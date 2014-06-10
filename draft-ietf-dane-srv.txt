@@ -367,16 +367,15 @@ Internet-Draft                TLSA and SRV                     June 2014
    There SHOULD also be at least one TLSA record published that
    authenticates the server's certificate.
 
-   When using TLSA records with Certificate Usage "DANE-EE", the
-   deployed certificate does not need to contain any of the possible
-   reference identifiers discussed below.  Indeed, none of the
-   certificate's information is necessary for such certificates.
-   However, servers that rely solely on validation using Certificate
-   Usage "DANE-EE" TLSA records might prevent clients that do not
-   support this specification from successfully connecting with TLS.
+   When using TLSA records with Certificate Usage "DANE-EE", it is not
+   necessary for the deployed certificate to contain an identifier for
+   either the source domain or target server host name.  However,
+   servers that rely solely on validation using Certificate Usage "DANE-
+   EE" TLSA records might prevent clients that do not support this
+   specification from successfully connecting with TLS.
 
    For TLSA records with Certificate Usage types other than "DANE-EE",
-   the certificate(s) MUST contain a reference identifier that matches:
+   the certificate(s) MUST contain an identifier that matches:
 
    o  the service domain name (the "source domain" in [RFC6125] terms,
       which is the SRV query domain); and/or
@@ -386,6 +385,7 @@ Internet-Draft                TLSA and SRV                     June 2014
 
    Servers that support multiple service domains (i.e., so-called
    "multi-tenanted environments") can implement the Transport Layer
+   Security Server Name Indication (TLS SNI) [RFC6066] or its functional
 
 
 
@@ -394,7 +394,6 @@ Finch, et al.           Expires December 12, 2014               [Page 7]
 Internet-Draft                TLSA and SRV                     June 2014
 
 
-   Security Server Name Indication (TLS SNI) [RFC6066] or its functional
    equivalent to determine which certificate to offer.  Clients that do
    not support this specification will indicate a preference for the
    service domain name, while clients that support this specification
@@ -439,6 +438,7 @@ Internet-Draft                TLSA and SRV                     June 2014
    installing a TLS certificate with the correct name (where necessary),
    and publishing a TLSA record for that certificate.  If these are not
    correct then connections from TLSA-aware clients might fail.
+
 
 
 
@@ -545,8 +545,8 @@ Internet-Draft                TLSA and SRV                     June 2014
 
    [I-D.ietf-dane-smtp-with-dane]
               Dukhovni, V. and W. Hardaker, "SMTP security via
-              opportunistic DANE TLS", draft-ietf-dane-smtp-with-dane-10
-              (work in progress), May 2014.
+              opportunistic DANE TLS", draft-ietf-dane-smtp-with-dane-05
+              (work in progress), February 2014.
 
    [I-D.ietf-xmpp-dna]
               Saint-Andre, P. and M. Miller, "Domain Name Associations

@@ -362,18 +362,17 @@ _9143._tcp.imap.example.net. IN TLSA ?
      There SHOULD also be at least one TLSA record published that
      authenticates the server's certificate.</t>
      
-     <t>When using TLSA records with Certificate Usage "DANE-EE", the
-      deployed certificate does not need to contain any of the possible
-      reference identifiers discussed below. Indeed, none of the
-      certificate's information is necessary for such certificates.
-      However, servers that rely solely on validation using Certificate
-      Usage "DANE-EE" TLSA records might prevent clients that do not
-      support this specification from successfully connecting with
-      TLS.</t>
-      
-     <t>For TLSA records with Certificate Usage types other than
-      "DANE-EE", the certificate(s) MUST contain a reference identifier
-      that matches:
+     <t>When using TLSA records with Certificate Usage "DANE-EE", it is
+      not necessary for the deployed certificate to contain an
+      identifier for either the source domain or target server host
+      name. However, servers that rely solely on validation using
+      Certificate Usage "DANE-EE" TLSA records might prevent clients
+      that do not support this specification from successfully
+      connecting with TLS.</t>
+
+      <t>For TLSA records with Certificate Usage types other than
+        "DANE-EE", the certificate(s) MUST contain an identifier that
+        matches:
 
       <list style="symbols">
           <t>the service domain name (the "source domain" in
