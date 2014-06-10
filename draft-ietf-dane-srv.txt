@@ -5,10 +5,10 @@
 DNS-Based Authentication of Named Entities (DANE)               T. Finch
 Internet-Draft                                   University of Cambridge
 Intended status: Standards Track                               M. Miller
-Expires: December 11, 2014                           Cisco Systems, Inc.
+Expires: December 12, 2014                           Cisco Systems, Inc.
                                                           P. Saint-Andre
                                                                     &yet
-                                                            June 9, 2014
+                                                           June 10, 2014
 
 
   Using DNS-Based Authentication of Named Entities (DANE) TLSA Records
@@ -20,10 +20,10 @@ Abstract
    The DANE specification (RFC 6698) describes how to use TLSA resource
    records in the DNS to associate a server's host name with its TLS
    certificate, where the association is secured with DNSSEC.  However,
-   application protocols use SRV records (RFC 2782) to indirectly name
-   the target server host names for a service domain cannot apply the
-   rules from RFC 6698.  Therefore this document provides guidelines
-   that enable such protocols locate and use TLSA records.
+   application protocols that use SRV records (RFC 2782) to indirectly
+   name the target server host names for a service domain cannot apply
+   the rules from RFC 6698.  Therefore this document provides guidelines
+   that enable such protocols to locate and use TLSA records.
 
 Status of This Memo
 
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 11, 2014.
+   This Internet-Draft will expire on December 12, 2014.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Finch, et al.           Expires December 11, 2014               [Page 1]
+Finch, et al.           Expires December 12, 2014               [Page 1]
 
 Internet-Draft                TLSA and SRV                     June 2014
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Finch, et al.           Expires December 11, 2014               [Page 2]
+Finch, et al.           Expires December 12, 2014               [Page 2]
 
 Internet-Draft                TLSA and SRV                     June 2014
 
@@ -139,8 +139,7 @@ Internet-Draft                TLSA and SRV                     June 2014
 
    Note: The "CertID" specification [RFC6125] does not use the terms
    "service domain" and "target server host name", but refers to the
-   same entities with the terms "source domain" and "derived domain",
-   respectively.
+   same entities with the terms "source domain" and "derived domain".
 
 2.  Terminology
 
@@ -150,7 +149,7 @@ Internet-Draft                TLSA and SRV                     June 2014
    [RFC2119].
 
    This draft uses the definitions for "secure", "insecure", "bogus",
-   and "indeterminate" from [RFC4035].  This draft uses the acronyms
+   and "indeterminate" from [RFC4033].  This draft uses the acronyms
    from [RFC7218] for the values of TLSA fields where appropriate.
 
 3.  DNS Checks
@@ -165,7 +164,8 @@ Internet-Draft                TLSA and SRV                     June 2014
 
 
 
-Finch, et al.           Expires December 11, 2014               [Page 3]
+
+Finch, et al.           Expires December 12, 2014               [Page 3]
 
 Internet-Draft                TLSA and SRV                     June 2014
 
@@ -203,7 +203,7 @@ Internet-Draft                TLSA and SRV                     June 2014
 
    For each SRV target server host name, the client makes A / AAAA
    queries, performs DNSSEC validation on the address (A, AAAA)
-   response, and continues based on the results:
+   response, and continues as follows based on the results:
 
    o  If the response is "secure" and usable, the client MUST perform a
       TLSA query for that target server host name as described in the
@@ -221,7 +221,7 @@ Internet-Draft                TLSA and SRV                     June 2014
 
 
 
-Finch, et al.           Expires December 11, 2014               [Page 4]
+Finch, et al.           Expires December 12, 2014               [Page 4]
 
 Internet-Draft                TLSA and SRV                     June 2014
 
@@ -233,7 +233,7 @@ Internet-Draft                TLSA and SRV                     June 2014
    from the SRV RDATA, the protocol from the SRV query name, and the
    TLSA base domain set to the SRV target server host name.
 
-   For example, the following SRV record for IMAP (see [RFC6186] leads
+   For example, the following SRV record for IMAP (see [RFC6186]) leads
    to the TLSA query shown below:
 
    _imap._tcp.example.com. 86400 IN SRV 10 0 9143 imap.example.net.
@@ -246,15 +246,15 @@ Internet-Draft                TLSA and SRV                     June 2014
    previous step are usable according to section 4.1 of [RFC6698].  This
    affects the use TLS as follows:
 
-   o  If the TLSA response is "secure" and usable, the client MUST use
-      TLS when connecting to the target server.  The TLSA records are
-      used when validating the server's certificate as described under
-      Section 4.
+   o  If the TLSA response is "secure" and usable, then the client MUST
+      use TLS when connecting to the target server.  The TLSA records
+      are used when validating the server's certificate as described
+      under Section 4.
 
-   o  If the TLSA response is "insecure", the client SHALL proceed as if
-      the target server had no TLSA records.  It MAY connect to the
-      target server with or without TLS, subject to the policies of the
-      application protocol or client implementation.
+   o  If the TLSA response is "insecure", then the client SHALL proceed
+      as if the target server had no TLSA records.  It MAY connect to
+      the target server with or without TLS, subject to the policies of
+      the application protocol or client implementation.
 
    o  If the TLSA response is "bogus" or "indeterminate", then the
       client MUST NOT connect to the target server (the client can still
@@ -277,25 +277,25 @@ Internet-Draft                TLSA and SRV                     June 2014
 
 
 
-Finch, et al.           Expires December 11, 2014               [Page 5]
+Finch, et al.           Expires December 12, 2014               [Page 5]
 
 Internet-Draft                TLSA and SRV                     June 2014
 
 
    In this case, the client uses the information in the server
-   certificate and DNSSEC validation status of the SRV query in its
+   certificate and the DNSSEC validation status of the SRV query in its
    authentication checks.  It SHOULD use the Server Name Indication
    extension (TLS SNI) [RFC6066] or its functional equivalent in the
    relevant application protocol (e.g., in XMPP [RFC6120] this is the
    'to' address of the initial stream header).  The preferred name SHALL
    be chosen as follows, and the client SHALL verify the identity
-   asserted by the server's certificate according to [RFC6125] section
-   6, using a list of reference identifiers constructed as follows (note
-   again that in RFC 6125 the terms "source domain" and "derived domain"
-   refer to the same things as "service domain" and "target server host
-   name" in this document).  The examples below assume a service domain
-   of "im.example.com" and a target server host name of
-   "xmpp23.hosting.example.net".
+   asserted by the server's certificate according to section 6 of
+   [RFC6125], using a list of reference identifiers constructed as
+   follows (note again that in RFC 6125 the terms "source domain" and
+   "derived domain" refer to the same things as "service domain" and
+   "target server host name" in this document).  The examples below
+   assume a service domain of "im.example.com" and a target server host
+   name of "xmpp23.hosting.example.net".
 
    SRV is insecure:  The reference identifiers SHALL include the service
       domain and MUST NOT include the SRV target server host name (e.g.,
@@ -309,15 +309,15 @@ Internet-Draft                TLSA and SRV                     June 2014
       target server host name is the preferred name for TLS SNI or its
       equivalent.
 
-   In the latter case, the client will accept either identity so that it
-   is compatible with servers that do and do not support this
-   specification.
+   In the latter case, the client will accept either identity to ensure
+   compatibility with servers that support this specification as well as
+   servers that do not support this specification.
 
 4.2.  TLSA Records
 
    If the client received one or more usable TLSA certificate
-   associations, it SHALL process them as described in [RFC6698] section
-   2.1.
+   associations, it SHALL process them as described in section 2.1 of
+   [RFC6698].
 
    If the TLS server's certificate -- or the public key of the server's
    certificate -- matches a usable TLSA record with Certificate Usage
@@ -325,7 +325,7 @@ Internet-Draft                TLSA and SRV                     June 2014
    Because the information in such a TLSA record supersedes the non-key
    information in the certificate, all other [RFC5280] and [RFC6125]
    authentication checks (e.g., reference identifier, key usage,
-   expiration, issuance, etc.)  MUST be ignored or omitted.
+   expiration, issuance) MUST be ignored or omitted.
 
 
 
@@ -333,7 +333,7 @@ Internet-Draft                TLSA and SRV                     June 2014
 
 
 
-Finch, et al.           Expires December 11, 2014               [Page 6]
+Finch, et al.           Expires December 12, 2014               [Page 6]
 
 Internet-Draft                TLSA and SRV                     June 2014
 
@@ -381,28 +381,27 @@ Internet-Draft                TLSA and SRV                     June 2014
    o  the service domain name (the "source domain" in [RFC6125] terms,
       which is the SRV query domain); and/or
 
-
    o  the target server host name (the "derived domain" in [RFC6125]
       terms, which is the SRV target).
 
+   Servers that support multiple service domains (i.e., so-called
+   "multi-tenanted environments") can implement the Transport Layer
 
 
 
-
-Finch, et al.           Expires December 11, 2014               [Page 7]
+Finch, et al.           Expires December 12, 2014               [Page 7]
 
 Internet-Draft                TLSA and SRV                     June 2014
 
 
-   Servers that support multiple service domains (i.e., multi-tenant)
-   can implement Server Name Indicator (TLS SNI) [RFC6066] or its
-   functional equivalent to determine which certificate to offer.
-   Clients that do not support this specification will indicate a
-   preference for the service domain name, while clients that support
-   this specification will indicate the target server host name.
-   However, the server determines what certificate to present in the TLS
-   handshake; e.g., the presented certificate might only authenticate
-   the target server host name.
+   Security Server Name Indication (TLS SNI) [RFC6066] or its functional
+   equivalent to determine which certificate to offer.  Clients that do
+   not support this specification will indicate a preference for the
+   service domain name, while clients that support this specification
+   will indicate the target server host name.  However, the server
+   determines what certificate to present in the TLS handshake; e.g.,
+   the presented certificate might only authenticate the target server
+   host name.
 
 7.  Internationalization Considerations
 
@@ -424,11 +423,11 @@ Internet-Draft                TLSA and SRV                     June 2014
    deployment are likely if a service domain has a third-party fallback
    server, for example.
 
-   The SRV and MX sorting rules are unchanged; in particular they have
-   not been altered in order to prioritize secure servers over insecure
-   servers.  If a site wants to be secure it needs to deploy this
-   protocol completely; a partial deployment is not secure and we make
-   no special effort to support it.
+   The SRV sorting rules are unchanged; in particular they have not been
+   altered in order to prioritize secure servers over insecure servers.
+   If a site wants to be secure it needs to deploy this protocol
+   completely; a partial deployment is not secure and we make no special
+   effort to support it.
 
 9.2.  A Service Domain Trusts its Servers
 
@@ -445,7 +444,8 @@ Internet-Draft                TLSA and SRV                     June 2014
 
 
 
-Finch, et al.           Expires December 11, 2014               [Page 8]
+
+Finch, et al.           Expires December 12, 2014               [Page 8]
 
 Internet-Draft                TLSA and SRV                     June 2014
 
@@ -468,14 +468,14 @@ Internet-Draft                TLSA and SRV                     June 2014
    only authenticates the CA that issued the certificate, and third
    parties can obtain certificates from the same CA.  Therefore, clients
    need to check whether the server's certificate matches one of the
-   expected reference identifiers to ensure the certificate was issued
-   by the CA to the server the client expects.
+   expected reference identifiers to ensure that the certificate was
+   issued by the CA to the server the client expects.
 
 10.  Acknowledgements
 
    Thanks to Mark Andrews for arguing that authenticating the target
    server host name is the right thing, and that we ought to rely on
-   DNSSEC to secure the SRV / MX lookup.  Thanks to James Cloos, Viktor
+   DNSSEC to secure the SRV lookup.  Thanks to James Cloos, Viktor
    Dukhovni, Ned Freed, Olafur Gudmundsson, Paul Hoffman, Phil Pennock,
    Hector Santos, Jonas Schneider, and Alessandro Vesely for helpful
    suggestions.
@@ -501,7 +501,7 @@ Internet-Draft                TLSA and SRV                     June 2014
 
 
 
-Finch, et al.           Expires December 11, 2014               [Page 9]
+Finch, et al.           Expires December 12, 2014               [Page 9]
 
 Internet-Draft                TLSA and SRV                     June 2014
 
@@ -557,7 +557,7 @@ Internet-Draft                TLSA and SRV                     June 2014
 
 
 
-Finch, et al.           Expires December 11, 2014              [Page 10]
+Finch, et al.           Expires December 12, 2014              [Page 10]
 
 Internet-Draft                TLSA and SRV                     June 2014
 
@@ -613,7 +613,7 @@ A.2.  XMPP
 
 
 
-Finch, et al.           Expires December 11, 2014              [Page 11]
+Finch, et al.           Expires December 12, 2014              [Page 11]
 
 Internet-Draft                TLSA and SRV                     June 2014
 
@@ -626,10 +626,10 @@ Internet-Draft                TLSA and SRV                     June 2014
 Appendix B.  Rationale
 
    The long-term goal of this specification is to settle on TLS
-   certificates that verify the server host name rather than the service
-   domain, since this is more convenient for servers hosting multiple
-   domains (so-called "multi-tenanted environments") and scales up more
-   easily to larger numbers of service domains.
+   certificates that verify the target server host name rather than the
+   service domain, since this is more convenient for servers hosting
+   multiple domains (so-called "multi-tenanted environments") and scales
+   up more easily to larger numbers of service domains.
 
    There are a number of other reasons for doing it this way:
 
@@ -637,59 +637,54 @@ Appendix B.  Rationale
       sense to associate it with the server host name rather than the
       service domain.
 
-
    o  In the absence of TLS SNI, if the certificate identifies the host
       name then it does not need to list all the possible service
       domains.
-
 
    o  When the server certificate is replaced it is much easier if there
       is one part of the DNS that needs updating to match, instead of an
       unbounded number of hosted service domains.
 
-
    o  The same TLSA records work with this specification, and with
       direct connections to the host name in the style of [RFC6698].
-
 
    o  Some application protocols, such as SMTP, allow a client to
       perform transactions with multiple service domains in the same
       connection.  It is not in general feasible for the client to
       specify the service domain using TLS SNI when the connection is
       established, and the server might not be able to present a
-      certificate that authenticates all possible service domains.
-
+      certificate that authenticates all possible service domains.  See
+      [I-D.ietf-dane-smtp-with-dane] for details.
 
    o  It is common for SMTP servers to act in multiple roles, for
       example as outgoing relays or as incoming MX servers, depending on
       the client identity.  It is simpler if the server can present the
       same certificate regardless of the role in which it is to act.
       Sometimes the server does not know its role until the client has
+      authenticated, which usually occurs after TLS has been
+      established.  See [I-D.ietf-dane-smtp-with-dane] for details.
+
+   This specification does not provide an option to put TLSA records
+   under the service domain because that would add complexity without
 
 
 
-
-Finch, et al.           Expires December 11, 2014              [Page 12]
+Finch, et al.           Expires December 12, 2014              [Page 12]
 
 Internet-Draft                TLSA and SRV                     June 2014
 
 
-      authenticated, which usually occurs after TLS has been
-      established.
-
-   This specification does not provide an option to put TLSA records
-   under the service domain because that would add complexity without
    providing any benefit, and security protocols are best kept simple.
    As described above, there are real-world cases where authenticating
    the service domain cannot be made to work, so there would be
    complicated criteria for when service domain TLSA records might be
    used and when they cannot.  This is all avoided by putting the TLSA
-   records under the server host name.
+   records under the target server host name.
 
-   The disadvantage is that clients which do not do DNSSEC validation
-   must, according to [RFC6125] rules, check the server certificate
-   against the service domain, since they have no other way to
-   authenticate the server.  This means that SNI support or its
+   The disadvantage is that clients which do not complete DNSSEC
+   validation must, according to [RFC6125] rules, check the server
+   certificate against the service domain, since they have no other way
+   to authenticate the server.  This means that SNI support or its
    functional equivalent is necessary for backward compatibility.
 
 Authors' Addresses
@@ -725,4 +720,9 @@ Authors' Addresses
 
 
 
-Finch, et al.           Expires December 11, 2014              [Page 13]
+
+
+
+
+
+Finch, et al.           Expires December 12, 2014              [Page 13]
