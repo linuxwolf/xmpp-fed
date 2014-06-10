@@ -10,8 +10,8 @@
  <!ENTITY rfc6066 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6066.xml">
  <!ENTITY rfc6120 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6120.xml">
  <!ENTITY rfc6125 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6125.xml">
+ <!ENTITY rfc6186 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6186.xml">
  <!ENTITY rfc6555 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6555.xml">
- <!ENTITY rfc6698 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6698.xml">
  <!ENTITY rfc6698 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6698.xml">
  <!ENTITY rfc7218 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7218.xml">
 
@@ -227,8 +227,8 @@
      query name, and the TLSA base domain set to the SRV target server host 
      name.</t>
 
-    <t>For example, the following SRV record leads to the TLSA 
-     query shown below:</t>
+    <t>For example, the following SRV record for IMAP (see <xref target='RFC6186'/> 
+    leads to the TLSA query shown below:</t>
     
     <t><figure><artwork><![CDATA[
 _imap._tcp.example.com. 86400 IN SRV 10 0 9143 imap.example.net.
@@ -266,7 +266,7 @@ _9143._tcp.imap.example.net. IN TLSA ?
 
   <section anchor="tls" title="TLS Checks">
 
-   <t>When connecting to a server, the client MUST use TLS if the responses to the SRV and TLSA queries were "secure" as described above. The following rules apply.</t>
+   <t>When connecting to a server, the client MUST use TLS if the responses to the SRV and TLSA queries were "secure" as described above. The rules described in the next two sections apply.</t>
 
    <section title="SRV Records Only">
     <t>If the client received zero usable TLSA certificate
@@ -287,17 +287,21 @@ _9143._tcp.imap.example.net. IN TLSA ?
     a list of reference identifiers constructed as follows (note again
     that in RFC 6125 the terms "source domain" and "derived domain"
     refer to the same things as "service domain" and "target server host name"
-    in this document).</t>
+    in this document).  The examples below assume a service domain of 
+    "im.example.com" and a target server host name of 
+    "xmpp23.hosting.example.net".</t>
 
     <t>
     <list style="hanging">
      <t hangText="SRV is insecure:">
-      The reference identifiers SHALL include the service domain and
-      MUST NOT include the SRV target server host name. The service domain is
-      the preferred name for TLS SNI or its equivalent.</t>
+      The reference identifiers SHALL include the service domain and 
+      MUST NOT include the SRV target server host name (e.g., include 
+      "im.example.com" but not "xmpp23.hosting.example.net"). The 
+      service domain is the preferred name for TLS SNI or its equivalent.</t>
      <t hangText="SRV is secure:">
       The reference identifiers SHALL include both the service domain
-      and the SRV target server host name. The target server host name is the
+      and the SRV target server host name (e.g., include both "im.example.com"
+      and "xmpp23.hosting.example.net"). The target server host name is the
       preferred name for TLS SNI or its equivalent.</t>
     </list>
     </t>
@@ -493,6 +497,7 @@ _9143._tcp.imap.example.net. IN TLSA ?
    &rfc6066; <!-- TLS SNI -->
    &rfc6120; <!-- XMPP -->
    &rfc6125; <!-- certificate verification -->
+   &rfc6186; <!-- email submission discovery -->
    &rfc6698; <!-- DANE TLSA -->
    &rfc7218; <!-- acronymania -->
 
@@ -516,26 +521,26 @@ _9143._tcp.imap.example.net. IN TLSA ?
    <t><figure>
     <artwork><![CDATA[
 ; mail domain
-example.com.              MX      1 mx.example.net.
-example.com.              RRSIG   MX ...
+_imap._tcp.example.com.   SRV 10 0 9143 imap.example.net.
+example.com.              RRSIG   SRV ...
 
-; SMTP server host name
-mx.example.net.           A      192.0.2.1
-mx.example.net.           RRSIG  A ...
+; target server host name
+imap.example.net.         A      192.0.2.1
+imap.example.net.         RRSIG  A ...
 
-mx.example.net.           AAAA   2001:db8:212:8::e:1
-mx.example.net.           RRSIG  ...
+imap.example.net.         AAAA   2001:db8:212:8::e:1
+imap.example.net.         RRSIG  ...
 
 ; TLSA resource record
-_25._tcp.mx.example.net.  TLSA   ...
-_25._tcp.mx.example.net.  RRSIG  TLSA ...
+_9143._tcp.imap.example.net.  TLSA   ...
+_9143._tcp.imap.example.net.  RRSIG  TLSA ...
     ]]></artwork>
    </figure></t>
 
-   <t>Mail for addresses at example.com is delivered by SMTP to
-    mx.example.net. Connections to mx.example.net port 25 that use
+   <t>Mail messages submitted for addresses at example.com are sent via IMAP
+    to imap.example.net. Connections to imap.example.net port 9143 that use
     STARTTLS will get a server certificate that authenticates the name
-    mx.example.net.</t>
+    imap.example.net.</t>
 
   </section>
 
@@ -545,9 +550,9 @@ _25._tcp.mx.example.net.  RRSIG  TLSA ...
     <artwork><![CDATA[
 ; XMPP domain
 _xmpp-client.example.com. SRV     1 0 5222 im.example.net.
-_xmpp-client.example.com.  RRSIG   SRV ...
+_xmpp-client.example.com. RRSIG   SRV ...
 
-; XMPP server host name
+; target server host name
 im.example.net.           A      192.0.2.3
 im.example.net.           RRSIG  A ...
 

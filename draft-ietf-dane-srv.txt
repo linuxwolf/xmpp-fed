@@ -5,10 +5,10 @@
 DNS-Based Authentication of Named Entities (DANE)               T. Finch
 Internet-Draft                                   University of Cambridge
 Intended status: Standards Track                               M. Miller
-Expires: December 6, 2014                            Cisco Systems, Inc.
+Expires: December 11, 2014                           Cisco Systems, Inc.
                                                           P. Saint-Andre
                                                                     &yet
-                                                            June 4, 2014
+                                                            June 9, 2014
 
 
   Using DNS-Based Authentication of Named Entities (DANE) TLSA Records
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 6, 2014.
+   This Internet-Draft will expire on December 11, 2014.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Finch, et al.           Expires December 6, 2014                [Page 1]
+Finch, et al.           Expires December 11, 2014               [Page 1]
 
 Internet-Draft                TLSA and SRV                     June 2014
 
@@ -77,19 +77,19 @@ Table of Contents
    4.  TLS Checks  . . . . . . . . . . . . . . . . . . . . . . . . .   5
      4.1.  SRV Records Only  . . . . . . . . . . . . . . . . . . . .   5
      4.2.  TLSA Records  . . . . . . . . . . . . . . . . . . . . . .   6
-   5.  Guidance for Application Protocols  . . . . . . . . . . . . .   6
+   5.  Guidance for Application Protocols  . . . . . . . . . . . . .   7
    6.  Guidance for Server Operators . . . . . . . . . . . . . . . .   7
    7.  Internationalization Considerations . . . . . . . . . . . . .   8
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
    9.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
      9.1.  Mixed Security Status . . . . . . . . . . . . . . . . . .   8
      9.2.  A Service Domain Trusts its Servers . . . . . . . . . . .   8
-     9.3.  Certificate Subject Name Matching . . . . . . . . . . . .   8
+     9.3.  Certificate Subject Name Matching . . . . . . . . . . . .   9
    10. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   9
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
      11.1.  Normative References . . . . . . . . . . . . . . . . . .   9
      11.2.  Informative References . . . . . . . . . . . . . . . . .  10
-   Appendix A.  Examples . . . . . . . . . . . . . . . . . . . . . .  10
+   Appendix A.  Examples . . . . . . . . . . . . . . . . . . . . . .  11
      A.1.  IMAP  . . . . . . . . . . . . . . . . . . . . . . . . . .  11
      A.2.  XMPP  . . . . . . . . . . . . . . . . . . . . . . . . . .  11
    Appendix B.  Rationale  . . . . . . . . . . . . . . . . . . . . .  12
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Finch, et al.           Expires December 6, 2014                [Page 2]
+Finch, et al.           Expires December 11, 2014               [Page 2]
 
 Internet-Draft                TLSA and SRV                     June 2014
 
@@ -165,7 +165,7 @@ Internet-Draft                TLSA and SRV                     June 2014
 
 
 
-Finch, et al.           Expires December 6, 2014                [Page 3]
+Finch, et al.           Expires December 11, 2014               [Page 3]
 
 Internet-Draft                TLSA and SRV                     June 2014
 
@@ -221,7 +221,7 @@ Internet-Draft                TLSA and SRV                     June 2014
 
 
 
-Finch, et al.           Expires December 6, 2014                [Page 4]
+Finch, et al.           Expires December 11, 2014               [Page 4]
 
 Internet-Draft                TLSA and SRV                     June 2014
 
@@ -233,8 +233,8 @@ Internet-Draft                TLSA and SRV                     June 2014
    from the SRV RDATA, the protocol from the SRV query name, and the
    TLSA base domain set to the SRV target server host name.
 
-   For example, the following SRV record leads to the TLSA query shown
-   below:
+   For example, the following SRV record for IMAP (see [RFC6186] leads
+   to the TLSA query shown below:
 
    _imap._tcp.example.com. 86400 IN SRV 10 0 9143 imap.example.net.
 
@@ -264,7 +264,7 @@ Internet-Draft                TLSA and SRV                     June 2014
 
    When connecting to a server, the client MUST use TLS if the responses
    to the SRV and TLSA queries were "secure" as described above.  The
-   following rules apply.
+   rules described in the next two sections apply.
 
 4.1.  SRV Records Only
 
@@ -277,7 +277,7 @@ Internet-Draft                TLSA and SRV                     June 2014
 
 
 
-Finch, et al.           Expires December 6, 2014                [Page 5]
+Finch, et al.           Expires December 11, 2014               [Page 5]
 
 Internet-Draft                TLSA and SRV                     June 2014
 
@@ -293,16 +293,20 @@ Internet-Draft                TLSA and SRV                     June 2014
    6, using a list of reference identifiers constructed as follows (note
    again that in RFC 6125 the terms "source domain" and "derived domain"
    refer to the same things as "service domain" and "target server host
-   name" in this document).
+   name" in this document).  The examples below assume a service domain
+   of "im.example.com" and a target server host name of
+   "xmpp23.hosting.example.net".
 
    SRV is insecure:  The reference identifiers SHALL include the service
-      domain and MUST NOT include the SRV target server host name.  The
-      service domain is the preferred name for TLS SNI or its
+      domain and MUST NOT include the SRV target server host name (e.g.,
+      include "im.example.com" but not "xmpp23.hosting.example.net").
+      The service domain is the preferred name for TLS SNI or its
       equivalent.
 
    SRV is secure:  The reference identifiers SHALL include both the
-      service domain and the SRV target server host name.  The target
-      server host name is the preferred name for TLS SNI or its
+      service domain and the SRV target server host name (e.g., include
+      both "im.example.com" and "xmpp23.hosting.example.net").  The
+      target server host name is the preferred name for TLS SNI or its
       equivalent.
 
    In the latter case, the client will accept either identity so that it
@@ -323,6 +327,17 @@ Internet-Draft                TLSA and SRV                     June 2014
    authentication checks (e.g., reference identifier, key usage,
    expiration, issuance, etc.)  MUST be ignored or omitted.
 
+
+
+
+
+
+
+Finch, et al.           Expires December 11, 2014               [Page 6]
+
+Internet-Draft                TLSA and SRV                     June 2014
+
+
 5.  Guidance for Application Protocols
 
    This document describes how to use DANE with application protocols in
@@ -330,13 +345,6 @@ Internet-Draft                TLSA and SRV                     June 2014
    document attempts to provide generic guidance applying to all such
    protocols, additional documents for particular application protocols
    could cover related topics, such as:
-
-
-
-Finch, et al.           Expires December 6, 2014                [Page 6]
-
-Internet-Draft                TLSA and SRV                     June 2014
-
 
    o  Fallback logic in the event that a client is unable to connect
       securely to a target server by following the procedures defined in
@@ -377,6 +385,15 @@ Internet-Draft                TLSA and SRV                     June 2014
    o  the target server host name (the "derived domain" in [RFC6125]
       terms, which is the SRV target).
 
+
+
+
+
+Finch, et al.           Expires December 11, 2014               [Page 7]
+
+Internet-Draft                TLSA and SRV                     June 2014
+
+
    Servers that support multiple service domains (i.e., multi-tenant)
    can implement Server Name Indicator (TLS SNI) [RFC6066] or its
    functional equivalent to determine which certificate to offer.
@@ -386,13 +403,6 @@ Internet-Draft                TLSA and SRV                     June 2014
    However, the server determines what certificate to present in the TLS
    handshake; e.g., the presented certificate might only authenticate
    the target server host name.
-
-
-
-Finch, et al.           Expires December 6, 2014                [Page 7]
-
-Internet-Draft                TLSA and SRV                     June 2014
-
 
 7.  Internationalization Considerations
 
@@ -431,6 +441,15 @@ Internet-Draft                TLSA and SRV                     June 2014
    and publishing a TLSA record for that certificate.  If these are not
    correct then connections from TLSA-aware clients might fail.
 
+
+
+
+
+Finch, et al.           Expires December 11, 2014               [Page 8]
+
+Internet-Draft                TLSA and SRV                     June 2014
+
+
 9.3.  Certificate Subject Name Matching
 
    Section 4 of the TLSA specification [RFC6698] leaves the details of
@@ -441,14 +460,6 @@ Internet-Draft                TLSA and SRV                     June 2014
    Certificate Usage "DANE-EE".  Because such a record identifies the
    specific certificate (or public key of the certificate), additional
    checks are superfluous and potentially conflicting.
-
-
-
-
-Finch, et al.           Expires December 6, 2014                [Page 8]
-
-Internet-Draft                TLSA and SRV                     June 2014
-
 
    Otherwise, while DNSSEC provides a secure binding between the server
    name and the TLSA record, and the TLSA record provides a binding to a
@@ -488,6 +499,13 @@ Internet-Draft                TLSA and SRV                     June 2014
               Rose, "Protocol Modifications for the DNS Security
               Extensions", RFC 4035, March 2005.
 
+
+
+Finch, et al.           Expires December 11, 2014               [Page 9]
+
+Internet-Draft                TLSA and SRV                     June 2014
+
+
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
               Infrastructure Certificate and Certificate Revocation List
@@ -495,16 +513,6 @@ Internet-Draft                TLSA and SRV                     June 2014
 
    [RFC5321]  Klensin, J., "Simple Mail Transfer Protocol", RFC 5321,
               October 2008.
-
-
-
-
-
-
-Finch, et al.           Expires December 6, 2014                [Page 9]
-
-Internet-Draft                TLSA and SRV                     June 2014
-
 
    [RFC5890]  Klensin, J., "Internationalized Domain Names for
               Applications (IDNA): Definitions and Document Framework",
@@ -521,6 +529,9 @@ Internet-Draft                TLSA and SRV                     June 2014
               within Internet Public Key Infrastructure Using X.509
               (PKIX) Certificates in the Context of Transport Layer
               Security (TLS)", RFC 6125, March 2011.
+
+   [RFC6186]  Daboo, C., "Use of SRV Records for Locating Email
+              Submission/Access Services", RFC 6186, March 2011.
 
    [RFC6698]  Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
               of Named Entities (DANE) Transport Layer Security (TLS)
@@ -543,6 +554,14 @@ Internet-Draft                TLSA and SRV                     June 2014
               (XMPP)", draft-ietf-xmpp-dna-05 (work in progress),
               February 2014.
 
+
+
+
+Finch, et al.           Expires December 11, 2014              [Page 10]
+
+Internet-Draft                TLSA and SRV                     June 2014
+
+
    [RFC6555]  Wing, D. and A. Yourtchenko, "Happy Eyeballs: Success with
               Dual-Stack Hosts", RFC 6555, April 2012.
 
@@ -551,46 +570,35 @@ Appendix A.  Examples
    In the following, most of the DNS resource data is elided for
    simplicity.
 
-
-
-
-
-
-
-Finch, et al.           Expires December 6, 2014               [Page 10]
-
-Internet-Draft                TLSA and SRV                     June 2014
-
-
 A.1.  IMAP
 
    ; mail domain
-   example.com.              MX      1 mx.example.net.
-   example.com.              RRSIG   MX ...
+   _imap._tcp.example.com.   SRV 10 0 9143 imap.example.net.
+   example.com.              RRSIG   SRV ...
 
-   ; SMTP server host name
-   mx.example.net.           A      192.0.2.1
-   mx.example.net.           RRSIG  A ...
+   ; target server host name
+   imap.example.net.         A      192.0.2.1
+   imap.example.net.         RRSIG  A ...
 
-   mx.example.net.           AAAA   2001:db8:212:8::e:1
-   mx.example.net.           RRSIG  ...
+   imap.example.net.         AAAA   2001:db8:212:8::e:1
+   imap.example.net.         RRSIG  ...
 
    ; TLSA resource record
-   _25._tcp.mx.example.net.  TLSA   ...
-   _25._tcp.mx.example.net.  RRSIG  TLSA ...
+   _9143._tcp.imap.example.net.  TLSA   ...
+   _9143._tcp.imap.example.net.  RRSIG  TLSA ...
 
-   Mail for addresses at example.com is delivered by SMTP to
-   mx.example.net.  Connections to mx.example.net port 25 that use
-   STARTTLS will get a server certificate that authenticates the name
-   mx.example.net.
+   Mail messages submitted for addresses at example.com are sent via
+   IMAP to imap.example.net.  Connections to imap.example.net port 9143
+   that use STARTTLS will get a server certificate that authenticates
+   the name imap.example.net.
 
 A.2.  XMPP
 
    ; XMPP domain
    _xmpp-client.example.com. SRV     1 0 5222 im.example.net.
-   _xmpp-client.example.com.  RRSIG   SRV ...
+   _xmpp-client.example.com. RRSIG   SRV ...
 
-   ; XMPP server host name
+   ; target server host name
    im.example.net.           A      192.0.2.3
    im.example.net.           RRSIG  A ...
 
@@ -601,22 +609,19 @@ A.2.  XMPP
    _5222._tcp.im.example.net.  TLSA   ...
    _5222._tcp.im.example.net.  RRSIG  TLSA ...
 
+
+
+
+
+Finch, et al.           Expires December 11, 2014              [Page 11]
+
+Internet-Draft                TLSA and SRV                     June 2014
+
+
    XMPP sessions for addresses at example.com are established at
    im.example.net.  Connections to im.example.net port 5222 that use
    STARTTLS will get a server certificate that authenticates the name
    im.example.net.
-
-
-
-
-
-
-
-
-Finch, et al.           Expires December 6, 2014               [Page 11]
-
-Internet-Draft                TLSA and SRV                     June 2014
-
 
 Appendix B.  Rationale
 
@@ -660,20 +665,21 @@ Appendix B.  Rationale
       the client identity.  It is simpler if the server can present the
       same certificate regardless of the role in which it is to act.
       Sometimes the server does not know its role until the client has
+
+
+
+
+Finch, et al.           Expires December 11, 2014              [Page 12]
+
+Internet-Draft                TLSA and SRV                     June 2014
+
+
       authenticated, which usually occurs after TLS has been
       established.
 
    This specification does not provide an option to put TLSA records
    under the service domain because that would add complexity without
    providing any benefit, and security protocols are best kept simple.
-
-
-
-Finch, et al.           Expires December 6, 2014               [Page 12]
-
-Internet-Draft                TLSA and SRV                     June 2014
-
-
    As described above, there are real-world cases where authenticating
    the service domain cannot be made to work, so there would be
    complicated criteria for when service domain TLSA records might be
@@ -719,10 +725,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-Finch, et al.           Expires December 6, 2014               [Page 13]
+Finch, et al.           Expires December 11, 2014              [Page 13]
