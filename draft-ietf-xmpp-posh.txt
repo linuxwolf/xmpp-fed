@@ -10,7 +10,7 @@ Expires: December 15, 2014                                          &yet
 
 
                       PKIX over Secure HTTP (POSH)
-                        draft-ietf-xmpp-posh-00
+                        draft-ietf-xmpp-posh-01
 
 Abstract
 
