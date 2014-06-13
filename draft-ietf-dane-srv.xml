@@ -157,7 +157,7 @@
     "OPTIONAL" in this memo are to be interpreted as described in 
     <xref target="RFC2119"/>.</t>
 
-   <t>This draft uses the definitions for "secure", "insecure", "bogus", and "indeterminate" from <xref target="RFC4033"/>. This draft uses the acronyms from <xref target="RFC7218"/> for the values of TLSA fields where appropriate.</t>
+   <t>This draft uses the definitions for "secure", "insecure", "bogus", and "indeterminate" from <xref target="RFC4035"/>. This draft uses the acronyms from <xref target="RFC7218"/> for the values of TLSA fields where appropriate.</t>
   </section>
 
   <section anchor="dns" title="DNS Checks">
@@ -180,12 +180,9 @@
      This corresponds to the AD bit being set in the response(s); see
      <xref target="RFC4035"/> section 3.2.3.</t>
 
-    <t>If the the entire RRset is not secure, this protocol has not been correctly
+    <t>If the the entire RRset is "insecure" or "indeterminate", this protocol has not been correctly
      deployed.  The client SHOULD fall back to its non-DNSSEC, non-DANE
-     behavior (this corresponds to the AD bit being unset).</t>
-
-    <t>If a particular response is "bogus" or "indeterminate" according to 
-     DNSSEC validation, the client MUST ignore that target server host name.</t>
+     behavior (this corresponds to the AD bit being unset). If the entire RRset is "bogus", the client MUST abort the attempt.</t>
 
     <t>In the successful case, the client now has an authentic list of
      target server host names with weight and priority values. It performs
