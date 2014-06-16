@@ -87,10 +87,6 @@
       <t>The approach sketched out above, called POSH ("PKIX Over Secure HTTP"), is explained in the remainder of this document.  While this approach is developed for use in the Extensible Messaging and Presence Protocol (XMPP) as a prooftype for Domain Name Associations (DNA) <xref target="I-D.ietf-xmpp-dna"/>, it can be applied to any non-HTTP application protocol.</t>
     </section>
 
-    <section title="Discussion Venue" anchor="discuss">
-      <t>The discussion venue for this document is the posh@ietf.org mailing list; visit https://www.ietf.org/mailman/listinfo/posh for subscription information and discussion archives.</t>
-    </section>
-
     <section title="Terminology" anchor="terms">
       <t>This document inherits security terminology from <xref target="RFC5280"/>.  The terms "source domain", "derived domain", "reference identifier", and "presented identifier" are used as defined in the "CertID" specification <xref target="RFC6125"/>.</t>
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>.</t>
@@ -209,21 +205,21 @@ Content-Length: 78
       <t>
         <figure>
           <artwork><![CDATA[
-Client                 Domain                 Server
-------                 ------                 ------
-  |                      |                      |
-  |    Request POSH      |                      |
-  |--------------------->|                      |
-  |                      |                      |
-  |   Return POSH keys   |                      |
-  |<---------------------|                      |
-  |                      |                      |
-  |              Service TLS Handshake          |
-  |<===========================================>|
-  |                      |                      |
-  |                 Service Data                |
-  |<===========================================>|
-  |                      |                      |
+Client                     Domain                     Server
+------                     ------                     ------
+  |                          |                          |
+  |      Request POSH        |                          |
+  |------------------------->|                          |
+  |                          |                          |
+  | Return POSH fingerprints |                          |
+  |<-------------------------|                          |
+  |                          |                          |
+  |                  Service TLS Handshake              |
+  |<===================================================>|
+  |                          |                          |
+  |                     Service Data                    |
+  |<===================================================>|
+  |                          |                          |
           ]]></artwork>
         </figure>
       </t>
@@ -231,27 +227,27 @@ Client                 Domain                 Server
       <t>
         <figure>
           <artwork><![CDATA[
-Client                 Domain                 Server
-------                 ------                 ------
-  |                      |                      |
-  |    Request POSH      |                      |
-  |--------------------->|                      |
-  |                      |                      |
-  |   Return POSH url    |                      |
-  |<---------------------|                      |
-  |                      |                      |
-  |                  Request POSH               |
-  |-------------------------------------------->|
-  |                      |                      |
-  |                Return POSH keys             |
-  |<--------------------------------------------|
-  |                      |                      |
-  |             Service TLS Handshake           |
-  |<===========================================>|
-  |                      |                      |
-  |                 Service Data                |
-  |<===========================================>|
-  |                      |                      |
+Client                     Domain                     Server
+------                     ------                     ------
+  |                          |                          |
+  |      Request POSH        |                          |
+  |------------------------->|                          |
+  |                          |                          |
+  |     Return POSH url      |                          |
+  |<-------------------------|                          |
+  |                          |                          |
+  |                      Request POSH                   |
+  |---------------------------------------------------->|
+  |                          |                          |
+  |                Return POSH fingerprints             |
+  |<----------------------------------------------------|
+  |                          |                          |
+  |                 Service TLS Handshake               |
+  |<===================================================>|
+  |                          |                          |
+  |                     Service Data                    |
+  |<===================================================>|
+  |                          |                          |
           ]]></artwork>
         </figure>
       </t>

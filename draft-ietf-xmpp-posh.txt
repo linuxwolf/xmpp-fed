@@ -5,8 +5,8 @@
 XMPP Working Group                                             M. Miller
 Internet-Draft                                       Cisco Systems, Inc.
 Intended status: Standards Track                          P. Saint-Andre
-Expires: December 15, 2014                                          &yet
-                                                           June 13, 2014
+Expires: December 18, 2014                                          &yet
+                                                           June 16, 2014
 
 
                       PKIX over Secure HTTP (POSH)
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Miller & Saint-Andre    Expires December 15, 2014               [Page 1]
+Miller & Saint-Andre    Expires December 18, 2014               [Page 1]
 
 Internet-Draft                    POSH                         June 2014
 
@@ -61,7 +61,7 @@ Internet-Draft                    POSH                         June 2014
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 15, 2014.
+   This Internet-Draft will expire on December 18, 2014.
 
 Copyright Notice
 
@@ -81,21 +81,20 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
-   2.  Discussion Venue  . . . . . . . . . . . . . . . . . . . . . .   4
-   3.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   4
-   4.  Obtaining Verification Materials  . . . . . . . . . . . . . .   4
-     4.1.  Source Domain Possesses PKIX Certificate Information  . .   6
-     4.2.  Source Domain References PKIX Certificate . . . . . . . .   7
-     4.3.  Performing Verification . . . . . . . . . . . . . . . . .   8
-   5.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . .   8
-   6.  Order of Operations . . . . . . . . . . . . . . . . . . . . .   8
-   7.  Caching Results . . . . . . . . . . . . . . . . . . . . . . .   9
-   8.  Alternates and Roll-over  . . . . . . . . . . . . . . . . . .  10
-   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
-   10. Security Considerations . . . . . . . . . . . . . . . . . . .  11
-   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
-     11.1.  Normative References . . . . . . . . . . . . . . . . . .  12
-     11.2.  Informative References . . . . . . . . . . . . . . . . .  13
+   2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   4
+   3.  Obtaining Verification Materials  . . . . . . . . . . . . . .   4
+     3.1.  Source Domain Possesses PKIX Certificate Information  . .   5
+     3.2.  Source Domain References PKIX Certificate . . . . . . . .   7
+     3.3.  Performing Verification . . . . . . . . . . . . . . . . .   8
+   4.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . .   8
+   5.  Order of Operations . . . . . . . . . . . . . . . . . . . . .   8
+   6.  Caching Results . . . . . . . . . . . . . . . . . . . . . . .   9
+   7.  Alternates and Roll-over  . . . . . . . . . . . . . . . . . .  10
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
+   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  11
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  12
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  12
    Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  14
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
 
@@ -106,15 +105,15 @@ Table of Contents
    Imagine that you work on the operations team of a hosting company
    that provides the "foo" service (or email or instant messaging or
    social networking service) for ten thousand different customer
+   organizations.  Each customer wants their service to be identified by
 
 
 
-Miller & Saint-Andre    Expires December 15, 2014               [Page 2]
+Miller & Saint-Andre    Expires December 18, 2014               [Page 2]
 
 Internet-Draft                    POSH                         June 2014
 
 
-   organizations.  Each customer wants their service to be identified by
    the customer's domain name (e.g., foo.example.com), not the hosting
    company's domain name (e.g., hosting.example.net).
 
@@ -162,15 +161,15 @@ Internet-Draft                    POSH                         June 2014
    their website ("https://foo.example.com/.well-known/posh.foo.json" is
    one possibility).  This could be a public key that you generate for
    the customer, but because the customer hosts it via HTTPS, any user
+   agent can find that public key and check it against the public key
 
 
 
-Miller & Saint-Andre    Expires December 15, 2014               [Page 3]
+Miller & Saint-Andre    Expires December 18, 2014               [Page 3]
 
 Internet-Draft                    POSH                         June 2014
 
 
-   agent can find that public key and check it against the public key
    you provide during TLS negotiation for the "foo" service (as one
    added benefit, the customer never needs to hand you a private key).
    Alternatively, the customer can redirect requests for that special
@@ -184,13 +183,7 @@ Internet-Draft                    POSH                         June 2014
    (DNA) [I-D.ietf-xmpp-dna], it can be applied to any non-HTTP
    application protocol.
 
-2.  Discussion Venue
-
-   The discussion venue for this document is the posh@ietf.org mailing
-   list; visit https://www.ietf.org/mailman/listinfo/posh for
-   subscription information and discussion archives.
-
-3.  Terminology
+2.  Terminology
 
    This document inherits security terminology from [RFC5280].  The
    terms "source domain", "derived domain", "reference identifier", and
@@ -202,7 +195,7 @@ Internet-Draft                    POSH                         June 2014
    "OPTIONAL" in this document are to be interpreted as described in
    [RFC2119].
 
-4.  Obtaining Verification Materials
+3.  Obtaining Verification Materials
 
    Server identity checking (see [RFC6125]) involves three different
    aspects:
@@ -218,14 +211,6 @@ Internet-Draft                    POSH                         June 2014
    3.  The materials that a TLS client uses to verify the TLS server's
        identity or check the TLS server's proof (in PKIX, this takes the
        form of chaining the end-entity certificate back to a trusted
-
-
-
-Miller & Saint-Andre    Expires December 15, 2014               [Page 4]
-
-Internet-Draft                    POSH                         June 2014
-
-
        root and performing all validity checks as described in
        [RFC5280], [RFC6125], and the relevant application protocol
        specification).
@@ -233,6 +218,14 @@ Internet-Draft                    POSH                         June 2014
    When POSH is used, the first two aspects remain the same: the TLS
    server proves it identity by presenting a PKIX certificate [RFC5280]
    and the certificate is checked according to the rules defined in the
+
+
+
+Miller & Saint-Andre    Expires December 18, 2014               [Page 4]
+
+Internet-Draft                    POSH                         June 2014
+
+
    appropriate application protocol specification (such as [RFC6120] for
    XMPP).  However, the TLS client obtains the materials it will use to
    verify the server's proof by retrieving a JSON document [RFC7159]
@@ -244,7 +237,7 @@ Internet-Draft                    POSH                         June 2014
 
    1.  The TLS client performs an HTTPS GET at the source domain to the
        path "/.well-known/posh.{servicedesc}.json".  The value of
-       "{servicedesc}" is application-specific; see Section 9 of this
+       "{servicedesc}" is application-specific; see Section 8 of this
        document for more details.  For example, if the application
        protocol is some hypothetical "Foo" service, then "{servicedesc}"
        could be "foo"; thus if a Foo client were to use POSH to verify a
@@ -262,12 +255,12 @@ Internet-Draft                    POSH                         June 2014
 
 
        *  If it possesses PKIX certificate information for the requested
-          path, it responds as detailed in Section 4.1.
+          path, it responds as detailed in Section 3.1.
 
 
        *  If it has a reference to where the PKIX certificate
           information can be obtained, it responds as detailed in
-          Section 4.2.
+          Section 3.2.
 
 
        *  If it does not have any PKIX certificate information for the
@@ -275,19 +268,19 @@ Internet-Draft                    POSH                         June 2014
           (e.g., 404).
 
 
-
-
-Miller & Saint-Andre    Expires December 15, 2014               [Page 5]
-
-Internet-Draft                    POSH                         June 2014
-
-
-4.1.  Source Domain Possesses PKIX Certificate Information
+3.1.  Source Domain Possesses PKIX Certificate Information
 
    If the source domain HTTPS server possesses the certificate
    information, it responds to the HTTPS GET with a success status code
    and the message body set to a JSON document [RFC7159]; the document
    is a JSON object which MUST have the following:
+
+
+
+Miller & Saint-Andre    Expires December 18, 2014               [Page 5]
+
+Internet-Draft                    POSH                         June 2014
+
 
    o  A "fingerprints" field whose value is an array of fingerprint
       descriptors.
@@ -295,7 +288,7 @@ Internet-Draft                    POSH                         June 2014
 
    o  An "expires" field whose value is the number of seconds after
       which the TLS client ought to consider the key information to be
-      stale (further explained under Section 7).
+      stale (further explained under Section 6).
 
    Each included fingerprint descriptor is a JSON object, where each
    member name is the textual name of a hash function (as listed in
@@ -330,19 +323,22 @@ Internet-Draft                    POSH                         June 2014
 
    The "expires" value is a hint regarding the expiration of the keying
    materials.  If no "expires" field is included, a TLS client SHOULD
+   consider these verification materials invalid.  See Section 6 for how
+   to reconcile this "expires" field with the reference's "expires"
+   field.
 
 
 
-Miller & Saint-Andre    Expires December 15, 2014               [Page 6]
+
+
+
+
+Miller & Saint-Andre    Expires December 18, 2014               [Page 6]
 
 Internet-Draft                    POSH                         June 2014
 
 
-   consider these verification materials invalid.  See Section 7 for how
-   to reconcile this "expires" field with the reference's "expires"
-   field.
-
-4.2.  Source Domain References PKIX Certificate
+3.2.  Source Domain References PKIX Certificate
 
    If the source domain HTTPS server has a reference to the certificate
    information, it responds to the HTTPS GET with a success statuc code
@@ -355,7 +351,7 @@ Internet-Draft                    POSH                         June 2014
 
    o  An "expires" field whose value is the number of seconds after
       which the TLS client ought to consider the delegation to be stale
-      (further explained under Section 7).
+      (further explained under Section 6).
 
    Example Reference Response
 
@@ -371,7 +367,7 @@ Internet-Draft                    POSH                         June 2014
    The client performs an HTTPS GET for the URL specified in the "url"
    field value.  The HTTPS server for the URI to which the client has
    been redirected responds to the request with a JSON document
-   containing fingerprints as described in Section 4.1.  The content
+   containing fingerprints as described in Section 3.1.  The content
    retrieved from the "url" location MUST NOT itself be a reference
    (i.e., containing a "url" fields instead of a "keys" field), in order
    to prevent circular delegations.
@@ -380,24 +376,25 @@ Internet-Draft                    POSH                         June 2014
       MUST contain either a reference or a fingerprints document, but
       MUST NOT contain both.
 
-      Note: See Section 10 for discussion about HTTPS redirects.
+      Note: See Section 9 for discussion about HTTPS redirects.
 
    The "expires" value is a hint regarding the expiration of the source
    domain's delegation of service to the delegated domain.  If no
    "expires" field is included, a TLS client SHOULD consider the
-   delegation invalid.  See Section 7 for guidelines about reconciling
+   delegation invalid.  See Section 6 for guidelines about reconciling
+   this "expires" field with the fingerprints document's "expires"
+   field.
 
 
 
-Miller & Saint-Andre    Expires December 15, 2014               [Page 7]
+
+
+Miller & Saint-Andre    Expires December 18, 2014               [Page 7]
 
 Internet-Draft                    POSH                         June 2014
 
 
-   this "expires" field with the fingerprints document's "expires"
-   field.
-
-4.3.  Performing Verification
+3.3.  Performing Verification
 
    The TLS client compares the PKIX information obtained from the TLS
    server against each fingerprint descriptor object in the POSH
@@ -407,14 +404,14 @@ Internet-Draft                    POSH                         June 2014
    client SHOULD reject the connection (the TLS client might still
    accept the connection if other verification schemes are successful).
 
-5.  Secure Delegation
+4.  Secure Delegation
 
    The delegation from the source domain to the delegated domain can be
    considered secure if the certificate offered by the TLS server
    matches the POSH certificate, regardless of how the POSH certificates
    are obtained.
 
-6.  Order of Operations
+5.  Order of Operations
 
    In order for the TLS client to perform verification of reference
    identifiers without potentially compromising data, POSH processes
@@ -429,83 +426,62 @@ Internet-Draft                    POSH                         June 2014
    The following diagram illustrates the possession flow:
 
 
+   Client                     Domain                     Server
+   ------                     ------                     ------
+     |                          |                          |
+     |      Request POSH        |                          |
+     |------------------------->|                          |
+     |                          |                          |
+     | Return POSH fingerprints |                          |
+     |<-------------------------|                          |
+     |                          |                          |
+     |                  Service TLS Handshake              |
+     |<===================================================>|
+     |                          |                          |
+     |                     Service Data                    |
+     |<===================================================>|
+     |                          |                          |
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-Miller & Saint-Andre    Expires December 15, 2014               [Page 8]
+Miller & Saint-Andre    Expires December 18, 2014               [Page 8]
 
 Internet-Draft                    POSH                         June 2014
 
 
-   Client                 Domain                 Server
-   ------                 ------                 ------
-     |                      |                      |
-     |    Request POSH      |                      |
-     |--------------------->|                      |
-     |                      |                      |
-     |   Return POSH keys   |                      |
-     |<---------------------|                      |
-     |                      |                      |
-     |              Service TLS Handshake          |
-     |<===========================================>|
-     |                      |                      |
-     |                 Service Data                |
-     |<===========================================>|
-     |                      |                      |
-
    While the following diagram illustrates the reference flow:
 
 
-   Client                 Domain                 Server
-   ------                 ------                 ------
-     |                      |                      |
-     |    Request POSH      |                      |
-     |--------------------->|                      |
-     |                      |                      |
-     |   Return POSH url    |                      |
-     |<---------------------|                      |
-     |                      |                      |
-     |                  Request POSH               |
-     |-------------------------------------------->|
-     |                      |                      |
-     |                Return POSH keys             |
-     |<--------------------------------------------|
-     |                      |                      |
-     |             Service TLS Handshake           |
-     |<===========================================>|
-     |                      |                      |
-     |                 Service Data                |
-     |<===========================================>|
-     |                      |                      |
+   Client                     Domain                     Server
+   ------                     ------                     ------
+     |                          |                          |
+     |      Request POSH        |                          |
+     |------------------------->|                          |
+     |                          |                          |
+     |     Return POSH url      |                          |
+     |<-------------------------|                          |
+     |                          |                          |
+     |                      Request POSH                   |
+     |---------------------------------------------------->|
+     |                          |                          |
+     |                Return POSH fingerprints             |
+     |<----------------------------------------------------|
+     |                          |                          |
+     |                 Service TLS Handshake               |
+     |<===================================================>|
+     |                          |                          |
+     |                     Service Data                    |
+     |<===================================================>|
+     |                          |                          |
 
-7.  Caching Results
+6.  Caching Results
 
    The TLS client MUST NOT cache results (reference or fingerprints)
    indefinitely.  If the source domain returns a reference, the TLS
    client MUST use the lower of the two "expires" values when
    determining how long to cache results (i.e., if the reference
    "expires" value is lower than the fingerprints "expires" value, honor
-
-
-
-Miller & Saint-Andre    Expires December 15, 2014               [Page 9]
-
-Internet-Draft                    POSH                         June 2014
-
-
    the reference "expires" value).  Once the TLS client considers the
    results stale, it SHOULD perform the entire POSH process again
    starting with the HTTPS GET to the source domain.  The TLS client MAY
@@ -520,7 +496,17 @@ Internet-Draft                    POSH                         June 2014
    indicate that the response (redirect, reference, or content) is not
    appropriate to cache at the HTTP level.
 
-8.  Alternates and Roll-over
+
+
+
+
+
+Miller & Saint-Andre    Expires December 18, 2014               [Page 9]
+
+Internet-Draft                    POSH                         June 2014
+
+
+7.  Alternates and Roll-over
 
    To indicate alternate PKIX certificates (such as when an existing
    certificate will soon expire), the returned fingerprints document MAY
@@ -544,7 +530,7 @@ Internet-Draft                    POSH                         June 2014
      "expires": 806400
    }
 
-9.  IANA Considerations
+8.  IANA Considerations
 
    This document registers a well-known URI [RFC5785] for protocols that
    use POSH.  The completed template follows.
@@ -554,13 +540,6 @@ Internet-Draft                    POSH                         June 2014
       URI suffix:  posh.
 
       Change controller:  IETF
-
-
-
-Miller & Saint-Andre    Expires December 15, 2014              [Page 10]
-
-Internet-Draft                    POSH                         June 2014
-
 
       Specification document:  [[ this document ]]
 
@@ -574,6 +553,15 @@ Internet-Draft                    POSH                         June 2014
    responsible for the relevant registrations with the IANA.  The URIs
    registered by such protocols SHOULD match the URI template [RFC6570]
    path "/.well-known/posh.{servicedesc}.json"; that is, begin with
+
+
+
+
+Miller & Saint-Andre    Expires December 18, 2014              [Page 10]
+
+Internet-Draft                    POSH                         June 2014
+
+
    "posh." and end with ".json" (indicating a media type of application/
    json [RFC7159]).
 
@@ -597,7 +585,7 @@ Internet-Draft                    POSH                         June 2014
    Note: As explained in [RFC5785], the IANA registration policy
    [RFC5226] for well-known URIs is Specification Required.
 
-10.  Security Considerations
+9.  Security Considerations
 
    This document supplements but does not supersede the security
    considerations provided in specifications for application protocols
@@ -609,14 +597,6 @@ Internet-Draft                    POSH                         June 2014
    pinning [I-D.ietf-websec-key-pinning], especially if the TLS client
    shares some information with a common HTTPS implementation (e.g.,
    platform-default web browser).
-
-
-
-
-Miller & Saint-Andre    Expires December 15, 2014              [Page 11]
-
-Internet-Draft                    POSH                         June 2014
-
 
    Note well that POSH is used by a TLS client to obtain the public key
    of a TLS server to which it might connect for a particular
@@ -630,6 +610,14 @@ Internet-Draft                    POSH                         June 2014
    another URL.  The location provided in the redirect response MUST
    specify an HTTPS URL.  Source domains SHOULD use only temporary
    redirect mechanisms, such as HTTP status codes 302 (Found) and 307
+
+
+
+Miller & Saint-Andre    Expires December 18, 2014              [Page 11]
+
+Internet-Draft                    POSH                         June 2014
+
+
    (Temporary Redirect).  Clients MAY treat any redirect as temporary,
    ignoring the specific semantics for 301 (Moved Permanently) and 308
    (Permanent Redirect) [RFC7238].  To protect against circular
@@ -638,9 +626,9 @@ Internet-Draft                    POSH                         June 2014
    although applications or implementations can require that fewer
    redirects be followed.
 
-11.  References
+10.  References
 
-11.1.  Normative References
+10.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
@@ -665,15 +653,6 @@ Internet-Draft                    POSH                         June 2014
               (PKIX) Certificates in the Context of Transport Layer
               Security (TLS)", RFC 6125, March 2011.
 
-
-
-
-
-Miller & Saint-Andre    Expires December 15, 2014              [Page 12]
-
-Internet-Draft                    POSH                         June 2014
-
-
    [RFC7159]  Bray, T., "The JavaScript Object Notation (JSON) Data
               Interchange Format", RFC 7159, March 2014.
 
@@ -681,12 +660,19 @@ Internet-Draft                    POSH                         June 2014
               (HTTP/1.1): Message Syntax and Routing", RFC 7230, June
               2014.
 
-11.2.  Informative References
+10.2.  Informative References
 
    [I-D.ietf-websec-key-pinning]
               Evans, C., Palmer, C., and R. Sleevi, "Public Key Pinning
               Extension for HTTP", draft-ietf-websec-key-pinning-14
               (work in progress), June 2014.
+
+
+
+Miller & Saint-Andre    Expires December 18, 2014              [Page 12]
+
+Internet-Draft                    POSH                         June 2014
+
 
    [I-D.ietf-xmpp-dna]
               Saint-Andre, P. and M. Miller, "Domain Name Associations
@@ -721,15 +707,6 @@ Internet-Draft                    POSH                         June 2014
    [RFC6570]  Gregorio, J., Fielding, R., Hadley, M., Nottingham, M.,
               and D. Orchard, "URI Template", RFC 6570, March 2012.
 
-
-
-
-
-Miller & Saint-Andre    Expires December 15, 2014              [Page 13]
-
-Internet-Draft                    POSH                         June 2014
-
-
    [RFC6698]  Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
               of Named Entities (DANE) Transport Layer Security (TLS)
               Protocol: TLSA", RFC 6698, August 2012.
@@ -742,6 +719,16 @@ Internet-Draft                    POSH                         June 2014
 
    [RFC7238]  Reschke, J., "The Hypertext Transfer Protocol Status Code
               308 (Permanent Redirect)", RFC 7238, June 2014.
+
+
+
+
+
+
+Miller & Saint-Andre    Expires December 18, 2014              [Page 13]
+
+Internet-Draft                    POSH                         June 2014
+
 
    [HASH-NAMES]
               "Hash Function Textual Names", <http://www.iana.org/
@@ -781,4 +768,17 @@ Authors' Addresses
 
 
 
-Miller & Saint-Andre    Expires December 15, 2014              [Page 14]
+
+
+
+
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre    Expires December 18, 2014              [Page 14]
