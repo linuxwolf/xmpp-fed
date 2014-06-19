@@ -34,7 +34,7 @@ Abstract
    hosted domain to securely delegate a non-HTTP application to a
    hosting service using redirects provided by HTTPS itself or by a
    pointer in a file served over HTTPS at the hosted domain.  While this
-   approach is developed for use in the Extensible Messaging and
+   approach was developed for use in the Extensible Messaging and
    Presence Protocol (XMPP) as a Domain Name Association prooftype, it
    can be applied to any non-HTTP application protocol.
 
@@ -84,8 +84,8 @@ Table of Contents
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   4
    3.  Obtaining Verification Materials  . . . . . . . . . . . . . .   4
      3.1.  Source Domain Possesses PKIX Certificate Information  . .   5
-     3.2.  Source Domain References PKIX Certificate . . . . . . . .   7
-     3.3.  Performing Verification . . . . . . . . . . . . . . . . .   8
+     3.2.  Source Domain References PKIX Certificate . . . . . . . .   6
+     3.3.  Performing Verification . . . . . . . . . . . . . . . . .   7
    4.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . .   8
    5.  Order of Operations . . . . . . . . . . . . . . . . . . . . .   8
    6.  Caching Results . . . . . . . . . . . . . . . . . . . . . . .   9
@@ -94,7 +94,7 @@ Table of Contents
    9.  Security Considerations . . . . . . . . . . . . . . . . . . .  11
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  12
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  12
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  13
    Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  14
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
 
@@ -128,18 +128,16 @@ Internet-Draft                    POSH                         June 2014
       because you work for the hosting company, not the customer
       organization.
 
-
    o  Customers won't obtain such certificates and then give them (plus
       the associated private keys) to you because their legal department
       is worried about liability.
-
 
    o  You don't want to install such certificates (plus the associated
       private keys) on your servers anyway because your legal department
       is worried about liability, too.
 
    Given your inability to deploy public keys / certificates containing
-   the right identifiers, your back-up approach was always to use a
+   the right identifiers, your back-up approach has always been to use a
    certificate containing hosting.example.net as the identifier.
    However, more and more customers and end users are complaining about
    warning messages in user agents and the inherent security issues
@@ -151,17 +149,19 @@ Internet-Draft                    POSH                         June 2014
    investigated the possibility of using DNS Security [RFC4033] and DNS-
    Based Authentication of Named Entities (DANE) [RFC6698] to solve the
    problem.  However, your customers and your operations team have told
-   you that they will not be able to deploy DNSSEC and DANE for several
-   years at least.  The product managers in your company are pushing you
-   to find a method that can be deployed more quickly to overcome the
-   lack of proper server identity checking for your hosted customers.
+   you that it will be several years before they will be able to deploy
+   DNSSEC and DANE for all of your customers (because of tooling
+   updates, slow deployment of DNSSEC at some top-level domains, etc.).
+   The product managers in your company are pushing you to find a method
+   that can be deployed more quickly to overcome the lack of proper
+   server identity checking for your hosted customers.
 
-   One possible approach is to ask each customer to provide the public
-   key / certificate for the "foo" service at a special HTTPS URI on
-   their website ("https://foo.example.com/.well-known/posh.foo.json" is
-   one possibility).  This could be a public key that you generate for
-   the customer, but because the customer hosts it via HTTPS, any user
-   agent can find that public key and check it against the public key
+   One possible approach that your team has investigated is to ask each
+   customer to provide the public key / certificate for the "foo"
+   service at a special HTTPS URL on their website ("https://
+   foo.example.com/.well-known/posh.foo.json" is one possibility).  This
+   could be a public key that you generate for the customer, but because
+   the customer hosts it via HTTPS, any user agent can find that public
 
 
 
@@ -170,15 +170,16 @@ Miller & Saint-Andre    Expires December 21, 2014               [Page 3]
 Internet-Draft                    POSH                         June 2014
 
 
-   you provide during TLS negotiation for the "foo" service (as one
-   added benefit, the customer never needs to hand you a private key).
-   Alternatively, the customer can redirect requests for that special
-   HTTPS URI to an HTTPS URI at your own website, thus making it
-   explicit that they have delegated the "foo" service to you.
+   key and check it against the public key you provide during TLS
+   negotiation for the "foo" service (as one added benefit, the customer
+   never needs to hand you a private key).  Alternatively, the customer
+   can redirect requests for that special HTTPS URL to an HTTPS URL at
+   your own website, thus making it explicit that they have delegated
+   the "foo" service to you.
 
    The approach sketched out above, called POSH ("PKIX Over Secure
    HTTP"), is explained in the remainder of this document.  While this
-   approach is developed for use in the Extensible Messaging and
+   approach was developed for use in the Extensible Messaging and
    Presence Protocol (XMPP) as a prooftype for Domain Name Associations
    (DNA) [I-D.ietf-xmpp-dna], it can be applied to any non-HTTP
    application protocol.
@@ -203,10 +204,8 @@ Internet-Draft                    POSH                         June 2014
    1.  A proof of the TLS server's identity (in PKIX, this takes the
        form of a PKIX certificate [RFC5280]).
 
-
    2.  Rules for checking the certificate (which vary by application
        protocol, although [RFC6125] attempts to harmonize those rules).
-
 
    3.  The materials that a TLS client uses to verify the TLS server's
        identity or check the TLS server's proof (in PKIX, this takes the
@@ -218,6 +217,7 @@ Internet-Draft                    POSH                         June 2014
    When POSH is used, the first two aspects remain the same: the TLS
    server proves it identity by presenting a PKIX certificate [RFC5280]
    and the certificate is checked according to the rules defined in the
+   appropriate application protocol specification (such as [RFC6120] for
 
 
 
@@ -226,7 +226,6 @@ Miller & Saint-Andre    Expires December 21, 2014               [Page 4]
 Internet-Draft                    POSH                         June 2014
 
 
-   appropriate application protocol specification (such as [RFC6120] for
    XMPP).  However, the TLS client obtains the materials it will use to
    verify the server's proof by retrieving a JSON document [RFC7159]
    containing hashes of the PKIX certificate over HTTPS ([RFC7230] and
@@ -244,29 +243,21 @@ Internet-Draft                    POSH                         June 2014
        Foo server for the domain "foo.example.com", the HTTPS GET
        request would be as follows:
 
-
-
-   GET /.well-known/posh.foo.json HTTP/1.1
-   Host: foo.example.com
-
+       GET /.well-known/posh.foo.json HTTP/1.1
+       Host: foo.example.com
 
    2.  The source domain HTTPS server responds in one of three ways:
 
-
-
        *  If it possesses PKIX certificate information for the requested
           path, it responds as detailed in Section 3.1.
-
 
        *  If it has a reference to where the PKIX certificate
           information can be obtained, it responds as detailed in
           Section 3.2.
 
-
-       *  If it does not have any PKIX certificate information for the
-          requested path, it responds with a client error status code
-          (e.g., 404).
-
+       *  If it does not have any PKIX certificate information or a
+          reference to such information for the requested path, it
+          responds with an HTTP client error status code (e.g., 404).
 
 3.1.  Source Domain Possesses PKIX Certificate Information
 
@@ -275,6 +266,15 @@ Internet-Draft                    POSH                         June 2014
    and the message body set to a JSON document [RFC7159]; the document
    is a JSON object which MUST have the following:
 
+   o  A "fingerprints" field whose value is an array of fingerprint
+      descriptors.
+
+   o  An "expires" field whose value is the number of seconds after
+      which the TLS client ought to consider the key information to be
+      stale (further explained under Section 6).
+
+
+
 
 
 Miller & Saint-Andre    Expires December 21, 2014               [Page 5]
@@ -282,19 +282,13 @@ Miller & Saint-Andre    Expires December 21, 2014               [Page 5]
 Internet-Draft                    POSH                         June 2014
 
 
-   o  A "fingerprints" field whose value is an array of fingerprint
-      descriptors.
-
-
-   o  An "expires" field whose value is the number of seconds after
-      which the TLS client ought to consider the key information to be
-      stale (further explained under Section 6).
-
    Each included fingerprint descriptor is a JSON object, where each
    member name is the textual name of a hash function (as listed in
-   [HASH-NAMES]) and its associated value is the base64 encoded
-   fingerprint hash generated using the named hash function.  Each
-   fingerprint descriptor MUST possess at least one named hash function.
+   [HASH-NAMES]) and its associated value is the base 64 encoded
+   fingerprint hash generated using the named hash function (where the
+   encoding adheres to the definition in Section 4 of [RFC4648] and
+   where the padding bits are set to zero).  Each fingerprint descriptor
+   MUST possess at least one named hash function.
 
    The fingerprint hash for a given hash algorithm is generated by
    performing the named hash function over the DER encoding of the PKIX
@@ -327,17 +321,6 @@ Internet-Draft                    POSH                         June 2014
    to reconcile this "expires" field with the reference's "expires"
    field.
 
-
-
-
-
-
-
-Miller & Saint-Andre    Expires December 21, 2014               [Page 6]
-
-Internet-Draft                    POSH                         June 2014
-
-
 3.2.  Source Domain References PKIX Certificate
 
    If the source domain HTTPS server has a reference to the certificate
@@ -346,7 +329,13 @@ Internet-Draft                    POSH                         June 2014
    object which MUST contain the following:
 
    o  A "url" field whose value is the HTTPS URL where TLS clients can
-      obtain the actual fingerprints.
+      obtain the actual certificate information.
+
+
+
+Miller & Saint-Andre    Expires December 21, 2014               [Page 6]
+
+Internet-Draft                    POSH                         June 2014
 
 
    o  An "expires" field whose value is the number of seconds after
@@ -365,12 +354,12 @@ Internet-Draft                    POSH                         June 2014
    }
 
    The client performs an HTTPS GET for the URL specified in the "url"
-   field value.  The HTTPS server for the URI to which the client has
+   field value.  The HTTPS server for the URL to which the client has
    been redirected responds to the request with a JSON document
    containing fingerprints as described in Section 3.1.  The content
    retrieved from the "url" location MUST NOT itself be a reference
-   (i.e., containing a "url" fields instead of a "keys" field), in order
-   to prevent circular delegations.
+   (i.e., containing a "url" field instead of a "fingerprints" field),
+   in order to prevent circular delegations.
 
       Note: The JSON document returned by the source domain HTTPS server
       MUST contain either a reference or a fingerprints document, but
@@ -382,8 +371,19 @@ Internet-Draft                    POSH                         June 2014
    domain's delegation of service to the delegated domain.  If no
    "expires" field is included, a TLS client SHOULD consider the
    delegation invalid.  See Section 6 for guidelines about reconciling
-   this "expires" field with the fingerprints document's "expires"
-   field.
+   this "expires" field with the "expires" field of the fingerprints
+   document.
+
+3.3.  Performing Verification
+
+   The TLS client compares the PKIX information obtained from the TLS
+   server against each fingerprint descriptor object in the POSH
+   results, until a match is found or the collection of POSH
+   verification materials is exhausted.  If none of the fingerprint
+   descriptor objects match the TLS server PKIX information, the TLS
+   client SHOULD reject the connection (however, the TLS client might
+   still accept the connection if other verification schemes are
+   successful).
 
 
 
@@ -394,22 +394,12 @@ Miller & Saint-Andre    Expires December 21, 2014               [Page 7]
 Internet-Draft                    POSH                         June 2014
 
 
-3.3.  Performing Verification
-
-   The TLS client compares the PKIX information obtained from the TLS
-   server against each fingerprint descriptor object in the POSH
-   results, until a match is found or the collection of POSH
-   verification materials is exhausted.  If none of the fingerprint
-   descriptor objects match the TLS server PKIX information, the TLS
-   client SHOULD reject the connection (the TLS client might still
-   accept the connection if other verification schemes are successful).
-
 4.  Secure Delegation
 
    The delegation from the source domain to the delegated domain can be
    considered secure if the certificate offered by the TLS server
-   matches the POSH certificate, regardless of how the POSH certificates
-   are obtained.
+   matches the POSH certificate, regardless of how the POSH certificate
+   is obtained.
 
 5.  Order of Operations
 
@@ -418,13 +408,14 @@ Internet-Draft                    POSH                         June 2014
    MUST be complete before any application-level data is exchanged for
    the source domain.  The TLS client SHOULD perform all POSH retrievals
    before opening any socket connections to the application protocol
-   server.  For application protocols that use DNS SRV, the POSH
-   processes ideally ought to be done in parallel with resolving the SRV
-   records and the addresses of any targets, similar to the "happy
-   eyeballs" approach for IPv4 and IPv6 [RFC6555].
+   server.  For application protocols that use DNS SRV (including
+   queries for TLSA records in concert with SRV records as described in
+   [I-D.ietf-dane-srv]), the POSH processes ideally ought to be done in
+   parallel with resolving the SRV records and the addresses of any
+   targets, similar to the "happy eyeballs" approach for IPv4 and IPv6
+   [RFC6555].
 
    The following diagram illustrates the possession flow:
-
 
    Client                     Domain                     Server
    ------                     ------                     ------
@@ -442,15 +433,21 @@ Internet-Draft                    POSH                         June 2014
      |<===================================================>|
      |                          |                          |
 
+               Figure 1: Order of Events for Possession Flow
+
+   While the following diagram illustrates the reference flow:
+
+
+
+
+
+
 
 
 
 Miller & Saint-Andre    Expires December 21, 2014               [Page 8]
 
 Internet-Draft                    POSH                         June 2014
-
-
-   While the following diagram illustrates the reference flow:
 
 
    Client                     Domain                     Server
@@ -475,6 +472,8 @@ Internet-Draft                    POSH                         June 2014
      |<===================================================>|
      |                          |                          |
 
+               Figure 2: Order of Events for Reference Flow
+
 6.  Caching Results
 
    The TLS client MUST NOT cache results (reference or fingerprints)
@@ -483,18 +482,19 @@ Internet-Draft                    POSH                         June 2014
    determining how long to cache results (i.e., if the reference
    "expires" value is lower than the fingerprints "expires" value, honor
    the reference "expires" value).  Once the TLS client considers the
-   results stale, it SHOULD perform the entire POSH process again
+   results stale, it needs to perform the entire POSH process again
    starting with the HTTPS GET to the source domain.  The TLS client MAY
    use a lower value than any provided in the "expires" field(s), or not
    cache results at all.
 
    The TLS client SHOULD NOT rely on HTTP caching mechanisms, instead
-   using the expiration hints provided in the POSH reference or
+   using the expiration hints provided in the POSH reference document or
    fingerprints documents.  To that end, the HTTPS servers for source
-   and derived domains SHOULD specify a 'Cache-Control' header
+   domains and derived domains SHOULD specify a 'Cache-Control' header
    indicating a very short duration (e.g., max-age=60) or "no-cache" to
    indicate that the response (redirect, reference, or content) is not
    appropriate to cache at the HTTP level.
+
 
 
 
@@ -635,6 +635,9 @@ Internet-Draft                    POSH                         June 2014
 
    [RFC2818]  Rescorla, E., "HTTP Over TLS", RFC 2818, May 2000.
 
+   [RFC4648]  Josefsson, S., "The Base16, Base32, and Base64 Data
+              Encodings", RFC 4648, October 2006.
+
    [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
               (TLS) Protocol Version 1.2", RFC 5246, August 2008.
 
@@ -660,12 +663,9 @@ Internet-Draft                    POSH                         June 2014
               (HTTP/1.1): Message Syntax and Routing", RFC 7230, June
               2014.
 
-10.2.  Informative References
 
-   [I-D.ietf-websec-key-pinning]
-              Evans, C., Palmer, C., and R. Sleevi, "Public Key Pinning
-              Extension for HTTP", draft-ietf-websec-key-pinning-14
-              (work in progress), June 2014.
+
+
 
 
 
@@ -673,6 +673,19 @@ Miller & Saint-Andre    Expires December 21, 2014              [Page 12]
 
 Internet-Draft                    POSH                         June 2014
 
+
+10.2.  Informative References
+
+   [I-D.ietf-dane-srv]
+              Finch, T., Miller, M., and P. Saint-Andre, "Using DNS-
+              Based Authentication of Named Entities (DANE) TLSA Records
+              with SRV Records", draft-ietf-dane-srv-06 (work in
+              progress), June 2014.
+
+   [I-D.ietf-websec-key-pinning]
+              Evans, C., Palmer, C., and R. Sleevi, "Public Key Pinning
+              Extension for HTTP", draft-ietf-websec-key-pinning-15
+              (work in progress), June 2014.
 
    [I-D.ietf-xmpp-dna]
               Saint-Andre, P. and M. Miller, "Domain Name Associations
@@ -707,6 +720,16 @@ Internet-Draft                    POSH                         June 2014
    [RFC6570]  Gregorio, J., Fielding, R., Hadley, M., Nottingham, M.,
               and D. Orchard, "URI Template", RFC 6570, March 2012.
 
+
+
+
+
+
+Miller & Saint-Andre    Expires December 21, 2014              [Page 13]
+
+Internet-Draft                    POSH                         June 2014
+
+
    [RFC6698]  Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
               of Named Entities (DANE) Transport Layer Security (TLS)
               Protocol: TLSA", RFC 6698, August 2012.
@@ -720,16 +743,6 @@ Internet-Draft                    POSH                         June 2014
    [RFC7238]  Reschke, J., "The Hypertext Transfer Protocol Status Code
               308 (Permanent Redirect)", RFC 7238, June 2014.
 
-
-
-
-
-
-Miller & Saint-Andre    Expires December 21, 2014              [Page 13]
-
-Internet-Draft                    POSH                         June 2014
-
-
    [HASH-NAMES]
               "Hash Function Textual Names", <http://www.iana.org/
               assignments/hash-function-text-names/
@@ -737,10 +750,10 @@ Internet-Draft                    POSH                         June 2014
 
 Appendix A.  Acknowledgements
 
-   Many thanks to Philipp Hancke, Joe Hildebrand, and Tobias Markmann
-   for their implementation feedback.  Thanks also to Dave Cridland,
-   Chris Newton, Max Pritikin, and Joe Salowey for their input on the
-   specification.
+   Many thanks to Thijs Alkemade, Philipp Hancke, Joe Hildebrand, and
+   Tobias Markmann for their implementation feedback.  Thanks also to
+   Dave Cridland, Chris Newton, Max Pritikin, and Joe Salowey for their
+   input on the specification.
 
 Authors' Addresses
 
@@ -760,19 +773,6 @@ Authors' Addresses
    USA
 
    Email: peter@andyet.com
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
