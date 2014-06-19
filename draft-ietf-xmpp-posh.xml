@@ -162,7 +162,7 @@ Content-Length: 2785
       </section>
 
       <section title="Source Domain References PKIX Certificate" anchor="prooftype-ref">
-        <t>If the source domain HTTPS server has a reference to the certificate information, it responds to the HTTPS GET with a success statuc code and message body set to a JSON document.  The document is a JSON object which MUST contain the following:</t>
+        <t>If the source domain HTTPS server has a reference to the certificate information, it responds to the HTTPS GET with a success status code and message body set to a JSON document.  The document is a JSON object which MUST contain the following:</t>
         <t>
           <list style='symbols'>
             <t>A "url" field whose value is the HTTPS URL where TLS clients can obtain the actual fingerprints.<vspace blankLines='1'/></t>
