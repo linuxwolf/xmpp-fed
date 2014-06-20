@@ -158,10 +158,10 @@ Internet-Draft                    POSH                         June 2014
 
    One possible approach that your team has investigated is to ask each
    customer to provide the public key / certificate for the "foo"
-   service at a special HTTPS URL on their website ("https://
-   foo.example.com/.well-known/posh.foo.json" is one possibility).  This
-   could be a public key that you generate for the customer, but because
-   the customer hosts it via HTTPS, any user agent can find that public
+   service at a special HTTPS URL on their website
+   ("https://foo.example.com/.well-known/posh.foo.json" is one
+   possibility).  This could be a public key that you generate for the
+   customer, but because the customer hosts it via HTTPS, any user agent
 
 
 
@@ -170,12 +170,12 @@ Miller & Saint-Andre    Expires December 21, 2014               [Page 3]
 Internet-Draft                    POSH                         June 2014
 
 
-   key and check it against the public key you provide during TLS
-   negotiation for the "foo" service (as one added benefit, the customer
-   never needs to hand you a private key).  Alternatively, the customer
-   can redirect requests for that special HTTPS URL to an HTTPS URL at
-   your own website, thus making it explicit that they have delegated
-   the "foo" service to you.
+   can find that public key and check it against the public key you
+   provide during TLS negotiation for the "foo" service (as one added
+   benefit, the customer never needs to hand you a private key).
+   Alternatively, the customer can redirect requests for that special
+   HTTPS URL to an HTTPS URL at your own website, thus making it
+   explicit that they have delegated the "foo" service to you.
 
    The approach sketched out above, called POSH ("PKIX Over Secure
    HTTP"), is explained in the remainder of this document.  While this
@@ -302,7 +302,7 @@ Internet-Draft                    POSH                         June 2014
 
    HTTP/1.1 200 OK
    Content-Type: application/json
-   Content-Length: 2785
+   Content-Length: 134
 
    {
      "fingerprints": [
@@ -346,7 +346,7 @@ Internet-Draft                    POSH                         June 2014
 
    HTTP/1.1 200 Ok
    Content-Type: application/json
-   Content-Length: 78
+   Content-Length: 79
 
    {
      "url":"https://hosting.example.net/.well-known/posh.foo.json",
@@ -684,7 +684,7 @@ Internet-Draft                    POSH                         June 2014
 
    [I-D.ietf-websec-key-pinning]
               Evans, C., Palmer, C., and R. Sleevi, "Public Key Pinning
-              Extension for HTTP", draft-ietf-websec-key-pinning-15
+              Extension for HTTP", draft-ietf-websec-key-pinning-14
               (work in progress), June 2014.
 
    [I-D.ietf-xmpp-dna]

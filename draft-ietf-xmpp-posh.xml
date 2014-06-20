@@ -142,7 +142,7 @@
               <artwork><![CDATA[
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 2785
+Content-Length: 134
 
 {
   "fingerprints": [
@@ -174,7 +174,7 @@ Content-Length: 2785
             <artwork><![CDATA[
 HTTP/1.1 200 Ok
 Content-Type: application/json
-Content-Length: 78
+Content-Length: 79
 
 {
   "url":"https://hosting.example.net/.well-known/posh.foo.json",
