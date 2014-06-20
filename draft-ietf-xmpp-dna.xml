@@ -4,7 +4,7 @@
 <?rfc strict="yes"?>
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
-<?rfc tocdepth="2"?>
+<?rfc tocdepth="3"?>
 <rfc category="std" docName="draft-ietf-xmpp-dna-05" ipr="trust200902">
 
   <front>
@@ -49,7 +49,7 @@
     <keyword>delegation</keyword>
     <keyword>security</keyword>
     <abstract>
-      <t>This document improves the security of the Extensible Messaging and Presence Protocol (XMPP) in two ways.  First, it specifies how "prooftypes" can establish a strong association between a domain name and an XML stream.  Second, it describes how to securely delegate a source domain to a derived domain, which is especially important in virtual hosting environments.</t>
+      <t>This document improves the security of the Extensible Messaging and Presence Protocol (XMPP) in two ways.  First, it specifies how "prooftypes" can establish a strong association between a domain name and an XML stream.  Second, it describes how to securely delegate a source domain to a derived domain, which is especially important in multi-tenanted environments.</t>
     </abstract>
   </front>
 
@@ -65,21 +65,75 @@
           <t>Describes the flow of operations for establishing a domain name association (DNA)</t>
         </list>
       </t>
-      <t>This document also provides guidelines for secure delegation.  The need for secure delegation arises because the process for resolving the domain name of an XMPP service into the IP address at which an XML stream will be negotiated (defined in <xref target='RFC6120'/>) can involve delegation of a source domain (say, example.com) to a derived domain (say, hosting.example.net) using technologies such as DNS SRV records <xref target='RFC2782'/>.  If such delegation is not done in a secure manner, then the domain name association cannot be authenticated.</t>
+      <t>This document also provides guidelines for secure delegation.  The need for secure delegation arises because the process for resolving the domain name of an XMPP service into the IP address at which an XML stream will be negotiated (see <xref target='RFC6120'/>) can involve delegation of a source domain (say, example.com) to a derived domain (say, hosting.example.net) using technologies such as DNS SRV records <xref target='RFC2782'/>.  If such delegation is not done in a secure manner, then the domain name association cannot be authenticated.</t>
     </section>
 
     <section title="Terminology" anchor="terms">
       <t>This document inherits XMPP terminology from <xref target="RFC6120"/> and <xref target="XEP-0220"/>, DNS terminology from <xref target="RFC1034"/>, <xref target="RFC1035"/>, <xref target="RFC2782"/> and <xref target="RFC4033"/>, and security terminology from <xref target="RFC4949"/> and <xref target="RFC5280"/>.  The terms "source domain", "derived domain", "reference identity", and "presented identity" are used as defined in the "CertID" specification <xref target="RFC6125"/>.</t>
     </section>
 
-    <section title="Flow Chart" anchor="flow">
-      <t>The following flow chart illustrates the protocol flow for establishing domain name associations between Server 1 and Server 2, as described in the remaining sections of this document.</t>
-      <figure>
-        <artwork><![CDATA[
+    <section title="Client-to-Server (C2S) DNA" anchor="c2s">
+
+      <t>The client-to-server case is much simpler than the server-to-server case (the client does not assert a domain name, only the server's domain name needs to be verified, etc.). Therefore we describe it first to help the reader understand domain name associations in XMPP.</t>
+
+      <section title="C2S Flow" anchor="c2s-flow">
+        <t>The following flow chart illustrates the protocol flow for establishing a domain name association for an XML stream from a client to a server.</t>
+        <figure>
+          <artwork><![CDATA[
+                        |
+                DNS RESOLUTION ETC.
+                        |
++-----------------STREAM HEADERS---------------------+
+|                                                    |
+|  A: <stream from='user@a.example' to='a.example'>  |
+|                                                    |
+|  B: <stream from='a.example' to='user@a.example'>  |
+|                                                    |
++----------------------------------------------------+
+                        |
++-----------------TLS NEGOTIATION--------------------+
+|                                                    |
+|   B: Server Certificate                            |
+|                                                    |
++----------------------------------------------------+
+                        |
+      (client establishes DNA for a.example!)
+                        |
+          ]]></artwork>
+        </figure>
+      </section>
+      <section title="C2S Description" anchor="c2s-description">
+        <t>To further illustrate the problem, consider the simplified order of events (see <xref target='RFC6120'/> for details) in establishing an XML stream from a client (user@a.exmaple) to a server (a.example):</t>
+        <t>
+          <list style='numbers'>
+            <t>The client resolves the DNS domain name a.example.</t>
+            <t>The client opens a TCP connection to the resolved IP address.</t>
+            <t>
+              The client sends an initial stream header to the server.
+              <vspace blankLines='1'/>
+              &lt;stream:stream from='user@a.example' to='a.example'&gt;
+            </t>
+            <t>
+              The server sends a response stream header to the client, asserting that it is a.example:
+              <vspace blankLines='1'/>
+              &lt;stream:stream from='a.example' to='user@a.example'&gt;
+            </t>
+            <t>The parties attempt TLS negotiation, during which the XMPP server (acting as a TLS server) presents a PKIX certificate proving that it is a.example.</t>
+            <t>The client checks the PKIX certificate that the server provided; if the proof is consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, the client accepts that there is a strong domain name association between its stream to the server and the DNS domain name of the server.</t>
+          </list>
+        </t>
+      </section>
+    </section>
+
+    <section title="Server-to-Server (S2S) DNA" anchor="s2s">
+      <t>The server-to-server case is much more complex than the client-to-server case, and involves checking of domain name associations in both directions along with other "wrinkles" described in the following sections.</t>
+
+      <section title="S2S Flow Chart" anchor="s2s-flow">
+        <t>The following flow chart illustrates the protocol flow for establishing domain name associations between Server 1 and Server 2, as described in the remaining sections of this document.</t>
+        <figure>
+          <artwork><![CDATA[
                     |
-                    |
-        (Section 4: A Simple Scenario)
-                    |
+        (Section 4.2: A Simple Scenario)
                     |
              DNS RESOLUTION ETC.
                     |
@@ -114,8 +168,8 @@
                     +----------------+
                     | B needs to auth A
                     |
-        (Section 5: One-Way Authentication)
                     |
+        (Section 4.3: One-Way Authentication)
                     |
              DNS RESOLUTION ETC.
                     |
@@ -136,8 +190,7 @@
     (B establishes DNA for a.example!)
                     |
                     |
-      (Section 6.1: Piggybacking Assertion)
-                    |
+      (Section 4.4.1: Piggybacking Assertion)
                     |
 +----------DIALBACK IDENTITY ASSERTION----------+
 |                                               |
@@ -162,8 +215,7 @@
 +-----------------------------------------------+
                     |
                     |
-      (Section 6.2: Piggybacking Supposition)
-                    |
+      (Section 4.4.2: Piggybacking Supposition)
                     |
 +-----------SUBSEQUENT CONNECTION---------------+
 |                                               |
@@ -192,147 +244,141 @@
 |                type='valid'/>                 |
 |                                               |
 +-----------------------------------------------+
-        ]]></artwork>
-      </figure>
-    </section>
-
-    <section title="A Simple Scenario" anchor="simple">
-      <t>To illustrate the problem, consider the simplified order of events (see <xref target='RFC6120'/> for details) in establishing an XML stream between Server 1 (a.example) and Server 2 (b.example):</t>
-      <t>
-        <list style='numbers'>
-          <t>Server 1 resolves the DNS domain name b.example.<vspace blankLines='1'/></t>
-          <t>Server 1 opens a TCP connection to the resolved IP address.<vspace blankLines='1'/></t>
-          <t>
-            Server 1 sends an initial stream header to Server 2, asserting that it is a.example:
-            <vspace blankLines='1'/>
-            &lt;stream:stream from='a.example' to='b.example'&gt;
-            <vspace blankLines='1'/>
-          </t>
-          <t>
-            Server 2 sends a response stream header to Server 1, asserting that it is b.example:
-            <vspace blankLines='1'/>
-            &lt;stream:stream from='b.example' to='a.example'&gt;
-            <vspace blankLines='1'/>
-          </t>
-          <t>The servers attempt TLS negotiation, during which Server 2 (acting as a TLS server) presents a PKIX certificate proving that it is b.example and Server 1 (acting as a TLS client) presents a PKIX certificate proving that it is a.example.<vspace blankLines='1'/></t>
-          <t>Server 1 checks the PKIX certificate that Server 2 provided and Server 2 checks the PKIX certificate that Server 1 provided; if these proofs are consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, each server accepts that there is a strong domain name association between its stream to the other party and the DNS domain name of the other party.</t>
-        </list>
-      </t>
-      <t>Several simplifying assumptions underlie the happy scenario just outlined:</t>
-      <t>
-        <list style='symbols'>
-          <t>Server 1 presents a PKIX certificate during TLS negotiation, which enables the parties to complete mutual authentication.</t>
-          <t>There are no additional domains associated with Server 1 and Server 2 (say, a subdomain rooms.a.example on Server 1 or a second domain c.example on Server 2).</t>
-          <t>The server administrators are able to obtain PKIX certificates in the first place.</t>
-          <t>The server administrators are running their own XMPP servers, rather than using hosting services.</t>
-        </list>
-      </t>
-      <t>Let's consider each of these "wrinkles" in turn.</t>
-    </section>
-
-    <section title="One-Way Authentication" anchor="oneway">
-      <t>If Server 1 does not present its PKIX certificate during TLS negotiation (perhaps because it wishes to verify the identity of Server 2 before presenting its own credentials), Server 2 is unable to mutually authenticate Server 1.  Therefore, Server 2 needs to negotiate and authenticate a stream to Server 1, just as Server 1 has done:</t>
-      <t>
-        <list style='numbers'>
-          <t>Server 2 resolves the DNS domain name a.example.<vspace blankLines='1'/></t>
-          <t>Server 2 opens a TCP connection to the resolved IP address.<vspace blankLines='1'/></t>
-          <t>
-            Server 2 sends an initial stream header to Server 1, asserting that it is b.example:
-            <vspace blankLines='1'/>
-            &lt;stream:stream from='b.example' to='a.example'&gt;
-            <vspace blankLines='1'/>
-          </t>
-          <t>
-            Server 1 sends a response stream header to Server 2, asserting that it is a.example:
-            <vspace blankLines='1'/>
-            &lt;stream:stream from='a.example' to='b.example'&gt;
-            <vspace blankLines='1'/>
-          </t>
-          <t>The servers attempt TLS negotiation, during which Server 1 (acting as a TLS server) presents a PKIX certificate proving that it is a.example.<vspace blankLines='1'/></t>
-          <t>Server 2 checks the PKIX certificate that Server 1 provided; if it is consistent with the XMPP profile <xref target='RFC6120'/> of the matching rules from <xref target='RFC6125'/>, Server 2 accepts that there is a strong domain name association between its stream to Server 1 and the DNS domain name a.example.</t>
-        </list>
-      </t>
-      <t>At this point the servers are using two TCP connections instead of one, which is somewhat wasteful.  However, there are ways to tie the authentication achieved on the second TCP connection to the first TCP connection; see <xref target='XEP-0288'/> for further discussion.</t>
-    </section>
-
-    <section title="Piggybacking" anchor="piggybacking">
-      <section title="Assertion" anchor="piggybacking-assertion">
-        <t>Consider the common scenario in which Server 2 hosts not only b.example but also a second domain c.example (a "multi-tenanted" environment).  If a user of Server 2 associated with c.example wishes to communicate with a friend at a.example, Server 2 needs to send XMPP stanzas from the domain c.example rather than b.example.  Although Server 2 could open an new TCP connection and negotiate new XML streams for the domain pair of c.example and a.example, that too is wasteful.  Server 2 already has a connection to a.example, so how can it assert that it would like to add a new domain pair to the existing connection?</t>
-        <t>The traditional method for doing so is the Server Dialback protocol, first specified in <xref target='RFC3920'/> and since moved to <xref target='XEP-0220'/>.  Here, Server 2 can send a &lt;db:result/&gt; element for the new domain pair over the existing stream.</t>
-        <figure>
-          <artwork><![CDATA[
-    <db:result from='c.example' to='a.example'>
-      some-dialback-key
-    </db:result>
+                    |
           ]]></artwork>
         </figure>
-        <t>This element functions as Server 2's assertion that it is (also) c.example, and thus is functionally equivalent to the 'from' address of an initial stream header as previously described.</t>
-        <t>In response to this assertion, Server 1 needs to obtain some kind of proof that Server 2 really is also c.example.  It can do the same thing that it did before:</t>
+      </section>
+
+      <section title="A Simple S2S Scenario" anchor="s2s-simple">
+        <t>To illustrate the problem, consider the simplified order of events (see <xref target='RFC6120'/> for details) in establishing an XML stream between Server 1 (a.example) and Server 2 (b.example):</t>
         <t>
           <list style='numbers'>
-            <t>Server 1 resolves the DNS domain name c.example.<vspace blankLines='1'/></t>
-            <t>Server 1 opens a TCP connection to the resolved IP address (which might be the same IP address as for b.example).<vspace blankLines='1'/></t>
+            <t>Server 1 resolves the DNS domain name b.example.</t>
+            <t>Server 1 opens a TCP connection to the resolved IP address.</t>
             <t>
               Server 1 sends an initial stream header to Server 2, asserting that it is a.example:
               <vspace blankLines='1'/>
-              &lt;stream:stream from='a.example' to='c.example'&gt;
-              <vspace blankLines='1'/>
+              &lt;stream:stream from='a.example' to='b.example'&gt;
             </t>
             <t>
-              Server 2 sends a response stream header to Server 1, asserting that it is c.example:
+              Server 2 sends a response stream header to Server 1, asserting that it is b.example:
               <vspace blankLines='1'/>
-              &lt;stream:stream from='c.example' to='a.example'&gt;
-              <vspace blankLines='1'/>
+              &lt;stream:stream from='b.example' to='a.example'&gt;
             </t>
-            <t>The servers attempt TLS negotiation, during which Server 2 (acting as a TLS server) presents a PKIX certificate proving that it is c.example.<vspace blankLines='1'/></t>
-            <t>Server 1 checks the PKIX certificate that Server 2 provided; if it is consistent with the XMPP profile <xref target='RFC6120'/> of the matching rules from <xref target='RFC6125'/>, Server 1 accepts that there is a strong domain name association between its stream to Server 2 and the DNS domain name c.example.</t>
+            <t>The servers attempt TLS negotiation, during which Server 2 (acting as a TLS server) presents a PKIX certificate proving that it is b.example and Server 1 (acting as a TLS client) presents a PKIX certificate proving that it is a.example.</t>
+            <t>Server 1 checks the PKIX certificate that Server 2 provided and Server 2 checks the PKIX certificate that Server 1 provided; if these proofs are consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, each server accepts that there is a strong domain name association between its stream to the other party and the DNS domain name of the other party.</t>
           </list>
         </t>
-        <t>Now that Server 1 accepts the domain name association, it informs Server 2 of that fact:</t>
-        <figure>
-          <artwork><![CDATA[
-    <db:result from='a.example' to='c.example' type='valid'/>
-          ]]></artwork>
-        </figure>
-        <t>The parties can then terminate the second connection, since it was used only for Server 1 to associate a stream over the same IP:port combination with the domain name c.example (the dialback key links the original stream to the new association).</t>
+        <t>Several simplifying assumptions underlie the happy scenario just outlined:</t>
+        <t>
+          <list style='symbols'>
+            <t>Server 1 presents a PKIX certificate during TLS negotiation, which enables the parties to complete mutual authentication.</t>
+            <t>There are no additional domains associated with Server 1 and Server 2 (say, a subdomain rooms.a.example on Server 1 or a second domain c.example on Server 2).</t>
+            <t>The server administrators are able to obtain PKIX certificates in the first place.</t>
+            <t>The server administrators are running their own XMPP servers, rather than using hosting services.</t>
+          </list>
+        </t>
+        <t>Let's consider each of these "wrinkles" in turn.</t>
       </section>
-      <section title="Supposition" anchor="piggybacking-supposition">
-        <t>Piggybacking can also occur in the other direction.  Consider the common scenario in which Server 1 provides XMPP services not only for a.example but also for a subdomain such as a groupchat service at rooms.a.example (see <xref target='XEP-0045'/>).  If a user from c.example at Server 2 wishes to join a room on the groupchat sevice, Server 2 needs to send XMPP stanzas from the domain c.example to the domain rooms.a.example rather than a.example.  Therefore, Server 2 needs to negotiate and authenticate a stream to rooms.a.example:</t>
+
+      <section title="One-Way Authentication" anchor="s2s-oneway">
+        <t>If Server 1 does not present its PKIX certificate during TLS negotiation (perhaps because it wishes to verify the identity of Server 2 before presenting its own credentials), Server 2 is unable to mutually authenticate Server 1.  Therefore, Server 2 needs to negotiate and authenticate a stream to Server 1, just as Server 1 has done:</t>
         <t>
           <list style='numbers'>
-            <t>Server 2 resolves the DNS domain name rooms.a.example.<vspace blankLines='1'/></t>
-            <t>Server 2 opens a TCP connection to the resolved IP address.<vspace blankLines='1'/></t>
+            <t>Server 2 resolves the DNS domain name a.example.</t>
+            <t>Server 2 opens a TCP connection to the resolved IP address.</t>
             <t>
-              Server 2 sends an initial stream header to Server 1 acting as rooms.a.example, asserting that it is b.example:
+              Server 2 sends an initial stream header to Server 1, asserting that it is b.example:
               <vspace blankLines='1'/>
-              &lt;stream:stream from='b.example' to='rooms.a.example'&gt;
-              <vspace blankLines='1'/>
+              &lt;stream:stream from='b.example' to='a.example'&gt;
             </t>
             <t>
-              Server 1 sends a response stream header to Server 2, asserting that it is rooms.a.example:
+              Server 1 sends a response stream header to Server 2, asserting that it is a.example:
               <vspace blankLines='1'/>
-              &lt;stream:stream from='rooms.a.example' to='b.example'&gt;
-              <vspace blankLines='1'/>
+              &lt;stream:stream from='a.example' to='b.example'&gt;
             </t>
-            <t>The servers attempt TLS negotiation, during which Server 1 (acting as a TLS server) presents a PKIX certificate proving that it is rooms.a.example.<vspace blankLines='1'/></t>
-            <t>Server 2 checks the PKIX certificate that Server 1 provided; if it is consistent with the XMPP profile <xref target='RFC6120'/> of the matching rules from <xref target='RFC6125'/>, Server 2 accepts that there is a strong domain name association between its stream to Server 1 and the DNS domain name rooms.a.example.</t>
+            <t>The servers attempt TLS negotiation, during which Server 1 (acting as a TLS server) presents a PKIX certificate proving that it is a.example.</t>
+            <t>Server 2 checks the PKIX certificate that Server 1 provided; if it is consistent with the XMPP profile <xref target='RFC6120'/> of the matching rules from <xref target='RFC6125'/>, Server 2 accepts that there is a strong domain name association between its stream to Server 1 and the DNS domain name a.example.</t>
           </list>
         </t>
-        <t>As before, the parties now have two TCP connections open.  So that they can close the now-redundant connection, Server 2 sends a dialback key to Server 1 over the new connection.</t>
-        <figure>
-          <artwork><![CDATA[
+        <t>At this point the servers are using two TCP connections instead of one, which is somewhat wasteful.  However, there are ways to tie the authentication achieved on the second TCP connection to the first TCP connection; see <xref target='XEP-0288'/> for further discussion.</t>
+      </section>
+
+      <section title="Piggybacking" anchor="s2s-piggybacking">
+        <section title="Assertion" anchor="s2s-piggybacking-assertion">
+          <t>Consider the common scenario in which Server 2 hosts not only b.example but also a second domain c.example (a "multi-tenanted" environment).  If a user of Server 2 associated with c.example wishes to communicate with a friend at a.example, Server 2 needs to send XMPP stanzas from the domain c.example rather than b.example.  Although Server 2 could open an new TCP connection and negotiate new XML streams for the domain pair of c.example and a.example, that too is wasteful.  Server 2 already has a connection to a.example, so how can it assert that it would like to add a new domain pair to the existing connection?</t>
+          <t>The traditional method for doing so is the Server Dialback protocol, first specified in <xref target='RFC3920'/> and since moved to <xref target='XEP-0220'/>.  Here, Server 2 can send a &lt;db:result/&gt; element for the new domain pair over the existing stream.</t>
+          <figure>
+            <artwork><![CDATA[
+    <db:result from='c.example' to='a.example'>
+      some-dialback-key
+    </db:result>
+            ]]></artwork>
+          </figure>
+          <t>This element functions as Server 2's assertion that it is (also) c.example, and thus is functionally equivalent to the 'from' address of an initial stream header as previously described.</t>
+          <t>In response to this assertion, Server 1 needs to obtain some kind of proof that Server 2 really is also c.example.  It can do the same thing that it did before:</t>
+          <t>
+            <list style='numbers'>
+              <t>Server 1 resolves the DNS domain name c.example.</t>
+              <t>Server 1 opens a TCP connection to the resolved IP address (which might be the same IP address as for b.example).</t>
+              <t>
+                Server 1 sends an initial stream header to Server 2, asserting that it is a.example:
+                <vspace blankLines='1'/>
+                &lt;stream:stream from='a.example' to='c.example'&gt;
+              </t>
+              <t>
+                Server 2 sends a response stream header to Server 1, asserting that it is c.example:
+                <vspace blankLines='1'/>
+                &lt;stream:stream from='c.example' to='a.example'&gt;
+              </t>
+              <t>The servers attempt TLS negotiation, during which Server 2 (acting as a TLS server) presents a PKIX certificate proving that it is c.example.</t>
+              <t>Server 1 checks the PKIX certificate that Server 2 provided; if it is consistent with the XMPP profile <xref target='RFC6120'/> of the matching rules from <xref target='RFC6125'/>, Server 1 accepts that there is a strong domain name association between its stream to Server 2 and the DNS domain name c.example.</t>
+            </list>
+          </t>
+          <t>Now that Server 1 accepts the domain name association, it informs Server 2 of that fact:</t>
+          <figure>
+            <artwork><![CDATA[
+    <db:result from='a.example' to='c.example' type='valid'/>
+            ]]></artwork>
+          </figure>
+          <t>The parties can then terminate the second connection, since it was used only for Server 1 to associate a stream over the same IP:port combination with the domain name c.example (the dialback key links the original stream to the new association).</t>
+        </section>
+        <section title="Supposition" anchor="s2s-piggybacking-supposition">
+          <t>Piggybacking can also occur in the other direction.  Consider the common scenario in which Server 1 provides XMPP services not only for a.example but also for a subdomain such as a groupchat service at rooms.a.example (see <xref target='XEP-0045'/>).  If a user from c.example at Server 2 wishes to join a room on the groupchat sevice, Server 2 needs to send XMPP stanzas from the domain c.example to the domain rooms.a.example rather than a.example.  Therefore, Server 2 needs to negotiate and authenticate a stream to rooms.a.example:</t>
+          <t>
+            <list style='numbers'>
+              <t>Server 2 resolves the DNS domain name rooms.a.example.</t>
+              <t>Server 2 opens a TCP connection to the resolved IP address.</t>
+              <t>
+                Server 2 sends an initial stream header to Server 1 acting as rooms.a.example, asserting that it is b.example:
+                <vspace blankLines='1'/>
+                &lt;stream:stream from='b.example' to='rooms.a.example'&gt;
+              </t>
+              <t>
+                Server 1 sends a response stream header to Server 2, asserting that it is rooms.a.example:
+                <vspace blankLines='1'/>
+                &lt;stream:stream from='rooms.a.example' to='b.example'&gt;
+              </t>
+              <t>The servers attempt TLS negotiation, during which Server 1 (acting as a TLS server) presents a PKIX certificate proving that it is rooms.a.example.</t>
+              <t>Server 2 checks the PKIX certificate that Server 1 provided; if it is consistent with the XMPP profile <xref target='RFC6120'/> of the matching rules from <xref target='RFC6125'/>, Server 2 accepts that there is a strong domain name association between its stream to Server 1 and the DNS domain name rooms.a.example.</t>
+            </list>
+          </t>
+          <t>As before, the parties now have two TCP connections open.  So that they can close the now-redundant connection, Server 2 sends a dialback key to Server 1 over the new connection.</t>
+          <figure>
+            <artwork><![CDATA[
     <db:result from='c.example' to='rooms.a.example'>
       some-dialback-key
     </db:result>
-          ]]></artwork>
-        </figure>
-        <t>Server 1 then informs Server 2 that it accepts the domain name association:</t>
-        <figure>
-          <artwork><![CDATA[
+            ]]></artwork>
+          </figure>
+          <t>Server 1 then informs Server 2 that it accepts the domain name association:</t>
+          <figure>
+            <artwork><![CDATA[
     <db:result from='rooms.a.example' to='c.example' type='valid'/>
-          ]]></artwork>
-        </figure>
-        <t>Server 2 can now close the connection over which it tested the domain name association for rooms.a.example.</t>
+            ]]></artwork>
+          </figure>
+          <t>Server 2 can now close the connection over which it tested the domain name association for rooms.a.example.</t>
+        </section>
       </section>
     </section>
 
@@ -362,7 +408,7 @@
     </section>
 
     <section title="Secure Delegation and Multi-Tenancy" anchor="delegation">
-      <t>One common method for deploying XMPP services is multi-tenancy or virtual hosting: e.g., the XMPP service for example.com is actually hosted at hosting.example.net.  Such an arrangement is relatively convenient in XMPP given the use of DNS SRV records <xref target="RFC2782"/>, such as the following pointer from example.com to hosting.example.net:</t>
+      <t>One common method for deploying XMPP services is multi-tenancy: e.g., the XMPP service for example.com is actually hosted at hosting.example.net.  Such an arrangement is relatively convenient in XMPP given the use of DNS SRV records <xref target="RFC2782"/>, such as the following pointer from example.com to hosting.example.net:</t>
       <figure>
         <artwork><![CDATA[
 _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
@@ -420,13 +466,13 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
           <author initials="P" surname="Saint-Andre" fullname="Peter Saint-Andre">
             <organization/>
           </author>
-          <date month="December" day="19" year="2013"/>
+          <date month="June" day="10" year="2014"/>
           <abstract>
-            <t>The DANE specification (RFC 6698) describes how to use TLSA resource records in the DNS to associate a server's host name with its TLS certificate.  The association is secured with DNSSEC.  Some application protocols use SRV records (RFC 2782) to indirectly name the server hosts for a service domain (SMTP uses MX records for the same purpose).  This specification gives generic instructions for how these application protocols locate and use TLSA records when technologies such as SRV records are used.  Separate documents give the details that are specific to particular application protocols.</t>
+            <t>The DANE specification (RFC 6698) describes how to use TLSA resource records in the DNS to associate a server's host name with its TLS certificate, where the association is secured with DNSSEC.  However, application protocols that use SRV records (RFC 2782) to indirectly name the target server host names for a service domain cannot apply the rules from RFC 6698.  Therefore this document provides guidelines that enable such protocols to locate and use TLSA records.</t>
           </abstract>
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-dane-srv-03"/>
-        <format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-dane-srv-03.txt"/>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-dane-srv-06"/>
+        <format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-dane-srv-06.txt"/>
       </reference>
       <reference anchor="I-D.ietf-xmpp-posh">
         <front>
@@ -817,6 +863,11 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
       </reference>
 
     </references>
+
+    <section title="Acknowledgements" anchor="acks">
+      <t>Thanks to Philipp Hancke for his feedback.</t>
+    </section>
+
 
   </back>
 
