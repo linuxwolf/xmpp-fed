@@ -2,6 +2,7 @@
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
  <!ENTITY rfc2119 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
  <!ENTITY rfc2782 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2782.xml">
+ <!ENTITY rfc2915 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2915.xml">
  <!ENTITY rfc4033 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4033.xml">
  <!ENTITY rfc4035 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4035.xml">
  <!ENTITY rfc5280 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5280.xml">
@@ -11,7 +12,6 @@
  <!ENTITY rfc6120 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6120.xml">
  <!ENTITY rfc6125 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6125.xml">
  <!ENTITY rfc6186 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6186.xml">
- <!ENTITY rfc6555 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6555.xml">
  <!ENTITY rfc6698 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6698.xml">
  <!ENTITY rfc7218 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7218.xml">
 
@@ -30,7 +30,7 @@
 <?rfc symrefs="yes" ?>
 <?rfc toc="yes" ?>
 
-<rfc ipr="trust200902" category="std" docName="draft-ietf-dane-srv-07">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-dane-srv-08">
 
  <front>
 
@@ -162,10 +162,13 @@
 
   <section anchor="dns" title="DNS Checks">
 
-   <t>To expedite connection to the intended service, where possible the
-   queries described in the following sections SHOULD be performed in
-   parallel (this is similar to the "happy eyeballs" approach for IPv4
-   and IPv6 connections described in <xref target='RFC6555'/>).</t>
+   <t>Developers of application clients that depend on DANE-SRV often 
+   would like to prepare as quickly as possible for making a connection 
+   to the intended service, thus reducing the wait time for end users.
+   To make this possible, a DNS library might perform the SRV queries 
+   and address queries in parallel (because it is wrong to make TLSA 
+   queries if the address records are not secure, performing them in 
+   parallel with the SRV queries and address queries is not appropriate).</t>
 
    <section title="SRV Query">
 
@@ -180,7 +183,7 @@
      This corresponds to the AD bit being set in the response(s); see
      <xref target="RFC4035"/> section 3.2.3.</t>
 
-    <t>If the the entire RRset is "insecure" or "indeterminate", this protocol has not been correctly
+    <t>If the the entire RRset is "insecure", this protocol has not been correctly
      deployed.  The client SHOULD fall back to its non-DNSSEC, non-DANE
      behavior (this corresponds to the AD bit being unset). If the entire RRset is "bogus", the client MUST abort the attempt.</t>
 
@@ -198,8 +201,8 @@
 
    <section title="Address Queries">
 
-    <t>For each SRV target server host name, the client makes A / AAAA
-     queries, performs DNSSEC validation on the address (A, AAAA) response,
+    <t>For each SRV target server host name, the client makes A and AAAA
+     queries, performs DNSSEC validation on the address (A or AAAA) response,
      and continues as follows based on the results:
 
      <list style="symbols">
@@ -344,6 +347,9 @@ _9143._tcp.imap.example.net. IN TLSA ?
      do not offer SRV records.</t>
      <t>Whether the application protocol has a functional equivalent for
      TLS SNI that is preferred within that protocol.</t>
+     <t>Use of SRV records with additional discovery technologies, such as
+     the use of both SRV records and NAPTR records <xref target='RFC2915'/> 
+     for transport selection in the Session Initiation Protocol (SIP).</t>
    </list>
    </t>
 
@@ -355,16 +361,16 @@ _9143._tcp.imap.example.net. IN TLSA ?
   <section title="Guidance for Server Operators">
 
     <t>To conform to this specification, the published SRV records and
-     subsequent address (A, AAAA) records MUST be secured with DNSSEC.
+     subsequent address (A and AAAA) records MUST be secured with DNSSEC.
      There SHOULD also be at least one TLSA record published that
      authenticates the server's certificate.</t>
 
      <t>When using TLSA records with Certificate Usage "DANE-EE", it is
       not necessary for the deployed certificate to contain an
       identifier for either the source domain or target server host
-      name. However, servers that rely solely on validation using
-      Certificate Usage "DANE-EE" TLSA records might prevent clients
-      that do not support this specification from successfully
+      name. However, operators need to be aware that servers relying solely 
+      on validation using Certificate Usage "DANE-EE" TLSA records might 
+      prevent clients that do not support this specification from successfully
       connecting with TLS.</t>
 
       <t>For TLSA records with Certificate Usage types other than
@@ -504,7 +510,7 @@ _9143._tcp.imap.example.net. IN TLSA ?
 
    &I-D.ietf-dane-smtp-with-dane;
    &I-D.ietf-xmpp-dna;
-   &rfc6555; <!-- happy eyeballs -->
+   &rfc2915; <!-- NAPTR -->
 
   </references>
 

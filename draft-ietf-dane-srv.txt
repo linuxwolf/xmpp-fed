@@ -5,15 +5,15 @@
 DNS-Based Authentication of Named Entities (DANE)               T. Finch
 Internet-Draft                                   University of Cambridge
 Intended status: Standards Track                               M. Miller
-Expires: January 24, 2015                            Cisco Systems, Inc.
+Expires: February 20, 2015                           Cisco Systems, Inc.
                                                           P. Saint-Andre
                                                                     &yet
-                                                           July 23, 2014
+                                                         August 19, 2014
 
 
   Using DNS-Based Authentication of Named Entities (DANE) TLSA Records
                             with SRV Records
-                         draft-ietf-dane-srv-07
+                         draft-ietf-dane-srv-08
 
 Abstract
 
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on January 24, 2015.
+   This Internet-Draft will expire on February 20, 2015.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Finch, et al.           Expires January 24, 2015                [Page 1]
+Finch, et al.           Expires February 20, 2015               [Page 1]
 
-Internet-Draft                TLSA and SRV                     July 2014
+Internet-Draft                TLSA and SRV                   August 2014
 
 
    publication of this document.  Please review these documents
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Finch, et al.           Expires January 24, 2015                [Page 2]
+Finch, et al.           Expires February 20, 2015               [Page 2]
 
-Internet-Draft                TLSA and SRV                     July 2014
+Internet-Draft                TLSA and SRV                   August 2014
 
 
    are located indirectly via SRV records [RFC2782].  Because of this
@@ -154,20 +154,20 @@ Internet-Draft                TLSA and SRV                     July 2014
 
 3.  DNS Checks
 
-   To expedite connection to the intended service, where possible the
-   queries described in the following sections SHOULD be performed in
-   parallel (this is similar to the "happy eyeballs" approach for IPv4
-   and IPv6 connections described in [RFC6555]).
+   Developers of application clients that depend on DANE-SRV often would
+   like to prepare as quickly as possible for making a connection to the
+   intended service, thus reducing the wait time for end users.  To make
+   this possible, a DNS library might perform the SRV queries and
+   address queries in parallel (because it is wrong to make TLSA queries
+   if the address records are not secure, performing them in parallel
+   with the SRV queries and address queries is not appropriate).
 
 
 
 
-
-
-
-Finch, et al.           Expires January 24, 2015                [Page 3]
+Finch, et al.           Expires February 20, 2015               [Page 3]
 
-Internet-Draft                TLSA and SRV                     July 2014
+Internet-Draft                TLSA and SRV                   August 2014
 
 
 3.1.  SRV Query
@@ -182,11 +182,10 @@ Internet-Draft                TLSA and SRV                     July 2014
    DNAME RRsets MUST be secure as well.  This corresponds to the AD bit
    being set in the response(s); see [RFC4035] section 3.2.3.
 
-   If the the entire RRset is "insecure" or "indeterminate", this
-   protocol has not been correctly deployed.  The client SHOULD fall
-   back to its non-DNSSEC, non-DANE behavior (this corresponds to the AD
-   bit being unset).  If the entire RRset is "bogus", the client MUST
-   abort the attempt.
+   If the the entire RRset is "insecure", this protocol has not been
+   correctly deployed.  The client SHOULD fall back to its non-DNSSEC,
+   non-DANE behavior (this corresponds to the AD bit being unset).  If
+   the entire RRset is "bogus", the client MUST abort the attempt.
 
    In the successful case, the client now has an authentic list of
    target server host names with weight and priority values.  It
@@ -199,8 +198,8 @@ Internet-Draft                TLSA and SRV                     July 2014
 
 3.2.  Address Queries
 
-   For each SRV target server host name, the client makes A / AAAA
-   queries, performs DNSSEC validation on the address (A, AAAA)
+   For each SRV target server host name, the client makes A and AAAA
+   queries, performs DNSSEC validation on the address (A or AAAA)
    response, and continues as follows based on the results:
 
    o  If the response is "secure" and usable, the client MUST perform a
@@ -221,9 +220,10 @@ Internet-Draft                TLSA and SRV                     July 2014
 
 
 
-Finch, et al.           Expires January 24, 2015                [Page 4]
+
+Finch, et al.           Expires February 20, 2015               [Page 4]
 
-Internet-Draft                TLSA and SRV                     July 2014
+Internet-Draft                TLSA and SRV                   August 2014
 
 
 3.3.  TLSA Queries
@@ -277,9 +277,9 @@ Internet-Draft                TLSA and SRV                     July 2014
 
 
 
-Finch, et al.           Expires January 24, 2015                [Page 5]
+Finch, et al.           Expires February 20, 2015               [Page 5]
 
-Internet-Draft                TLSA and SRV                     July 2014
+Internet-Draft                TLSA and SRV                   August 2014
 
 
    In this case, the client uses the information in the server
@@ -333,9 +333,9 @@ Internet-Draft                TLSA and SRV                     July 2014
 
 
 
-Finch, et al.           Expires January 24, 2015                [Page 6]
+Finch, et al.           Expires February 20, 2015               [Page 6]
 
-Internet-Draft                TLSA and SRV                     July 2014
+Internet-Draft                TLSA and SRV                   August 2014
 
 
 5.  Guidance for Application Protocols
@@ -357,22 +357,27 @@ Internet-Draft                TLSA and SRV                     July 2014
    o  Whether the application protocol has a functional equivalent for
       TLS SNI that is preferred within that protocol.
 
+   o  Use of SRV records with additional discovery technologies, such as
+      the use of both SRV records and NAPTR records [RFC2915] for
+      transport selection in the Session Initiation Protocol (SIP).
+
    For example, [I-D.ietf-xmpp-dna] covers such topics for the
    Extensible Messaging and Presence Protocol (XMPP).
 
 6.  Guidance for Server Operators
 
    To conform to this specification, the published SRV records and
-   subsequent address (A, AAAA) records MUST be secured with DNSSEC.
+   subsequent address (A and AAAA) records MUST be secured with DNSSEC.
    There SHOULD also be at least one TLSA record published that
    authenticates the server's certificate.
 
    When using TLSA records with Certificate Usage "DANE-EE", it is not
    necessary for the deployed certificate to contain an identifier for
    either the source domain or target server host name.  However,
-   servers that rely solely on validation using Certificate Usage "DANE-
-   EE" TLSA records might prevent clients that do not support this
-   specification from successfully connecting with TLS.
+   operators need to be aware that servers relying solely on validation
+   using Certificate Usage "DANE-EE" TLSA records might prevent clients
+   that do not support this specification from successfully connecting
+   with TLS.
 
    For TLSA records with Certificate Usage types other than "DANE-EE",
    the certificate(s) MUST contain an identifier that matches:
@@ -380,20 +385,21 @@ Internet-Draft                TLSA and SRV                     July 2014
    o  the service domain name (the "source domain" in [RFC6125] terms,
       which is the SRV query domain); and/or
 
+
+
+
+
+Finch, et al.           Expires February 20, 2015               [Page 7]
+
+Internet-Draft                TLSA and SRV                   August 2014
+
+
    o  the target server host name (the "derived domain" in [RFC6125]
       terms, which is the SRV target).
 
    Servers that support multiple service domains (i.e., so-called
    "multi-tenanted environments") can implement the Transport Layer
    Security Server Name Indication (TLS SNI) [RFC6066] or its functional
-
-
-
-Finch, et al.           Expires January 24, 2015                [Page 7]
-
-Internet-Draft                TLSA and SRV                     July 2014
-
-
    equivalent to determine which certificate to offer.  Clients that do
    not support this specification will indicate a preference for the
    service domain name, while clients that support this specification
@@ -436,19 +442,16 @@ Internet-Draft                TLSA and SRV                     July 2014
    domain holders and their server operators.  Most of the setup
    requirements for this protocol fall on the server operator:
    installing a TLS certificate with the correct name (where necessary),
+
+
+
+Finch, et al.           Expires February 20, 2015               [Page 8]
+
+Internet-Draft                TLSA and SRV                   August 2014
+
+
    and publishing a TLSA record for that certificate.  If these are not
    correct then connections from TLSA-aware clients might fail.
-
-
-
-
-
-
-
-Finch, et al.           Expires January 24, 2015                [Page 8]
-
-Internet-Draft                TLSA and SRV                     July 2014
-
 
 9.3.  Certificate Subject Name Matching
 
@@ -495,16 +498,17 @@ Internet-Draft                TLSA and SRV                     July 2014
               Rose, "DNS Security Introduction and Requirements", RFC
               4033, March 2005.
 
+
+
+
+Finch, et al.           Expires February 20, 2015               [Page 9]
+
+Internet-Draft                TLSA and SRV                   August 2014
+
+
    [RFC4035]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Protocol Modifications for the DNS Security
               Extensions", RFC 4035, March 2005.
-
-
-
-Finch, et al.           Expires January 24, 2015                [Page 9]
-
-Internet-Draft                TLSA and SRV                     July 2014
-
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
@@ -545,8 +549,18 @@ Internet-Draft                TLSA and SRV                     July 2014
 
    [I-D.ietf-dane-smtp-with-dane]
               Dukhovni, V. and W. Hardaker, "SMTP security via
-              opportunistic DANE TLS", draft-ietf-dane-smtp-with-dane-05
-              (work in progress), February 2014.
+              opportunistic DANE TLS", draft-ietf-dane-smtp-with-dane-10
+              (work in progress), May 2014.
+
+
+
+
+
+
+Finch, et al.           Expires February 20, 2015              [Page 10]
+
+Internet-Draft                TLSA and SRV                   August 2014
+
 
    [I-D.ietf-xmpp-dna]
               Saint-Andre, P. and M. Miller, "Domain Name Associations
@@ -554,16 +568,8 @@ Internet-Draft                TLSA and SRV                     July 2014
               (XMPP)", draft-ietf-xmpp-dna-05 (work in progress),
               February 2014.
 
-
-
-
-Finch, et al.           Expires January 24, 2015               [Page 10]
-
-Internet-Draft                TLSA and SRV                     July 2014
-
-
-   [RFC6555]  Wing, D. and A. Yourtchenko, "Happy Eyeballs: Success with
-              Dual-Stack Hosts", RFC 6555, April 2012.
+   [RFC2915]  Mealling, M. and R. Daniel, "The Naming Authority Pointer
+              (NAPTR) DNS Resource Record", RFC 2915, September 2000.
 
 Appendix A.  Examples
 
@@ -594,6 +600,24 @@ A.1.  IMAP
 
 A.2.  XMPP
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+Finch, et al.           Expires February 20, 2015              [Page 11]
+
+Internet-Draft                TLSA and SRV                   August 2014
+
+
    ; XMPP domain
    _xmpp-client.example.com. SRV     1 0 5222 im.example.net.
    _xmpp-client.example.com. RRSIG   SRV ...
@@ -608,15 +632,6 @@ A.2.  XMPP
    ; TLSA resource record
    _5222._tcp.im.example.net.  TLSA   ...
    _5222._tcp.im.example.net.  RRSIG  TLSA ...
-
-
-
-
-
-Finch, et al.           Expires January 24, 2015               [Page 11]
-
-Internet-Draft                TLSA and SRV                     July 2014
-
 
    XMPP sessions for addresses at example.com are established at
    im.example.net.  Connections to im.example.net port 5222 that use
@@ -651,6 +666,14 @@ Appendix B.  Rationale
    o  Some application protocols, such as SMTP, allow a client to
       perform transactions with multiple service domains in the same
       connection.  It is not in general feasible for the client to
+
+
+
+Finch, et al.           Expires February 20, 2015              [Page 12]
+
+Internet-Draft                TLSA and SRV                   August 2014
+
+
       specify the service domain using TLS SNI when the connection is
       established, and the server might not be able to present a
       certificate that authenticates all possible service domains.  See
@@ -666,14 +689,6 @@ Appendix B.  Rationale
 
    This specification does not provide an option to put TLSA records
    under the service domain because that would add complexity without
-
-
-
-Finch, et al.           Expires January 24, 2015               [Page 12]
-
-Internet-Draft                TLSA and SRV                     July 2014
-
-
    providing any benefit, and security protocols are best kept simple.
    As described above, there are real-world cases where authenticating
    the service domain cannot be made to work, so there would be
@@ -701,6 +716,20 @@ Authors' Addresses
    URI:   http://dotat.at/
 
 
+
+
+
+
+
+
+
+
+
+Finch, et al.           Expires February 20, 2015              [Page 13]
+
+Internet-Draft                TLSA and SRV                   August 2014
+
+
    Matthew Miller
    Cisco Systems, Inc.
    1899 Wynkoop Street, Suite 600
@@ -725,4 +754,31 @@ Authors' Addresses
 
 
 
-Finch, et al.           Expires January 24, 2015               [Page 13]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Finch, et al.           Expires February 20, 2015              [Page 14]
