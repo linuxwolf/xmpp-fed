@@ -2,7 +2,7 @@
 <!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
  <!ENTITY rfc2119 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
  <!ENTITY rfc2782 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2782.xml">
- <!ENTITY rfc2915 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2915.xml">
+ <!ENTITY rfc3403 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3403.xml">
  <!ENTITY rfc4033 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4033.xml">
  <!ENTITY rfc4035 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4035.xml">
  <!ENTITY rfc5280 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5280.xml">
@@ -165,10 +165,11 @@
    <t>Developers of application clients that depend on DANE-SRV often 
    would like to prepare as quickly as possible for making a connection 
    to the intended service, thus reducing the wait time for end users.
-   To make this possible, a DNS library might perform the SRV queries 
-   and address queries in parallel (because it is wrong to make TLSA 
-   queries if the address records are not secure, performing them in 
-   parallel with the SRV queries and address queries is not appropriate).</t>
+   To make this possible, a DNS library might perform the SRV queries, 
+   address queries, and TLSA queries in parallel (although the TLSA 
+   records are not usable if the address records are not secure, 
+   performing the TLSA queries in parallel is not harmful from a
+   security perspective).</t>
 
    <section title="SRV Query">
 
@@ -348,7 +349,7 @@ _9143._tcp.imap.example.net. IN TLSA ?
      <t>Whether the application protocol has a functional equivalent for
      TLS SNI that is preferred within that protocol.</t>
      <t>Use of SRV records with additional discovery technologies, such as
-     the use of both SRV records and NAPTR records <xref target='RFC2915'/> 
+     the use of both SRV records and NAPTR records <xref target='RFC3403'/> 
      for transport selection in the Session Initiation Protocol (SIP).</t>
    </list>
    </t>
@@ -510,7 +511,7 @@ _9143._tcp.imap.example.net. IN TLSA ?
 
    &I-D.ietf-dane-smtp-with-dane;
    &I-D.ietf-xmpp-dna;
-   &rfc2915; <!-- NAPTR -->
+   &rfc3403; <!-- NAPTR -->
 
   </references>
 

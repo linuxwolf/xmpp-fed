@@ -157,10 +157,10 @@ Internet-Draft                TLSA and SRV                   August 2014
    Developers of application clients that depend on DANE-SRV often would
    like to prepare as quickly as possible for making a connection to the
    intended service, thus reducing the wait time for end users.  To make
-   this possible, a DNS library might perform the SRV queries and
-   address queries in parallel (because it is wrong to make TLSA queries
-   if the address records are not secure, performing them in parallel
-   with the SRV queries and address queries is not appropriate).
+   this possible, a DNS library might perform the SRV queries, address
+   queries, and TLSA queries in parallel (although the TLSA records are
+   not usable if the address records are not secure, performing the TLSA
+   queries in parallel is not harmful from a security perspective).
 
 
 
@@ -358,7 +358,7 @@ Internet-Draft                TLSA and SRV                   August 2014
       TLS SNI that is preferred within that protocol.
 
    o  Use of SRV records with additional discovery technologies, such as
-      the use of both SRV records and NAPTR records [RFC2915] for
+      the use of both SRV records and NAPTR records [RFC3403] for
       transport selection in the Session Initiation Protocol (SIP).
 
    For example, [I-D.ietf-xmpp-dna] covers such topics for the
@@ -568,8 +568,9 @@ Internet-Draft                TLSA and SRV                   August 2014
               (XMPP)", draft-ietf-xmpp-dna-05 (work in progress),
               February 2014.
 
-   [RFC2915]  Mealling, M. and R. Daniel, "The Naming Authority Pointer
-              (NAPTR) DNS Resource Record", RFC 2915, September 2000.
+   [RFC3403]  Mealling, M., "Dynamic Delegation Discovery System (DDDS)
+              Part Three: The Domain Name System (DNS) Database", RFC
+              3403, October 2002.
 
 Appendix A.  Examples
 
@@ -599,7 +600,6 @@ A.1.  IMAP
    the name imap.example.net.
 
 A.2.  XMPP
-
 
 
 
