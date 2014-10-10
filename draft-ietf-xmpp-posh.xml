@@ -130,7 +130,7 @@
         <t>
           <list style="symbols">
             <t>A "fingerprints" field whose value is a JSON array of fingerprint descriptors.</t>
-            <t>An "expires" field whose value is a JSON number specifying the seconds after which the TLS client ought to consider the key information to be stale (further explained under <xref target='caching'/>).</t>
+            <t>An "expires" field whose value is a JSON number specifying the number of seconds after which the TLS client ought to consider the key information to be stale (further explained under <xref target='caching'/>).</t>
           </list>
         </t>
         <t>Each included fingerprint descriptor is a JSON object, where each member name is the textual name of a hash function (as listed in <xref target='HASH-NAMES'/>) and its associated value is the base 64 encoded fingerprint hash generated using the named hash function (where the encoding adheres to the definition in Section 4 of <xref target='RFC4648'/> and where the padding bits are set to zero).  Each fingerprint descriptor MUST possess at least one named hash function.</t>
@@ -164,7 +164,7 @@ Content-Length: 134
         <t>If the source domain HTTPS server has a reference to the certificate information, it responds to the HTTPS GET with a success status code and message body set to a JSON document.  The document is a JSON object which MUST contain the following:</t>
         <t>
           <list style='symbols'>
-            <t>A "url" field whose value is the HTTPS URL where TLS clients can obtain the actual certificate information.</t>
+            <t>A "url" field whose value is a JSON string specifying the HTTPS URL where TLS clients can obtain the actual certificate information.</t>
             <t>An "expires" field whose value is a JSON number specifying the number of seconds after which the TLS client ought to consider the delegation to be stale (further explained under <xref target='caching'/>).</t>
           </list>
         </t>

@@ -270,8 +270,8 @@ Internet-Draft                    POSH                      October 2014
       descriptors.
 
    o  An "expires" field whose value is a JSON number specifying the
-      seconds after which the TLS client ought to consider the key
-      information to be stale (further explained under Section 6).
+      number of seconds after which the TLS client ought to consider the
+      key information to be stale (further explained under Section 6).
 
 
 
@@ -328,8 +328,8 @@ Internet-Draft                    POSH                      October 2014
    and message body set to a JSON document.  The document is a JSON
    object which MUST contain the following:
 
-   o  A "url" field whose value is the HTTPS URL where TLS clients can
-      obtain the actual certificate information.
+
+
 
 
 
@@ -337,6 +337,10 @@ Miller & Saint-Andre     Expires April 13, 2015                 [Page 6]
 
 Internet-Draft                    POSH                      October 2014
 
+
+   o  A "url" field whose value is a JSON string specifying the HTTPS
+      URL where TLS clients can obtain the actual certificate
+      information.
 
    o  An "expires" field whose value is a JSON number specifying the
       number of seconds after which the TLS client ought to consider the
@@ -382,10 +386,6 @@ Internet-Draft                    POSH                      October 2014
    verification materials is exhausted.  If none of the fingerprint
    descriptor objects match the TLS server PKIX information, the TLS
    client SHOULD reject the connection (however, the TLS client might
-   still accept the connection if other verification schemes are
-   successful).
-
-
 
 
 
@@ -393,6 +393,9 @@ Miller & Saint-Andre     Expires April 13, 2015                 [Page 7]
 
 Internet-Draft                    POSH                      October 2014
 
+
+   still accept the connection if other verification schemes are
+   successful).
 
 4.  Secure Delegation
 
@@ -436,9 +439,6 @@ Internet-Draft                    POSH                      October 2014
                Figure 1: Order of Events for Possession Flow
 
    While the following diagram illustrates the reference flow:
-
-
-
 
 
 
