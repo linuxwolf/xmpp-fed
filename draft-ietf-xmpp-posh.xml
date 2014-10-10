@@ -129,8 +129,8 @@
         <t>If the source domain HTTPS server possesses the certificate information, it responds to the HTTPS GET with a success status code and the message body set to a JSON document <xref target='RFC7159'/>; the document is a JSON object which MUST have the following:</t>
         <t>
           <list style="symbols">
-            <t>A "fingerprints" field whose value is an array of fingerprint descriptors.</t>
-            <t>An "expires" field whose value is the number of seconds after which the TLS client ought to consider the key information to be stale (further explained under <xref target='caching'/>).</t>
+            <t>A "fingerprints" field whose value is a JSON array of fingerprint descriptors.</t>
+            <t>An "expires" field whose value is a JSON number specifying the seconds after which the TLS client ought to consider the key information to be stale (further explained under <xref target='caching'/>).</t>
           </list>
         </t>
         <t>Each included fingerprint descriptor is a JSON object, where each member name is the textual name of a hash function (as listed in <xref target='HASH-NAMES'/>) and its associated value is the base 64 encoded fingerprint hash generated using the named hash function (where the encoding adheres to the definition in Section 4 of <xref target='RFC4648'/> and where the padding bits are set to zero).  Each fingerprint descriptor MUST possess at least one named hash function.</t>
@@ -157,7 +157,7 @@ Content-Length: 134
 ]]></artwork>
           </figure>
         </t>
-        <t>The "expires" value is a hint regarding the expiration of the keying materials. It MUST be a non-negative number. If no "expires" field is included or its value is less than 1, a TLS client SHOULD consider these verification materials invalid.  See <xref target='caching'/> for how to reconcile this "expires" field with the reference's "expires" field.</t>
+        <t>The "expires" value is a hint regarding the expiration of the keying materials. It MUST be a non-negative integer. If no "expires" field is included or its value is less than 1, a TLS client SHOULD consider these verification materials invalid.  See <xref target='caching'/> for how to reconcile this "expires" field with the reference's "expires" field.</t>
       </section>
 
       <section title="Source Domain References PKIX Certificate" anchor="prooftype-ref">
@@ -165,7 +165,7 @@ Content-Length: 134
         <t>
           <list style='symbols'>
             <t>A "url" field whose value is the HTTPS URL where TLS clients can obtain the actual certificate information.</t>
-            <t>An "expires" field whose value is the number of seconds after which the TLS client ought to consider the delegation to be stale (further explained under <xref target='caching'/>).</t>
+            <t>An "expires" field whose value is a JSON number specifying the number of seconds after which the TLS client ought to consider the delegation to be stale (further explained under <xref target='caching'/>).</t>
           </list>
         </t>
         <t>
@@ -186,7 +186,7 @@ Content-Length: 79
         <t>The client performs an HTTPS GET for the URL specified in the "url" field value.  The HTTPS server for the URL to which the client has been redirected responds to the request with a JSON document containing fingerprints as described in <xref target='prooftype-possess'/>.  The content retrieved from the "url" location MUST NOT itself be a reference (i.e., containing a "url" field instead of a "fingerprints" field), in order to prevent circular delegations.</t>
         <t><list style='empty'><t>Note: The JSON document returned by the source domain HTTPS server MUST contain either a reference or a fingerprints document, but MUST NOT contain both.</t></list></t>
         <t><list style='empty'><t>Note: See <xref target='security'/> for discussion about HTTPS redirects.</t></list></t>
-        <t>The "expires" value is a hint regarding the expiration of the source domain's delegation of service to the delegated domain. It MUST be a non-negative number. If no "expires" field is included or its value is less than 1, a TLS client SHOULD consider the delegation invalid.  See <xref target='caching'/> for guidelines about reconciling this "expires" field with the "expires" field of the fingerprints document.</t>
+        <t>The "expires" value is a hint regarding the expiration of the source domain's delegation of service to the delegated domain. It MUST be a non-negative integer. If no "expires" field is included or its value is less than 1, a TLS client SHOULD consider the delegation invalid.  See <xref target='caching'/> for guidelines about reconciling this "expires" field with the "expires" field of the fingerprints document.</t>
       </section>
       
       <section title="Performing Verification" anchor="prooftype-verify">

@@ -10,7 +10,7 @@ Expires: April 13, 2015                                             &yet
 
 
                       PKIX over Secure HTTP (POSH)
-                        draft-ietf-xmpp-posh-01
+                        draft-ietf-xmpp-posh-02
 
 Abstract
 
@@ -266,12 +266,12 @@ Internet-Draft                    POSH                      October 2014
    and the message body set to a JSON document [RFC7159]; the document
    is a JSON object which MUST have the following:
 
-   o  A "fingerprints" field whose value is an array of fingerprint
+   o  A "fingerprints" field whose value is a JSON array of fingerprint
       descriptors.
 
-   o  An "expires" field whose value is the number of seconds after
-      which the TLS client ought to consider the key information to be
-      stale (further explained under Section 6).
+   o  An "expires" field whose value is a JSON number specifying the
+      seconds after which the TLS client ought to consider the key
+      information to be stale (further explained under Section 6).
 
 
 
@@ -316,7 +316,7 @@ Internet-Draft                    POSH                      October 2014
 
 
    The "expires" value is a hint regarding the expiration of the keying
-   materials.  It MUST be a non-negative number.  If no "expires" field
+   materials.  It MUST be a non-negative integer.  If no "expires" field
    is included or its value is less than 1, a TLS client SHOULD consider
    these verification materials invalid.  See Section 6 for how to
    reconcile this "expires" field with the reference's "expires" field.
@@ -338,9 +338,9 @@ Miller & Saint-Andre     Expires April 13, 2015                 [Page 6]
 Internet-Draft                    POSH                      October 2014
 
 
-   o  An "expires" field whose value is the number of seconds after
-      which the TLS client ought to consider the delegation to be stale
-      (further explained under Section 6).
+   o  An "expires" field whose value is a JSON number specifying the
+      number of seconds after which the TLS client ought to consider the
+      delegation to be stale (further explained under Section 6).
 
    Example Reference Response
 
@@ -369,7 +369,7 @@ Internet-Draft                    POSH                      October 2014
 
    The "expires" value is a hint regarding the expiration of the source
    domain's delegation of service to the delegated domain.  It MUST be a
-   non-negative number.  If no "expires" field is included or its value
+   non-negative integer.  If no "expires" field is included or its value
    is less than 1, a TLS client SHOULD consider the delegation invalid.
    See Section 6 for guidelines about reconciling this "expires" field
    with the "expires" field of the fingerprints document.
