@@ -29,7 +29,7 @@
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="2"?>
-<rfc category="std" docName="draft-ietf-xmpp-posh-01" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-xmpp-posh-02" ipr="trust200902">
   <front>
     <title abbrev="POSH">PKIX over Secure HTTP (POSH)</title>
     <author initials="M." surname="Miller" fullname="Matthew Miller">
@@ -157,7 +157,7 @@ Content-Length: 134
 ]]></artwork>
           </figure>
         </t>
-        <t>The "expires" value is a hint regarding the expiration of the keying materials.  If no "expires" field is included, a TLS client SHOULD consider these verification materials invalid.  See <xref target='caching'/> for how to reconcile this "expires" field with the reference's "expires" field.</t>
+        <t>The "expires" value is a hint regarding the expiration of the keying materials. It MUST be a non-negative number. If no "expires" field is included or its value is less than 1, a TLS client SHOULD consider these verification materials invalid.  See <xref target='caching'/> for how to reconcile this "expires" field with the reference's "expires" field.</t>
       </section>
 
       <section title="Source Domain References PKIX Certificate" anchor="prooftype-ref">
@@ -186,7 +186,7 @@ Content-Length: 79
         <t>The client performs an HTTPS GET for the URL specified in the "url" field value.  The HTTPS server for the URL to which the client has been redirected responds to the request with a JSON document containing fingerprints as described in <xref target='prooftype-possess'/>.  The content retrieved from the "url" location MUST NOT itself be a reference (i.e., containing a "url" field instead of a "fingerprints" field), in order to prevent circular delegations.</t>
         <t><list style='empty'><t>Note: The JSON document returned by the source domain HTTPS server MUST contain either a reference or a fingerprints document, but MUST NOT contain both.</t></list></t>
         <t><list style='empty'><t>Note: See <xref target='security'/> for discussion about HTTPS redirects.</t></list></t>
-        <t>The "expires" value is a hint regarding the expiration of the source domain's delegation of service to the delegated domain.  If no "expires" field is included, a TLS client SHOULD consider the delegation invalid.  See <xref target='caching'/> for guidelines about reconciling this "expires" field with the "expires" field of the fingerprints document.</t>
+        <t>The "expires" value is a hint regarding the expiration of the source domain's delegation of service to the delegated domain. It MUST be a non-negative number. If no "expires" field is included or its value is less than 1, a TLS client SHOULD consider the delegation invalid.  See <xref target='caching'/> for guidelines about reconciling this "expires" field with the "expires" field of the fingerprints document.</t>
       </section>
       
       <section title="Performing Verification" anchor="prooftype-verify">
