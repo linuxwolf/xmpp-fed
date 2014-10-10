@@ -317,7 +317,7 @@ Internet-Draft                    POSH                      October 2014
 
    The "expires" value is a hint regarding the expiration of the keying
    materials.  It MUST be a non-negative integer.  If no "expires" field
-   is included or its value is less than 1, a TLS client SHOULD consider
+   is included or its value is equal to 0, a TLS client SHOULD consider
    these verification materials invalid.  See Section 6 for how to
    reconcile this "expires" field with the reference's "expires" field.
 
@@ -370,7 +370,7 @@ Internet-Draft                    POSH                      October 2014
    The "expires" value is a hint regarding the expiration of the source
    domain's delegation of service to the delegated domain.  It MUST be a
    non-negative integer.  If no "expires" field is included or its value
-   is less than 1, a TLS client SHOULD consider the delegation invalid.
+   is equal to 0, a TLS client SHOULD consider the delegation invalid.
    See Section 6 for guidelines about reconciling this "expires" field
    with the "expires" field of the fingerprints document.
 
