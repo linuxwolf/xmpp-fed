@@ -11,7 +11,7 @@ Expires: April 14, 2015                              Cisco Systems, Inc.
 
 Domain Name Associations (DNA) in the Extensible Messaging and Presence
                             Protocol (XMPP)
-                         draft-ietf-xmpp-dna-06
+                         draft-ietf-xmpp-dna-07
 
 Abstract
 
