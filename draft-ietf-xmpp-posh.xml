@@ -48,14 +48,8 @@
     <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
       <organization>&amp;yet</organization>
       <address>
-        <postal>
-          <street>P.O. Box 787</street>
-          <city>Parker</city>
-          <region>CO</region>
-          <code>80134</code>
-          <country>USA</country>
-        </postal>
         <email>peter@andyet.com</email>
+        <uri>https://andyet.com/</uri>
       </address>
     </author>
     <date/>

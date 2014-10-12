@@ -74,14 +74,8 @@
   <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
     <organization>&amp;yet</organization>
     <address>
-      <postal>
-        <street>P.O. Box 787</street>
-        <city>Parker</city>
-        <region>CO</region>
-        <code>80134</code>
-        <country>USA</country>
-      </postal>
       <email>peter@andyet.com</email>
+      <uri>https://andyet.com/</uri>
     </address>
   </author>
 
@@ -161,15 +155,6 @@
   </section>
 
   <section anchor="dns" title="DNS Checks">
-
-   <t>Developers of application clients that depend on DANE-SRV often 
-   would like to prepare as quickly as possible for making a connection 
-   to the intended service, thus reducing the wait time for end users.
-   To make this possible, a DNS library might perform the SRV queries, 
-   address queries, and TLSA queries in parallel (although the TLSA 
-   records are not usable if the address records are not secure, 
-   performing the TLSA queries in parallel is not harmful from a
-   security perspective).</t>
 
    <section title="SRV Query">
 
@@ -330,7 +315,7 @@ _9143._tcp.imap.example.net. IN TLSA ?
   </section>
   </section>
 
-  <section title="Guidance for Application Protocols">
+  <section title="Guidance for Protocol Authors">
 
    <t>This document describes how to use DANE with application protocols
    in which target servers are discovered via SRV records. Although
@@ -397,6 +382,20 @@ _9143._tcp.imap.example.net. IN TLSA ?
      the target server host name.  However, the server determines what
      certificate to present in the TLS handshake; e.g., the presented
      certificate might only authenticate the target server host name.</t>
+
+  </section>
+
+  <section title="Guidance for Application Developers">
+
+   <t>Developers of application clients that depend on DANE-SRV often 
+   would like to prepare as quickly as possible for making a connection 
+   to the intended service, thus reducing the wait time for end users.
+   To make this optimization possible, a DNS library might perform the 
+   SRV queries, address queries, and TLSA queries in parallel (because a 
+   TLSA record can be ignored if it turns out that the address record on 
+   which it depends is not secure, performing the TLSA queries in 
+   parallel with the SRV queries and address queries is not harmful 
+   from a security perspective and can yield some operational benefits).</t>
 
   </section>
 

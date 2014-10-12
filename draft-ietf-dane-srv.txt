@@ -5,10 +5,10 @@
 DNS-Based Authentication of Named Entities (DANE)               T. Finch
 Internet-Draft                                   University of Cambridge
 Intended status: Standards Track                               M. Miller
-Expires: February 20, 2015                           Cisco Systems, Inc.
+Expires: April 14, 2015                              Cisco Systems, Inc.
                                                           P. Saint-Andre
                                                                     &yet
-                                                         August 19, 2014
+                                                        October 11, 2014
 
 
   Using DNS-Based Authentication of Named Entities (DANE) TLSA Records
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on February 20, 2015.
+   This Internet-Draft will expire on April 14, 2015.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Finch, et al.           Expires February 20, 2015               [Page 1]
+Finch, et al.            Expires April 14, 2015                 [Page 1]
 
-Internet-Draft                TLSA and SRV                   August 2014
+Internet-Draft                TLSA and SRV                  October 2014
 
 
    publication of this document.  Please review these documents
@@ -70,25 +70,26 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   2
    2.  Terminology . . . . . . . . . . . . . . . . . . . . . . . . .   3
    3.  DNS Checks  . . . . . . . . . . . . . . . . . . . . . . . . .   3
-     3.1.  SRV Query . . . . . . . . . . . . . . . . . . . . . . . .   4
+     3.1.  SRV Query . . . . . . . . . . . . . . . . . . . . . . . .   3
      3.2.  Address Queries . . . . . . . . . . . . . . . . . . . . .   4
-     3.3.  TLSA Queries  . . . . . . . . . . . . . . . . . . . . . .   5
+     3.3.  TLSA Queries  . . . . . . . . . . . . . . . . . . . . . .   4
      3.4.  Impact on TLS Usage . . . . . . . . . . . . . . . . . . .   5
    4.  TLS Checks  . . . . . . . . . . . . . . . . . . . . . . . . .   5
      4.1.  SRV Records Only  . . . . . . . . . . . . . . . . . . . .   5
      4.2.  TLSA Records  . . . . . . . . . . . . . . . . . . . . . .   6
-   5.  Guidance for Application Protocols  . . . . . . . . . . . . .   7
+   5.  Guidance for Protocol Authors . . . . . . . . . . . . . . . .   6
    6.  Guidance for Server Operators . . . . . . . . . . . . . . . .   7
-   7.  Internationalization Considerations . . . . . . . . . . . . .   8
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
-   9.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
-     9.1.  Mixed Security Status . . . . . . . . . . . . . . . . . .   8
-     9.2.  A Service Domain Trusts its Servers . . . . . . . . . . .   8
-     9.3.  Certificate Subject Name Matching . . . . . . . . . . . .   9
-   10. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   9
-   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
-     11.1.  Normative References . . . . . . . . . . . . . . . . . .   9
-     11.2.  Informative References . . . . . . . . . . . . . . . . .  10
+   7.  Guidance for Application Developers . . . . . . . . . . . . .   8
+   8.  Internationalization Considerations . . . . . . . . . . . . .   8
+   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
+   10. Security Considerations . . . . . . . . . . . . . . . . . . .   8
+     10.1.  Mixed Security Status  . . . . . . . . . . . . . . . . .   8
+     10.2.  A Service Domain Trusts its Servers  . . . . . . . . . .   8
+     10.3.  Certificate Subject Name Matching  . . . . . . . . . . .   9
+   11. Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   9
+   12. References  . . . . . . . . . . . . . . . . . . . . . . . . .   9
+     12.1.  Normative References . . . . . . . . . . . . . . . . . .   9
+     12.2.  Informative References . . . . . . . . . . . . . . . . .  10
    Appendix A.  Examples . . . . . . . . . . . . . . . . . . . . . .  11
      A.1.  IMAP  . . . . . . . . . . . . . . . . . . . . . . . . . .  11
      A.2.  XMPP  . . . . . . . . . . . . . . . . . . . . . . . . . .  11
@@ -104,16 +105,17 @@ Table of Contents
    TLS and DTLS with host names" (see the last paragraph of section 1.2
    of [RFC6698]).
 
+
+
+
+
+Finch, et al.            Expires April 14, 2015                 [Page 2]
+
+Internet-Draft                TLSA and SRV                  October 2014
+
+
    Some application protocols do not use host names directly; instead,
    they use a service domain, and the relevant target server host names
-
-
-
-Finch, et al.           Expires February 20, 2015               [Page 2]
-
-Internet-Draft                TLSA and SRV                   August 2014
-
-
    are located indirectly via SRV records [RFC2782].  Because of this
    intermediate resolution step, the normal DANE rules specified in
    [RFC6698] cannot be applied to protocols that use SRV records.
@@ -154,27 +156,19 @@ Internet-Draft                TLSA and SRV                   August 2014
 
 3.  DNS Checks
 
-   Developers of application clients that depend on DANE-SRV often would
-   like to prepare as quickly as possible for making a connection to the
-   intended service, thus reducing the wait time for end users.  To make
-   this possible, a DNS library might perform the SRV queries, address
-   queries, and TLSA queries in parallel (although the TLSA records are
-   not usable if the address records are not secure, performing the TLSA
-   queries in parallel is not harmful from a security perspective).
-
-
-
-
-Finch, et al.           Expires February 20, 2015               [Page 3]
-
-Internet-Draft                TLSA and SRV                   August 2014
-
-
 3.1.  SRV Query
 
    When the client makes an SRV query, a successful result will
    typically be a list of one or more SRV records (or possibly a chain
    of CNAME / DNAME aliases leading to such a list).
+
+
+
+
+Finch, et al.            Expires April 14, 2015                 [Page 3]
+
+Internet-Draft                TLSA and SRV                  October 2014
+
 
    For this specification to apply, the entire DNS RRset that is
    returned MUST be "secure" according to DNSSSEC validation ([RFC4033]
@@ -214,18 +208,6 @@ Internet-Draft                TLSA and SRV                   August 2014
       connect to this target server; instead it uses the next most
       appropriate SRV target.
 
-
-
-
-
-
-
-
-Finch, et al.           Expires February 20, 2015               [Page 4]
-
-Internet-Draft                TLSA and SRV                   August 2014
-
-
 3.3.  TLSA Queries
 
    The client SHALL construct the TLSA query name as described in
@@ -235,6 +217,14 @@ Internet-Draft                TLSA and SRV                   August 2014
 
    For example, the following SRV record for IMAP (see [RFC6186]) leads
    to the TLSA query shown below:
+
+
+
+
+Finch, et al.            Expires April 14, 2015                 [Page 4]
+
+Internet-Draft                TLSA and SRV                  October 2014
+
 
    _imap._tcp.example.com. 86400 IN SRV 10 0 9143 imap.example.net.
 
@@ -273,15 +263,6 @@ Internet-Draft                TLSA and SRV                   August 2014
    rules [RFC5280] or protocol-specific rules (e.g., following
    [RFC6125]) without further input from the TLSA records.
 
-
-
-
-
-Finch, et al.           Expires February 20, 2015               [Page 5]
-
-Internet-Draft                TLSA and SRV                   August 2014
-
-
    In this case, the client uses the information in the server
    certificate and the DNSSEC validation status of the SRV query in its
    authentication checks.  It SHOULD use the Server Name Indication
@@ -293,6 +274,14 @@ Internet-Draft                TLSA and SRV                   August 2014
    [RFC6125], using a list of reference identifiers constructed as
    follows (note again that in RFC 6125 the terms "source domain" and
    "derived domain" refer to the same things as "service domain" and
+
+
+
+Finch, et al.            Expires April 14, 2015                 [Page 5]
+
+Internet-Draft                TLSA and SRV                  October 2014
+
+
    "target server host name" in this document).  The examples below
    assume a service domain of "im.example.com" and a target server host
    name of "xmpp23.hosting.example.net".
@@ -327,18 +316,7 @@ Internet-Draft                TLSA and SRV                   August 2014
    authentication checks (e.g., reference identifier, key usage,
    expiration, issuance) MUST be ignored or omitted.
 
-
-
-
-
-
-
-Finch, et al.           Expires February 20, 2015               [Page 6]
-
-Internet-Draft                TLSA and SRV                   August 2014
-
-
-5.  Guidance for Application Protocols
+5.  Guidance for Protocol Authors
 
    This document describes how to use DANE with application protocols in
    which target servers are discovered via SRV records.  Although this
@@ -349,6 +327,16 @@ Internet-Draft                TLSA and SRV                   August 2014
    o  Fallback logic in the event that a client is unable to connect
       securely to a target server by following the procedures defined in
       this document.
+
+
+
+
+
+
+Finch, et al.            Expires April 14, 2015                 [Page 6]
+
+Internet-Draft                TLSA and SRV                  October 2014
+
 
    o  How clients ought to behave if they do not support SRV lookups, or
       if clients that support SRV lookups encounter service domains that
@@ -385,15 +373,6 @@ Internet-Draft                TLSA and SRV                   August 2014
    o  the service domain name (the "source domain" in [RFC6125] terms,
       which is the SRV query domain); and/or
 
-
-
-
-
-Finch, et al.           Expires February 20, 2015               [Page 7]
-
-Internet-Draft                TLSA and SRV                   August 2014
-
-
    o  the target server host name (the "derived domain" in [RFC6125]
       terms, which is the SRV target).
 
@@ -408,18 +387,37 @@ Internet-Draft                TLSA and SRV                   August 2014
    the presented certificate might only authenticate the target server
    host name.
 
-7.  Internationalization Considerations
+
+
+Finch, et al.            Expires April 14, 2015                 [Page 7]
+
+Internet-Draft                TLSA and SRV                  October 2014
+
+
+7.  Guidance for Application Developers
+
+   Developers of application clients that depend on DANE-SRV often would
+   like to prepare as quickly as possible for making a connection to the
+   intended service, thus reducing the wait time for end users.  To make
+   this optimization possible, a DNS library might perform the SRV
+   queries, address queries, and TLSA queries in parallel (because a
+   TLSA record can be ignored if it turns out that the address record on
+   which it depends is not secure, performing the TLSA queries in
+   parallel with the SRV queries and address queries is not harmful from
+   a security perspective and can yield some operational benefits).
+
+8.  Internationalization Considerations
 
    If any of the DNS queries are for an internationalized domain name,
    then they need to use the A-label form [RFC5890].
 
-8.  IANA Considerations
+9.  IANA Considerations
 
    No IANA action is required.
 
-9.  Security Considerations
+10.  Security Considerations
 
-9.1.  Mixed Security Status
+10.1.  Mixed Security Status
 
    We do not specify that clients checking all of a service domain's
    target server host names are consistent in whether they have or do
@@ -434,7 +432,7 @@ Internet-Draft                TLSA and SRV                   August 2014
    completely; a partial deployment is not secure and we make no special
    effort to support it.
 
-9.2.  A Service Domain Trusts its Servers
+10.2.  A Service Domain Trusts its Servers
 
    By signing their zone with DNSSEC, service domain operators
    implicitly instruct their clients to check their server TLSA records.
@@ -442,18 +440,17 @@ Internet-Draft                TLSA and SRV                   August 2014
    domain holders and their server operators.  Most of the setup
    requirements for this protocol fall on the server operator:
    installing a TLS certificate with the correct name (where necessary),
-
-
-
-Finch, et al.           Expires February 20, 2015               [Page 8]
-
-Internet-Draft                TLSA and SRV                   August 2014
-
-
    and publishing a TLSA record for that certificate.  If these are not
    correct then connections from TLSA-aware clients might fail.
 
-9.3.  Certificate Subject Name Matching
+
+
+Finch, et al.            Expires April 14, 2015                 [Page 8]
+
+Internet-Draft                TLSA and SRV                  October 2014
+
+
+10.3.  Certificate Subject Name Matching
 
    Section 4 of the TLSA specification [RFC6698] leaves the details of
    checking names in certificates to higher level application protocols,
@@ -474,7 +471,7 @@ Internet-Draft                TLSA and SRV                   August 2014
    expected reference identifiers to ensure that the certificate was
    issued by the CA to the server the client expects.
 
-10.  Acknowledgements
+11.  Acknowledgements
 
    Thanks to Mark Andrews for arguing that authenticating the target
    server host name is the right thing, and that we ought to rely on
@@ -483,9 +480,9 @@ Internet-Draft                TLSA and SRV                   August 2014
    Hector Santos, Jonas Schneider, and Alessandro Vesely for helpful
    suggestions.
 
-11.  References
+12.  References
 
-11.1.  Normative References
+12.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
@@ -498,17 +495,16 @@ Internet-Draft                TLSA and SRV                   August 2014
               Rose, "DNS Security Introduction and Requirements", RFC
               4033, March 2005.
 
-
-
-
-Finch, et al.           Expires February 20, 2015               [Page 9]
-
-Internet-Draft                TLSA and SRV                   August 2014
-
-
    [RFC4035]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Protocol Modifications for the DNS Security
               Extensions", RFC 4035, March 2005.
+
+
+
+Finch, et al.            Expires April 14, 2015                 [Page 9]
+
+Internet-Draft                TLSA and SRV                  October 2014
+
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
@@ -545,28 +541,26 @@ Internet-Draft                TLSA and SRV                   August 2014
               Conversations about DNS-Based Authentication of Named
               Entities (DANE)", RFC 7218, April 2014.
 
-11.2.  Informative References
+12.2.  Informative References
 
    [I-D.ietf-dane-smtp-with-dane]
               Dukhovni, V. and W. Hardaker, "SMTP security via
               opportunistic DANE TLS", draft-ietf-dane-smtp-with-dane-10
               (work in progress), May 2014.
 
-
-
-
-
-
-Finch, et al.           Expires February 20, 2015              [Page 10]
-
-Internet-Draft                TLSA and SRV                   August 2014
-
-
    [I-D.ietf-xmpp-dna]
               Saint-Andre, P. and M. Miller, "Domain Name Associations
               (DNA) in the Extensible Messaging and Presence Protocol
               (XMPP)", draft-ietf-xmpp-dna-05 (work in progress),
               February 2014.
+
+
+
+
+Finch, et al.            Expires April 14, 2015                [Page 10]
+
+Internet-Draft                TLSA and SRV                  October 2014
+
 
    [RFC3403]  Mealling, M., "Dynamic Delegation Discovery System (DDDS)
               Part Three: The Domain Name System (DNS) Database", RFC
@@ -601,23 +595,6 @@ A.1.  IMAP
 
 A.2.  XMPP
 
-
-
-
-
-
-
-
-
-
-
-
-
-Finch, et al.           Expires February 20, 2015              [Page 11]
-
-Internet-Draft                TLSA and SRV                   August 2014
-
-
    ; XMPP domain
    _xmpp-client.example.com. SRV     1 0 5222 im.example.net.
    _xmpp-client.example.com. RRSIG   SRV ...
@@ -632,6 +609,14 @@ Internet-Draft                TLSA and SRV                   August 2014
    ; TLSA resource record
    _5222._tcp.im.example.net.  TLSA   ...
    _5222._tcp.im.example.net.  RRSIG  TLSA ...
+
+
+
+
+Finch, et al.            Expires April 14, 2015                [Page 11]
+
+Internet-Draft                TLSA and SRV                  October 2014
+
 
    XMPP sessions for addresses at example.com are established at
    im.example.net.  Connections to im.example.net port 5222 that use
@@ -666,14 +651,6 @@ Appendix B.  Rationale
    o  Some application protocols, such as SMTP, allow a client to
       perform transactions with multiple service domains in the same
       connection.  It is not in general feasible for the client to
-
-
-
-Finch, et al.           Expires February 20, 2015              [Page 12]
-
-Internet-Draft                TLSA and SRV                   August 2014
-
-
       specify the service domain using TLS SNI when the connection is
       established, and the server might not be able to present a
       certificate that authenticates all possible service domains.  See
@@ -689,6 +666,14 @@ Internet-Draft                TLSA and SRV                   August 2014
 
    This specification does not provide an option to put TLSA records
    under the service domain because that would add complexity without
+
+
+
+Finch, et al.            Expires April 14, 2015                [Page 12]
+
+Internet-Draft                TLSA and SRV                  October 2014
+
+
    providing any benefit, and security protocols are best kept simple.
    As described above, there are real-world cases where authenticating
    the service domain cannot be made to work, so there would be
@@ -716,20 +701,6 @@ Authors' Addresses
    URI:   http://dotat.at/
 
 
-
-
-
-
-
-
-
-
-
-Finch, et al.           Expires February 20, 2015              [Page 13]
-
-Internet-Draft                TLSA and SRV                   August 2014
-
-
    Matthew Miller
    Cisco Systems, Inc.
    1899 Wynkoop Street, Suite 600
@@ -741,11 +712,9 @@ Internet-Draft                TLSA and SRV                   August 2014
 
    Peter Saint-Andre
    &yet
-   P.O. Box 787
-   Parker, CO  80134
-   USA
 
    Email: peter@andyet.com
+   URI:   https://andyet.com/
 
 
 
@@ -756,29 +725,4 @@ Internet-Draft                TLSA and SRV                   August 2014
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Finch, et al.           Expires February 20, 2015              [Page 14]
+Finch, et al.            Expires April 14, 2015                [Page 13]

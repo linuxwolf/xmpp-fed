@@ -5,13 +5,13 @@
 Network Working Group                                     P. Saint-Andre
 Internet-Draft                                                      &yet
 Intended status: Standards Track                               M. Miller
-Expires: December 21, 2014                           Cisco Systems, Inc.
-                                                           June 19, 2014
+Expires: April 14, 2015                              Cisco Systems, Inc.
+                                                        October 11, 2014
 
 
 Domain Name Associations (DNA) in the Extensible Messaging and Presence
                             Protocol (XMPP)
-                         draft-ietf-xmpp-dna-05
+                         draft-ietf-xmpp-dna-06
 
 Abstract
 
@@ -37,7 +37,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 21, 2014.
+   This Internet-Draft will expire on April 14, 2015.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Saint-Andre & Miller    Expires December 21, 2014               [Page 1]
+Saint-Andre & Miller     Expires April 14, 2015                 [Page 1]
 
-Internet-Draft                  XMPP DNA                       June 2014
+Internet-Draft                  XMPP DNA                    October 2014
 
 
    include Simplified BSD License text as described in Section 4.e of
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Saint-Andre & Miller    Expires December 21, 2014               [Page 2]
+Saint-Andre & Miller     Expires April 14, 2015                 [Page 2]
 
-Internet-Draft                  XMPP DNA                       June 2014
+Internet-Draft                  XMPP DNA                    October 2014
 
 
    1.  Generalizes the model currently in use so that additional
@@ -165,9 +165,9 @@ Internet-Draft                  XMPP DNA                       June 2014
 
 
 
-Saint-Andre & Miller    Expires December 21, 2014               [Page 3]
+Saint-Andre & Miller     Expires April 14, 2015                 [Page 3]
 
-Internet-Draft                  XMPP DNA                       June 2014
+Internet-Draft                  XMPP DNA                    October 2014
 
 
                            |
@@ -187,14 +187,14 @@ Internet-Draft                  XMPP DNA                       June 2014
    |                                                    |
    +----------------------------------------------------+
                            |
-         (client establishes DNA for a.example!)
+          (client establishes DNA for a.example)
                            |
 
 3.2.  C2S Description
 
-   To further illustrate the problem, consider the simplified order of
-   events (see [RFC6120] for details) in establishing an XML stream from
-   a client (user@a.exmaple) to a server (a.example):
+   The simplified order of events (see [RFC6120] for details) in
+   establishing an XML stream from a client (user@a.exmaple) to a server
+   (a.example) is as follows:
 
    1.  The client resolves the DNS domain name a.example.
 
@@ -221,9 +221,9 @@ Internet-Draft                  XMPP DNA                       June 2014
 
 
 
-Saint-Andre & Miller    Expires December 21, 2014               [Page 4]
+Saint-Andre & Miller     Expires April 14, 2015                 [Page 4]
 
-Internet-Draft                  XMPP DNA                       June 2014
+Internet-Draft                  XMPP DNA                    October 2014
 
 
 4.  Server-to-Server (S2S) DNA
@@ -260,7 +260,7 @@ Internet-Draft                  XMPP DNA                       June 2014
    |                                               |
    +-----------------------------------------------+
                        |
-       (A establishes DNA for b.example!)
+           (A establishes DNA for b.example)
                        |
    +-------------AUTHENTICATION--------------------+
    |                   |                           |
@@ -277,9 +277,9 @@ Internet-Draft                  XMPP DNA                       June 2014
 
 
 
-Saint-Andre & Miller    Expires December 21, 2014               [Page 5]
+Saint-Andre & Miller     Expires April 14, 2015                 [Page 5]
 
-Internet-Draft                  XMPP DNA                       June 2014
+Internet-Draft                  XMPP DNA                    October 2014
 
 
                        |
@@ -302,7 +302,7 @@ Internet-Draft                  XMPP DNA                       June 2014
    |                                               |
    +-----------------------------------------------+
                        |
-       (B establishes DNA for a.example!)
+           (B establishes DNA for a.example)
                        |
                        |
          (Section 4.4.1: Piggybacking Assertion)
@@ -333,9 +333,9 @@ Internet-Draft                  XMPP DNA                       June 2014
 
 
 
-Saint-Andre & Miller    Expires December 21, 2014               [Page 6]
+Saint-Andre & Miller     Expires April 14, 2015                 [Page 6]
 
-Internet-Draft                  XMPP DNA                       June 2014
+Internet-Draft                  XMPP DNA                    October 2014
 
 
          (Section 4.4.2: Piggybacking Supposition)
@@ -389,9 +389,9 @@ Internet-Draft                  XMPP DNA                       June 2014
 
 
 
-Saint-Andre & Miller    Expires December 21, 2014               [Page 7]
+Saint-Andre & Miller     Expires April 14, 2015                 [Page 7]
 
-Internet-Draft                  XMPP DNA                       June 2014
+Internet-Draft                  XMPP DNA                    October 2014
 
 
        <stream:stream from='b.example' to='a.example'>
@@ -445,9 +445,9 @@ Internet-Draft                  XMPP DNA                       June 2014
 
 
 
-Saint-Andre & Miller    Expires December 21, 2014               [Page 8]
+Saint-Andre & Miller     Expires April 14, 2015                 [Page 8]
 
-Internet-Draft                  XMPP DNA                       June 2014
+Internet-Draft                  XMPP DNA                    October 2014
 
 
        <stream:stream from='b.example' to='a.example'>
@@ -501,9 +501,9 @@ Internet-Draft                  XMPP DNA                       June 2014
 
 
 
-Saint-Andre & Miller    Expires December 21, 2014               [Page 9]
+Saint-Andre & Miller     Expires April 14, 2015                 [Page 9]
 
-Internet-Draft                  XMPP DNA                       June 2014
+Internet-Draft                  XMPP DNA                    October 2014
 
 
    This element functions as Server 2's assertion that it is (also)
@@ -557,9 +557,9 @@ Internet-Draft                  XMPP DNA                       June 2014
 
 
 
-Saint-Andre & Miller    Expires December 21, 2014              [Page 10]
+Saint-Andre & Miller     Expires April 14, 2015                [Page 10]
 
-Internet-Draft                  XMPP DNA                       June 2014
+Internet-Draft                  XMPP DNA                    October 2014
 
 
    rooms.a.example (see [XEP-0045]).  If a user from c.example at Server
@@ -613,9 +613,9 @@ Internet-Draft                  XMPP DNA                       June 2014
 
 
 
-Saint-Andre & Miller    Expires December 21, 2014              [Page 11]
+Saint-Andre & Miller     Expires April 14, 2015                [Page 11]
 
-Internet-Draft                  XMPP DNA                       June 2014
+Internet-Draft                  XMPP DNA                    October 2014
 
 
 5.  Alternative Prooftypes
@@ -669,9 +669,9 @@ Internet-Draft                  XMPP DNA                       June 2014
 
 
 
-Saint-Andre & Miller    Expires December 21, 2014              [Page 12]
+Saint-Andre & Miller     Expires April 14, 2015                [Page 12]
 
-Internet-Draft                  XMPP DNA                       June 2014
+Internet-Draft                  XMPP DNA                    October 2014
 
 
    retrieving the PKIK certificate over HTTPS at a well-known URI
@@ -725,9 +725,9 @@ Internet-Draft                  XMPP DNA                       June 2014
 
 
 
-Saint-Andre & Miller    Expires December 21, 2014              [Page 13]
+Saint-Andre & Miller     Expires April 14, 2015                [Page 13]
 
-Internet-Draft                  XMPP DNA                       June 2014
+Internet-Draft                  XMPP DNA                    October 2014
 
 
    with the DANE prooftype, and the POSH specification
@@ -781,9 +781,9 @@ Internet-Draft                  XMPP DNA                       June 2014
 
 
 
-Saint-Andre & Miller    Expires December 21, 2014              [Page 14]
+Saint-Andre & Miller     Expires April 14, 2015                [Page 14]
 
-Internet-Draft                  XMPP DNA                       June 2014
+Internet-Draft                  XMPP DNA                    October 2014
 
 
    URI suffix: posh._xmpp-server._tcp.json
@@ -811,8 +811,8 @@ Internet-Draft                  XMPP DNA                       June 2014
 
    [I-D.ietf-xmpp-posh]
               Miller, M. and P. Saint-Andre, "PKIX over Secure HTTP
-              (POSH)", draft-ietf-xmpp-posh-00 (work in progress),
-              February 2014.
+              (POSH)", draft-ietf-xmpp-posh-01 (work in progress), June
+              2014.
 
    [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
               STD 13, RFC 1034, November 1987.
@@ -837,9 +837,9 @@ Internet-Draft                  XMPP DNA                       June 2014
 
 
 
-Saint-Andre & Miller    Expires December 21, 2014              [Page 15]
+Saint-Andre & Miller     Expires April 14, 2015                [Page 15]
 
-Internet-Draft                  XMPP DNA                       June 2014
+Internet-Draft                  XMPP DNA                    October 2014
 
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
@@ -893,20 +893,18 @@ Appendix A.  Acknowledgements
 
 
 
-Saint-Andre & Miller    Expires December 21, 2014              [Page 16]
+Saint-Andre & Miller     Expires April 14, 2015                [Page 16]
 
-Internet-Draft                  XMPP DNA                       June 2014
+Internet-Draft                  XMPP DNA                    October 2014
 
 
 Authors' Addresses
 
    Peter Saint-Andre
    &yet
-   P.O. Box 787
-   Parker, CO  80134
-   USA
 
    Email: peter@andyet.com
+   URI:   https://andyet.com/
 
 
    Matthew Miller
@@ -949,4 +947,6 @@ Authors' Addresses
 
 
 
-Saint-Andre & Miller    Expires December 21, 2014              [Page 17]
+
+
+Saint-Andre & Miller     Expires April 14, 2015                [Page 17]

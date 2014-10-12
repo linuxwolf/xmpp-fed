@@ -5,7 +5,7 @@
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="3"?>
-<rfc category="std" docName="draft-ietf-xmpp-dna-05" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-xmpp-dna-06" ipr="trust200902">
 
   <front>
     <title abbrev="XMPP DNA">Domain Name Associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP)</title>
@@ -13,14 +13,8 @@
     <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
       <organization>&amp;yet</organization>
       <address>
-        <postal>
-          <street>P.O. Box 787</street>
-          <city>Parker</city>
-          <region>CO</region>
-          <code>80134</code>
-          <country>USA</country>
-        </postal>
         <email>peter@andyet.com</email>
+        <uri>https://andyet.com/</uri>
       </address>
     </author>
 
@@ -97,13 +91,13 @@
 |                                                    |
 +----------------------------------------------------+
                         |
-      (client establishes DNA for a.example!)
+       (client establishes DNA for a.example)
                         |
           ]]></artwork>
         </figure>
       </section>
       <section title="C2S Description" anchor="c2s-description">
-        <t>To further illustrate the problem, consider the simplified order of events (see <xref target='RFC6120'/> for details) in establishing an XML stream from a client (user@a.exmaple) to a server (a.example):</t>
+        <t>The simplified order of events (see <xref target='RFC6120'/> for details) in establishing an XML stream from a client (user@a.exmaple) to a server (a.example) is as follows:</t>
         <t>
           <list style='numbers'>
             <t>The client resolves the DNS domain name a.example.</t>
@@ -153,7 +147,7 @@
 |                                               |
 +-----------------------------------------------+
                     |
-    (A establishes DNA for b.example!)
+        (A establishes DNA for b.example)
                     |
 +-------------AUTHENTICATION--------------------+
 |                   |                           |
@@ -187,7 +181,7 @@
 |                                               |
 +-----------------------------------------------+
                     |
-    (B establishes DNA for a.example!)
+        (B establishes DNA for a.example)
                     |
                     |
       (Section 4.4.1: Piggybacking Assertion)
@@ -483,13 +477,13 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
           <author initials="P" surname="Saint-Andre" fullname="Peter Saint-Andre">
             <organization/>
           </author>
-          <date month="February" year="2014"/>
+          <date month="June" day="19" year="2014"/>
           <abstract>
-            <t>Experience has shown that it is extremely difficult to deploy proper PKIX certificates for TLS in multi-tenanted environments, since certification authorities will not issue certificates for hosted domains to hosting services, hosted domains do not want hosting services to hold their private keys, and hosting services wish to avoid liability for holding those keys.  As a result, domains hosted in multi-tenanted environments often deploy non-HTTP applications such as email and instant messaging using certificates that identify the hosting service, not the hosted domain.  Such deployments force end users and peer services to accept a certificate with an improper identifier, resulting in obvious security implications.  This document defines two methods that make it easier to deploy certificates for proper server identity checking in non-HTTP application protocols.  The first method enables the TLS client associated with a user agent or peer application server to obtain the end-entity certificate of a hosted domain over secure HTTP as an alternative to standard PKIX techniques.  The second method enables a hosted domain to securely delegate a non-HTTP application to a hosting service using redirects provided by HTTPS itself or by a pointer in a file served over HTTPS at the hosted domain.  While this approach is developed for use in the Extensible Messaging and Presence Protocol (XMPP) as a Domain Name Association prooftype, it can be applied to any non-HTTP application protocol.</t>
+            <t>Experience has shown that it is extremely difficult to deploy proper PKIX certificates for TLS in multi-tenanted environments, since certification authorities will not issue certificates for hosted domains to hosting services, hosted domains do not want hosting services to hold their private keys, and hosting services wish to avoid liability for holding those keys.  As a result, domains hosted in multi-tenanted environments often deploy non-HTTP applications such as email and instant messaging using certificates that identify the hosting service, not the hosted domain.  Such deployments force end users and peer services to accept a certificate with an improper identifier, resulting in obvious security implications.  This document defines two methods that make it easier to deploy certificates for proper server identity checking in non-HTTP application protocols.  The first method enables the TLS client associated with a user agent or peer application server to obtain the end-entity certificate of a hosted domain over secure HTTP as an alternative to standard PKIX techniques.  The second method enables a hosted domain to securely delegate a non-HTTP application to a hosting service using redirects provided by HTTPS itself or by a pointer in a file served over HTTPS at the hosted domain.  While this approach was developed for use in the Extensible Messaging and Presence Protocol (XMPP) as a Domain Name Association prooftype, it can be applied to any non-HTTP application protocol.</t>
           </abstract>
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-xmpp-posh-00"/>
-        <format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-xmpp-posh-00.txt"/>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-xmpp-posh-01"/>
+        <format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-xmpp-posh-01.txt"/>
       </reference>
       <reference anchor="RFC1034">
         <front>
