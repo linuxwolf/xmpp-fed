@@ -5,10 +5,10 @@
 DNS-Based Authentication of Named Entities (DANE)               T. Finch
 Internet-Draft                                   University of Cambridge
 Intended status: Standards Track                               M. Miller
-Expires: April 14, 2015                              Cisco Systems, Inc.
+Expires: April 24, 2015                              Cisco Systems, Inc.
                                                           P. Saint-Andre
                                                                     &yet
-                                                        October 11, 2014
+                                                        October 21, 2014
 
 
   Using DNS-Based Authentication of Named Entities (DANE) TLSA Records
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 14, 2015.
+   This Internet-Draft will expire on April 24, 2015.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Finch, et al.            Expires April 14, 2015                 [Page 1]
+Finch, et al.            Expires April 24, 2015                 [Page 1]
 
 Internet-Draft                TLSA and SRV                  October 2014
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Finch, et al.            Expires April 14, 2015                 [Page 2]
+Finch, et al.            Expires April 24, 2015                 [Page 2]
 
 Internet-Draft                TLSA and SRV                  October 2014
 
@@ -160,15 +160,18 @@ Internet-Draft                TLSA and SRV                  October 2014
 
    When the client makes an SRV query, a successful result will
    typically be a list of one or more SRV records (or possibly a chain
-   of CNAME / DNAME aliases leading to such a list).
+   of CNAME / DNAME aliases leading to such a list).  Implementers need
+   to be aware that unsuccessful results can occur because of various
 
 
 
-
-Finch, et al.            Expires April 14, 2015                 [Page 3]
+Finch, et al.            Expires April 24, 2015                 [Page 3]
 
 Internet-Draft                TLSA and SRV                  October 2014
 
+
+   DNS-related errors; a helpful summary can be found in section 2.1 of
+   [I-D.ietf-dane-smtp-with-dane].
 
    For this specification to apply, the entire DNS RRset that is
    returned MUST be "secure" according to DNSSSEC validation ([RFC4033]
@@ -215,16 +218,16 @@ Internet-Draft                TLSA and SRV                  October 2014
    from the SRV RDATA, the protocol from the SRV query name, and the
    TLSA base domain set to the SRV target server host name.
 
-   For example, the following SRV record for IMAP (see [RFC6186]) leads
-   to the TLSA query shown below:
 
 
 
-
-Finch, et al.            Expires April 14, 2015                 [Page 4]
+Finch, et al.            Expires April 24, 2015                 [Page 4]
 
 Internet-Draft                TLSA and SRV                  October 2014
 
+
+   For example, the following SRV record for IMAP (see [RFC6186]) leads
+   to the TLSA query shown below:
 
    _imap._tcp.example.com. 86400 IN SRV 10 0 9143 imap.example.net.
 
@@ -271,17 +274,17 @@ Internet-Draft                TLSA and SRV                  October 2014
    'to' address of the initial stream header).  The preferred name SHALL
    be chosen as follows, and the client SHALL verify the identity
    asserted by the server's certificate according to section 6 of
-   [RFC6125], using a list of reference identifiers constructed as
-   follows (note again that in RFC 6125 the terms "source domain" and
-   "derived domain" refer to the same things as "service domain" and
 
 
 
-Finch, et al.            Expires April 14, 2015                 [Page 5]
+Finch, et al.            Expires April 24, 2015                 [Page 5]
 
 Internet-Draft                TLSA and SRV                  October 2014
 
 
+   [RFC6125], using a list of reference identifiers constructed as
+   follows (note again that in RFC 6125 the terms "source domain" and
+   "derived domain" refer to the same things as "service domain" and
    "target server host name" in this document).  The examples below
    assume a service domain of "im.example.com" and a target server host
    name of "xmpp23.hosting.example.net".
@@ -330,10 +333,7 @@ Internet-Draft                TLSA and SRV                  October 2014
 
 
 
-
-
-
-Finch, et al.            Expires April 14, 2015                 [Page 6]
+Finch, et al.            Expires April 24, 2015                 [Page 6]
 
 Internet-Draft                TLSA and SRV                  October 2014
 
@@ -389,7 +389,7 @@ Internet-Draft                TLSA and SRV                  October 2014
 
 
 
-Finch, et al.            Expires April 14, 2015                 [Page 7]
+Finch, et al.            Expires April 24, 2015                 [Page 7]
 
 Internet-Draft                TLSA and SRV                  October 2014
 
@@ -445,7 +445,7 @@ Internet-Draft                TLSA and SRV                  October 2014
 
 
 
-Finch, et al.            Expires April 14, 2015                 [Page 8]
+Finch, et al.            Expires April 24, 2015                 [Page 8]
 
 Internet-Draft                TLSA and SRV                  October 2014
 
@@ -501,7 +501,7 @@ Internet-Draft                TLSA and SRV                  October 2014
 
 
 
-Finch, et al.            Expires April 14, 2015                 [Page 9]
+Finch, et al.            Expires April 24, 2015                 [Page 9]
 
 Internet-Draft                TLSA and SRV                  October 2014
 
@@ -545,8 +545,8 @@ Internet-Draft                TLSA and SRV                  October 2014
 
    [I-D.ietf-dane-smtp-with-dane]
               Dukhovni, V. and W. Hardaker, "SMTP security via
-              opportunistic DANE TLS", draft-ietf-dane-smtp-with-dane-10
-              (work in progress), May 2014.
+              opportunistic DANE TLS", draft-ietf-dane-smtp-with-dane-05
+              (work in progress), February 2014.
 
    [I-D.ietf-xmpp-dna]
               Saint-Andre, P. and M. Miller, "Domain Name Associations
@@ -557,7 +557,7 @@ Internet-Draft                TLSA and SRV                  October 2014
 
 
 
-Finch, et al.            Expires April 14, 2015                [Page 10]
+Finch, et al.            Expires April 24, 2015                [Page 10]
 
 Internet-Draft                TLSA and SRV                  October 2014
 
@@ -613,7 +613,7 @@ A.2.  XMPP
 
 
 
-Finch, et al.            Expires April 14, 2015                [Page 11]
+Finch, et al.            Expires April 24, 2015                [Page 11]
 
 Internet-Draft                TLSA and SRV                  October 2014
 
@@ -669,7 +669,7 @@ Appendix B.  Rationale
 
 
 
-Finch, et al.            Expires April 14, 2015                [Page 12]
+Finch, et al.            Expires April 24, 2015                [Page 12]
 
 Internet-Draft                TLSA and SRV                  October 2014
 
@@ -725,4 +725,4 @@ Authors' Addresses
 
 
 
-Finch, et al.            Expires April 14, 2015                [Page 13]
+Finch, et al.            Expires April 24, 2015                [Page 13]

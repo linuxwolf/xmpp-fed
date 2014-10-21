@@ -160,7 +160,10 @@
 
     <t>When the client makes an SRV query, a successful result will
      typically be a list of one or more SRV records (or possibly a chain of
-     CNAME / DNAME aliases leading to such a list).</t>
+     CNAME / DNAME aliases leading to such a list).  Implementers need to
+     be aware that unsuccessful results can occur because of various
+     DNS-related errors; a helpful summary can be found in section 2.1 of
+     <xref target="I-D.ietf-dane-smtp-with-dane"/>.</t>
 
     <t>For this specification to apply, the entire DNS RRset that is
      returned MUST be "secure" according to DNSSSEC validation
