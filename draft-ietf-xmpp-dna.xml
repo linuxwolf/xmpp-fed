@@ -5,7 +5,7 @@
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="3"?>
-<rfc category="std" docName="draft-ietf-xmpp-dna-07" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-xmpp-dna-08" ipr="trust200902">
 
   <front>
     <title abbrev="XMPP DNA">Domain Name Associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP)</title>
@@ -391,7 +391,14 @@
       </section>
       <section title="POSH" anchor="alternatives-posh">
         <t>In the POSH prooftype, the server's proof consists of a PKIX certificate that is checked according to the rules from <xref target="RFC6120"/> and <xref target="RFC6125"/>, the client's verification material is obtained by retrieving the PKIX certificate over HTTPS at a well-known URI <xref target="RFC5785"/>, and secure DNS is not necessary since the HTTPS retrieval mechanism relies on the chain of trust from the public key infrastructure.</t>
-        <t>POSH is defined in <xref target='I-D.ietf-xmpp-posh'/>.  For XMPP purposes, the well-known URIs <xref target='RFC5785'/> to be used are:</t>
+        <t>POSH is defined in <xref target='I-D.ietf-xmpp-posh'/>.  For XMPP purposes, the following rules apply:</t>
+        <t>
+          <list style='symbols'>
+            <t>If no verification materials are found via POSH, pursue the fallback methods described in <xref target='RFC6120'/>.</t>
+            <t>Use the 'to' address of the initial stream header to determine the domain name of the TLS client's reference identifier (since use of the TLS Server Name Indication is purely discretionary in XMPP, as mentioned in <xref target='RFC6120'/>).</t>
+          </list>
+        </t>
+        <t>The well-known URIs <xref target='RFC5785'/> to be used for POSH are:</t>
         <t>
           <list style='symbols'>
             <t>"/.well-known/posh._xmpp-client._tcp.json" for client-to-server connections</t>
@@ -419,8 +426,9 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
           <t hangText="prooftype:">A mechanism for proving an association between a domain name and an XML stream, where the mechanism defines (1) the nature of the server's proof, (2) the matching rules for comparing the client's verification material against the server's proof, (3) how the client obtains its verification material, and (4) whether the mechanism depends on secure DNS.</t>
         </list>
       </t>
-      <t>The PKIX, DANE, and POSH prooftypes adhere to this model.  In addition, other prooftypes are possible (examples might include PGP keys rather than PKIX certificates, or a token mechanism such as Kerberos or OAuth).</t>
-      <t>Some prooftypes depend on (or are enhanced by) secure DNS and thus also need to describe how they ensure secure delegation.</t>
+      <t>The PKIX, DANE, and POSH prooftypes adhere to this model. (Some prooftypes depend on, or are enhanced by, secure DNS and thus also need to describe how they ensure secure delegation.)</t>
+      <t>Other prooftypes are possible; examples might include TLS with PGP keys <xref target='RFC6091'/>, a token mechanism such as Kerberos <xref target='RFC4120'/> or OAuth <xref target='RFC6749'/>, and Server Dialback keys <xref target='XEP-0220'/>.</t>
+      <t>Although the PKIX prooftype reuses the syntax of the XMPP Server Dialback protocol <xref target='XEP-0220'/> for signalling between servers, this framework document does not define how the generation and validation of Server Dialback keys (also specified in <xref target='XEP-0220'/>) is a DNA prooftype. However, nothing in this document prevents the continued use of server dialback, and a future specification (or an updated version of <xref target='XEP-0220'/>) might define a DNA prooftype for dialback in a way that is consistent with this framework.  However, nothing in this document prevents the continued use of Server Dialback on the XMPP network.</t>
     </section>
 
     <section title="IANA Considerations" anchor="iana">
@@ -834,6 +842,50 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
         <format type="XML" octets="234610" target="http://xml.resource.org/public/rfc/xml/rfc3920.xml"/>
       </reference>
 
+<reference anchor='RFC4120'>
+<front>
+<title>The Kerberos Network Authentication Service (V5)</title>
+<author initials='C.' surname='Neuman' fullname='C. Neuman'>
+<organization /></author>
+<author initials='T.' surname='Yu' fullname='T. Yu'>
+<organization /></author>
+<author initials='S.' surname='Hartman' fullname='S. Hartman'>
+<organization /></author>
+<author initials='K.' surname='Raeburn' fullname='K. Raeburn'>
+<organization /></author>
+<date year='2005' month='July' />
+<abstract>
+<t>This document provides an overview and specification of Version 5 of the Kerberos protocol, and it obsoletes RFC 1510 to clarify aspects of the protocol and its intended use that require more detailed or clearer explanation than was provided in RFC 1510.  This document is intended to provide a detailed description of the protocol, suitable for implementation, together with descriptions of the appropriate use of protocol messages and fields within those messages. [STANDARDS-TRACK]</t></abstract></front>
+<seriesInfo name='RFC' value='4120' />
+<format type='TXT' octets='340314' target='http://www.rfc-editor.org/rfc/rfc4120.txt' />
+</reference>
+
+<reference anchor='RFC6091'>
+<front>
+<title>Using OpenPGP Keys for Transport Layer Security (TLS) Authentication</title>
+<author initials='N.' surname='Mavrogiannopoulos' fullname='N. Mavrogiannopoulos'>
+<organization /></author>
+<author initials='D.' surname='Gillmor' fullname='D. Gillmor'>
+<organization /></author>
+<date year='2011' month='February' />
+<abstract>
+<t>This memo defines Transport Layer Security (TLS) extensions and associated semantics that allow clients and servers to negotiate the use of OpenPGP certificates for a TLS session, and specifies how to transport OpenPGP certificates via TLS.  It also defines the registry for non-X.509 certificate types.  This document is not an Internet Standards Track specification; it is published for informational purposes.</t></abstract></front>
+<seriesInfo name='RFC' value='6091' />
+<format type='TXT' octets='18529' target='http://www.rfc-editor.org/rfc/rfc6091.txt' />
+</reference>
+
+<reference anchor='RFC6749'>
+<front>
+<title>The OAuth 2.0 Authorization Framework</title>
+<author initials='D.' surname='Hardt' fullname='D. Hardt'>
+<organization /></author>
+<date year='2012' month='October' />
+<abstract>
+<t>The OAuth 2.0 authorization framework enables a third-party application to obtain limited access to an HTTP service, either on behalf of a resource owner by orchestrating an approval interaction between the resource owner and the HTTP service, or by allowing the third-party application to obtain access on its own behalf.  This specification replaces and obsoletes the OAuth 1.0 protocol described in RFC 5849. [STANDARDS-TRACK]</t></abstract></front>
+<seriesInfo name='RFC' value='6749' />
+<format type='TXT' octets='163498' target='http://www.rfc-editor.org/rfc/rfc6749.txt' />
+</reference>
+
       <reference anchor="XEP-0045">
         <front>
           <title>Multi-User Chat</title>
@@ -875,7 +927,6 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
     <section title="Acknowledgements" anchor="acks">
       <t>Thanks to Philipp Hancke for his feedback.</t>
     </section>
-
 
   </back>
 
