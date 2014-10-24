@@ -468,13 +468,13 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
           <author initials="P" surname="Saint-Andre" fullname="Peter Saint-Andre">
             <organization/>
           </author>
-          <date month="July" day="23" year="2014"/>
+          <date month="October" day="21" year="2014"/>
           <abstract>
             <t>The DANE specification (RFC 6698) describes how to use TLSA resource records in the DNS to associate a server's host name with its TLS certificate, where the association is secured with DNSSEC.  However, application protocols that use SRV records (RFC 2782) to indirectly name the target server host names for a service domain cannot apply the rules from RFC 6698.  Therefore this document provides guidelines that enable such protocols to locate and use TLSA records.</t>
           </abstract>
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-dane-srv-07"/>
-        <format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-dane-srv-07.txt"/>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-dane-srv-08"/>
+        <format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-dane-srv-08.txt"/>
       </reference>
 
       <reference anchor="I-D.ietf-xmpp-posh">
