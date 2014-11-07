@@ -5,12 +5,12 @@
 XMPP Working Group                                             M. Miller
 Internet-Draft                                       Cisco Systems, Inc.
 Intended status: Standards Track                          P. Saint-Andre
-Expires: April 14, 2015                                             &yet
-                                                        October 11, 2014
+Expires: May 11, 2015                                               &yet
+                                                        November 7, 2014
 
 
                       PKIX over Secure HTTP (POSH)
-                        draft-ietf-xmpp-posh-02
+                        draft-ietf-xmpp-posh-03
 
 Abstract
 
@@ -27,16 +27,16 @@ Abstract
    identifier, resulting in obvious security implications.  This
    document defines two methods that make it easier to deploy
    certificates for proper server identity checking in non-HTTP
-   application protocols.  The first method enables the TLS client
-   associated with a user agent or peer application server to obtain the
-   end-entity certificate of a hosted domain over secure HTTP as an
-   alternative to standard PKIX techniques.  The second method enables a
-   hosted domain to securely delegate a non-HTTP application to a
-   hosting service using redirects provided by HTTPS itself or by a
-   pointer in a file served over HTTPS at the hosted domain.  While this
-   approach was developed for use in the Extensible Messaging and
-   Presence Protocol (XMPP) as a Domain Name Association prooftype, it
-   can be applied to any non-HTTP application protocol.
+   application protocols.  The first method enables a user agent or peer
+   application server to obtain the end-entity certificate of a hosted
+   domain over secure HTTP as an alternative to standard PKIX
+   techniques.  The second method enables a hosted domain to securely
+   delegate a non-HTTP application to a hosting service using redirects
+   provided by HTTPS itself or by a pointer in a file served over HTTPS
+   at the hosted domain.  While this approach was developed for use in
+   the Extensible Messaging and Presence Protocol (XMPP) as a Domain
+   Name Association (DNA) prooftype, it can be applied to any non-HTTP
+   application protocol.
 
 Status of This Memo
 
@@ -53,15 +53,15 @@ Status of This Memo
 
 
 
-Miller & Saint-Andre     Expires April 14, 2015                 [Page 1]
+Miller & Saint-Andre      Expires May 11, 2015                  [Page 1]
 
-Internet-Draft                    POSH                      October 2014
+Internet-Draft                    POSH                     November 2014
 
 
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 14, 2015.
+   This Internet-Draft will expire on May 11, 2015.
 
 Copyright Notice
 
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Miller & Saint-Andre     Expires April 14, 2015                 [Page 2]
+Miller & Saint-Andre      Expires May 11, 2015                  [Page 2]
 
-Internet-Draft                    POSH                      October 2014
+Internet-Draft                    POSH                     November 2014
 
 
    the customer's domain name (e.g., foo.example.com), not the hosting
@@ -165,9 +165,9 @@ Internet-Draft                    POSH                      October 2014
 
 
 
-Miller & Saint-Andre     Expires April 14, 2015                 [Page 3]
+Miller & Saint-Andre      Expires May 11, 2015                  [Page 3]
 
-Internet-Draft                    POSH                      October 2014
+Internet-Draft                    POSH                     November 2014
 
 
    key and check it against the public key you provide during TLS
@@ -201,32 +201,32 @@ Internet-Draft                    POSH                      October 2014
    Server identity checking (see [RFC6125]) involves three different
    aspects:
 
-   1.  A proof of the TLS server's identity (in PKIX, this takes the
+   1.  A proof of the POSH server's identity (in PKIX, this takes the
        form of a PKIX certificate [RFC5280]).
 
    2.  Rules for checking the certificate (which vary by application
        protocol, although [RFC6125] attempts to harmonize those rules).
 
-   3.  The materials that a TLS client uses to verify the TLS server's
-       identity or check the TLS server's proof (in PKIX, this takes the
-       form of chaining the end-entity certificate back to a trusted
+   3.  The materials that a POSH client uses to verify the POSH server's
+       identity or check the POSH server's proof (in PKIX, this takes
+       the form of chaining the end-entity certificate back to a trusted
        root and performing all validity checks as described in
        [RFC5280], [RFC6125], and the relevant application protocol
        specification).
 
-   When POSH is used, the first two aspects remain the same: the TLS
+   When POSH is used, the first two aspects remain the same: the POSH
    server proves it identity by presenting a PKIX certificate [RFC5280]
    and the certificate is checked according to the rules defined in the
    appropriate application protocol specification (such as [RFC6120] for
 
 
 
-Miller & Saint-Andre     Expires April 14, 2015                 [Page 4]
+Miller & Saint-Andre      Expires May 11, 2015                  [Page 4]
 
-Internet-Draft                    POSH                      October 2014
+Internet-Draft                    POSH                     November 2014
 
 
-   XMPP).  However, the TLS client obtains the materials it will use to
+   XMPP).  However, the POSH client obtains the materials it will use to
    verify the server's proof by retrieving a JSON document [RFC7159]
    containing hashes of the PKIX certificate over HTTPS ([RFC7230] and
    [RFC2818]) from a well-known URI [RFC5785].
@@ -234,14 +234,14 @@ Internet-Draft                    POSH                      October 2014
    The process for retrieving a PKIX certificate over secure HTTP is as
    follows.
 
-   1.  The TLS client performs an HTTPS GET at the source domain to the
-       path "/.well-known/posh.{servicedesc}.json".  The value of
-       "{servicedesc}" is application-specific; see Section 8 of this
-       document for more details.  For example, if the application
-       protocol is some hypothetical "Foo" service, then "{servicedesc}"
-       could be "foo"; thus if a Foo client were to use POSH to verify a
-       Foo server for the domain "foo.example.com", the HTTPS GET
-       request would be as follows:
+   1.  The POSH client performs an HTTPS GET request at the source
+       domain to the path "/.well-known/posh.{servicedesc}.json".  The
+       value of "{servicedesc}" is application-specific; see Section 8
+       of this document for more details.  For example, if the
+       application protocol is some hypothetical "Foo" service, then
+       "{servicedesc}" could be "foo"; thus if a Foo client were to use
+       POSH to verify a Foo server for the domain "foo.example.com", the
+       HTTPS GET request would be as follows:
 
        GET /.well-known/posh.foo.json HTTP/1.1
        Host: foo.example.com
@@ -262,24 +262,24 @@ Internet-Draft                    POSH                      October 2014
 3.1.  Source Domain Possesses PKIX Certificate Information
 
    If the source domain HTTPS server possesses the certificate
-   information, it responds to the HTTPS GET with a success status code
-   and the message body set to a JSON document [RFC7159]; the document
-   is a JSON object which MUST have the following:
+   information, it responds to the HTTPS GET request with a success
+   status code and the message body set to a JSON document [RFC7159];
+   the document is a JSON object which MUST have the following:
 
    o  A "fingerprints" field whose value is a JSON array of fingerprint
       descriptors.
 
    o  An "expires" field whose value is a JSON number specifying the
-      number of seconds after which the TLS client ought to consider the
-      key information to be stale (further explained under Section 6).
+      number of seconds after which the POSH client ought to consider
+      the key information to be stale (further explained under
+      Section 6).
 
 
 
 
-
-Miller & Saint-Andre     Expires April 14, 2015                 [Page 5]
+Miller & Saint-Andre      Expires May 11, 2015                  [Page 5]
 
-Internet-Draft                    POSH                      October 2014
+Internet-Draft                    POSH                     November 2014
 
 
    Each included fingerprint descriptor is a JSON object, where each
@@ -317,34 +317,34 @@ Internet-Draft                    POSH                      October 2014
 
    The "expires" value is a hint regarding the expiration of the keying
    materials.  It MUST be a non-negative integer.  If no "expires" field
-   is included or its value is equal to 0, a TLS client SHOULD consider
+   is included or its value is equal to 0, a POSH client SHOULD consider
    these verification materials invalid.  See Section 6 for how to
    reconcile this "expires" field with the reference's "expires" field.
 
 3.2.  Source Domain References PKIX Certificate
 
    If the source domain HTTPS server has a reference to the certificate
-   information, it responds to the HTTPS GET with a success status code
-   and message body set to a JSON document.  The document is a JSON
-   object which MUST contain the following:
+   information, it responds to the HTTPS GET request with a success
+   status code and message body set to a JSON document.  The document is
+   a JSON object which MUST contain the following:
 
 
 
 
 
 
-Miller & Saint-Andre     Expires April 14, 2015                 [Page 6]
+Miller & Saint-Andre      Expires May 11, 2015                  [Page 6]
 
-Internet-Draft                    POSH                      October 2014
+Internet-Draft                    POSH                     November 2014
 
 
    o  A "url" field whose value is a JSON string specifying the HTTPS
-      URL where TLS clients can obtain the actual certificate
+      URL where POSH clients can obtain the actual certificate
       information.
 
    o  An "expires" field whose value is a JSON number specifying the
-      number of seconds after which the TLS client ought to consider the
-      delegation to be stale (further explained under Section 6).
+      number of seconds after which the POSH client ought to consider
+      the delegation to be stale (further explained under Section 6).
 
    Example Reference Response
 
@@ -357,9 +357,9 @@ Internet-Draft                    POSH                      October 2014
      "expires":86400
    }
 
-   The client performs an HTTPS GET for the URL specified in the "url"
-   field value.  The HTTPS server for the URL to which the client has
-   been redirected responds to the request with a JSON document
+   The client performs an HTTPS GET request for the URL specified in the
+   "url" field value.  The HTTPS server for the URL to which the client
+   has been redirected responds to the request with a JSON document
    containing fingerprints as described in Section 3.1.  The content
    retrieved from the "url" location MUST NOT itself be a reference
    (i.e., containing a "url" field instead of a "fingerprints" field),
@@ -374,24 +374,24 @@ Internet-Draft                    POSH                      October 2014
    The "expires" value is a hint regarding the expiration of the source
    domain's delegation of service to the delegated domain.  It MUST be a
    non-negative integer.  If no "expires" field is included or its value
-   is equal to 0, a TLS client SHOULD consider the delegation invalid.
+   is equal to 0, a POSH client SHOULD consider the delegation invalid.
    See Section 6 for guidelines about reconciling this "expires" field
    with the "expires" field of the fingerprints document.
 
 3.3.  Performing Verification
 
-   The TLS client compares the PKIX information obtained from the TLS
+   The POSH client compares the PKIX information obtained from the POSH
    server against each fingerprint descriptor object in the POSH
    results, until a match is found or the collection of POSH
    verification materials is exhausted.  If none of the fingerprint
-   descriptor objects match the TLS server PKIX information, the TLS
-   client SHOULD reject the connection (however, the TLS client might
+   descriptor objects match the POSH server PKIX information, the POSH
+   client SHOULD reject the connection (however, the POSH client might
 
 
 
-Miller & Saint-Andre     Expires April 14, 2015                 [Page 7]
+Miller & Saint-Andre      Expires May 11, 2015                  [Page 7]
 
-Internet-Draft                    POSH                      October 2014
+Internet-Draft                    POSH                     November 2014
 
 
    still accept the connection if other verification schemes are
@@ -400,18 +400,20 @@ Internet-Draft                    POSH                      October 2014
 4.  Secure Delegation
 
    The delegation from the source domain to the delegated domain can be
-   considered secure if the certificate offered by the TLS server
+   considered secure if the certificate offered by the POSH server
    matches the POSH certificate, regardless of how the POSH certificate
    is obtained.
 
 5.  Order of Operations
 
-   In order for the TLS client to perform verification of reference
+   In order for the POSH client to perform verification of reference
    identifiers without potentially compromising data, POSH processes
-   MUST be complete before any application-level data is exchanged for
-   the source domain.  The TLS client SHOULD perform all POSH retrievals
-   before opening any socket connections to the application protocol
-   server.  For application protocols that use DNS SRV (including
+   MUST be complete before any application-layer data is exchanged for
+   the source domain.  In cases where the POSH client initiates an
+   application-layer connection, the client SHOULD perform all POSH
+   retrievals before initiating a connection (naturally this is not
+   possible in cases where the POSH client receives an application-layer
+   connection).  For application protocols that use DNS SRV (including
    queries for TLSA records in concert with SRV records as described in
    [I-D.ietf-dane-srv]), the POSH processes ideally ought to be done in
    parallel with resolving the SRV records and the addresses of any
@@ -443,11 +445,9 @@ Internet-Draft                    POSH                      October 2014
 
 
 
-
-
-Miller & Saint-Andre     Expires April 14, 2015                 [Page 8]
+Miller & Saint-Andre      Expires May 11, 2015                  [Page 8]
 
-Internet-Draft                    POSH                      October 2014
+Internet-Draft                    POSH                     November 2014
 
 
    Client                     Domain                     Server
@@ -476,24 +476,24 @@ Internet-Draft                    POSH                      October 2014
 
 6.  Caching Results
 
-   The TLS client MUST NOT cache results (reference or fingerprints)
-   indefinitely.  If the source domain returns a reference, the TLS
+   The POSH client MUST NOT cache results (reference or fingerprints)
+   indefinitely.  If the source domain returns a reference, the POSH
    client MUST use the lower of the two "expires" values when
    determining how long to cache results (i.e., if the reference
    "expires" value is lower than the fingerprints "expires" value, honor
-   the reference "expires" value).  Once the TLS client considers the
+   the reference "expires" value).  Once the POSH client considers the
    results stale, it needs to perform the entire POSH process again
-   starting with the HTTPS GET to the source domain.  The TLS client MAY
-   use a lower value than any provided in the "expires" field(s), or not
-   cache results at all.
+   starting with the HTTPS GET request to the source domain.  The POSH
+   client MAY use a lower value than any provided in the "expires"
+   field(s), or not cache results at all.
 
-   The TLS client SHOULD NOT rely on HTTP caching mechanisms, instead
+   The POSH client SHOULD NOT rely on HTTP caching mechanisms, instead
    using the expiration hints provided in the POSH reference document or
    fingerprints documents.  To that end, the HTTPS servers for source
    domains and derived domains SHOULD specify a 'Cache-Control' header
    indicating a very short duration (e.g., max-age=60) or "no-cache" to
    indicate that the response (redirect, reference, or content) is not
-   appropriate to cache at the HTTP level.
+   appropriate to cache at the HTTP layer.
 
 
 
@@ -501,9 +501,9 @@ Internet-Draft                    POSH                      October 2014
 
 
 
-Miller & Saint-Andre     Expires April 14, 2015                 [Page 9]
+Miller & Saint-Andre      Expires May 11, 2015                  [Page 9]
 
-Internet-Draft                    POSH                      October 2014
+Internet-Draft                    POSH                     November 2014
 
 
 7.  Alternates and Roll-over
@@ -557,9 +557,9 @@ Internet-Draft                    POSH                      October 2014
 
 
 
-Miller & Saint-Andre     Expires April 14, 2015                [Page 10]
+Miller & Saint-Andre      Expires May 11, 2015                 [Page 10]
 
-Internet-Draft                    POSH                      October 2014
+Internet-Draft                    POSH                     November 2014
 
 
    "posh." and end with ".json" (indicating a media type of application/
@@ -594,15 +594,15 @@ Internet-Draft                    POSH                      October 2014
    depends on checking the identity of the HTTP server in accordance
    with [RFC2818].  Additionally, the security of POSH can benefit from
    other HTTP hardening protocols, such as HSTS [RFC6797] and key
-   pinning [I-D.ietf-websec-key-pinning], especially if the TLS client
+   pinning [I-D.ietf-websec-key-pinning], especially if the POSH client
    shares some information with a common HTTPS implementation (e.g.,
    platform-default web browser).
 
-   Note well that POSH is used by a TLS client to obtain the public key
-   of a TLS server to which it might connect for a particular
+   Note well that POSH is used by a POSH client to obtain the public key
+   of a POSH server to which it might connect for a particular
    application protocol such as IMAP or XMPP.  POSH does not enable a
    hosted domain to transfer private keys to a hosting service via
-   HTTPS.  POSH also does not enable a TLS server to engage in
+   HTTPS.  POSH also does not enable a POSH server to engage in
    certificate enrollment with a certification authority via HTTPS, as
    is done in Enrollment over Secure Transport [RFC7030].
 
@@ -613,9 +613,9 @@ Internet-Draft                    POSH                      October 2014
 
 
 
-Miller & Saint-Andre     Expires April 14, 2015                [Page 11]
+Miller & Saint-Andre      Expires May 11, 2015                 [Page 11]
 
-Internet-Draft                    POSH                      October 2014
+Internet-Draft                    POSH                     November 2014
 
 
    (Temporary Redirect).  Clients MAY treat any redirect as temporary,
@@ -669,9 +669,9 @@ Internet-Draft                    POSH                      October 2014
 
 
 
-Miller & Saint-Andre     Expires April 14, 2015                [Page 12]
+Miller & Saint-Andre      Expires May 11, 2015                 [Page 12]
 
-Internet-Draft                    POSH                      October 2014
+Internet-Draft                    POSH                     November 2014
 
 
 10.2.  Informative References
@@ -725,9 +725,9 @@ Internet-Draft                    POSH                      October 2014
 
 
 
-Miller & Saint-Andre     Expires April 14, 2015                [Page 13]
+Miller & Saint-Andre      Expires May 11, 2015                 [Page 13]
 
-Internet-Draft                    POSH                      October 2014
+Internet-Draft                    POSH                     November 2014
 
 
    [RFC6698]  Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
@@ -781,4 +781,4 @@ Authors' Addresses
 
 
 
-Miller & Saint-Andre     Expires April 14, 2015                [Page 14]
+Miller & Saint-Andre      Expires May 11, 2015                 [Page 14]
