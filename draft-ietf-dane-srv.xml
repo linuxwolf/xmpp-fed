@@ -480,8 +480,8 @@ _9143._tcp.imap.example.net. IN TLSA ?
 
    <t>Thanks to Mark Andrews for arguing that authenticating the
     target server host name is the right thing, and that we ought to rely on
-    DNSSEC to secure the SRV lookup. Thanks to James Cloos, Viktor
-    Dukhovni, Ned Freed, Olafur Gudmundsson, Paul Hoffman, Phil
+    DNSSEC to secure the SRV lookup. Thanks to Stephane Bortzmeyer, James Cloos, 
+    Viktor Dukhovni, Ned Freed, Olafur Gudmundsson, Paul Hoffman, Phil
     Pennock, Hector Santos, Jonas Schneider, and Alessandro Vesely for
     helpful suggestions.</t>
 
@@ -543,8 +543,8 @@ _9143._tcp.imap.example.net.  RRSIG  TLSA ...
     ]]></artwork>
    </figure></t>
 
-   <t>Mail messages submitted for addresses at example.com are sent via IMAP
-    to imap.example.net. Connections to imap.example.net port 9143 that use
+   <t>Mail messages received for addresses at example.com are retrieved via IMAP
+    at imap.example.net. Connections to imap.example.net port 9143 that use
     STARTTLS will get a server certificate that authenticates the name
     imap.example.net.</t>
 

@@ -5,10 +5,10 @@
 DNS-Based Authentication of Named Entities (DANE)               T. Finch
 Internet-Draft                                   University of Cambridge
 Intended status: Standards Track                               M. Miller
-Expires: April 24, 2015                              Cisco Systems, Inc.
+Expires: May 29, 2015                                Cisco Systems, Inc.
                                                           P. Saint-Andre
                                                                     &yet
-                                                        October 21, 2014
+                                                       November 25, 2014
 
 
   Using DNS-Based Authentication of Named Entities (DANE) TLSA Records
@@ -40,7 +40,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 24, 2015.
+   This Internet-Draft will expire on May 29, 2015.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Finch, et al.            Expires April 24, 2015                 [Page 1]
+Finch, et al.             Expires May 29, 2015                  [Page 1]
 
-Internet-Draft                TLSA and SRV                  October 2014
+Internet-Draft                TLSA and SRV                 November 2014
 
 
    publication of this document.  Please review these documents
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Finch, et al.            Expires April 24, 2015                 [Page 2]
+Finch, et al.             Expires May 29, 2015                  [Page 2]
 
-Internet-Draft                TLSA and SRV                  October 2014
+Internet-Draft                TLSA and SRV                 November 2014
 
 
    Some application protocols do not use host names directly; instead,
@@ -165,9 +165,9 @@ Internet-Draft                TLSA and SRV                  October 2014
 
 
 
-Finch, et al.            Expires April 24, 2015                 [Page 3]
+Finch, et al.             Expires May 29, 2015                  [Page 3]
 
-Internet-Draft                TLSA and SRV                  October 2014
+Internet-Draft                TLSA and SRV                 November 2014
 
 
    DNS-related errors; a helpful summary can be found in section 2.1 of
@@ -221,9 +221,9 @@ Internet-Draft                TLSA and SRV                  October 2014
 
 
 
-Finch, et al.            Expires April 24, 2015                 [Page 4]
+Finch, et al.             Expires May 29, 2015                  [Page 4]
 
-Internet-Draft                TLSA and SRV                  October 2014
+Internet-Draft                TLSA and SRV                 November 2014
 
 
    For example, the following SRV record for IMAP (see [RFC6186]) leads
@@ -277,9 +277,9 @@ Internet-Draft                TLSA and SRV                  October 2014
 
 
 
-Finch, et al.            Expires April 24, 2015                 [Page 5]
+Finch, et al.             Expires May 29, 2015                  [Page 5]
 
-Internet-Draft                TLSA and SRV                  October 2014
+Internet-Draft                TLSA and SRV                 November 2014
 
 
    [RFC6125], using a list of reference identifiers constructed as
@@ -333,9 +333,9 @@ Internet-Draft                TLSA and SRV                  October 2014
 
 
 
-Finch, et al.            Expires April 24, 2015                 [Page 6]
+Finch, et al.             Expires May 29, 2015                  [Page 6]
 
-Internet-Draft                TLSA and SRV                  October 2014
+Internet-Draft                TLSA and SRV                 November 2014
 
 
    o  How clients ought to behave if they do not support SRV lookups, or
@@ -389,9 +389,9 @@ Internet-Draft                TLSA and SRV                  October 2014
 
 
 
-Finch, et al.            Expires April 24, 2015                 [Page 7]
+Finch, et al.             Expires May 29, 2015                  [Page 7]
 
-Internet-Draft                TLSA and SRV                  October 2014
+Internet-Draft                TLSA and SRV                 November 2014
 
 
 7.  Guidance for Application Developers
@@ -445,9 +445,9 @@ Internet-Draft                TLSA and SRV                  October 2014
 
 
 
-Finch, et al.            Expires April 24, 2015                 [Page 8]
+Finch, et al.             Expires May 29, 2015                  [Page 8]
 
-Internet-Draft                TLSA and SRV                  October 2014
+Internet-Draft                TLSA and SRV                 November 2014
 
 
 10.3.  Certificate Subject Name Matching
@@ -475,10 +475,10 @@ Internet-Draft                TLSA and SRV                  October 2014
 
    Thanks to Mark Andrews for arguing that authenticating the target
    server host name is the right thing, and that we ought to rely on
-   DNSSEC to secure the SRV lookup.  Thanks to James Cloos, Viktor
-   Dukhovni, Ned Freed, Olafur Gudmundsson, Paul Hoffman, Phil Pennock,
-   Hector Santos, Jonas Schneider, and Alessandro Vesely for helpful
-   suggestions.
+   DNSSEC to secure the SRV lookup.  Thanks to Stephane Bortzmeyer,
+   James Cloos, Viktor Dukhovni, Ned Freed, Olafur Gudmundsson, Paul
+   Hoffman, Phil Pennock, Hector Santos, Jonas Schneider, and Alessandro
+   Vesely for helpful suggestions.
 
 12.  References
 
@@ -501,9 +501,9 @@ Internet-Draft                TLSA and SRV                  October 2014
 
 
 
-Finch, et al.            Expires April 24, 2015                 [Page 9]
+Finch, et al.             Expires May 29, 2015                  [Page 9]
 
-Internet-Draft                TLSA and SRV                  October 2014
+Internet-Draft                TLSA and SRV                 November 2014
 
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
@@ -545,8 +545,8 @@ Internet-Draft                TLSA and SRV                  October 2014
 
    [I-D.ietf-dane-smtp-with-dane]
               Dukhovni, V. and W. Hardaker, "SMTP security via
-              opportunistic DANE TLS", draft-ietf-dane-smtp-with-dane-05
-              (work in progress), February 2014.
+              opportunistic DANE TLS", draft-ietf-dane-smtp-with-dane-10
+              (work in progress), May 2014.
 
    [I-D.ietf-xmpp-dna]
               Saint-Andre, P. and M. Miller, "Domain Name Associations
@@ -557,9 +557,9 @@ Internet-Draft                TLSA and SRV                  October 2014
 
 
 
-Finch, et al.            Expires April 24, 2015                [Page 10]
+Finch, et al.             Expires May 29, 2015                 [Page 10]
 
-Internet-Draft                TLSA and SRV                  October 2014
+Internet-Draft                TLSA and SRV                 November 2014
 
 
    [RFC3403]  Mealling, M., "Dynamic Delegation Discovery System (DDDS)
@@ -588,8 +588,8 @@ A.1.  IMAP
    _9143._tcp.imap.example.net.  TLSA   ...
    _9143._tcp.imap.example.net.  RRSIG  TLSA ...
 
-   Mail messages submitted for addresses at example.com are sent via
-   IMAP to imap.example.net.  Connections to imap.example.net port 9143
+   Mail messages received for addresses at example.com are retrieved via
+   IMAP at imap.example.net.  Connections to imap.example.net port 9143
    that use STARTTLS will get a server certificate that authenticates
    the name imap.example.net.
 
@@ -613,9 +613,9 @@ A.2.  XMPP
 
 
 
-Finch, et al.            Expires April 24, 2015                [Page 11]
+Finch, et al.             Expires May 29, 2015                 [Page 11]
 
-Internet-Draft                TLSA and SRV                  October 2014
+Internet-Draft                TLSA and SRV                 November 2014
 
 
    XMPP sessions for addresses at example.com are established at
@@ -669,9 +669,9 @@ Appendix B.  Rationale
 
 
 
-Finch, et al.            Expires April 24, 2015                [Page 12]
+Finch, et al.             Expires May 29, 2015                 [Page 12]
 
-Internet-Draft                TLSA and SRV                  October 2014
+Internet-Draft                TLSA and SRV                 November 2014
 
 
    providing any benefit, and security protocols are best kept simple.
@@ -725,4 +725,4 @@ Authors' Addresses
 
 
 
-Finch, et al.            Expires April 24, 2015                [Page 13]
+Finch, et al.             Expires May 29, 2015                 [Page 13]
