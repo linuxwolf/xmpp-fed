@@ -5,13 +5,15 @@
 Network Working Group                                     P. Saint-Andre
 Internet-Draft                                                      &yet
 Intended status: Standards Track                               M. Miller
-Expires: April 24, 2015                              Cisco Systems, Inc.
-                                                        October 21, 2014
+Expires: July 27, 2015                               Cisco Systems, Inc.
+                                                               P. Hancke
+                                                                    &yet
+                                                        January 23, 2015
 
 
 Domain Name Associations (DNA) in the Extensible Messaging and Presence
                             Protocol (XMPP)
-                         draft-ietf-xmpp-dna-08
+                         draft-ietf-xmpp-dna-09
 
 Abstract
 
@@ -40,24 +42,25 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on April 24, 2015.
+   This Internet-Draft will expire on July 27, 2015.
 
 Copyright Notice
 
-   Copyright (c) 2014 IETF Trust and the persons identified as the
+   Copyright (c) 2015 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
+
+
+
+
+
+Saint-Andre, et al.       Expires July 27, 2015                 [Page 1]
+
+Internet-Draft                  XMPP DNA                    January 2015
+
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents
    (http://trustee.ietf.org/license-info) in effect on the date of
-
-
-
-Saint-Andre & Miller     Expires April 24, 2015                 [Page 1]
-
-Internet-Draft                  XMPP DNA                    October 2014
-
-
    publication of this document.  Please review these documents
    carefully, as they describe your rights and restrictions with respect
    to this document.  Code Components extracted from this document must
@@ -103,17 +106,16 @@ Table of Contents
    service.  In other words, the client or peer server needs to verify
    the identity of the server to which it connects.
 
+
+
+
+Saint-Andre, et al.       Expires July 27, 2015                 [Page 2]
+
+Internet-Draft                  XMPP DNA                    January 2015
+
+
    To date, such verification has been established based on information
    obtained from the Domain Name System (DNS), the Public Key
-
-
-
-
-Saint-Andre & Miller     Expires April 24, 2015                 [Page 2]
-
-Internet-Draft                  XMPP DNA                    October 2014
-
-
    Infrastructure (PKI), or similar sources.  In relation to such
    associations, this document does the following:
 
@@ -163,11 +165,9 @@ Internet-Draft                  XMPP DNA                    October 2014
 
 
 
-
-
-Saint-Andre & Miller     Expires April 24, 2015                 [Page 3]
+Saint-Andre, et al.       Expires July 27, 2015                 [Page 3]
 
-Internet-Draft                  XMPP DNA                    October 2014
+Internet-Draft                  XMPP DNA                    January 2015
 
 
 3.1.  C2S Flow
@@ -221,9 +221,9 @@ Internet-Draft                  XMPP DNA                    October 2014
 
 
 
-Saint-Andre & Miller     Expires April 24, 2015                 [Page 4]
+Saint-Andre, et al.       Expires July 27, 2015                 [Page 4]
 
-Internet-Draft                  XMPP DNA                    October 2014
+Internet-Draft                  XMPP DNA                    January 2015
 
 
    5.  The parties attempt TLS negotiation, during which the XMPP server
@@ -277,9 +277,9 @@ Internet-Draft                  XMPP DNA                    October 2014
 
 
 
-Saint-Andre & Miller     Expires April 24, 2015                 [Page 5]
+Saint-Andre, et al.       Expires July 27, 2015                 [Page 5]
 
-Internet-Draft                  XMPP DNA                    October 2014
+Internet-Draft                  XMPP DNA                    January 2015
 
 
    |          {client certificate?} ----+          |
@@ -333,9 +333,9 @@ Internet-Draft                  XMPP DNA                    October 2014
 
 
 
-Saint-Andre & Miller     Expires April 24, 2015                 [Page 6]
+Saint-Andre, et al.       Expires July 27, 2015                 [Page 6]
 
-Internet-Draft                  XMPP DNA                    October 2014
+Internet-Draft                  XMPP DNA                    January 2015
 
 
                        |
@@ -389,9 +389,9 @@ Internet-Draft                  XMPP DNA                    October 2014
 
 
 
-Saint-Andre & Miller     Expires April 24, 2015                 [Page 7]
+Saint-Andre, et al.       Expires July 27, 2015                 [Page 7]
 
-Internet-Draft                  XMPP DNA                    October 2014
+Internet-Draft                  XMPP DNA                    January 2015
 
 
    2.  Server 1 opens a TCP connection to the resolved IP address.
@@ -445,9 +445,9 @@ Internet-Draft                  XMPP DNA                    October 2014
 
 
 
-Saint-Andre & Miller     Expires April 24, 2015                 [Page 8]
+Saint-Andre, et al.       Expires July 27, 2015                 [Page 8]
 
-Internet-Draft                  XMPP DNA                    October 2014
+Internet-Draft                  XMPP DNA                    January 2015
 
 
    negotiate and authenticate a stream to Server 1, just as Server 1 has
@@ -501,9 +501,9 @@ Internet-Draft                  XMPP DNA                    October 2014
 
 
 
-Saint-Andre & Miller     Expires April 24, 2015                 [Page 9]
+Saint-Andre, et al.       Expires July 27, 2015                 [Page 9]
 
-Internet-Draft                  XMPP DNA                    October 2014
+Internet-Draft                  XMPP DNA                    January 2015
 
 
    The traditional method for doing so is the Server Dialback protocol,
@@ -557,9 +557,9 @@ Internet-Draft                  XMPP DNA                    October 2014
 
 
 
-Saint-Andre & Miller     Expires April 24, 2015                [Page 10]
+Saint-Andre, et al.       Expires July 27, 2015                [Page 10]
 
-Internet-Draft                  XMPP DNA                    October 2014
+Internet-Draft                  XMPP DNA                    January 2015
 
 
    The parties can then terminate the second connection, since it was
@@ -613,9 +613,9 @@ Internet-Draft                  XMPP DNA                    October 2014
 
 
 
-Saint-Andre & Miller     Expires April 24, 2015                [Page 11]
+Saint-Andre, et al.       Expires July 27, 2015                [Page 11]
 
-Internet-Draft                  XMPP DNA                    October 2014
+Internet-Draft                  XMPP DNA                    January 2015
 
 
    Server 1 then informs Server 2 that it accepts the domain name
@@ -669,9 +669,9 @@ Internet-Draft                  XMPP DNA                    October 2014
 
 
 
-Saint-Andre & Miller     Expires April 24, 2015                [Page 12]
+Saint-Andre, et al.       Expires July 27, 2015                [Page 12]
 
-Internet-Draft                  XMPP DNA                    October 2014
+Internet-Draft                  XMPP DNA                    January 2015
 
 
    o  Use the 'to' address of the initial stream header to determine the
@@ -725,9 +725,9 @@ Internet-Draft                  XMPP DNA                    October 2014
 
 
 
-Saint-Andre & Miller     Expires April 24, 2015                [Page 13]
+Saint-Andre, et al.       Expires July 27, 2015                [Page 13]
 
-Internet-Draft                  XMPP DNA                    October 2014
+Internet-Draft                  XMPP DNA                    January 2015
 
 
    of multi-tenancy has been found to be unwieldy when the provider
@@ -781,9 +781,9 @@ Internet-Draft                  XMPP DNA                    October 2014
 
 
 
-Saint-Andre & Miller     Expires April 24, 2015                [Page 14]
+Saint-Andre, et al.       Expires July 27, 2015                [Page 14]
 
-Internet-Draft                  XMPP DNA                    October 2014
+Internet-Draft                  XMPP DNA                    January 2015
 
 
    of Server Dialback keys (also specified in [XEP-0220]) is a DNA
@@ -837,9 +837,9 @@ Internet-Draft                  XMPP DNA                    October 2014
 
 
 
-Saint-Andre & Miller     Expires April 24, 2015                [Page 15]
+Saint-Andre, et al.       Expires July 27, 2015                [Page 15]
 
-Internet-Draft                  XMPP DNA                    October 2014
+Internet-Draft                  XMPP DNA                    January 2015
 
 
 10.  References
@@ -849,8 +849,8 @@ Internet-Draft                  XMPP DNA                    October 2014
    [I-D.ietf-dane-srv]
               Finch, T., Miller, M., and P. Saint-Andre, "Using DNS-
               Based Authentication of Named Entities (DANE) TLSA records
-              with SRV and MX records.", draft-ietf-dane-srv-07 (work in
-              progress), July 2014.
+              with SRV and MX records.", draft-ietf-dane-srv-08 (work in
+              progress), October 2014.
 
    [I-D.ietf-xmpp-posh]
               Miller, M. and P. Saint-Andre, "PKIX over Secure HTTP
@@ -893,9 +893,9 @@ Internet-Draft                  XMPP DNA                    October 2014
 
 
 
-Saint-Andre & Miller     Expires April 24, 2015                [Page 16]
+Saint-Andre, et al.       Expires July 27, 2015                [Page 16]
 
-Internet-Draft                  XMPP DNA                    October 2014
+Internet-Draft                  XMPP DNA                    January 2015
 
 
    [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
@@ -949,14 +949,15 @@ Internet-Draft                  XMPP DNA                    October 2014
 
 
 
-Saint-Andre & Miller     Expires April 24, 2015                [Page 17]
+Saint-Andre, et al.       Expires July 27, 2015                [Page 17]
 
-Internet-Draft                  XMPP DNA                    October 2014
+Internet-Draft                  XMPP DNA                    January 2015
 
 
 Appendix A.  Acknowledgements
 
-   Thanks to Philipp Hancke for his feedback.
+   Thanks to Richard Barnes, Stephen Farrell, and Jonas Lindberg for
+   contributing to earlier versions of this document.
 
 Authors' Addresses
 
@@ -976,6 +977,11 @@ Authors' Addresses
    Email: mamille2@cisco.com
 
 
+   Philipp Hancke
+   &yet
+
+   Email: fippo@andyet.com
+   URI:   https://andyet.com/
 
 
 
@@ -999,10 +1005,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-Saint-Andre & Miller     Expires April 24, 2015                [Page 18]
+Saint-Andre, et al.       Expires July 27, 2015                [Page 18]

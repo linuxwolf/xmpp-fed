@@ -5,7 +5,7 @@
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="3"?>
-<rfc category="std" docName="draft-ietf-xmpp-dna-08" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-xmpp-dna-09" ipr="trust200902">
 
   <front>
     <title abbrev="XMPP DNA">Domain Name Associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP)</title>
@@ -29,6 +29,14 @@
           <country>USA</country>
         </postal>
         <email>mamille2@cisco.com</email>
+      </address>
+    </author>
+
+    <author initials="P." surname="Hancke" fullname="Philipp Hancke">
+      <organization>&amp;yet</organization>
+      <address>
+        <email>fippo@andyet.com</email>
+        <uri>https://andyet.com/</uri>
       </address>
     </author>
 
@@ -925,7 +933,7 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
     </references>
 
     <section title="Acknowledgements" anchor="acks">
-      <t>Thanks to Philipp Hancke for his feedback.</t>
+      <t>Thanks to Richard Barnes, Stephen Farrell, and Jonas Lindberg for contributing to earlier versions of this document.</t>
     </section>
 
   </back>
