@@ -85,7 +85,7 @@
     </section>
 
     <section title="Terminology" anchor="terms">
-      <t>This document inherits security terminology from <xref target="RFC5280"/>.  The terms "Source Domain", "derived domain", "reference identifier", and "presented identifier" are used as defined in the "CertID" specification <xref target="RFC6125"/>.</t>
+      <t>This document inherits security terminology from <xref target="RFC5280"/>.  The terms "Source Domain", "Delegated Domain", "Derived Domain", and "Reference Identifier" are used as defined in the "CertID" specification <xref target="RFC6125"/>.</t>
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>.</t>
     </section>
 
@@ -194,7 +194,7 @@ Content-Length: 79
     </section>
 
     <section title="Order of Operations" anchor="order">
-      <t>In order for the POSH client to perform verification of reference identifiers without potentially compromising data, POSH processes MUST be complete before any application-layer data is exchanged for the Source Domain.  In cases where the POSH client initiates an application-layer connection, the client SHOULD perform all POSH retrievals before initiating a connection (naturally this is not possible in cases where the POSH client receives an application-layer connection).  For application protocols that use DNS SRV (including queries for TLSA records in concert with SRV records as described in <xref target='I-D.ietf-dane-srv'/>), the POSH processes ideally ought to be done in parallel with resolving the SRV records and the addresses of any targets, similar to the "happy eyeballs" approach for IPv4 and IPv6 <xref target='RFC6555'/>.</t>
+      <t>In order for the POSH client to perform verification of Reference Identifiers without potentially compromising data, POSH processes MUST be complete before any application-layer data is exchanged for the Source Domain.  In cases where the POSH client initiates an application-layer connection, the client SHOULD perform all POSH retrievals before initiating a connection (naturally this is not possible in cases where the POSH client receives an application-layer connection).  For application protocols that use DNS SRV (including queries for TLSA records in concert with SRV records as described in <xref target='I-D.ietf-dane-srv'/>), the POSH processes ideally ought to be done in parallel with resolving the SRV records and the addresses of any targets, similar to the "happy eyeballs" approach for IPv4 and IPv6 <xref target='RFC6555'/>.</t>
       <t>The following diagram illustrates the possession flow:</t>
       <t>
         <figure anchor='figure-1' title='Order of Events for Possession Flow'>
@@ -249,7 +249,7 @@ Client                     Domain                     Server
 
     <section title="Caching Results" anchor="caching">
       <t>The POSH client MUST NOT cache results (reference or fingerprints) indefinitely.  If the Source Domain returns a reference, the POSH client MUST use the lower of the two "expires" values when determining how long to cache results (i.e., if the reference "expires" value is lower than the fingerprints "expires" value, honor the reference "expires" value).  Once the POSH client considers the results stale, it needs to perform the entire POSH process again starting with the HTTPS GET request to the Source Domain.  The POSH client MAY use a lower value than any provided in the "expires" field(s), or not cache results at all.</t>
-      <t>The POSH client SHOULD NOT rely on HTTP caching mechanisms, instead using the expiration hints provided in the POSH reference document or fingerprints documents.  To that end, the HTTPS servers for Source Domains and derived domains SHOULD specify a 'Cache-Control' header indicating a very short duration (e.g., max-age=60) or "no-cache" to indicate that the response (redirect, reference, or content) is not appropriate to cache at the HTTP layer.</t>
+      <t>The POSH client SHOULD NOT rely on HTTP caching mechanisms, instead using the expiration hints provided in the POSH reference document or fingerprints documents.  To that end, the HTTPS servers for Source Domains and Derived Domains SHOULD specify a 'Cache-Control' header indicating a very short duration (e.g., max-age=60) or "no-cache" to indicate that the response (redirect, reference, or content) is not appropriate to cache at the HTTP layer.</t>
     </section>
 
     <section title="Alternates and Roll-over" anchor="rollover">

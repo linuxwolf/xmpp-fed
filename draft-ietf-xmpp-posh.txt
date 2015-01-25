@@ -5,8 +5,8 @@
 XMPP Working Group                                             M. Miller
 Internet-Draft                                       Cisco Systems, Inc.
 Intended status: Standards Track                          P. Saint-Andre
-Expires: July 27, 2015                                              &yet
-                                                        January 23, 2015
+Expires: July 29, 2015                                              &yet
+                                                        January 25, 2015
 
 
                       PKIX over Secure HTTP (POSH)
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on July 27, 2015.
+   This Internet-Draft will expire on July 29, 2015.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Miller & Saint-Andre      Expires July 27, 2015                 [Page 1]
+Miller & Saint-Andre      Expires July 29, 2015                 [Page 1]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Miller & Saint-Andre      Expires July 27, 2015                 [Page 2]
+Miller & Saint-Andre      Expires July 29, 2015                 [Page 2]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -152,20 +152,20 @@ Internet-Draft                    POSH                      January 2015
 
    One possible approach that your team has investigated is to ask each
    customer to provide the public key / certificate for the "foo"
-   service at a special HTTPS URL on their website ("https://
-   bar.example.com/.well-known/posh.foo.json" is one possibility).  This
-   could be a public key that you generate for the customer, but because
-   the customer hosts it via HTTPS, any user agent can find that public
-   key and check it against the public key you provide during TLS
-   negotiation for the "foo" service (as one added benefit, the customer
-   never needs to hand you a private key).  Alternatively, the customer
-   can redirect requests for that special HTTPS URL to an HTTPS URL at
-   your own website, thus making it explicit that they have delegated
-   the "foo" service to you.
+   service at a special HTTPS URL on their website
+   ("https://bar.example.com/.well-known/posh.foo.json" is one
+   possibility).  This could be a public key that you generate for the
+   customer, but because the customer hosts it via HTTPS, any user agent
+   can find that public key and check it against the public key you
+   provide during TLS negotiation for the "foo" service (as one added
+   benefit, the customer never needs to hand you a private key).
+   Alternatively, the customer can redirect requests for that special
+   HTTPS URL to an HTTPS URL at your own website, thus making it
+   explicit that they have delegated the "foo" service to you.
 
 
 
-Miller & Saint-Andre      Expires July 27, 2015                 [Page 3]
+Miller & Saint-Andre      Expires July 29, 2015                 [Page 3]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -180,8 +180,8 @@ Internet-Draft                    POSH                      January 2015
 2.  Terminology
 
    This document inherits security terminology from [RFC5280].  The
-   terms "Source Domain", "derived domain", "reference identifier", and
-   "presented identifier" are used as defined in the "CertID"
+   terms "Source Domain", "Delegated Domain", "Derived Domain", and
+   "Reference Identifier" are used as defined in the "CertID"
    specification [RFC6125].
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -221,7 +221,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 27, 2015                 [Page 4]
+Miller & Saint-Andre      Expires July 29, 2015                 [Page 4]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -277,7 +277,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 27, 2015                 [Page 5]
+Miller & Saint-Andre      Expires July 29, 2015                 [Page 5]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -333,7 +333,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 27, 2015                 [Page 6]
+Miller & Saint-Andre      Expires July 29, 2015                 [Page 6]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -389,7 +389,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 27, 2015                 [Page 7]
+Miller & Saint-Andre      Expires July 29, 2015                 [Page 7]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -406,8 +406,8 @@ Internet-Draft                    POSH                      January 2015
 
 5.  Order of Operations
 
-   In order for the POSH client to perform verification of reference
-   identifiers without potentially compromising data, POSH processes
+   In order for the POSH client to perform verification of Reference
+   Identifiers without potentially compromising data, POSH processes
    MUST be complete before any application-layer data is exchanged for
    the Source Domain.  In cases where the POSH client initiates an
    application-layer connection, the client SHOULD perform all POSH
@@ -445,7 +445,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 27, 2015                 [Page 8]
+Miller & Saint-Andre      Expires July 29, 2015                 [Page 8]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -490,7 +490,7 @@ Internet-Draft                    POSH                      January 2015
    The POSH client SHOULD NOT rely on HTTP caching mechanisms, instead
    using the expiration hints provided in the POSH reference document or
    fingerprints documents.  To that end, the HTTPS servers for Source
-   Domains and derived domains SHOULD specify a 'Cache-Control' header
+   Domains and Derived Domains SHOULD specify a 'Cache-Control' header
    indicating a very short duration (e.g., max-age=60) or "no-cache" to
    indicate that the response (redirect, reference, or content) is not
    appropriate to cache at the HTTP layer.
@@ -501,7 +501,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 27, 2015                 [Page 9]
+Miller & Saint-Andre      Expires July 29, 2015                 [Page 9]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -557,7 +557,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 27, 2015                [Page 10]
+Miller & Saint-Andre      Expires July 29, 2015                [Page 10]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -613,7 +613,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 27, 2015                [Page 11]
+Miller & Saint-Andre      Expires July 29, 2015                [Page 11]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -669,7 +669,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 27, 2015                [Page 12]
+Miller & Saint-Andre      Expires July 29, 2015                [Page 12]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -697,7 +697,7 @@ Internet-Draft                    POSH                      January 2015
 
    [I-D.ietf-websec-key-pinning]
               Evans, C., Palmer, C., and R. Sleevi, "Public Key Pinning
-              Extension for HTTP", draft-ietf-websec-key-pinning-15
+              Extension for HTTP", draft-ietf-websec-key-pinning-14
               (work in progress), June 2014.
 
    [I-D.ietf-xmpp-dna]
@@ -725,7 +725,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 27, 2015                [Page 13]
+Miller & Saint-Andre      Expires July 29, 2015                [Page 13]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -756,8 +756,8 @@ Internet-Draft                    POSH                      January 2015
               308 (Permanent Redirect)", RFC 7238, June 2014.
 
    [HASH-NAMES]
-              "Hash Function Textual Names", <http://www.iana.org/
-              assignments/hash-function-text-names/
+              "Hash Function Textual Names",
+              <http://www.iana.org/assignments/hash-function-text-names/
               hash-function-text-names.xhtml>.
 
 Appendix A.  Acknowledgements
@@ -781,7 +781,7 @@ Authors' Addresses
 
 
 
-Miller & Saint-Andre      Expires July 27, 2015                [Page 14]
+Miller & Saint-Andre      Expires July 29, 2015                [Page 14]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -837,4 +837,4 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 27, 2015                [Page 15]
+Miller & Saint-Andre      Expires July 29, 2015                [Page 15]
