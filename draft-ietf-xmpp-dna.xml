@@ -385,26 +385,15 @@
           <t>The parties can then terminate the second connection, since it was used only for Server 1 to associate a stream with the domain name c.example (the dialback key links the original stream to the new association).</t>
         </section>
         <section title="Supposition" anchor="s2s-piggybacking-supposition">
-          <t>Piggybacking can also occur in the other direction.  Consider the common scenario in which Server 1 provides XMPP services not only for a.example but also for a subdomain such as a groupchat service at rooms.a.example (see <xref target='XEP-0045'/>).  If a user from c.example at Server 2 wishes to join a room on the groupchat sevice, Server 2 needs to send XMPP stanzas from the domain c.example to the domain rooms.a.example rather than a.example.  Therefore, Server 2 needs to negotiate and authenticate a stream to rooms.a.example:</t>
+          <t>Piggybacking can also occur in the other direction.  Consider the common scenario in which Server 1 provides XMPP services not only for a.example but also for a subdomain such as a groupchat service at rooms.a.example (see <xref target='XEP-0045'/>).  If a user from c.example at Server 2 wishes to join a room on the groupchat sevice, Server 2 needs to send XMPP stanzas from the domain c.example to the domain rooms.a.example rather than a.example. First, Server 2 needs to determine whether it can piggyback the domain rooms.a.example on the connection to a.example:</t>
           <t>
             <list style='numbers'>
               <t>Server 2 resolves the DNS domain name rooms.a.example.</t>
-              <t>Server 2 opens a TCP connection to the resolved IP address.</t>
-              <t>
-                Server 2 sends an initial stream header to Server 1 acting as rooms.a.example, asserting that it is b.example:
-                <vspace blankLines='1'/>
-                &lt;stream:stream from='b.example' to='rooms.a.example'&gt;
-              </t>
-              <t>
-                Server 1 sends a response stream header to Server 2, asserting that it is rooms.a.example:
-                <vspace blankLines='1'/>
-                &lt;stream:stream from='rooms.a.example' to='b.example'&gt;
-              </t>
-              <t>The servers attempt TLS negotiation, during which Server 1 (acting as a TLS server) presents a PKIX certificate proving that it is rooms.a.example.</t>
-              <t>Once again, the Server Dialback protocol is used to establish an association between the streams:
+              <t>Server 2 determines this resolves to an IP address and port that it is already connected to.</t>
+              <t>Server 2 determines that the PKIX certifіcate for that active connection would also be valid for the rooms.a.example domain and that Server 1 haѕ announced support for dialback errors.</t>
             </list>
           </t>
-          <t>As before, the parties now have two TCP connections open.  So that they can close the now-redundant connection, Server 2 sends a dialback key to Server 1 over the old connection.</t>
+          <t>Server 2 sends a dialback key to Server 1 over the existing connection.</t>
           <figure>
             <artwork><![CDATA[
     <db:result from='c.example' to='rooms.a.example'>
@@ -418,7 +407,6 @@
     <db:result from='rooms.a.example' to='c.example' type='valid'/>
             ]]></artwork>
           </figure>
-          <t>Server 2 can now close the connection over which it tested the domain name association for rooms.a.example.</t>
         </section>
       </section>
     </section>
