@@ -5,8 +5,8 @@
 XMPP Working Group                                             M. Miller
 Internet-Draft                                       Cisco Systems, Inc.
 Intended status: Standards Track                          P. Saint-Andre
-Expires: July 29, 2015                                              &yet
-                                                        January 25, 2015
+Expires: July 30, 2015                                              &yet
+                                                        January 26, 2015
 
 
                       PKIX over Secure HTTP (POSH)
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on July 29, 2015.
+   This Internet-Draft will expire on July 30, 2015.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Miller & Saint-Andre      Expires July 29, 2015                 [Page 1]
+Miller & Saint-Andre      Expires July 30, 2015                 [Page 1]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Miller & Saint-Andre      Expires July 29, 2015                 [Page 2]
+Miller & Saint-Andre      Expires July 30, 2015                 [Page 2]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -165,7 +165,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 29, 2015                 [Page 3]
+Miller & Saint-Andre      Expires July 30, 2015                 [Page 3]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -221,7 +221,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 29, 2015                 [Page 4]
+Miller & Saint-Andre      Expires July 30, 2015                 [Page 4]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -277,7 +277,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 29, 2015                 [Page 5]
+Miller & Saint-Andre      Expires July 30, 2015                 [Page 5]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -333,7 +333,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 29, 2015                 [Page 6]
+Miller & Saint-Andre      Expires July 30, 2015                 [Page 6]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -389,7 +389,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 29, 2015                 [Page 7]
+Miller & Saint-Andre      Expires July 30, 2015                 [Page 7]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -445,7 +445,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 29, 2015                 [Page 8]
+Miller & Saint-Andre      Expires July 30, 2015                 [Page 8]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -501,7 +501,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 29, 2015                 [Page 9]
+Miller & Saint-Andre      Expires July 30, 2015                 [Page 9]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -557,7 +557,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 29, 2015                [Page 10]
+Miller & Saint-Andre      Expires July 30, 2015                [Page 10]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -613,7 +613,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 29, 2015                [Page 11]
+Miller & Saint-Andre      Expires July 30, 2015                [Page 11]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -669,7 +669,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 29, 2015                [Page 12]
+Miller & Saint-Andre      Expires July 30, 2015                [Page 12]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -725,7 +725,7 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 29, 2015                [Page 13]
+Miller & Saint-Andre      Expires July 30, 2015                [Page 13]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -781,7 +781,7 @@ Authors' Addresses
 
 
 
-Miller & Saint-Andre      Expires July 29, 2015                [Page 14]
+Miller & Saint-Andre      Expires July 30, 2015                [Page 14]
 
 Internet-Draft                    POSH                      January 2015
 
@@ -837,4 +837,4 @@ Internet-Draft                    POSH                      January 2015
 
 
 
-Miller & Saint-Andre      Expires July 29, 2015                [Page 15]
+Miller & Saint-Andre      Expires July 30, 2015                [Page 15]
