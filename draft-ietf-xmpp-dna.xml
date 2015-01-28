@@ -325,7 +325,7 @@
             <t>The servers attempt TLS negotiation, during which Server 1 (acting as a TLS server) presents a PKIX certificate proving that it is a.example.</t>
             <t>Server 2 checks the PKIX certificate that Server 1 provided. This might be the same certificate presented by Server 1 as a client certificate in the initial connection. Even if this certificate is not signed by a trusted CA (for example it could be self-signed) Server 2 can assert that there is an association between the incoming connection and the domain name a.example. Note that this may be insecure unless DNSSEC is used.</t>
             <t>
-              If the certificate provided by Server 1 is different from the one presented in the initial connection, Server 2 proceeds with Server Dialback in order to establish the Domain Name Association. In order to do this it sends a request for verification as described in XEP-0220:
+              If the certificate provided by Server 1 is different from the one presented in the initial connection, Server 2 proceeds with Server Dialback in order to establish the domain name association. In order to do this it sends a request for verification as described in XEP-0220:
               <vspace blankLines='1'/>
               &lt;db:verify from='b.example' to='a.example' id='...'&gt;some-dialback-key&lt;/db:verify&gt;
             </t>
