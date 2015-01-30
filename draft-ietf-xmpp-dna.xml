@@ -398,7 +398,7 @@
             <list style='numbers'>
               <t>Server 2 resolves the DNS domain name rooms.a.example.</t>
               <t>Server 2 determines this resolves to an IP address and port that it is already connected to.</t>
-              <t>Server 2 determines that the PKIX certifіcate for that active connection would also be valid for the rooms.a.example domain and that Server 1 haѕ announced support for dialback errors.</t>
+              <t>Server 2 determines that the PKIX certificate for that active connection would also be valid for the rooms.a.example domain and that Server 1 has announced support for dialback errors.</t>
             </list>
           </t>
           <t>Server 2 sends a dialback key to Server 1 over the existing connection.</t>
