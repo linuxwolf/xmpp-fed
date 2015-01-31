@@ -124,6 +124,7 @@
             <t>The client checks the PKIX certificate that the server provided; if the proof is consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, the client accepts that there is a strong domain name association between its stream to the target server and the DNS domain name of the XMPP service.</t>
           </list>
         </t>
+        <t>Note that the certificate the server presents may not be trusted by the client, e.g. because the server is hosting multiple domains and secure delegation as described in Section 6 is necessary. Another example is a self-signed certificate which requires the client to follow the fallback process described in section 6.6.4 of <xref target='RFC6125'/> .</t>
       </section>
     </section>
 
@@ -297,13 +298,14 @@
         <t>Several simplifying assumptions underlie the happy scenario just outlined:</t>
         <t>
           <list style='symbols'>
+            <t>The PKIX certificate presented by Server 2 during TLS negotiation is trusted by Server 1 and matches the expected identity.</t>
             <t>The PKIX certificate presented by Server 1 during TLS negotiation is trusted by Server 2, which enables the parties to complete mutual authentication.</t>
             <t>There are no additional domains associated with Server 1 and Server 2 (say, a subdomain rooms.a.example on Server 1 or a second domain c.example on Server 2).</t>
             <t>The server administrators are able to obtain PKIX certificates in the first place.</t>
             <t>The server administrators are running their own XMPP servers, rather than using hosting services.</t>
           </list>
         </t>
-        <t>Let's consider each of these "wrinkles" in turn.</t>
+        <t>Let's consider each of these "wrinkles" in turn. Since Server 1 is acting as a S2S client the behaviour is same as in the C2S case described in Section 3.2.</t>
       </section>
 
       <section title="One-Way Authentication" anchor="s2s-oneway">

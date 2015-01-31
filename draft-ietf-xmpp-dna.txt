@@ -82,20 +82,20 @@ Table of Contents
      4.4.  Piggybacking  . . . . . . . . . . . . . . . . . . . . . .  10
        4.4.1.  Assertion . . . . . . . . . . . . . . . . . . . . . .  10
        4.4.2.  Supposition . . . . . . . . . . . . . . . . . . . . .  12
-   5.  Alternative Prooftypes  . . . . . . . . . . . . . . . . . . .  12
+   5.  Alternative Prooftypes  . . . . . . . . . . . . . . . . . . .  13
      5.1.  DANE  . . . . . . . . . . . . . . . . . . . . . . . . . .  13
-     5.2.  POSH  . . . . . . . . . . . . . . . . . . . . . . . . . .  13
+     5.2.  POSH  . . . . . . . . . . . . . . . . . . . . . . . . . .  14
    6.  Secure Delegation and Multi-Tenancy . . . . . . . . . . . . .  14
    7.  Prooftype Model . . . . . . . . . . . . . . . . . . . . . . .  15
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  15
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  16
      8.1.  Well-Known URI for xmpp-client Service  . . . . . . . . .  16
      8.2.  Well-Known URI for xmpp-server Service  . . . . . . . . .  16
    9.  Security Considerations . . . . . . . . . . . . . . . . . . .  16
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  16
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  16
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  17
      10.2.  Informative References . . . . . . . . . . . . . . . . .  18
    Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  18
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  18
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  19
 
 1.  Introduction
 
@@ -236,6 +236,12 @@ Internet-Draft                  XMPP DNA                    January 2015
        domain name association between its stream to the target server
        and the DNS domain name of the XMPP service.
 
+   Note that the certificate the server presents may not be trusted by
+   the client, e.g. because the server is hosting multiple domains and
+   secure delegation as described in Section 6 is necessary.  Another
+   example is a self-signed certificate which requires the client to
+   follow the fallback process described in section 6.6.4 of [RFC6125] .
+
 4.  Server-to-Server (S2S) DNA
 
    The server-to-server case is significantly more complex than the
@@ -268,12 +274,6 @@ Internet-Draft                  XMPP DNA                    January 2015
    |   B: Certificate Request                      |
    |   A: Client Certificate                       |
    |                                               |
-   +-----------------------------------------------+
-                       |
-           (A establishes DNA for b.example)
-                       |
-   +-------------AUTHENTICATION--------------------+
-   |                   |                           |
 
 
 
@@ -282,6 +282,12 @@ Saint-Andre, et al.      Expires August 3, 2015                 [Page 5]
 Internet-Draft                  XMPP DNA                    January 2015
 
 
+   +-----------------------------------------------+
+                       |
+           (A establishes DNA for b.example)
+                       |
+   +-------------AUTHENTICATION--------------------+
+   |                   |                           |
    |       {valid client certificate?} -+          |
    |                   |                |          |
    |                   | yes         no |          |
@@ -324,12 +330,6 @@ Internet-Draft                  XMPP DNA                    January 2015
    +----------DIALBACK IDENTITY VERIFICATION-------+
    |                                               |
    |  A: <db:verify from='b.example'               |
-   |                to='a.example'                 |
-   |                id=...'>                       |
-   |       some-dialback-key                       |
-   |     </db:verify>                              |
-   |  B: <db:verify from='a.example'               |
-   |                to='b.example'                 |
 
 
 
@@ -338,6 +338,12 @@ Saint-Andre, et al.      Expires August 3, 2015                 [Page 6]
 Internet-Draft                  XMPP DNA                    January 2015
 
 
+   |                to='a.example'                 |
+   |                id=...'>                       |
+   |       some-dialback-key                       |
+   |     </db:verify>                              |
+   |  B: <db:verify from='a.example'               |
+   |                to='b.example'                 |
    |                type='valid'                   |
    |                id=...'>                       |
    |                                               |
@@ -380,12 +386,6 @@ Internet-Draft                  XMPP DNA                    January 2015
    |                                               |
    |  A: <stream from='rooms.a.example'            |
    |             to='c.example'>                   |
-   |                                               |
-   +-----------------------------------------------+
-                       |
-   +-----------DNA DANCE AS ABOVE------------------+
-   |                                               |
-   |    DNS RESOLUTION, STREAM HEADERS,            |
 
 
 
@@ -394,6 +394,12 @@ Saint-Andre, et al.      Expires August 3, 2015                 [Page 7]
 Internet-Draft                  XMPP DNA                    January 2015
 
 
+   |                                               |
+   +-----------------------------------------------+
+                       |
+   +-----------DNA DANCE AS ABOVE------------------+
+   |                                               |
+   |    DNS RESOLUTION, STREAM HEADERS,            |
    |    TLS NEGOTIATION, AUTHENTICATION            |
    |                                               |
    +-----------------------------------------------+
@@ -435,12 +441,6 @@ Internet-Draft                  XMPP DNA                    January 2015
        it is b.example and Server 1 (acting as a TLS client) presents a
        PKIX certificate proving that it is a.example.
 
-   6.  Server 1 checks the PKIX certificate that Server 2 provided and
-       Server 2 checks the PKIX certificate that Server 1 provided; if
-       these proofs are consistent with the XMPP profile of the matching
-       rules from [RFC6125], each server accepts that there is a strong
-       domain name association between its stream to the other party and
-       the DNS domain name of the other party.
 
 
 
@@ -450,8 +450,18 @@ Saint-Andre, et al.      Expires August 3, 2015                 [Page 8]
 Internet-Draft                  XMPP DNA                    January 2015
 
 
+   6.  Server 1 checks the PKIX certificate that Server 2 provided and
+       Server 2 checks the PKIX certificate that Server 1 provided; if
+       these proofs are consistent with the XMPP profile of the matching
+       rules from [RFC6125], each server accepts that there is a strong
+       domain name association between its stream to the other party and
+       the DNS domain name of the other party.
+
    Several simplifying assumptions underlie the happy scenario just
    outlined:
+
+   o  The PKIX certificate presented by Server 2 during TLS negotiation
+      is trusted by Server 1 and matches the expected identity.
 
    o  The PKIX certificate presented by Server 1 during TLS negotiation
       is trusted by Server 2, which enables the parties to complete
@@ -467,7 +477,9 @@ Internet-Draft                  XMPP DNA                    January 2015
    o  The server administrators are running their own XMPP servers,
       rather than using hosting services.
 
-   Let's consider each of these "wrinkles" in turn.
+   Let's consider each of these "wrinkles" in turn.  Since Server 1 is
+   acting as a S2S client the behaviour is same as in the C2S case
+   described in Section 3.2.
 
 4.3.  One-Way Authentication
 
@@ -485,6 +497,15 @@ Internet-Draft                  XMPP DNA                    January 2015
 
        <stream:stream from='b.example' to='a.example'>
 
+
+
+
+
+Saint-Andre, et al.      Expires August 3, 2015                 [Page 9]
+
+Internet-Draft                  XMPP DNA                    January 2015
+
+
    4.  Server 1 sends a response stream header to Server 2, asserting
        that it is a.example:
 
@@ -498,14 +519,6 @@ Internet-Draft                  XMPP DNA                    January 2015
        This might be the same certificate presented by Server 1 as a
        client certificate in the initial connection.  Even if this
        certificate is not signed by a trusted CA (for example it could
-
-
-
-Saint-Andre, et al.      Expires August 3, 2015                 [Page 9]
-
-Internet-Draft                  XMPP DNA                    January 2015
-
-
        be self-signed) Server 2 can assert that there is an association
        between the incoming connection and the domain name a.example.
        Note that this may be insecure unless DNSSEC is used.
@@ -541,6 +554,14 @@ Internet-Draft                  XMPP DNA                    January 2015
    XMPP stanzas from the domain c.example rather than b.example.
    Although Server 2 could open an new TCP connection and negotiate new
    XML streams for the domain pair of c.example and a.example, that too
+
+
+
+Saint-Andre, et al.      Expires August 3, 2015                [Page 10]
+
+Internet-Draft                  XMPP DNA                    January 2015
+
+
    is wasteful.  Server 2 already has a connection to a.example, so how
    can it assert that it would like to add a new domain pair to the
    existing connection?
@@ -553,14 +574,6 @@ Internet-Draft                  XMPP DNA                    January 2015
        <db:result from='c.example' to='a.example'>
          some-dialback-key
        </db:result>
-
-
-
-
-Saint-Andre, et al.      Expires August 3, 2015                [Page 10]
-
-Internet-Draft                  XMPP DNA                    January 2015
-
 
    This element functions as Server 2's assertion that it is (also)
    c.example, and thus is functionally equivalent to the 'from' address
@@ -597,6 +610,14 @@ Internet-Draft                  XMPP DNA                    January 2015
        different certificates, c.example is associated with the origin
        of the request.  This is done using the Server Dialback Protocol:
 
+
+
+
+Saint-Andre, et al.      Expires August 3, 2015                [Page 11]
+
+Internet-Draft                  XMPP DNA                    January 2015
+
+
        <db:verify from='a.example' to='c.example' id='...'>some-
        dialback-key</db:verify>
 
@@ -610,13 +631,6 @@ Internet-Draft                  XMPP DNA                    January 2015
    Server 2 of that fact:
 
        <db:result from='a.example' to='c.example' type='valid'/>
-
-
-
-Saint-Andre, et al.      Expires August 3, 2015                [Page 11]
-
-Internet-Draft                  XMPP DNA                    January 2015
-
 
    The parties can then terminate the second connection, since it was
    used only for Server 1 to associate a stream with the domain name
@@ -651,6 +665,15 @@ Internet-Draft                  XMPP DNA                    January 2015
          some-dialback-key
        </db:result>
 
+
+
+
+
+Saint-Andre, et al.      Expires August 3, 2015                [Page 12]
+
+Internet-Draft                  XMPP DNA                    January 2015
+
+
    Server 1 then informs Server 2 that it accepts the domain name
    association:
 
@@ -664,15 +687,6 @@ Internet-Draft                  XMPP DNA                    January 2015
    checked according to the XMPP profile [RFC6120] of the matching rules
    from [RFC6125], the client's verification material is obtained out of
    band in the form of a trusted root, and secure DNS is not necessary.
-
-
-
-
-
-Saint-Andre, et al.      Expires August 3, 2015                [Page 12]
-
-Internet-Draft                  XMPP DNA                    January 2015
-
 
    However, sometimes XMPP server administrators are unable or unwilling
    to obtain valid PKIX certificates for their servers.  As one example,
@@ -708,6 +722,14 @@ Internet-Draft                  XMPP DNA                    January 2015
 
    o  Use the 'to' address of the initial stream header to determine the
       domain name of the TLS client's reference identifier (since use of
+
+
+
+Saint-Andre, et al.      Expires August 3, 2015                [Page 13]
+
+Internet-Draft                  XMPP DNA                    January 2015
+
+
       the TLS Server Name Indication is purely discretionary in XMPP, as
       mentioned in [RFC6120]).
 
@@ -720,15 +742,6 @@ Internet-Draft                  XMPP DNA                    January 2015
    [RFC5785], and secure DNS is not necessary since the HTTPS retrieval
    mechanism relies on the chain of trust from the public key
    infrastructure.
-
-
-
-
-
-Saint-Andre, et al.      Expires August 3, 2015                [Page 13]
-
-Internet-Draft                  XMPP DNA                    January 2015
-
 
    POSH is defined in [I-D.ietf-xmpp-posh].  For XMPP purposes, the
    following rules apply:
@@ -765,6 +778,14 @@ Internet-Draft                  XMPP DNA                    January 2015
    de.example and jabber-ch.example).  However, in practice the security
    of multi-tenancy has been found to be unwieldy when the provider
    hosts large numbers of XMPP services on behalf of multiple tenants
+
+
+
+Saint-Andre, et al.      Expires August 3, 2015                [Page 14]
+
+Internet-Draft                  XMPP DNA                    January 2015
+
+
    (see [I-D.ietf-xmpp-posh] for a detailed description).  Typically
    there are two main reasons for this state of affairs: the service
    provider (say, hosting.example.net) wishes to limit its liability and
@@ -778,14 +799,6 @@ Internet-Draft                  XMPP DNA                    January 2015
    key exchange).  This is also true of client-to-server communications,
    forcing end users to override certificate warnings or configure their
    clients to accept certificates for hosting.example.net instead of
-
-
-
-Saint-Andre, et al.      Expires August 3, 2015                [Page 14]
-
-Internet-Draft                  XMPP DNA                    January 2015
-
-
    example.com.  The fundamental problem here is that if DNSSEC is not
    used then the act of delegation via DNS SRV records is inherently
    insecure.
@@ -821,6 +834,14 @@ Internet-Draft                  XMPP DNA                    January 2015
    framework document does not define how the generation and validation
    of Server Dialback keys (also specified in [XEP-0220]) is a DNA
    prooftype.  However, nothing in this document prevents the continued
+
+
+
+Saint-Andre, et al.      Expires August 3, 2015                [Page 15]
+
+Internet-Draft                  XMPP DNA                    January 2015
+
+
    use of server dialback, and a future specification (or an updated
    version of [XEP-0220]) might define a DNA prooftype for dialback in a
    way that is consistent with this framework.
@@ -831,16 +852,6 @@ Internet-Draft                  XMPP DNA                    January 2015
    registering the well-known URIs [RFC5785] of protocols that make use
    of POSH.  This specification registers two such URIs, for which the
    completed registration templates follow.
-
-
-
-
-
-
-Saint-Andre, et al.      Expires August 3, 2015                [Page 15]
-
-Internet-Draft                  XMPP DNA                    January 2015
-
 
 8.1.  Well-Known URI for xmpp-client Service
 
@@ -875,6 +886,18 @@ Internet-Draft                  XMPP DNA                    January 2015
 
 10.  References
 
+
+
+
+
+
+
+
+Saint-Andre, et al.      Expires August 3, 2015                [Page 16]
+
+Internet-Draft                  XMPP DNA                    January 2015
+
+
 10.1.  Normative References
 
    [I-D.ietf-dane-srv]
@@ -890,13 +913,6 @@ Internet-Draft                  XMPP DNA                    January 2015
 
    [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
               STD 13, RFC 1034, November 1987.
-
-
-
-Saint-Andre, et al.      Expires August 3, 2015                [Page 16]
-
-Internet-Draft                  XMPP DNA                    January 2015
-
 
    [RFC1035]  Mockapetris, P., "Domain names - implementation and
               specification", STD 13, RFC 1035, November 1987.
@@ -930,6 +946,14 @@ Internet-Draft                  XMPP DNA                    January 2015
               (PKIX) Certificates in the Context of Transport Layer
               Security (TLS)", RFC 6125, March 2011.
 
+
+
+
+Saint-Andre, et al.      Expires August 3, 2015                [Page 17]
+
+Internet-Draft                  XMPP DNA                    January 2015
+
+
    [RFC6698]  Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
               of Named Entities (DANE) Transport Layer Security (TLS)
               Protocol: TLSA", RFC 6698, August 2012.
@@ -941,18 +965,6 @@ Internet-Draft                  XMPP DNA                    January 2015
    [XEP-0220]
               Miller, J., Saint-Andre, P., and P. Hancke, "Server
               Dialback", XSF XEP 0220, September 2013.
-
-
-
-
-
-
-
-
-Saint-Andre, et al.      Expires August 3, 2015                [Page 17]
-
-Internet-Draft                  XMPP DNA                    January 2015
-
 
 10.2.  Informative References
 
@@ -986,6 +998,18 @@ Appendix A.  Acknowledgements
    Thanks to Richard Barnes, Stephen Farrell, and Jonas Lindberg for
    contributing to earlier versions of this document.
 
+
+
+
+
+
+
+
+Saint-Andre, et al.      Expires August 3, 2015                [Page 18]
+
+Internet-Draft                  XMPP DNA                    January 2015
+
+
 Authors' Addresses
 
    Peter Saint-Andre
@@ -1004,35 +1028,11 @@ Authors' Addresses
    Email: mamille2@cisco.com
 
 
-
-Saint-Andre, et al.      Expires August 3, 2015                [Page 18]
-
-Internet-Draft                  XMPP DNA                    January 2015
-
-
    Philipp Hancke
    &yet
 
    Email: fippo@andyet.com
    URI:   https://andyet.com/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
