@@ -124,7 +124,7 @@
             <t>The client checks the PKIX certificate that the server provided; if the proof is consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, the client accepts that there is a strong domain name association between its stream to the target server and the DNS domain name of the XMPP service.</t>
           </list>
         </t>
-        <t>Note that the certificate the server presents may not be trusted by the client, e.g. because the server is hosting multiple domains and secure delegation as described in Section 6 is necessary. Another example is a self-signed certificate which requires the client to follow the fallback process described in section 6.6.4 of <xref target='RFC6125'/>.</t>
+        <t>Note that the certificate the server presents may not be trusted by the client, e.g. because the server is hosting multiple domains and secure delegation as described in Section 6 is necessary. Another example is a self-signed certificate which requires the client to apply either the fallback process described in section 6.6.4 of <xref target='RFC6125'/> or the rationale outlined in <xref target='I-D.ietf-uta-xmpp'/>.</t>
       </section>
     </section>
 
@@ -965,6 +965,22 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
         </front>
         <seriesInfo name="XSF XEP" value="0288"/>
         <format type="HTML" target="http://xmpp.org/extensions/xep-0288.html"/>
+      </reference>
+
+      <reference anchor='I-D.ietf-uta-xmpp'>
+        <front>
+          <title>Use of Transport Layer Security (TLS) in the Extensible Messaging and Presence Protocol (XMPP)</title>
+          <author initials='P' surname='Saint-Andre' fullname='Peter Saint-Andre'>
+            <organization />
+          </author>
+          <author initials='T' surname='Alkemade' fullname='Thijs Alkemade'>
+            <organization />
+          </author>
+          <date month='January' day='23' year='2015' />
+          <abstract><t>This document provides recommendations for the use of Transport Layer Security (TLS) in the Extensible Messaging and Presence Protocol (XMPP).  This document updates RFC 6120.</t></abstract>
+        </front>
+        <seriesInfo name='Internet-Draft' value='draft-ietf-uta-xmpp-05' />
+        <format type='TXT' target='http://www.ietf.org/internet-drafts/draft-ietf-uta-xmpp-05.txt' />
       </reference>
 
     </references>

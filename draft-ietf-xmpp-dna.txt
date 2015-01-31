@@ -94,7 +94,7 @@ Table of Contents
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  16
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  17
      10.2.  Informative References . . . . . . . . . . . . . . . . .  18
-   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  18
+   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  19
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  19
 
 1.  Introduction
@@ -240,7 +240,8 @@ Internet-Draft                  XMPP DNA                    January 2015
    the client, e.g. because the server is hosting multiple domains and
    secure delegation as described in Section 6 is necessary.  Another
    example is a self-signed certificate which requires the client to
-   follow the fallback process described in section 6.6.4 of [RFC6125].
+   apply either the fallback process described in section 6.6.4 of
+   [RFC6125] or the rationale outlined in [I-D.ietf-uta-xmpp].
 
 4.  Server-to-Server (S2S) DNA
 
@@ -273,7 +274,6 @@ Internet-Draft                  XMPP DNA                    January 2015
    |   B: Server Certificate                       |
    |   B: Certificate Request                      |
    |   A: Client Certificate                       |
-   |                                               |
 
 
 
@@ -282,6 +282,7 @@ Saint-Andre, et al.      Expires August 3, 2015                 [Page 5]
 Internet-Draft                  XMPP DNA                    January 2015
 
 
+   |                                               |
    +-----------------------------------------------+
                        |
            (A establishes DNA for b.example)
@@ -329,7 +330,6 @@ Internet-Draft                  XMPP DNA                    January 2015
                        |
    +----------DIALBACK IDENTITY VERIFICATION-------+
    |                                               |
-   |  A: <db:verify from='b.example'               |
 
 
 
@@ -338,6 +338,7 @@ Saint-Andre, et al.      Expires August 3, 2015                 [Page 6]
 Internet-Draft                  XMPP DNA                    January 2015
 
 
+   |  A: <db:verify from='b.example'               |
    |                to='a.example'                 |
    |                id=...'>                       |
    |       some-dialback-key                       |
@@ -385,7 +386,6 @@ Internet-Draft                  XMPP DNA                    January 2015
    |             to='rooms.a.example'>             |
    |                                               |
    |  A: <stream from='rooms.a.example'            |
-   |             to='c.example'>                   |
 
 
 
@@ -394,6 +394,7 @@ Saint-Andre, et al.      Expires August 3, 2015                 [Page 7]
 Internet-Draft                  XMPP DNA                    January 2015
 
 
+   |             to='c.example'>                   |
    |                                               |
    +-----------------------------------------------+
                        |
@@ -440,7 +441,6 @@ Internet-Draft                  XMPP DNA                    January 2015
        (acting as a TLS server) presents a PKIX certificate proving that
        it is b.example and Server 1 (acting as a TLS client) presents a
        PKIX certificate proving that it is a.example.
-
 
 
 
@@ -993,11 +993,11 @@ Internet-Draft                  XMPP DNA                    January 2015
               Hancke, P. and D. Cridland, "Bidirectional Server-to-
               Server Connections", XSF XEP 0288, September 2013.
 
-Appendix A.  Acknowledgements
-
-   Thanks to Richard Barnes, Stephen Farrell, and Jonas Lindberg for
-   contributing to earlier versions of this document.
-
+   [I-D.ietf-uta-xmpp]
+              Saint-Andre, P. and T. Alkemade, "Use of Transport Layer
+              Security (TLS) in the Extensible Messaging and Presence
+              Protocol (XMPP)", draft-ietf-uta-xmpp-05 (work in
+              progress), January 2015.
 
 
 
@@ -1009,6 +1009,11 @@ Saint-Andre, et al.      Expires August 3, 2015                [Page 18]
 
 Internet-Draft                  XMPP DNA                    January 2015
 
+
+Appendix A.  Acknowledgements
+
+   Thanks to Richard Barnes, Stephen Farrell, and Jonas Lindberg for
+   contributing to earlier versions of this document.
 
 Authors' Addresses
 
@@ -1033,11 +1038,6 @@ Authors' Addresses
 
    Email: fippo@andyet.com
    URI:   https://andyet.com/
-
-
-
-
-
 
 
 
