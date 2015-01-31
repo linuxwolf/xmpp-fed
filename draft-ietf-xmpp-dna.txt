@@ -240,7 +240,7 @@ Internet-Draft                  XMPP DNA                    January 2015
    the client, e.g. because the server is hosting multiple domains and
    secure delegation as described in Section 6 is necessary.  Another
    example is a self-signed certificate which requires the client to
-   follow the fallback process described in section 6.6.4 of [RFC6125] .
+   follow the fallback process described in section 6.6.4 of [RFC6125].
 
 4.  Server-to-Server (S2S) DNA
 
