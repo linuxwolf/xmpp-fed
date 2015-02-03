@@ -13,7 +13,7 @@ Prooftype
 
 There are multiple approaches to verifying the domain associated with a (TLS) connection:
 
-* DANE < http://tools.ietf.org/html/draft-ietf-dane-protocol-23 >
+* DANE < http://tools.ietf.org/html/rfc6698 >
 * POSH (defined herein), using HTTPS and PKIX
 * PKIX < http://tools.ietf.org/html/rfc6125 >
 
@@ -23,7 +23,7 @@ Delegation
 Delegation is where one domain (e.g. "im.example.com") is actually hosted at another domain ("hosting.example.net").  There are multiple approaches to secure delegation:
 
 * DNSSEC < http://tools.ietf.org/html/rfc4033 >
-* HTTPS redirect of POSH (defined herein)
+* POSH 'pointer' document (defined herein)
 
 Assertions
 ==========
