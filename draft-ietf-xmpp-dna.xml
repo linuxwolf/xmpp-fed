@@ -318,6 +318,7 @@
           <list style='numbers'>
             <t>
               Server A asserts it is a.example using the Server Dialback protocol:
+              <vspace blankLines='1'/>
               &lt;db:result from='a.example' to='b.example' id='...'&gt;some-dialback-key&lt;/db:result&gt;
             </t>
             <t>Server B resolves the DNS domain name a.example.</t>
