@@ -172,21 +172,13 @@
                                       |
                     +-----------------+
                     | B needs to establish DNA
-                    | for its stream to a.example, 
+                    | for this stream from a.example, 
                     | so A asserts its identity
-
-AUTHORS: we don't actually show this example
-         later on...
-
                     |
 +----------DIALBACK IDENTITY ASSERTION----------+
 |                                               |
-|  A: <db:result from='b.example'               |
-
-AUTHORS: this was c.example, but don't we want
-         b.example here??
-
-|                to='a.example'>                |
+|  A: <db:result from='a.example'               |
+|                to='b.example'>                |
 |       some-dialback-key                       |
 |     </db:result>                              |
 |                                               |
@@ -213,24 +205,12 @@ AUTHORS: this was c.example, but don't we want
 +----------DIALBACK IDENTITY VERIFICATION-------+
 |                                               |
 |  B: <db:verify from='b.example'               |
-
-AUTHORS: this was from A, but shouldn't it be
-         from B?? Server B is the one that's 
-         trying to verify A's identity. See
-         Step 7 in Section 4.3...
-
 |                to='a.example'                 |
 |                id='...'>                      |
 |       some-dialback-key                       |
 |     </db:verify>                              |
 |                                               |
 |  A: <db:verify from='a.example'               |
-
-AUTHORS: this was from B, but shouldn't it be
-         from A?? Server A is the one verifying
-         the dialback key for a.example. See
-         Step 8 in Section 4.3...
-
 |                to='b.example'                 |
 |                type='valid'                   |
 |                id='...'>                      |
@@ -334,14 +314,12 @@ AUTHORS: this was from B, but shouldn't it be
 
       <section title="One-Way Authentication" anchor="s2s-oneway">
         <t>If the PKIX certificate presented by Server A during TLS negotiation is not trusted by Server B, Server B is unable to mutually authenticate Server A. Therefore, Server B needs to verify the asserted identity of Server A by other means.</t>
-
-<t>
-AUTHORS: we don't show the identity assertion here,
-         but it's in the flow diagram above!!
-</t>
-
         <t>
           <list style='numbers'>
+            <t>
+              Server A asserts it is a.example using the Server Dialback protocol:
+              &lt;db:result from='a.example' to='b.example' id='...'&gt;some-dialback-key&lt;/db:result&gt;
+            </t>
             <t>Server B resolves the DNS domain name a.example.</t>
             <t>Server B opens a TCP connection to the resolved IP address.</t>
             <t>
