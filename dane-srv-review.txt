@@ -1,9 +1,5 @@
 CONSOLIDATED FEEDBACK FROM VIKTOR DUKHOVNI
 
-[ I'm splitting it into a few messages to keep it manageable, and
-  in any case some of my comments are still pencil marks on a
-  print-out, not yet transcribed. ]
-
 ###
 
 This message covers that abstract and introduction.
@@ -18,6 +14,8 @@ General comment:
     single host.  So in many places I will be suggesting replacing
     statements about "hostnames" with statements about "transport
     endpoints".
+
+PSA: I don't want to lose the idea of a target server here...
 
 1. Abstract:
 
@@ -39,10 +37,17 @@ General comment:
     <t>
      The DANE specification (RFC 6698) describes how to use DNSSEC
      secured TLSA resource records to associate a transport endpoint
+
+PSA: a server's transport endpoint
+
      with corresponding TLS key material.  This document builds on
      RFC 6698 to specify DANE for application protocols that use SRV
      records (RFC 2782) to indirectly locate the transport endpoints
      associated with a given service at a service domain.
+
+PSA: the transport endpoints for a target server 
+     associated with a given service at a service domain.
+
     </t>
 
 2.  Introduction first two paragraphs:
@@ -77,6 +82,9 @@ General comment:
      records to associate a transport endpoint with corresponding
      TLS key material.  Some application protocols locate transport
      endpoints indirectly via SRV records <xref target="RFC2782"/>.
+
+PSA: here also mention target server and service domain
+
      As a result of this indirection, the rules specified in <xref
      target="RFC6698"/> cannot be applied verbatim to protocols that
      use SRV records. (Rules for SMTP <xref target='RFC5321'/>, which
@@ -95,6 +103,8 @@ General comment:
     some reason not clear to me) OPS is being held back relative
     to SMTP and SRV, detailed CNAME language can be found in
     the SMTP draft (modulo MX<->SRV substitution).
+
+
 
 Add to references:
 
@@ -122,6 +132,9 @@ Add to references:
        We rely on DNSSEC to secure SRV records that map the desired
        service, transport protocol and service domain to corresponding
        target transport endpoints (i.e., the host names and ports
+
+PSA: target server
+
        that are returned in the SRV records).
       </t>
  
@@ -136,6 +149,9 @@ Add to references:
        When DNSSEC validated TLSA records are published for a
        particular transport endpoint, and the endpoint supports both
        cleartext and TLS communication, clients SHOULD use TLS when
+
+PSA: MUST?
+
        connecting to that endpoint.
       </t>
 
@@ -144,6 +160,9 @@ Add to references:
        certificate or public key MUST match at least one of the
        usable TLSA records.  The primary reference identity for
        peername checks is the TLSA base domain (generally the target
+
+PSA: whence this "peername" term?
+
        host name) with the service domain also supported for
        compatibility with legacy deployments.  Additional acceptable
        peer names may arise as a result of CNAME expansion of either
@@ -325,6 +344,8 @@ feedback):
   queries.  TLSA queries should be made if either the A or AAAA
   response is secure (e.g., sometimes the absence of "AAAA" is
   "insecure" due to opt-out, while the "A" records are "secure").
+
+PSA: not sure about "usable"...
 
   When the zone containing the host's A/AAAA records is unsigned,
   queries for TLSA are more likely to fail than to unexpectedly
