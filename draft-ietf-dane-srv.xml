@@ -29,7 +29,7 @@
 <?rfc symrefs="yes" ?>
 <?rfc toc="yes" ?>
 
-<rfc ipr="trust200902" category="std" docName="draft-ietf-dane-srv-08">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-dane-srv-09">
   <front>
     <title abbrev="TLSA and SRV"> Using DNS-Based Authentication of Named Entities (DANE) TLSA Records with SRV Records </title>
     <author initials="T." surname="Finch" fullname="Tony Finch">
@@ -71,19 +71,19 @@
     <area>Security</area>
     <workgroup>DNS-Based Authentication of Named Entities (DANE)</workgroup>
     <abstract>
-      <t>The DANE specification (RFC 6698) describes how to use DNSSEC secured TLSA resource records to associate a server's connection endpoint with its TLS certificate. However, application protocols that use SRV records (RFC 2782) to indirectly name the target server connection endpoints for a service domain cannot apply the rules from RFC 6698. Therefore this document provides guidelines that enable such protocols to locate and use TLSA records.</t>
+      <t>The DANE specification (RFC 6698) describes how to use TLSA resource records secured by DNSSEC (RFC 4033) to associate a server's connection endpoint with its TLS certificate. However, application protocols that use SRV records (RFC 2782) to indirectly name the target server connection endpoints for a service domain cannot apply the rules from RFC 6698. Therefore this document provides guidelines that enable such protocols to locate and use TLSA records.</t>
     </abstract>
   </front>
   <middle>
     <section anchor="intro" title="Introduction">
-      <t>The base DANE specification <xref target="RFC6698" /> describes how to use DNSSEC <xref target="RFC4033"/> secured TLSA resource records to associate a target server's connection endpoint with its TLS certificate. Some application protocols locate connection endpoints indirectly via SRV records <xref target="RFC2782"/>. As a result of this indirection, the rules specified in <xref target="RFC6698"/> cannot be directly applied to such application protocols. (Rules for SMTP <xref target="RFC5321"/>, which uses MX resource records instead of SRV records, are described in <xref target="I-D.ietf-dane-smtp-with-dane"/>.)</t>
+      <t>The base DANE specification <xref target="RFC6698" /> describes how to use TLSA resource records secured by DNSSEC <xref target="RFC4033"/> to associate a target server's connection endpoint with its TLS certificate. Some application protocols locate connection endpoints indirectly via SRV records <xref target="RFC2782"/>. As a result of this indirection, the rules specified in <xref target="RFC6698"/> cannot be directly applied to such application protocols. (Rules for SMTP <xref target="RFC5321"/>, which uses MX resource records instead of SRV records, are described in <xref target="I-D.ietf-dane-smtp-with-dane"/>.)</t>
       <t>This document describes how to use DANE TLSA records with SRV records. To summarize:
         <list style="symbols">
-          <t>We rely on DNSSEC to secure SRV records that map the desired service, transport protocol, and service domain to the corresponding target server connection endpoints (i.e., the target host names and ports returned in the SRV records).</t>
-          <t>The TLSA records for each connection endpoint are located using the target port, transport protocol, and target host name (not the service domain).</t>
-          <t>When DNSSEC validated TLSA records are published for a particular connection endpoint, clients always use TLS when connecting (even if the connection endpoint supports cleartext communication).</t>
+          <t>We rely on DNSSEC to secure SRV records that map the desired service, transport protocol, and service domain to the corresponding target server connection endpoints (i.e., the target server host names and port numbers returned in the SRV records for that service type).</t>
+          <t>The TLSA records for each connection endpoint are located using the transport protocol, port number, and host name for the target server (not the service domain).</t>
+          <t>When DNSSEC-validated TLSA records are published for a particular connection endpoint, clients always use TLS when connecting (even if the connection endpoint supports cleartext communication).</t>
           <t>If there is at least one usable TLSA record, the connection endpoint's TLS certificate or public key needs to match at least one of those usable TLSA records.</t>
-          <t>If there are no usable TLSA records, the target server host name is used as one of the acceptable reference identifiers as described in <xref target="RFC6125"/>. Other reference identifiers might arise as a result of CNAME expansion of either the service domain or target host name, as detailed in <xref target="I-D.ietf-dane-ops"/>.</t>
+          <t>If there are no usable TLSA records, the target server host name is used as one of the acceptable reference identifiers, as described in <xref target="RFC6125"/>. Other reference identifiers might arise through CNAME expansion of either the service domain or target server host name, as detailed in <xref target="I-D.ietf-dane-ops"/>.</t>
         </list>
       </t>
     </section>
@@ -96,47 +96,48 @@
           <t hangText="service domain:">The fully qualified DNS domain name that identifies an application service; corresponds to the term "source domain" from <xref target="RFC6125"/>.</t>
         </list>
       </t>
-      <t>Note that this document uses the term "target server host name" in place of the term "derived domain" from CertID <xref target="RFC6125"/>.</t>
+      <t>This document uses the term "target server host name" in place of the term "derived domain" from the CertID specification <xref target="RFC6125"/>.</t>
     </section>
     <section anchor="dns" title="DNS Checks">
       <section title="SRV Query">
-        <t>When the client makes an SRV query, a successful result will typically be a list of one or more SRV records (or possibly a chain of CNAME / DNAME aliases leading to such a list). Implementers need to be aware that unsuccessful results can occur because of various DNS-related errors; guidance on avoiding downgrade attacks can be found in section 2.1 of <xref target="I-D.ietf-dane-smtp-with-dane" />.</t>
-        <t>For this specification to apply, the entire DNS RRset that is returned MUST be "secure" according to DNSSSEC validation ( <xref target="RFC4035" /> section 5). In the case where the answer is obtained via a chain of CNAME and/or DNAME aliases, the whole chain of CNAME and DNAME RRsets MUST also be secure.</t>
-        <t>If the lookup result is "insecure" (or no SRV records are located), this protocol does not apply.  The client SHOULD fall back to its non-DNSSEC, non-DANE (and possibly non-SRV) behavior. If the SRV lookup fails because the RRset is "bogus", the client MUST abort its attempt to connect to the desired service.</t>
-        <t>When the lookup returns a "secure" RRset (possibly via a chain of "secure" CNAME/DNAME records), the client now has an authentic list of target connection endpoints with weight and priority values. It performs server ordering and selection using the weight and priority values without regard to the presence or absence of DNSSEC or TLSA records. It also takes note of the DNSSEC validation status of the SRV response for use when checking certificate names (see <xref target="tls"/>). The client can not proceed to making address qeries on the target server host names as described in the following section.</t>
+        <t>When the client makes an SRV query, a successful result will typically be a list of one or more SRV records (or possibly a chain of CNAME / DNAME aliases leading to such a list).</t>
+        <t><list style='empty'><t>NOTE: Implementers need to be aware that unsuccessful results can occur because of various DNS-related errors; guidance on avoiding downgrade attacks can be found in Section 2.1 of <xref target="I-D.ietf-dane-smtp-with-dane" />.</t></list></t>
+        <t>For this specification to apply, the entire DNS RRset that is returned MUST be "secure" according to DNSSEC validation (Section 5 of <xref target="RFC4035" />). In the case where the answer is obtained via a chain of CNAME and/or DNAME aliases, the whole chain of CNAME and DNAME RRsets MUST also be secure.</t>
+        <t>If the lookup result is "insecure" (or no SRV records are located), this protocol does not apply and the client SHOULD fall back to its non-DNSSEC, non-DANE (and possibly non-SRV) behavior. If the SRV lookup fails because the RRset is "bogus", the client MUST abort its attempt to connect to the desired service.</t>
+        <t>When the lookup returns a "secure" RRset (possibly via a chain of "secure" CNAME/DNAME records), the client now has an authentic list of target server connection endpoints with weight and priority values. It performs server ordering and selection using the weight and priority values without regard to the presence or absence of DNSSEC or TLSA records. It also takes note of the DNSSEC validation status of the SRV response for use when checking certificate names (see <xref target="tls"/>). The client can then proceed to making address queries on the target server host names as described in the following section.</t>
       </section>
       <section title="Address Queries">
-        <t>For each SRV target server host name, the client makes A and/or AAAA queries, performs DNSSEC validation on the address (A or AAAA) response, and continues as follows based on the results:
+        <t>For each SRV target server connnection endpoint, the client makes A and/or AAAA queries, performs DNSSEC validation on the address (A or AAAA) response, and continues as follows based on the results:
           <list style="symbols">
-            <t>If either the A or AAAA RRSets are "secure" and usable, the client MUST perform a TLSA query for that target server host name as described in the next section.</t>
-            <t>If both RRsets are "insecure", the client MUST NOT perform a TLSA query for that target connection endpoint; the TLSA query will most likely fail or produce spurious failures.</t>
-            <t>If the address record lookup fails (including both "bogus" and "indeterminate" validation statuses), the client MUST NOT connect to this connection endpoint; instead it uses the next most appropriate SRV target. This mitigates against downgrade attacks.</t>
+            <t>If either the A or AAAA RRSets are "secure", the client MUST perform a TLSA query for that target server connection endpoint as described in the next section.</t>
+            <t>If both RRsets are "insecure", the client MUST NOT perform a TLSA query for that target server connection endpoint; the TLSA query will most likely fail or produce spurious results.</t>
+            <t>If the address record lookup fails (this a validation status of either "bogus" or "indeterminate"), the client MUST NOT connect to this connection endpoint; instead it uses the next most appropriate SRV target. This mitigates against downgrade attacks.</t>
           </list>
         </t>
       </section>
       <section title="TLSA Queries">
         <t>The client SHALL construct the TLSA query name as described in
-          <xref target="RFC6698" /> section 3, based on fields from the SRV record: the port from the SRV RDATA, the protocol from the SRV query name, and the TLSA base domain set to the SRV target server host name.</t>
+          Section 3 of <xref target="RFC6698" />, based on the fields from the SRV record: the port number from the SRV RDATA, the transport protocol from the SRV query name, and the TLSA base domain from the SRV target server host name.</t>
         <t>For example, the following SRV record for IMAP (see <xref target='RFC6186' />):</t>
         <t>
           <figure>
             <artwork><![CDATA[
-_imap._tcp.example.com. 86400 IN SRV 10 0 9143 imap.example.net.
+    _imap._tcp.example.com. 86400 IN SRV 10 0 9143 imap.example.net.
 ]]></artwork>
           </figure>
 
         </t>
-        <t>leads to TLSA query shown below:</t>
+        <t>leads to the TLSA query shown below:</t>
         <t>
           <figure>
             <artwork><![CDATA[
-_9143._tcp.imap.example.net. IN TLSA ?
+    _9143._tcp.imap.example.net. IN TLSA ?
 ]]></artwork>
           </figure>
         </t>
       </section>
       <section title="Impact on TLS Usage">
-        <t>The client SHALL determine if the TLSA record(s) returned in the previous step are usable according to section 4.1 of <xref target="RFC6698" />. This affects the use TLS as follows:</t>
+        <t>The client SHALL determine if the TLSA records returned in the previous step are usable according to Section 4.1 of <xref target="RFC6698" />. This affects the use TLS as follows:</t>
         <t>
           <list style='symbols'>
             <t>If the TLSA response is "secure" and usable, then the client MUST use TLS when connecting to the target server. The TLSA records are used when validating the server's certificate as described in <xref target="tls" />.</t>
@@ -147,9 +148,9 @@ _9143._tcp.imap.example.net. IN TLSA ?
       </section>
     </section>
     <section anchor="tls" title="TLS Checks">
-      <t>When connecting to a server, the client MUST use TLS if the responses to the SRV and TLSA queries were "secure" as described above. The rules described in the next two sections apply; <xref target="tls.with-tlsa"/> where there is at least one usable TLSA record, and <xref target="tls.srv-only"/> otherwise.</t>
+      <t>When connecting to a server, the client MUST use TLS if the responses to the SRV and TLSA queries were "secure" as described above. The rules described in the next two sections apply to such secure responses; <xref target="tls.with-tlsa"/> where there is at least one usable TLSA record, and <xref target="tls.srv-only"/> otherwise.</t>
       <section title="SRV Records Only" anchor="tls.srv-only">
-        <t>If the client received zero usable TLSA certificate associations, it SHALL validate the server's TLS certificate using the normal PKIX rules <xref target="RFC5280" /> or protocol-specific rules (e.g., following <xref target="RFC6125" />) without further input from the TLSA records. In this case, the client uses the information in the server certificate and the DNSSEC validation status of the SRV query in its authentication checks. It SHOULD use the Server Name Indication extension (TLS SNI) <xref target="RFC6066" /> or its functional equivalent in the relevant application protocol (e.g., in XMPP <xref target="RFC6120" /> this is the 'to' address of the initial stream header). The preferred name SHALL be chosen as follows, and the client SHALL verify the identity asserted by the server's certificate according to section 6 of <xref target="RFC6125" />, using a list of reference identifiers constructed as follows (note again that in RFC 6125 the terms "source domain" and "derived domain" refer to the same things as "service domain" and "target server host name" in this document). The examples below assume a service domain of "im.example.com" and a target server host name of "xmpp23.hosting.example.net".</t>
+        <t>If the client received zero usable TLSA certificate associations, it SHALL validate the server's TLS certificate using the normal PKIX rules <xref target="RFC5280" /> or protocol-specific rules (e.g., following <xref target="RFC6125" />) without further input from the TLSA records. In this case, the client uses the information in the server certificate and the DNSSEC validation status of the SRV query in its authentication checks. It SHOULD use the Server Name Indication extension (TLS SNI) <xref target="RFC6066" /> or its functional equivalent in the relevant application protocol (e.g., in XMPP <xref target="RFC6120" /> this is the 'to' address of the initial stream header). The preferred name SHALL be chosen as follows, and the client SHALL verify the identity asserted by the server's certificate according to Section 6 of <xref target="RFC6125" />, using a list of reference identifiers constructed as follows (note again that in RFC 6125 the terms "source domain" and "derived domain" to refer to the same things as "service domain" and "target server host name" in this document). The examples below assume a service domain of "im.example.com" and a target server host name of "xmpp23.hosting.example.net".</t>
         <t>
           <list style="hanging">
             <t hangText="SRV is insecure:"> The reference identifiers SHALL include the service domain and MUST NOT include the SRV target server host name (e.g., include "im.example.com" but not "xmpp23.hosting.example.net"). The service domain is the preferred name for TLS SNI or its equivalent.</t>
@@ -159,8 +160,7 @@ _9143._tcp.imap.example.net. IN TLSA ?
         <t>In the latter case, the client will accept either identity to ensure compatibility with servers that support this specification as well as servers that do not support this specification.</t>
       </section>
       <section title="TLSA Records" anchor="tls.with-tlsa">
-        <t>If the client received one or more usable TLSA certificate associations, it SHALL process them as described in section 2.1 of
-          <xref target="RFC6698" />.</t>
+        <t>If the client received one or more usable TLSA certificate associations, it SHALL process them as described in Section 2.1 of <xref target="RFC6698" />.</t>
         <t>If the TLS server's certificate -- or the public key of the server's certificate -- matches a usable TLSA record with Certificate Usage "DANE-EE", the client MUST ignore expiration checks from <xref target="RFC5280"/> and reference identifier checks from <xref target="RFC6125"/>. The information in such a TLSA record supersedes the non-key information in the certificate.</t>
       </section>
     </section>
@@ -192,7 +192,7 @@ _9143._tcp.imap.example.net. IN TLSA ?
       <t>Servers that support multiple service domains (i.e., so-called "multi-tenanted environments") can implement the Transport Layer Security Server Name Indication (TLS SNI) <xref target="RFC6066" /> or its functional equivalent to determine which certificate to offer. Clients that do not support this specification will indicate a preference for the service domain name, while clients that support this specification will indicate the target server host name. However, the server determines what certificate to present in the TLS handshake; e.g., the presented certificate might only authenticate the target server host name.</t>
     </section>
     <section title="Guidance for Application Developers">
-      <t>Developers of application clients that depend on DANE-SRV often would like to prepare as quickly as possible for making a connection to the intended service, thus reducing the wait time for end users. To make this optimization possible, a DNS library might perform the SRV queries, address queries, and TLSA queries in parallel (because a TLSA record can be ignored if it turns out that the address record on which it depends is not secure, performing the TLSA queries in parallel with the SRV queries and address queries is not harmful from a security perspective and can yield some operational benefits).</t>
+      <t>Developers of application clients that depend on DANE-SRV often would like to prepare as quickly as possible for making a connection to the intended service, thus reducing the wait time for end users. To make this optimization possible, a DNS library might perform the SRV queries, address queries, and TLSA queries in parallel. (Because a TLSA record can be ignored if it turns out that the address record on which it depends is not secure, performing the TLSA queries in parallel with the SRV queries and address queries is not harmful from a security perspective and can yield some operational benefits.)</t>
     </section>
     <section title="Internationalization Considerations">
       <t>If any of the DNS queries are for an internationalized domain name, then they need to use the A-label form
@@ -203,44 +203,37 @@ _9143._tcp.imap.example.net. IN TLSA ?
     </section>
     <section anchor="security" title="Security Considerations">
       <section title="Mixed Security Status">
-        <t>We do not specify that clients checking all of a service domain's target connection endpoints are consistent in whether they have or do not have TLSA records. This is so that partial or incremental deployment does not break the service. Different levels of deployment are likely if a service domain has a third-party fallback server, for example.</t>
+        <t>We do not specify that all of the target server connection endpoints for a service domain need to be consistent in whether they have or do not have TLSA records. This is so that partial or incremental deployment does not break the service. Different levels of deployment are likely if a service domain has a third-party fallback server, for example.</t>
         <t>The SRV sorting rules are unchanged; in particular they have not been altered in order to prioritize secure connection endpoints over insecure connection endpoints. If a site wants to be secure it needs to deploy this protocol completely; a partial deployment is not secure and we make no special effort to support it.</t>
       </section>
-      <!-- TODO: is this assertion is still true?? -->
-      <!-- <section title="A Service Domain Trusts its Servers">
-        <t>By signing their zone with DNSSEC, service domain operators implicitly instruct their clients to check their server TLSA records. This implies another point in the trust relationship between service domain holders and their server operators. Most of the setup requirements for this protocol fall on the server operator: installing a TLS certificate with the correct name (where necessary), and publishing a TLSA record for that certificate. If these are not correct then connections from TLSA-aware clients might fail.</t>
-      </section> -->
       <section title="Certificate Subject Name Matching">
         <t>Section 4 of the TLSA specification <xref target="RFC6698" /> leaves the details of checking names in certificates to higher level application protocols, though it suggests the use of <xref target="RFC6125" />.</t>
         <t>Name checks are not necessary if the matching TLSA record is of Certificate Usage "DANE-EE". Because such a record identifies the specific certificate (or public key of the certificate), additional checks are superfluous and potentially conflicting.</t>
         <t>Otherwise, while DNSSEC provides a secure binding between the server name and the TLSA record, and the TLSA record provides a binding to a certificate, this latter step can be indirect via a chain of certificates. For example, a Certificate Usage "PKIX-TA" TLSA record only authenticates the CA that issued the certificate, and third parties can obtain certificates from the same CA. Therefore, clients need to check whether the server's certificate matches one of the expected reference identifiers to ensure that the certificate was issued by the CA to the server the client expects.</t>
       </section>
     </section>
-    <section title="Acknowledgements">
-      <t>Thanks to Mark Andrews for arguing that authenticating the target server host name is the right thing, and that we ought to rely on DNSSEC to secure the SRV lookup. Thanks to Stephane Bortzmeyer, James Cloos, Viktor Dukhovni, Ned Freed, Olafur Gudmundsson, Paul Hoffman, Phil Pennock, Hector Santos, Jonas Schneider, and Alessandro Vesely for helpful suggestions.</t>
-    </section>
   </middle>
   <back>
     <references title="Normative References">
       &I-D.ietf-dane-ops;
-      &rfc2119; <!-- MUSTard MAYonnaise -->
-      &rfc2782; <!-- DNS SRV -->
-      &rfc4033; <!-- DNSSEC overview -->
-      &rfc4035; <!-- DNSSEC protocol -->
-      &rfc5280; <!-- PKIX -->
-      &rfc5321; <!-- ESMTP -->
-      &rfc5890; <!-- IDNA -->
-      &rfc6066; <!-- TLS SNI -->
-      &rfc6120; <!-- XMPP -->
-      &rfc6125; <!-- certificate verification -->
-      &rfc6186; <!-- email submission discovery -->
-      &rfc6698; <!-- DANE TLSA -->
-      &rfc7218; <!-- acronymania -->
+      &rfc2119;
+      &rfc2782;
+      &rfc4033;
+      &rfc4035;
+      &rfc5280;
+      &rfc5890;
+      &rfc6066;
+      &rfc6125;
+      &rfc6698;
+      &rfc7218;
     </references>
     <references title="Informative References">
       &I-D.ietf-dane-smtp-with-dane;
       &I-D.ietf-xmpp-dna;
-      &rfc3403; <!-- NAPTR -->
+      &rfc3403;
+      &rfc5321;
+      &rfc6120;
+      &rfc6186;
     </references>
     <section title="Examples">
       <t>In the following, most of the DNS resource data is elided for simplicity.</t>
@@ -309,6 +302,9 @@ _5222._tcp.im.example.net.  RRSIG  TLSA ...
       </t>
       <t>This specification does not provide an option to put TLSA records under the service domain because that would add complexity without providing any benefit, and security protocols are best kept simple. As described above, there are real-world cases where authenticating the service domain cannot be made to work, so there would be complicated criteria for when service domain TLSA records might be used and when they cannot. This is all avoided by putting the TLSA records under the target server host name.</t>
       <t>The disadvantage is that clients which do not complete DNSSEC validation must, according to <xref target="RFC6125" /> rules, check the server certificate against the service domain, since they have no other way to authenticate the server. This means that SNI support or its functional equivalent is necessary for backward compatibility.</t>
+    </section>
+    <section title="Acknowledgements">
+      <t>Thanks to Mark Andrews for arguing that authenticating the target server host name is the right thing, and that we ought to rely on DNSSEC to secure the SRV lookup. Thanks to Stephane Bortzmeyer, James Cloos, Viktor Dukhovni, Ned Freed, Olafur Gudmundsson, Paul Hoffman, Phil Pennock, Hector Santos, Jonas Schneider, and Alessandro Vesely for helpful suggestions.</t>
     </section>
   </back>
 </rfc>
