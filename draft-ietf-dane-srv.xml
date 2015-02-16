@@ -89,7 +89,7 @@
     </section>
     <section anchor="terms" title="Terminology">
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this memo are to be interpreted as described in <xref target="RFC2119" />.</t>
-      <t>This draft uses the definitions for "secure", "insecure", "bogus", and "indeterminate" from <xref target="RFC4035" />. This draft uses the acronyms from <xref target="RFC7218" /> for the values of TLSA fields where appropriate.</t>
+      <t>This draft uses the definitions for "secure", "insecure", "bogus", and "indeterminate" from Section 4.3 of <xref target="RFC4035" />. This draft uses the acronyms from <xref target="RFC7218" /> for the values of TLSA fields where appropriate.</t>
       <t>Additionally, this document uses the following terms:
         <list style="hanging">
           <t hangText="connection endpoint:">A tuple of a fully qualified DNS host name, transport protocol, and port number that a client uses to establish a connection to the target server.</t>

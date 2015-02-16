@@ -149,8 +149,9 @@ Internet-Draft                TLSA and SRV                 February 2015
    [RFC2119].
 
    This draft uses the definitions for "secure", "insecure", "bogus",
-   and "indeterminate" from [RFC4035].  This draft uses the acronyms
-   from [RFC7218] for the values of TLSA fields where appropriate.
+   and "indeterminate" from Section 4.3 of [RFC4035].  This draft uses
+   the acronyms from [RFC7218] for the values of TLSA fields where
+   appropriate.
 
    Additionally, this document uses the following terms:
 
@@ -161,7 +162,6 @@ Internet-Draft                TLSA and SRV                 February 2015
    service domain:  The fully qualified DNS domain name that identifies
       an application service; corresponds to the term "source domain"
       from [RFC6125].
-
 
 
 
