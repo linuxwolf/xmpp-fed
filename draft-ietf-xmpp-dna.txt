@@ -90,7 +90,7 @@ Table of Contents
      8.2.  Well-Known URI for xmpp-server Service  . . . . . . . . .  17
    9.  Security Considerations . . . . . . . . . . . . . . . . . . .  17
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  17
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  17
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  18
      10.2.  Informative References . . . . . . . . . . . . . . . . .  19
    Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  20
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  20
@@ -494,7 +494,7 @@ Internet-Draft                  XMPP DNA                   February 2015
 
    If the PKIX certificate presented by Server A during TLS negotiation
    is not trusted by Server B, Server B is unable to mutually
-   authenticate Server A.  Therefore, Server B needs to verify the
+   authenticate Server A. Therefore, Server B needs to verify the
    asserted identity of Server A by other means.
 
 
@@ -720,8 +720,8 @@ Internet-Draft                  XMPP DNA                   February 2015
       for a tenant such as example.com (or the tenant might not want the
       hosting provider to hold its certificate and private key).
 
-   o  Even if PKIX certificates for each tenant can be obtained, the
-      management can introduce a large administrative load.
+
+
 
 
 
@@ -729,6 +729,10 @@ Saint-Andre, et al.      Expires August 20, 2015               [Page 13]
 
 Internet-Draft                  XMPP DNA                   February 2015
 
+
+   o  Even if PKIX certificates for each tenant can be obtained, the
+      management of so many certificates can introduce a large
+      administrative load.
 
    (Additional discussion can be found in [I-D.ietf-xmpp-posh].)
 
@@ -773,10 +777,6 @@ Internet-Draft                  XMPP DNA                   February 2015
 
    1.  The server's proof consists of a PKIX certificate.
 
-   2.  The proof is checked according to the rules from [RFC6120] and
-       [RFC6125].
-
-
 
 
 
@@ -785,6 +785,9 @@ Saint-Andre, et al.      Expires August 20, 2015               [Page 14]
 
 Internet-Draft                  XMPP DNA                   February 2015
 
+
+   2.  The proof is checked according to the rules from [RFC6120] and
+       [RFC6125].
 
    3.  The client's verification material is obtained by retrieving a
        hash of the PKIX certificate over HTTPS at a well-known URI
@@ -831,9 +834,6 @@ Internet-Draft                  XMPP DNA                   February 2015
    numbers of XMPP services on behalf of multiple tenants (see
    [I-D.ietf-xmpp-posh] for a detailed description).  Typically there
    are two main reasons for this state of affairs: the service provider
-   (say, hosting.example.net) wishes to limit its liability and
-   therefore does not wish to hold the certificate and private key for
-   the tenant (say, example.com) and the tenant wishes to improve the
 
 
 
@@ -842,6 +842,9 @@ Saint-Andre, et al.      Expires August 20, 2015               [Page 15]
 Internet-Draft                  XMPP DNA                   February 2015
 
 
+   (say, hosting.example.net) wishes to limit its liability and
+   therefore does not wish to hold the certificate and private key for
+   the tenant (say, example.com) and the tenant wishes to improve the
    security of the service and therefore does not wish to share its
    certificate and private key with the service provider.  As a result,
    server-to-server communications to example.com go unencrypted or the
@@ -886,9 +889,6 @@ Internet-Draft                  XMPP DNA                   February 2015
    of Server Dialback keys (also specified in [XEP-0220]) is a DNA
    prooftype.  However, nothing in this document prevents the continued
    use of Server Dialback for signaling, and a future specification (or
-   an updated version of [XEP-0220]) might define a DNA prooftype for
-   Server Dialback keys in a way that is consistent with this framework.
-
 
 
 
@@ -897,6 +897,9 @@ Saint-Andre, et al.      Expires August 20, 2015               [Page 16]
 
 Internet-Draft                  XMPP DNA                   February 2015
 
+
+   an updated version of [XEP-0220]) might define a DNA prooftype for
+   Server Dialback keys in a way that is consistent with this framework.
 
 8.  IANA Considerations
 
@@ -940,9 +943,6 @@ Internet-Draft                  XMPP DNA                   February 2015
 
 10.  References
 
-10.1.  Normative References
-
-
 
 
 
@@ -954,11 +954,13 @@ Saint-Andre, et al.      Expires August 20, 2015               [Page 17]
 Internet-Draft                  XMPP DNA                   February 2015
 
 
+10.1.  Normative References
+
    [I-D.ietf-dane-srv]
               Finch, T., Miller, M., and P. Saint-Andre, "Using DNS-
               Based Authentication of Named Entities (DANE) TLSA Records
-              with SRV Records", draft-ietf-dane-srv-08 (work in
-              progress), October 2014.
+              with SRV Records", draft-ietf-dane-srv-06 (work in
+              progress), June 2014.
 
    [I-D.ietf-xmpp-posh]
               Miller, M. and P. Saint-Andre, "PKIX over Secure HTTP
@@ -999,8 +1001,6 @@ Internet-Draft                  XMPP DNA                   February 2015
               within Internet Public Key Infrastructure Using X.509
               (PKIX) Certificates in the Context of Transport Layer
               Security (TLS)", RFC 6125, March 2011.
-
-
 
 
 

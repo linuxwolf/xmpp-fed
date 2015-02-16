@@ -461,7 +461,7 @@
         <list style='symbols'>
           <t>In order to issue a PKIX certificate, a CA might try to send email messages to authoritative mailbox names <xref target='RFC2142'/>, but the administrator of a subsidiary service such as im.cs.podunk.example cannot receive email sent to mailto:hostmaster@podunk.example.</t>
           <t>A hosting provider such as hosting.example.net might not want to take on the liability of holding the certificate and private key for a tenant such as example.com (or the tenant might not want the hosting provider to hold its certificate and private key).</t>
-          <t>Even if PKIX certificates for each tenant can be obtained, the management can introduce a large administrative load.</t>
+          <t>Even if PKIX certificates for each tenant can be obtained, the management of so many certificates can introduce a large administrative load.</t>
         </list>
       </t>
       <t>(Additional discussion can be found in <xref target='I-D.ietf-xmpp-posh'/>.)</t>
