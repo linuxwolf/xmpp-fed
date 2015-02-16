@@ -29,7 +29,7 @@
 <?rfc symrefs="yes" ?>
 <?rfc toc="yes" ?>
 
-<rfc ipr="trust200902" category="std" docName="draft-ietf-dane-srv-09">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-dane-srv-10">
   <front>
     <title abbrev="TLSA and SRV"> Using DNS-Based Authentication of Named Entities (DANE) TLSA Records with SRV Records </title>
     <author initials="T." surname="Finch" fullname="Tony Finch">
@@ -103,7 +103,7 @@
         <t>When the client makes an SRV query, a successful result will typically be a list of one or more SRV records (or possibly a chain of CNAME / DNAME aliases leading to such a list).</t>
         <t><list style='empty'><t>NOTE: Implementers need to be aware that unsuccessful results can occur because of various DNS-related errors; guidance on avoiding downgrade attacks can be found in Section 2.1 of <xref target="I-D.ietf-dane-smtp-with-dane" />.</t></list></t>
         <t>For this specification to apply, the entire DNS RRset that is returned MUST be "secure" according to DNSSEC validation (Section 5 of <xref target="RFC4035" />). In the case where the answer is obtained via a chain of CNAME and/or DNAME aliases, the whole chain of CNAME and DNAME RRsets MUST also be secure.</t>
-        <t>If the lookup result is "insecure" (or no SRV records are located), this protocol does not apply and the client SHOULD fall back to its non-DNSSEC, non-DANE (and possibly non-SRV) behavior. If the SRV lookup fails because the RRset is "bogus", the client MUST abort its attempt to connect to the desired service.</t>
+        <t>If the SRV lookup fails because the RRset is "bogus" (or the lookup fails for reasons other than no records), the client MUST abort its attempt to connect to the desired service. If the lookup result is "insecure" (or no SRV records exist), this protocol does not apply and the client SHOULD fall back to its non-DNSSEC, non-DANE (and possibly non-SRV) behavior.</t>
         <t>When the lookup returns a "secure" RRset (possibly via a chain of "secure" CNAME/DNAME records), the client now has an authentic list of target server connection endpoints with weight and priority values. It performs server ordering and selection using the weight and priority values without regard to the presence or absence of DNSSEC or TLSA records. It also takes note of the DNSSEC validation status of the SRV response for use when checking certificate names (see <xref target="tls"/>). The client can then proceed to making address queries on the target server host names as described in the following section.</t>
       </section>
       <section title="Address Queries">
@@ -141,8 +141,8 @@
         <t>
           <list style='symbols'>
             <t>If the TLSA response is "secure" and usable, then the client MUST use TLS when connecting to the target server. The TLSA records are used when validating the server's certificate as described in <xref target="tls" />.</t>
-            <t>If the TLSA lookup fails, then the client SHALL proceed as if the target server had no TLSA records. It MAY connect to the target server with or without TLS, subject to the policies of the application protocol or client implementation.</t>
-            <t>If the TLSA response is "bogus" or "indeterminate", then the client MUST NOT connect to the target server (the client can still use other SRV targets).</t>
+            <t>If the TLSA response is "bogus" or "indeterminate" (or the lookup fails for reasons other than no records), then the client MUST NOT connect to the target server (the client can still use other SRV targets).</t>
+            <t>If the TLSA response is "insecure" (or no TLSA records exist), then the client SHALL proceed as if the target server had no TLSA records. It MAY connect to the target server with or without TLS, subject to the policies of the application protocol or client implementation.</t>
           </list>
         </t>
       </section>
