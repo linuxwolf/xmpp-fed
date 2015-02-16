@@ -11,14 +11,14 @@ OUTPUT=$(TXT_OUTPUT) \
 
 all :	$(OUTPUT)
 
-txtdocs : clearcache $(TXT_OUTPUT)
+txtdocs : $(TXT_OUTPUT)
 
-htmldocs : clearcache $(HTML_OUTPUT)
+htmldocs : $(HTML_OUTPUT)
 
 clearcache :
 	$(XML2RFC) --clear-cache
 
-clean :
+clean : clearcache
 	rm -rf $(OUTPUT)
 
 %.html : %.xml
@@ -27,4 +27,4 @@ clean :
 %.txt : %.xml
 	$(RFC2TXT) $<
 
-.PHONY : all txtdocs htmldocs clearcache
+.PHONY : all clean clearcache txtdocs htmldocs
