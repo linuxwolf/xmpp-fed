@@ -1,5 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd" [
+  <!ENTITY rfc1034 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1034.xml">
+  <!ENTITY rfc1035 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.1035.xml">
+  <!ENTITY rfc2142 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2142.xml">
+  <!ENTITY rfc2782 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.2782.xml">
+  <!ENTITY rfc3920 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.3920.xml">
+  <!ENTITY rfc4033 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4033.xml">
+  <!ENTITY rfc4120 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4120.xml">
+  <!ENTITY rfc4949 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4949.xml">
+  <!ENTITY rfc5280 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5280.xml">
+  <!ENTITY rfc5785 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.5785.xml">
+  <!ENTITY rfc6066 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6066.xml">
+  <!ENTITY rfc6091 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6091.xml">
+  <!ENTITY rfc6120 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6120.xml">
+  <!ENTITY rfc6125 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6125.xml">
+  <!ENTITY rfc6698 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6698.xml">
+  <!ENTITY rfc6749 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6749.xml">
+  <!ENTITY rfc7218 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7218.xml">
+  <!ENTITY xep0045 PUBLIC "" "http://xmpp.org/extensions/refs/reference.XSF.XEP-0045.xml">
+  <!ENTITY xep0220 PUBLIC "" "http://xmpp.org/extensions/refs/reference.XSF.XEP-0220.xml">
+  <!ENTITY xep0288 PUBLIC "" "http://xmpp.org/extensions/refs/reference.XSF.XEP-0288.xml">
+  <!ENTITY I-D.ietf-dane-srv PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-dane-srv.xml">
+  <!ENTITY I-D.ietf-uta-xmpp PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-uta-xmpp.xml">
+  <!ENTITY I-D.ietf-xmpp-posh PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-xmpp-posh.xml">
+]>
 <?rfc compact="yes"?>
 <?rfc strict="yes"?>
 <?rfc symrefs="yes"?>
@@ -76,7 +100,7 @@
 
     <section title="Client-to-Server (C2S) DNA" anchor="c2s">
 
-      <t>The client-to-server case is much simpler than the server-to-server case because the client does not assert a domain name, verification happens in only one direction, etc.  Therefore we describe this case first to help the reader understand domain name associations in XMPP.</t>
+      <t>The client-to-server case is much simpler than the server-to-server case because the client does not assert a domain name, which means verification happens in only one direction.  Therefore we describe this case first to help the reader understand domain name associations in XMPP.</t>
 
       <section title="C2S Flow" anchor="c2s-flow">
         <t>The following flow chart illustrates the protocol flow for establishing a domain name association for an XML stream from a client (C) to a server (S) using the standard PKIX prooftype specified in <xref target="RFC6120"/>.</t>
@@ -105,14 +129,15 @@
           ]]></artwork>
         </figure>
       </section>
+      
       <section title="C2S Description" anchor="c2s-description">
         <t>The simplified order of events (see <xref target='RFC6120'/> for details) in establishing an XML stream from a client (user@a.exmaple) to a server (a.example) is as follows:</t>
         <t>
           <list style='numbers'>
-            <t>The client resolves the DNS domain name a.example.</t>
+            <t>The client resolves via DNS the service _xmpp-client._tcp.a.example.</t>
             <t>The client opens a TCP connection to the resolved IP address.</t>
             <t>
-              The client sends an initial stream header to the server.
+              The client sends an initial stream header to the server:
               <vspace blankLines='1'/>
               &lt;stream:stream from='user@a.example' to='a.example'&gt;
             </t>
@@ -122,22 +147,22 @@
               &lt;stream:stream from='a.example' to='user@a.example'&gt;
             </t>
             <t>The parties attempt TLS negotiation, during which the XMPP server (acting as a TLS server) presents a PKIX certificate proving that it is a.example.</t>
-            <t>The client checks the PKIX certificate that the server provided; if the proof is consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, the client accepts that there is a strong domain name association between its stream to the target server and the DNS domain name of the XMPP service.</t>
+            <t>The client checks the PKIX certificate that the server provided; if the proof is consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/> and the certificate is otherwise valid according to <xref target='RFC5280'/>, the client accepts that there is a strong domain name association between its stream to the target server and the DNS domain name of the XMPP service.</t>
           </list>
         </t>
-        <t>The certificate that the server presents might not be trusted by the client. As one example, the server might be hosting multiple domains and secure delegation as described in Section 6 is necessary. As another example, the server might present a self-signed certificate, which requires the client to apply either the fallback process described in section 6.6.4 of <xref target='RFC6125'/> or prompt the user to accept an unauthenticated connection as described in <xref target='I-D.ietf-uta-xmpp'/>.</t>
+        <t>The certificate that the server presents might not be trusted by the client. As one example, the server might be hosting multiple domains and secure delegation as described in <xref target='delegation'/> is necessary. As another example, the server might present a self-signed certificate, which requires the client to apply either the fallback process described in section 6.6.4 of <xref target='RFC6125'/> or prompt the user to accept an unauthenticated connection as described in <xref target='I-D.ietf-uta-xmpp'/>.</t>
       </section>
     </section>
 
     <section title="Server-to-Server (S2S) DNA" anchor="s2s">
       <t>The server-to-server case is significantly more complex than the client-to-server case, and involves checking of domain name associations in both directions along with other "wrinkles" described in the following sections.</t>
 
-      <section title="S2S Flow Chart" anchor="s2s-flow">
+      <section title="S2S Flow" anchor="s2s-flow">
         <t>The following flow chart illustrates the protocol flow for establishing domain name associations between Server A (the initiating entity) and Server B (the receiving entity), as described in the remaining sections of this document.</t>
         <figure>
           <artwork><![CDATA[
                     |
-        (Section 4.2: A Simple Scenario)
+        (A Simple S2S Scenario)
                     |
              DNS RESOLUTION ETC.
                     |
@@ -283,7 +308,7 @@
         <t>To illustrate the problem, consider the simplified order of events (see <xref target='RFC6120'/> for details) in establishing an XML stream between Server A (a.example) and Server B (b.example):</t>
         <t>
           <list style='numbers'>
-            <t>Server A resolves the DNS domain name b.example.</t>
+            <t>Server A resolves via DNS the service  _xmpp-server._tcp.b.example.</t>
             <t>Server A opens a TCP connection to the resolved IP address.</t>
             <t>
               Server A sends an initial stream header to Server B, asserting that it is a.example:
@@ -296,7 +321,7 @@
               &lt;stream:stream from='b.example' to='a.example'&gt;
             </t>
             <t>The servers attempt TLS negotiation, during which Server B (acting as a TLS server) presents a PKIX certificate proving that it is b.example and Server A (acting as a TLS client) presents a PKIX certificate proving that it is a.example.</t>
-            <t>Server A checks the PKIX certificate that Server B provided and Server B checks the PKIX certificate that Server A provided; if these proofs are consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/>, each server accepts that there is a strong domain name association between its stream to the other party and the DNS domain name of the other party.</t>
+            <t>Server A checks the PKIX certificate that Server B provided and Server B checks the PKIX certificate that Server A provided; if these proofs are consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/> and is otherwise valid according to <xref target='RFC5280'/>, each server accepts that there is a strong domain name association between its stream to the other party and the DNS domain name of the other party.</t>
           </list>
         </t>
         <t>Several simplifying assumptions underlie the happy scenario just outlined:</t>
@@ -305,11 +330,11 @@
             <t>The PKIX certificate presented by Server B during TLS negotiation is trusted by Server A and matches the expected identity.</t>
             <t>The PKIX certificate presented by Server A during TLS negotiation is trusted by Server B, which enables the parties to complete mutual authentication.</t>
             <t>There are no additional domains associated with Server A and Server B (say, a subdomain rooms.a.example on Server A or a second domain c.example on Server B).</t>
-            <t>The server administrators are able to obtain PKIX certificates in the first place.</t>
+            <t>The server administrators are able to obtain PKIX certificates issued by a widely-accepted certificate authority (CA) in the first place.</t>
             <t>The server administrators are running their own XMPP servers, rather than using hosting services.</t>
           </list>
         </t>
-        <t>Let's consider each of these "wrinkles" in turn. Since Server A is acting as a S2S client the behaviour is same as in the C2S case described in Section 3.2.</t>
+        <t>Let's consider each of these "wrinkles" in turn. Since Server A is acting as a S2S client the behaviour is same as in the C2S case described in <xref target='c2s-description'/>.</t>
       </section>
 
       <section title="One-Way Authentication" anchor="s2s-oneway">
@@ -321,7 +346,7 @@
               <vspace blankLines='1'/>
               &lt;db:result from='a.example' to='b.example' id='...'&gt;some-dialback-key&lt;/db:result&gt;
             </t>
-            <t>Server B resolves the DNS domain name a.example.</t>
+            <t>Server B resolves via DNS the service _xmpp-server._tcp.a.example.</t>
             <t>Server B opens a TCP connection to the resolved IP address.</t>
             <t>
               Server B sends an initial stream header to Server A, asserting that it is b.example:
@@ -334,9 +359,9 @@
               &lt;stream:stream from='a.example' to='b.example'&gt;
             </t>
             <t>The servers attempt TLS negotiation, during which Server A (acting as a TLS server) presents a PKIX certificate proving that it is a.example.</t>
-            <t>Server B checks the PKIX certificate that Server A provided. This might be the same certificate presented by Server A as a client certificate in the initial connection. Even if this certificate is not signed by a trusted CA (for example it could be self-signed) Server B can verify that there is an association between the incoming connection and the domain name a.example. Note that this may be insecure unless DNSSEC is used.</t>
+            <t>Server B checks the PKIX certificate that Server A provided. This might be the same certificate presented by Server A as a client certificate in the initial connection. Even if this certificate is not signed by a trusted CA (for example it could be self-signed) Server B can verify that there is an association between the incoming connection and the domain name a.example. Note that this may be insecure unless DNSSEC <xref target='RFC4033'/> is used.</t>
             <t>
-              If the certificate provided by Server A is different from the one presented in the initial connection, Server B proceeds with Server Dialback in order to establish the domain name association. In order to do this it sends a request for verification as described in XEP-0220:
+              If the certificate provided by Server A is different from the one presented in the initial connection, Server B proceeds with Server Dialback in order to establish the domain name association. In order to do this it sends a request for verification as described in <xref target='XEP-0220'/>:
               <vspace blankLines='1'/>
               &lt;db:verify from='b.example' to='a.example' id='...'&gt;some-dialback-key&lt;/db:verify&gt;
             </t>
@@ -354,8 +379,8 @@
 
       <section title="Piggybacking" anchor="s2s-piggybacking">
         <section title="Assertion" anchor="s2s-piggybacking-assertion">
-          <t>Consider the common scenario in which Server B hosts not only b.example but also a second domain c.example (a "multi-tenanted" environment).  If a user of Server B associated with c.example wishes to communicate with a friend at a.example, Server B needs to send XMPP stanzas from the domain c.example rather than b.example.  Although Server B could open a new TCP connection and negotiate new XML streams for the domain pair of c.example and a.example, that too is wasteful (especially if Server B hosts a large number of domains).  Server B already has a connection to a.example, so how can it assert that it would like to add a new domain pair to the existing connection?</t>
-          <t>The traditional method for doing so is the Server Dialback protocol, first specified in <xref target='RFC3920'/> and since moved to <xref target='XEP-0220'/>.  Here, Server B can send a &lt;db:result/&gt; element for the new domain pair over the existing stream.</t>
+          <t>Consider the common scenario in which Server B hosts not only b.example but also a second domain c.example (often called a "multi-tenanted" environment).  If a user of Server B associated with c.example wishes to communicate with a friend at a.example, Server B needs to send XMPP stanzas from the domain c.example rather than b.example.  Although Server B could open a new TCP connection and negotiate new XML streams for the domain pair of c.example and a.example, that too is wasteful (especially if Server B hosts a large number of domains).  Server B already has a connection to a.example, so how can it assert that it would like to add a new domain pair to the existing connection?</t>
+          <t>The traditional method for doing so is the Server Dialback protocol, first specified in (the now obsolete) <xref target='RFC3920'/> and since moved to <xref target='XEP-0220'/>.  Here, Server B can send a &lt;db:result/&gt; element for the new domain pair over the existing stream.</t>
           <figure>
             <artwork><![CDATA[
     <db:result from='c.example' to='a.example'>
@@ -367,7 +392,7 @@
           <t>In response to this assertion, Server A needs to obtain some kind of proof that Server B really is also c.example. If the certificate presented by Server B is also valid for c.example then no further action is necessary.  However, if not then Server A needs to do a bit more work.  Specifically, Server A can pursue the same strategy it used before:</t>
           <t>
             <list style='numbers'>
-              <t>Server A resolves the DNS domain name c.example.</t>
+              <t>Server A resolves via DNS the service _xmpp-server._tcp.c.example.</t>
               <t>Server A opens a TCP connection to the resolved IP address (which might be the same IP address as for b.example).</t>
               <t>
                 Server A sends an initial stream header to Server B, asserting that it is a.example:
@@ -381,7 +406,7 @@
               </t>
               <t>The servers attempt TLS negotiation, during which Server B (acting as a TLS server) presents a PKIX certificate proving that it is c.example.</t>
               <t>
-                At this point, Server A needs to establish that, despite different certificates, c.example is associated with the origin of the request. This is done using the Server Dialback Protocol:
+                At this point, Server A needs to establish that, despite different certificates, c.example is associated with the origin of the request. This is done using Server Dialback <xref target='XEP-0220'/>:
                 <vspace blankLines='1'/>
                 &lt;db:verify from='a.example' to='c.example' id='...'&gt;some-dialback-key&lt;/db:verify&gt;
               </t>
@@ -403,10 +428,10 @@
           <t>The parties can then terminate the second connection, since it was used only for Server A to associate a stream with the domain name c.example (the dialback key links the original stream to the new association).</t>
         </section>
         <section title="Supposition" anchor="s2s-piggybacking-supposition">
-          <t>Piggybacking can also occur in the other direction.  Consider the common scenario in which Server A provides XMPP services not only for a.example but also for a subdomain such as a groupchat service at rooms.a.example (see <xref target='XEP-0045'/>).  If a user from c.example at Server B wishes to join a room on the groupchat sevice, Server B needs to send XMPP stanzas from the domain c.example to the domain rooms.a.example rather than a.example. First, Server B needs to determine whether it can piggyback the domain rooms.a.example on the connection to a.example:</t>
+          <t>Piggybacking can also occur in the other direction.  Consider the common scenario in which Server A provides XMPP services not only for a.example but also for a subdomain such as a groupchat service (e.g., Multi-User Chat <xref target='XEP-0045'/>) at rooms.a.example.  If a user from c.example at Server B wishes to join a room on the groupchat sevice, Server B needs to send XMPP stanzas from the domain c.example to the domain rooms.a.example rather than a.example. First, Server B needs to determine whether it can piggyback the domain rooms.a.example on the connection to a.example:</t>
           <t>
             <list style='numbers'>
-              <t>Server B resolves the DNS domain name rooms.a.example.</t>
+              <t>Server B resolves vua DNS the service _xmpp-server._tcp.rooms.a.example.</t>
               <t>Server B determines this resolves to an IP address and port that it is already connected to.</t>
               <t>Server B determines that the PKIX certificate for that active connection would also be valid for the rooms.a.example domain and that Server A has announced support for dialback errors.</t>
             </list>
@@ -430,12 +455,13 @@
     </section>
 
     <section title="Alternative Prooftypes" anchor="alternatives">
-      <t>The foregoing protocol flows assumed that domain name associations were proved using the PKI prooftype specified in <xref target="RFC6120"/>: that is, the server's proof consists of a PKIX certificate that is checked according to the XMPP profile <xref target='RFC6120'/> of the matching rules from <xref target="RFC6125"/>, the client's verification material is obtained out of band in the form of a trusted root, and secure DNS is not necessary.</t>
+      <t>The foregoing protocol flows assumed that domain name associations were proved using the PKI prooftype specified in <xref target='RFC6120'/>: that is, the server's proof consists of a PKIX certificate that is checked according to the XMPP profile <xref target='RFC6120'/> of the matching rules from <xref target='RFC6125'/> (and the overall validation rules from <xref target='RFC5280'/>), the client's verification material is obtained out of band in the form of a trusted root, and secure DNS is not necessary.</t>
       <t>However, sometimes XMPP server administrators are unable or unwilling to obtain valid PKIX certificates for all of the domains they host at their servers.  For example:</t>
       <t>
         <list style='symbols'>
-          <t>In order to issue a PKIX certificate, a certification authority (CA) might try to send email messages to authoritative mailbox names <xref target='RFC2142'/>, but the administrator of a subsidiary service such as im.cs.podunk.example cannot receive email sent to mailto:hostmaster@podunk.example.</t>
+          <t>In order to issue a PKIX certificate, a CA might try to send email messages to authoritative mailbox names <xref target='RFC2142'/>, but the administrator of a subsidiary service such as im.cs.podunk.example cannot receive email sent to mailto:hostmaster@podunk.example.</t>
           <t>A hosting provider such as hosting.example.net might not want to take on the liability of holding the certificate and private key for a tenant such as example.com (or the tenant might not want the hosting provider to hold its certificate and private key).</t>
+          <t>Even if PKIX certificates for each tenant can be obtained, the management can introduce a large administrative load.</t>
         </list>
       </t>
       <t>(Additional discussion can be found in <xref target='I-D.ietf-xmpp-posh'/>.)</t>
@@ -454,7 +480,7 @@
         <t>
           <list style='symbols'>
             <t>If there is no SRV resource record, pursue the fallback methods described in <xref target='RFC6120'/>.</t>
-            <t>Use the 'to' address of the initial stream header to determine the domain name of the TLS client's reference identifier (since use of the TLS Server Name Indication is purely discretionary in XMPP, as mentioned in <xref target='RFC6120'/>).</t>
+            <t>Use the 'to' address of the initial stream header to determine the domain name of the TLS client's reference identifier (since use of the Server Name Indication extension (TLS SNI) <xref target='RFC6066'/> is purely discretionary in XMPP, as mentioned in <xref target='RFC6120'/>).</t>
           </list>
         </t>
       </section>
@@ -463,8 +489,8 @@
         <t>
           <list style='numbers'>
             <t>The server's proof consists of a PKIX certificate.</t>
-            <t>The proof is checked according to the rules from <xref target="RFC6120"/> and <xref target="RFC6125"/>.</t>
-            <t>The client's verification material is obtained by retrieving the PKIX certificate over HTTPS at a well-known URI <xref target="RFC5785"/>.</t>
+            <t>The proof is checked according to the rules from <xref target='RFC6120'/> and <xref target='RFC6125'/>.</t>
+            <t>The client's verification material is obtained by retrieving a hash of the PKIX certificate over HTTPS at a well-known URI <xref target='RFC5785'/>.</t>
             <t>Secure DNS is not necessary since the HTTPS retrieval mechanism relies on the chain of trust from the public key infrastructure.</t>
           </list>
         </t>
@@ -472,7 +498,7 @@
         <t>
           <list style='symbols'>
             <t>If no verification materials are found via POSH, pursue the fallback methods described in <xref target='RFC6120'/>.</t>
-            <t>Use the 'to' address of the initial stream header to determine the domain name of the TLS client's reference identifier (since use of the TLS Server Name Indication is purely discretionary in XMPP, as mentioned in <xref target='RFC6120'/>).</t>
+            <t>Use the 'to' address of the initial stream header to determine the domain name of the TLS client's reference identifier (since use of the Server Name Indication extension (TLS SNI) <xref target='RFC6066'/> is purely discretionary in XMPP, as mentioned in <xref target='RFC6120'/>).</t>
           </list>
         </t>
         <t>The well-known URIs <xref target='RFC5785'/> to be used for POSH are:</t>
@@ -486,7 +512,7 @@
     </section>
 
     <section title="Secure Delegation and Multi-Tenancy" anchor="delegation">
-      <t>One common method for deploying XMPP services is multi-tenancy: e.g., XMPP services for the service domain example.com are actually hosted at the target server hosting.example.net.  Such an arrangement is relatively convenient in XMPP given the use of DNS SRV records <xref target="RFC2782"/>, such as the following delegation from example.com to hosting.example.net:</t>
+      <t>One common method for deploying XMPP services is multi-tenancy: e.g., XMPP services for the service domain example.com are actually hosted at the target server hosting.example.net.  Such an arrangement is relatively convenient in XMPP given the use of DNS SRV records <xref target='RFC2782'/>, such as the following delegation from example.com to hosting.example.net:</t>
       <figure>
         <artwork><![CDATA[
 _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
@@ -511,13 +537,13 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
     <section title="IANA Considerations" anchor="iana">
       <t>The POSH specification <xref target='I-D.ietf-xmpp-posh'/> provides guidelines for registering the well-known URIs <xref target='RFC5785'/> of protocols that make use of POSH. This specification registers two such URIs, for which the completed registration templates follow.</t>
       <section title="Well-Known URI for xmpp-client Service" anchor="iana-client">
-        <t>This specification registers "posh._xmpp-client._tcp.json" in the Well-Known URI Registry as defined by <xref target="RFC5785"/>.</t>
+        <t>This specification registers "posh._xmpp-client._tcp.json" in the Well-Known URI Registry as defined by <xref target='RFC5785'/>.</t>
         <t>URI suffix: posh._xmpp-client._tcp.json</t>
         <t>Change controller: IETF</t>
         <t>Specification document(s): [[ this document ]]</t>
       </section>
       <section title="Well-Known URI for xmpp-server Service" anchor="iana-server">
-        <t>This specification registers "posh._xmpp-server._tcp.json" in the Well-Known URI Registry as defined by <xref target="RFC5785"/>.</t>
+        <t>This specification registers "posh._xmpp-server._tcp.json" in the Well-Known URI Registry as defined by <xref target='RFC5785'/>.</t>
         <t>URI suffix: posh._xmpp-server._tcp.json</t>
         <t>Change controller: IETF</t>
         <t>Specification document(s): [[ this document ]]</t>
@@ -525,7 +551,7 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
     </section>
 
     <section title="Security Considerations" anchor="security">
-      <t>With regard to the PKIX prooftype, this document supplements but does not supersede the security considerations of <xref target="RFC6120"/> and <xref target="RFC6125"/>.</t>
+      <t>With regard to the PKIX prooftype, this document supplements but does not supersede the security considerations of <xref target='RFC6120'/> and <xref target='RFC6125'/>.</t>
       <t>With regard to the DANE and PKIX prooftypes, the reader is referred to <xref target='I-D.ietf-dane-srv'/> and <xref target='I-D.ietf-xmpp-posh'/>, respectively.</t>
       <t>Any future prooftypes need to thoroughly describe how they conform to the prooftype model specified in <xref target='model'/> of this document.</t>
     </section>
@@ -535,488 +561,32 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
   <back>
 
     <references title="Normative References">
-      <reference anchor="I-D.ietf-dane-srv">
-        <front>
-          <title>Using DNS-Based Authentication of Named Entities (DANE) TLSA records with SRV and MX records.</title>
-          <author initials="T" surname="Finch" fullname="Tony Finch">
-            <organization/>
-          </author>
-          <author initials="M" surname="Miller" fullname="Matthew Miller">
-            <organization/>
-          </author>
-          <author initials="P" surname="Saint-Andre" fullname="Peter Saint-Andre">
-            <organization/>
-          </author>
-          <date month="October" day="21" year="2014"/>
-          <abstract>
-            <t>The DANE specification (RFC 6698) describes how to use TLSA resource records in the DNS to associate a server's host name with its TLS certificate, where the association is secured with DNSSEC.  However, application protocols that use SRV records (RFC 2782) to indirectly name the target server host names for a service domain cannot apply the rules from RFC 6698.  Therefore this document provides guidelines that enable such protocols to locate and use TLSA records.</t>
-          </abstract>
-        </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-dane-srv-08"/>
-        <format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-dane-srv-08.txt"/>
-      </reference>
-
-      <reference anchor="I-D.ietf-xmpp-posh">
-        <front>
-          <title>PKIX over Secure HTTP (POSH)</title>
-          <author initials="M" surname="Miller" fullname="Matthew Miller">
-            <organization/>
-          </author>
-          <author initials="P" surname="Saint-Andre" fullname="Peter Saint-Andre">
-            <organization/>
-          </author>
-          <date month="January" day="26" year="2015"/>
-          <abstract>
-            <t>Experience has shown that it is extremely difficult to deploy proper PKIX certificates for TLS in multi-tenanted environments.  As a result, domains hosted in such environments often deploy applications using certificates that identify the hosting service, not the hosted domain.  Such deployments force end users and peer services to accept a certificate with an improper identifier, resulting in obvious security implications.  This document defines two methods that make it easier to deploy certificates for proper server identity checking in non-HTTP application protocols.  While these methods developed for use in the Extensible Messaging and Presence Protocol (XMPP) as a Domain Name Association (DNA) prooftype, they might also be usable in other non-HTTP application protocols.</t>
-          </abstract>
-        </front>
-        <seriesInfo name="Internet-Draft" value="draft-ietf-xmpp-posh-03"/>
-        <format type="TXT" target="http://www.ietf.org/internet-drafts/draft-ietf-xmpp-posh-03.txt"/>
-      </reference>
-
-      <reference anchor="RFC1034">
-        <front>
-          <title abbrev="Domain Concepts and Facilities">Domain names - concepts and facilities</title>
-          <author initials="P." surname="Mockapetris" fullname="P. Mockapetris">
-            <organization>Information Sciences Institute (ISI)</organization>
-          </author>
-          <date year="1987" day="1" month="November"/>
-        </front>
-        <seriesInfo name="STD" value="13"/>
-        <seriesInfo name="RFC" value="1034"/>
-        <format type="TXT" octets="129180" target="http://www.rfc-editor.org/rfc/rfc1034.txt"/>
-      </reference>
-
-      <reference anchor="RFC1035">
-        <front>
-          <title abbrev="Domain Implementation and Specification">Domain names - implementation and specification</title>
-          <author initials="P." surname="Mockapetris" fullname="P. Mockapetris">
-            <organization>USC/ISI</organization>
-            <address>
-              <postal>
-                <street>4676 Admiralty Way</street>
-                <city>Marina del Rey</city>
-                <region>CA</region>
-                <code>90291</code>
-                <country>US</country>
-              </postal>
-              <phone>+1 213 822 1511</phone>
-            </address>
-          </author>
-          <date year="1987" day="1" month="November"/>
-        </front>
-        <seriesInfo name="STD" value="13"/>
-        <seriesInfo name="RFC" value="1035"/>
-        <format type="TXT" octets="125626" target="http://www.rfc-editor.org/rfc/rfc1035.txt"/>
-      </reference>
-
-      <reference anchor="RFC2782">
-        <front>
-          <title abbrev="DNS SRV RR">A DNS RR for specifying the location of services (DNS SRV)</title>
-          <author initials="A." surname="Gulbrandsen" fullname="Arnt Gulbrandsen">
-            <organization>Troll Tech</organization>
-            <address>
-              <postal>
-                <street>Waldemar Thranes gate 98B</street>
-                <city>Oslo</city>
-                <region/>
-                <code>N-0175</code>
-                <country>NO</country>
-              </postal>
-              <phone>+47 22 806390</phone>
-              <facsimile>+47 22 806380</facsimile>
-              <email>arnt@troll.no</email>
-            </address>
-          </author>
-          <author initials="P." surname="Vixie" fullname="Paul Vixie">
-            <organization>Internet Software Consortium</organization>
-            <address>
-              <postal>
-                <street>950 Charter Street</street>
-                <city>Redwood City</city>
-                <region>CA</region>
-                <code>94063</code>
-                <country>US</country>
-              </postal>
-              <phone>+1 650 779 7001</phone>
-            </address>
-          </author>
-          <author initials="L." surname="Esibov" fullname="Levon Esibov">
-            <organization>Microsoft Corporation</organization>
-            <address>
-              <postal>
-                <street>One Microsoft Way</street>
-                <city>Redmond</city>
-                <region>WA</region>
-                <code>98052</code>
-                <country>US</country>
-              </postal>
-              <email>levone@microsoft.com</email>
-            </address>
-          </author>
-          <date year="2000" month="February"/>
-          <abstract>
-            <t>This document describes a DNS RR which specifies the location of the
-             server(s) for a specific protocol and domain.</t>
-          </abstract>
-        </front>
-        <seriesInfo name="RFC" value="2782"/>
-        <format type="TXT" octets="24013" target="http://www.rfc-editor.org/rfc/rfc2782.txt"/>
-      </reference>
-
-      <reference anchor="RFC4033">
-        <front>
-          <title>DNS Security Introduction and Requirements</title>
-          <author initials="R." surname="Arends" fullname="Roy Arends">
-            <organization>Telematica Instituut</organization>
-            <address>
-              <email>roy.arends@telin.nl</email>
-            </address>
-          </author>
-          <author initials="R." surname="Austein" fullname="Rob Austein">
-            <organization>Internet Systems Consortium</organization>
-            <address>
-              <email>sra@isc.org</email>
-            </address>
-          </author>
-          <author initials="M." surname="Larson" fullname="Matt Larson">
-            <organization>VeriSign, Inc.</organization>
-            <address>
-              <email>mlarson@verisign.com</email>
-            </address>
-          </author>
-          <author initials="D." surname="Massey" fullname="Dan Massey">
-            <organization>Colorado State University</organization>
-            <address>
-              <email>massey@cs.colostate.edu</email>
-            </address>
-          </author>
-          <author initials="S." surname="Rose" fullname="Scott Rose">
-            <organization>National Institute for Standards and Technology</organization>
-            <address>
-              <email>scott.rose@nist.gov</email>
-            </address>
-          </author>
-          <date month="May" year="2005"/>
-        </front>
-        <seriesInfo name="RFC" value="4033"/>
-        <format type="TXT" target="http://tools.ietf.org/rfc/rfc4033.txt"/>
-      </reference>
-
-      <reference anchor="RFC4949">
-        <front>
-          <title>Internet Security Glossary, Version 2</title>
-          <author initials="R." surname="Shirey" fullname="R. Shirey">
-            <organization/>
-          </author>
-          <date year="2007" month="August"/>
-          <abstract>
-            <t>This Glossary provides definitions, abbreviations, and explanations of terminology for information system security.  The 334 pages of entries offer recommendations to improve the comprehensibility of written material that is generated in the Internet Standards Process (RFC 2026).  The recommendations follow the principles that such writing should (a) use the same term or definition whenever the same concept is mentioned; (b) use terms in their plainest, dictionary sense; (c) use terms that are already well-established in open publications; and (d) avoid terms that either favor a particular vendor or favor a particular technology or mechanism over other, competing techniques that already exist or could be developed.  This memo provides information for the Internet community.</t>
-          </abstract>
-        </front>
-        <seriesInfo name="RFC" value="4949"/>
-        <format type="TXT" octets="867626" target="ftp://ftp.isi.edu/in-notes/rfc4949.txt"/>
-      </reference>
-
-      <reference anchor="RFC5280">
-        <front>
-          <title>Internet X.509 Public Key Infrastructure Certificate and Certificate Revocation List (CRL) Profile</title>
-          <author initials="D." surname="Cooper" fullname="D. Cooper">
-            <organization/>
-          </author>
-          <author initials="S." surname="Santesson" fullname="S. Santesson">
-            <organization/>
-          </author>
-          <author initials="S." surname="Farrell" fullname="S. Farrell">
-            <organization/>
-          </author>
-          <author initials="S." surname="Boeyen" fullname="S. Boeyen">
-            <organization/>
-          </author>
-          <author initials="R." surname="Housley" fullname="R. Housley">
-            <organization/>
-          </author>
-          <author initials="W." surname="Polk" fullname="W. Polk">
-            <organization/>
-          </author>
-          <date year="2008" month="May"/>
-          <abstract>
-            <t>This memo profiles the X.509 v3 certificate and X.509 v2 certificate revocation list (CRL) for use in the Internet.  An overview of this approach and model is provided as an introduction.  The X.509 v3 certificate format is described in detail, with additional information regarding the format and semantics of Internet name forms.  Standard certificate extensions are described and two Internet-specific extensions are defined.  A set of required certificate extensions is specified.  The X.509 v2 CRL format is described in detail along with standard and Internet-specific extensions.  An algorithm for X.509 certification path validation is described.  An ASN.1 module and examples are provided in the appendices. [STANDARDS TRACK]</t>
-          </abstract>
-        </front>
-        <seriesInfo name="RFC" value="5280"/>
-        <format type="TXT" octets="352580" target="ftp://ftp.isi.edu/in-notes/rfc5280.txt"/>
-      </reference>
-
-      <reference anchor="RFC5785">
-        <front>
-          <title>Defining Well-Known Uniform Resource Identifiers (URIs)</title>
-          <author initials="M." surname="Nottingham" fullname="M. Nottingham">
-            <organization/>
-          </author>
-          <author initials="E." surname="Hammer-Lahav" fullname="E. Hammer-Lahav">
-            <organization/>
-          </author>
-          <date year="2010" month="April"/>
-          <abstract>
-            <t>This memo defines a path prefix for "well-known locations", "/.well-known/", in selected Uniform Resource Identifier (URI) schemes. [STANDARDS-TRACK]</t>
-          </abstract>
-        </front>
-        <seriesInfo name="RFC" value="5785"/>
-        <format type="TXT" octets="13779" target="http://www.rfc-editor.org/rfc/rfc5785.txt"/>
-      </reference>
-
-      <reference anchor="RFC6120">
-        <front>
-          <title>Extensible Messaging and Presence Protocol (XMPP): Core</title>
-          <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
-            <organization>Cisco</organization>
-            <address>
-              <email>psaintan@cisco.com</email>
-            </address>
-          </author>
-          <date month="March" year="2011"/>
-        </front>
-        <seriesInfo name="RFC" value="6120"/>
-        <format type="TXT" target="http://tools.ietf.org/rfc/rfc6120.txt"/>
-      </reference>
-
-      <reference anchor="RFC6125">
-        <front>
-          <title>Representation and Verification of Domain-Based Application Service Identity within Internet Public Key Infrastructure Using X.509 (PKIX) Certificates in the Context of Transport Layer Security (TLS)</title>
-          <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
-            <organization>Cisco</organization>
-            <address>
-              <email>psaintan@cisco.com</email>
-            </address>
-          </author>
-          <author initials="J." surname="Hodges" fullname="Jeff Hodges">
-            <organization>PayPal</organization>
-            <address>
-              <email>jeff.hodges@paypal.com</email>
-            </address>
-          </author>
-          <date month="March" year="2011"/>
-        </front>
-        <seriesInfo name="RFC" value="6125"/>
-        <format type="TXT" target="http://tools.ietf.org/rfc/rfc6125.txt"/>
-      </reference>
-
-<reference anchor='RFC6698'>
-<front>
-<title>The DNS-Based Authentication of Named Entities (DANE) Transport Layer Security (TLS) Protocol: TLSA</title>
-<author initials='P.' surname='Hoffman' fullname='P. Hoffman'>
-<organization /></author>
-<author initials='J.' surname='Schlyter' fullname='J. Schlyter'>
-<organization /></author>
-<date year='2012' month='August' />
-<abstract>
-<t>Encrypted communication on the Internet often uses Transport Layer Security (TLS), which depends on third parties to certify the keys used.  This document improves on that situation by enabling the administrators of domain names to specify the keys used in that domain's TLS servers.  This requires matching improvements in TLS client software, but no change in TLS server software. [STANDARDS-TRACK]</t></abstract></front>
-<seriesInfo name='RFC' value='6698' />
-<format type='TXT' octets='84034' target='http://www.rfc-editor.org/rfc/rfc6698.txt' />
-</reference>
-
-<reference anchor='RFC7218'>
-<front>
-<title>Adding Acronyms to Simplify Conversations about DNS-Based Authentication of Named Entities (DANE)</title>
-<author initials='O.' surname='Gudmundsson' fullname='O. Gudmundsson'>
-<organization /></author>
-<date year='2014' month='April' />
-<abstract>
-<t>Experience has shown that people get confused when discussing the three numeric fields of the TLSA record.  This document specifies descriptive acronyms for the three numeric fields in TLSA records.  This document updates the format of the IANA registry created by RFC 6698.</t></abstract></front>
-<seriesInfo name='RFC' value='7218' />
-<format type='TXT' octets='8907' target='http://www.rfc-editor.org/rfc/rfc7218.txt' />
-</reference>
-
-      <reference anchor="XEP-0220">
-        <front>
-          <title>Server Dialback</title>
-          <author initials="J" surname="Miller" fullname="Jeremie Miller">
-            <address>
-              <email>jer@jabber.org</email>
-            </address>
-          </author>
-          <author initials="P" surname="Saint-Andre" fullname="Peter Saint-Andre">
-            <organization>Cisco</organization>
-            <address>
-              <email>psaintan@cisco.com</email>
-            </address>
-          </author>
-          <author initials="P" surname="Hancke" fullname="Philipp Hancke">
-            <address>
-              <email>fippo@goodadvice.pages.de</email>
-            </address>
-          </author>
-          <date day="27" month="September" year="2013"/>
-        </front>
-        <seriesInfo name="XSF XEP" value="0220"/>
-        <format type="HTML" target="http://xmpp.org/extensions/xep-0220.html#appendix-authorinfo"/>
-      </reference>
-
+      &I-D.ietf-dane-srv;
+      &I-D.ietf-xmpp-posh;
+      &rfc1034;
+      &rfc1035;
+      &rfc2782;
+      &rfc4033;
+      &rfc4949;
+      &rfc5280;
+      &rfc5785;
+      &rfc6120;
+      &rfc6125;
+      &rfc6698;
+      &rfc7218;
+      &xep0220;
     </references>
 
     <references title="Informative References">
-
-<reference anchor='RFC2142'>
-<front>
-<title abbrev='Mailbox Names'>MAILBOX NAMES FOR COMMON SERVICES, ROLES AND FUNCTIONS</title>
-<author initials='D.' surname='Crocker' fullname='Dave Crocker'>
-<organization>Internet Mail Consortium</organization>
-<address>
-<postal>
-<street>127 Segre Ave.</street>
-<street>Santa Cruz</street>
-<country>CA</country></postal>
-<phone>+1 408 246 8253</phone>
-<email>dcrocker@imc.org</email></address></author>
-<date year='1997' month='May' />
-<area>Applications</area>
-<keyword>mail</keyword>
-<abstract>
-<t>
-   This specification enumerates and describes Internet mail addresses
-   (mailbox name @ host reference) to be used when contacting personnel
-   at an organization.  Mailbox names are provided for both operations
-   and business functions.  Additional mailbox names and aliases are not
-   prohibited, but organizations which support email exchanges with the
-   Internet are encouraged to support AT LEAST each mailbox name for
-   which the associated function exists within the organization.
-</t></abstract></front>
-<seriesInfo name='RFC' value='2142' />
-<format type='TXT' octets='12195' target='http://www.rfc-editor.org/rfc/rfc2142.txt' />
-<format type='XML' octets='16712' target='http://xml.resource.org/public/rfc/xml/rfc2142.xml' />
-</reference>
-
-      <reference anchor="RFC3920">
-        <front>
-          <title abbrev="XMPP Core">Extensible Messaging and Presence Protocol (XMPP): Core</title>
-          <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre" role="editor">
-            <organization>Jabber Software Foundation</organization>
-            <address>
-              <email>stpeter@jabber.org</email>
-            </address>
-          </author>
-          <date year="2004" month="October"/>
-          <area>Applications</area>
-          <workgroup>XMPP Working Group</workgroup>
-          <keyword>RFC</keyword>
-          <keyword>Request for Comments</keyword>
-          <keyword>I-D</keyword>
-          <keyword>Internet-Draft</keyword>
-          <keyword>XMPP</keyword>
-          <keyword>Extensible Messaging and Presence Protocol</keyword>
-          <keyword>Jabber</keyword>
-          <keyword>IM</keyword>
-          <keyword>Instant Messaging</keyword>
-          <keyword>Presence</keyword>
-          <keyword>XML</keyword>
-          <keyword>Extensible Markup Language</keyword>
-          <abstract>
-            <t>This memo defines the core features of the Extensible Messaging and Presence Protocol (XMPP), a protocol for streaming Extensible Markup Language (XML) elements in order to exchange structured information in close to real time between any two network endpoints.  While XMPP provides a generalized, extensible framework for exchanging XML data, it is used mainly for the purpose of building instant messaging and presence applications that meet the requirements of RFC 2779.</t>
-          </abstract>
-        </front>
-        <seriesInfo name="RFC" value="3920"/>
-        <format type="TXT" octets="194313" target="http://www.rfc-editor.org/rfc/rfc3920.txt"/>
-        <format type="HTML" octets="279912" target="http://xml.resource.org/public/rfc/html/rfc3920.html"/>
-        <format type="XML" octets="234610" target="http://xml.resource.org/public/rfc/xml/rfc3920.xml"/>
-      </reference>
-
-<reference anchor='RFC4120'>
-<front>
-<title>The Kerberos Network Authentication Service (V5)</title>
-<author initials='C.' surname='Neuman' fullname='C. Neuman'>
-<organization /></author>
-<author initials='T.' surname='Yu' fullname='T. Yu'>
-<organization /></author>
-<author initials='S.' surname='Hartman' fullname='S. Hartman'>
-<organization /></author>
-<author initials='K.' surname='Raeburn' fullname='K. Raeburn'>
-<organization /></author>
-<date year='2005' month='July' />
-<abstract>
-<t>This document provides an overview and specification of Version 5 of the Kerberos protocol, and it obsoletes RFC 1510 to clarify aspects of the protocol and its intended use that require more detailed or clearer explanation than was provided in RFC 1510.  This document is intended to provide a detailed description of the protocol, suitable for implementation, together with descriptions of the appropriate use of protocol messages and fields within those messages. [STANDARDS-TRACK]</t></abstract></front>
-<seriesInfo name='RFC' value='4120' />
-<format type='TXT' octets='340314' target='http://www.rfc-editor.org/rfc/rfc4120.txt' />
-</reference>
-
-<reference anchor='RFC6091'>
-<front>
-<title>Using OpenPGP Keys for Transport Layer Security (TLS) Authentication</title>
-<author initials='N.' surname='Mavrogiannopoulos' fullname='N. Mavrogiannopoulos'>
-<organization /></author>
-<author initials='D.' surname='Gillmor' fullname='D. Gillmor'>
-<organization /></author>
-<date year='2011' month='February' />
-<abstract>
-<t>This memo defines Transport Layer Security (TLS) extensions and associated semantics that allow clients and servers to negotiate the use of OpenPGP certificates for a TLS session, and specifies how to transport OpenPGP certificates via TLS.  It also defines the registry for non-X.509 certificate types.  This document is not an Internet Standards Track specification; it is published for informational purposes.</t></abstract></front>
-<seriesInfo name='RFC' value='6091' />
-<format type='TXT' octets='18529' target='http://www.rfc-editor.org/rfc/rfc6091.txt' />
-</reference>
-
-<reference anchor='RFC6749'>
-<front>
-<title>The OAuth 2.0 Authorization Framework</title>
-<author initials='D.' surname='Hardt' fullname='D. Hardt'>
-<organization /></author>
-<date year='2012' month='October' />
-<abstract>
-<t>The OAuth 2.0 authorization framework enables a third-party application to obtain limited access to an HTTP service, either on behalf of a resource owner by orchestrating an approval interaction between the resource owner and the HTTP service, or by allowing the third-party application to obtain access on its own behalf.  This specification replaces and obsoletes the OAuth 1.0 protocol described in RFC 5849. [STANDARDS-TRACK]</t></abstract></front>
-<seriesInfo name='RFC' value='6749' />
-<format type='TXT' octets='163498' target='http://www.rfc-editor.org/rfc/rfc6749.txt' />
-</reference>
-
-      <reference anchor="XEP-0045">
-        <front>
-          <title>Multi-User Chat</title>
-          <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre">
-            <organization/>
-            <address>
-              <email>stpeter@jabber.org</email>
-            </address>
-          </author>
-          <date day="08" month="February" year="2012"/>
-        </front>
-        <seriesInfo name="XSF XEP" value="0045"/>
-        <format type="HTML" target="http://xmpp.org/extensions/xep-0045.html"/>
-      </reference>
-
-      <reference anchor="XEP-0288">
-        <front>
-          <title>Bidirectional Server-to-Server Connections</title>
-          <author initials="P." surname="Hancke" fullname="Philipp Hancke">
-            <organization/>
-            <address>
-              <email/>
-            </address>
-          </author>
-          <author initials="D." surname="Cridland" fullname="Dave Cridland">
-            <organization/>
-            <address>
-              <email>dave.cridland@isode.com</email>
-            </address>
-          </author>
-          <date day="26" month="September" year="2013"/>
-        </front>
-        <seriesInfo name="XSF XEP" value="0288"/>
-        <format type="HTML" target="http://xmpp.org/extensions/xep-0288.html"/>
-      </reference>
-
-      <reference anchor='I-D.ietf-uta-xmpp'>
-        <front>
-          <title>Use of Transport Layer Security (TLS) in the Extensible Messaging and Presence Protocol (XMPP)</title>
-          <author initials='P' surname='Saint-Andre' fullname='Peter Saint-Andre'>
-            <organization />
-          </author>
-          <author initials='T' surname='Alkemade' fullname='Thijs Alkemade'>
-            <organization />
-          </author>
-          <date month='January' day='23' year='2015' />
-          <abstract><t>This document provides recommendations for the use of Transport Layer Security (TLS) in the Extensible Messaging and Presence Protocol (XMPP).  This document updates RFC 6120.</t></abstract>
-        </front>
-        <seriesInfo name='Internet-Draft' value='draft-ietf-uta-xmpp-05' />
-        <format type='TXT' target='http://www.ietf.org/internet-drafts/draft-ietf-uta-xmpp-05.txt' />
-      </reference>
-
+      &I-D.ietf-uta-xmpp;
+      &rfc2142;
+      &rfc3920;
+      &rfc4120;
+      &rfc6066;
+      &rfc6091;
+      &rfc6749;
+      &xep0045;
+      &xep0288;
     </references>
 
     <section title="Acknowledgements" anchor="acks">
