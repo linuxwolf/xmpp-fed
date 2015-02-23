@@ -94,13 +94,13 @@ Table of Contents
    We begin with a thought experiment.
 
    Imagine that you work on the operations team of a hosting company
-   that provides the "foo" service (or email or instant messaging or
+   that provides the "SPICE" service (or email or instant messaging or
    social networking service) for ten thousand different customer
    organizations.  Each customer wants their service to be identified by
    the customer's domain name (e.g., bar.example.com), not the hosting
    company's domain name (e.g., hosting.example.net).
 
-   In order to properly secure each customer's "foo" service via
+   In order to properly secure each customer's "SPICE" service via
    Transport Layer Security (TLS) [RFC5246], you need to obtain PKIX
    certificates [RFC5280] containing identifiers such as
    bar.example.com, as explained in the "CertID" specification
@@ -151,17 +151,17 @@ Internet-Draft                    POSH                     February 2015
    server identity checking for your hosted customers.
 
    One possible approach that your team has investigated is to ask each
-   customer to provide the public key / certificate for the "foo"
-   service at a special HTTPS URL on their website ("https://
-   bar.example.com/.well-known/posh.foo.json" is one possibility).  This
-   could be a public key that you generate for the customer, but because
-   the customer hosts it via HTTPS, any user agent can find that public
-   key and check it against the public key you provide during TLS
-   negotiation for the "foo" service (as one added benefit, the customer
-   never needs to hand you a private key).  Alternatively, the customer
-   can redirect requests for that special HTTPS URL to an HTTPS URL at
-   your own website, thus making it explicit that they have delegated
-   the "foo" service to you.
+   customer to provide the public key / certificate for the "SPICE"
+   service at a special HTTPS URL on their website
+   ("https://bar.example.com/.well-known/posh.spice.json" is one
+   possibility).  This could be a public key that you generate for the
+   customer, but because the customer hosts it via HTTPS, any user agent
+   can find that public key and check it against the public key you
+   provide during TLS negotiation for the "SPICE" service (as one added
+   benefit, the customer never needs to hand you a private key).
+   Alternatively, the customer can redirect requests for that special
+   HTTPS URL to an HTTPS URL at your own website, thus making it
+   explicit that they have delegated the "SPICE" service to you.
 
 
 
@@ -247,13 +247,13 @@ Internet-Draft                    POSH                     February 2015
        Domain to the path "/.well-known/posh.{servicedesc}.json".  The
        value of "{servicedesc}" is application-specific; see Section 9
        of this document for more details.  For example, if the
-       application protocol is some hypothetical "foo" service, then
-       "{servicedesc}" could be "foo"; thus if an application client
+       application protocol is some hypothetical "SPICE" service, then
+       "{servicedesc}" could be "spice"; thus if an application client
        were to use POSH to verify an application server for the Source
        Domain "bar.example.com", the HTTPS GET request would be as
        follows:
 
-       GET /.well-known/posh.foo.json HTTP/1.1
+       GET /.well-known/posh.spice.json HTTP/1.1
        Host: bar.example.com
 
    2.  The Source Domain HTTPS server responds in one of three ways:
@@ -366,7 +366,7 @@ Internet-Draft                    POSH                     February 2015
    Content-Length: 79
 
    {
-     "url":"https://hosting.example.net/.well-known/posh.foo.json",
+     "url":"https://hosting.example.net/.well-known/posh.spice.json",
      "expires":86400
    }
 
@@ -569,9 +569,9 @@ Internet-Draft                    POSH                     February 2015
    [RFC5226] for well-known URIs is Specification Required).
 
    For the sake of consistency, it would be best if the URIs registered
-   by such protocols match the URI template [RFC6570] path "/.well-known
-   /posh.{servicedesc}.json"; that is, begin with "posh." and end with
-   ".json" (indicating a media type of application/json [RFC7159]).
+   by such protocols match the URI template [RFC6570] path "/.well-
+   known/posh.{servicedesc}.json"; that is, begin with "posh." and end
+   with ".json" (indicating a media type of application/json [RFC7159]).
 
    For POSH-using protocols that rely on DNS SRV records [RFC2782], it
    would be best if the "{servicedesc}" part of the well-known URI is
@@ -692,19 +692,19 @@ Internet-Draft                    POSH                     February 2015
    [I-D.ietf-dane-srv]
               Finch, T., Miller, M., and P. Saint-Andre, "Using DNS-
               Based Authentication of Named Entities (DANE) TLSA Records
-              with SRV Records", draft-ietf-dane-srv-06 (work in
-              progress), June 2014.
+              with SRV Records", draft-ietf-dane-srv-11 (work in
+              progress), February 2015.
 
    [I-D.ietf-websec-key-pinning]
               Evans, C., Palmer, C., and R. Sleevi, "Public Key Pinning
-              Extension for HTTP", draft-ietf-websec-key-pinning-15
-              (work in progress), June 2014.
+              Extension for HTTP", draft-ietf-websec-key-pinning-21
+              (work in progress), October 2014.
 
    [I-D.ietf-xmpp-dna]
-              Saint-Andre, P. and M. Miller, "Domain Name Associations
-              (DNA) in the Extensible Messaging and Presence Protocol
-              (XMPP)", draft-ietf-xmpp-dna-05 (work in progress),
-              February 2014.
+              Saint-Andre, P., Miller, M., and P. Hancke, "Domain Name
+              Associations (DNA) in the Extensible Messaging and
+              Presence Protocol (XMPP)", draft-ietf-xmpp-dna-09 (work in
+              progress), February 2015.
 
    [RFC2782]  Gulbrandsen, A., Vixie, P., and L. Esibov, "A DNS RR for
               specifying the location of services (DNS SRV)", RFC 2782,
@@ -756,8 +756,8 @@ Internet-Draft                    POSH                     February 2015
               308 (Permanent Redirect)", RFC 7238, June 2014.
 
    [HASH-NAMES]
-              "Hash Function Textual Names", <http://www.iana.org/
-              assignments/hash-function-text-names/
+              "Hash Function Textual Names",
+              <http://www.iana.org/assignments/hash-function-text-names/
               hash-function-text-names.xhtml>.
 
 Appendix A.  Acknowledgements
