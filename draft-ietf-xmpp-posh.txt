@@ -10,7 +10,7 @@ Expires: August 27, 2015                                            &yet
 
 
                       PKIX over Secure HTTP (POSH)
-                        draft-ietf-xmpp-posh-03
+                        draft-ietf-xmpp-posh-04
 
 Abstract
 
@@ -80,13 +80,14 @@ Table of Contents
    5.  Order of Operations . . . . . . . . . . . . . . . . . . . . .   8
    6.  Caching Results . . . . . . . . . . . . . . . . . . . . . . .  10
    7.  Alternates and Roll-over  . . . . . . . . . . . . . . . . . .  10
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
-   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  12
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  12
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  13
-   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  15
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
+   8.  Guidelines for Protocols that Use POSH  . . . . . . . . . . .  11
+   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
+   10. Security Considerations . . . . . . . . . . . . . . . . . . .  11
+   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
+     11.1.  Normative References . . . . . . . . . . . . . . . . . .  12
+     11.2.  Informative References . . . . . . . . . . . . . . . . .  13
+   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  14
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
 
 1.  Introduction
 
@@ -105,7 +106,6 @@ Table of Contents
    bar.example.com, as explained in the "CertID" specification
    [RFC6125].  Unfortunately, you can't obtain such certificates
    because:
-
 
 
 
@@ -152,16 +152,16 @@ Internet-Draft                    POSH                     February 2015
 
    One possible approach that your team has investigated is to ask each
    customer to provide the public key / certificate for the "foo"
-   service at a special HTTPS URL on their website
-   ("https://bar.example.com/.well-known/posh.foo.json" is one
-   possibility).  This could be a public key that you generate for the
-   customer, but because the customer hosts it via HTTPS, any user agent
-   can find that public key and check it against the public key you
-   provide during TLS negotiation for the "foo" service (as one added
-   benefit, the customer never needs to hand you a private key).
-   Alternatively, the customer can redirect requests for that special
-   HTTPS URL to an HTTPS URL at your own website, thus making it
-   explicit that they have delegated the "foo" service to you.
+   service at a special HTTPS URL on their website ("https://
+   bar.example.com/.well-known/posh.foo.json" is one possibility).  This
+   could be a public key that you generate for the customer, but because
+   the customer hosts it via HTTPS, any user agent can find that public
+   key and check it against the public key you provide during TLS
+   negotiation for the "foo" service (as one added benefit, the customer
+   never needs to hand you a private key).  Alternatively, the customer
+   can redirect requests for that special HTTPS URL to an HTTPS URL at
+   your own website, thus making it explicit that they have delegated
+   the "foo" service to you.
 
 
 
@@ -191,13 +191,13 @@ Internet-Draft                    POSH                     February 2015
 
    Additionally, this document uses the following terms:
 
-   POSH client:  The client utilizing the application service.  It uses
-      the protocol defined herein to verify the POSH server's
-      certificate.
+   POSH client:  The client utilizing the application service (e.g., an
+      XMPP client).  It relies on the protocol defined herein to verify
+      the POSH server's identity.
 
-   POSH server:  The server hosting the application service.  It relies
-      on the protocol defined herein for POSH clients to verify its
-      certificate.
+   POSH server:  The server hosting the application service (e.g., an
+      XMPP server).  It expects clients to rely on the protocol defined
+      herein to verify its identity.
 
 3.  Obtaining Verification Materials
 
@@ -245,7 +245,7 @@ Internet-Draft                    POSH                     February 2015
 
    1.  The POSH client performs an HTTPS GET request at the Source
        Domain to the path "/.well-known/posh.{servicedesc}.json".  The
-       value of "{servicedesc}" is application-specific; see Section 8
+       value of "{servicedesc}" is application-specific; see Section 9
        of this document for more details.  For example, if the
        application protocol is some hypothetical "foo" service, then
        "{servicedesc}" could be "foo"; thus if an application client
@@ -378,7 +378,7 @@ Internet-Draft                    POSH                     February 2015
    (i.e., containing a "url" field instead of a "fingerprints" field),
    in order to prevent circular delegations.
 
-      Note: See Section 9 for discussion about HTTPS redirects.
+      Note: See Section 10 for discussion about HTTPS redirects.
 
    The "expires" value is a hint regarding the expiration of the Source
    Domain's delegation of service to the Delegated Domain.  It MUST be a
@@ -562,34 +562,19 @@ Miller & Saint-Andre     Expires August 27, 2015               [Page 10]
 Internet-Draft                    POSH                     February 2015
 
 
-8.  IANA Considerations
+8.  Guidelines for Protocols that Use POSH
 
-   This document registers a well-known URI [RFC5785] for protocols that
-   use POSH.  The completed template follows.
+   Protocols that use POSH will need to register well-known URIs wth the
+   IANA in accordance with [RFC5785] (the IANA registration policy
+   [RFC5226] for well-known URIs is Specification Required).
 
+   For the sake of consistency, it would be best if the URIs registered
+   by such protocols match the URI template [RFC6570] path "/.well-known
+   /posh.{servicedesc}.json"; that is, begin with "posh." and end with
+   ".json" (indicating a media type of application/json [RFC7159]).
 
-
-      URI suffix:  posh.
-
-      Change controller:  IETF
-
-      Specification document:  [[ this document ]]
-
-      Related information:  Because the "posh." string is merely a
-         prefix, protocols that use POSH need to register particular
-         URIs that are prefixed with the "posh." string.
-
-   Note that the registered URI is "posh." (with a trailing dot).  This
-   is merely a prefix to be placed at the front of well-known URIs
-   [RFC5785] registered by protocols that use POSH, which themselves are
-   responsible for the relevant registrations with the IANA.  The URIs
-   registered by such protocols SHOULD match the URI template [RFC6570]
-   path "/.well-known/posh.{servicedesc}.json"; that is, begin with
-   "posh." and end with ".json" (indicating a media type of application/
-   json [RFC7159]).
-
-   For POSH-using protocols that rely on DNS SRV records [RFC2782], the
-   "{servicedesc}" part of the well-known URI SHOULD be
+   For POSH-using protocols that rely on DNS SRV records [RFC2782], it
+   would be best if the "{servicedesc}" part of the well-known URI is
    "{service}.{proto}", where the "{service}" is the DNS SRV "Service"
    prepended by the underscore character "_" and the "{proto}" is the
    DNS SRV "Proto" also prepended by the underscore character "_".  As
@@ -602,23 +587,15 @@ Internet-Draft                    POSH                     February 2015
    known URI can be any unique string or identifier for the protocol,
    which might be a service name registered with the IANA in accordance
    with [RFC6335] or which might be an unregistered name.  As an
-   example, the well-known URI for the mythical "foo" service could be
-   "posh.foo.json".
+   example, the well-known URI for a hypothetical "SPICE" application
+   could be "posh.spice.json".
 
-   Note: As explained in [RFC5785], the IANA registration policy
-   [RFC5226] for well-known URIs is Specification Required.
+9.  IANA Considerations
 
+   This document requests no actions of IANA.  [Note to RFC Editor:
+   please remove this section before publication.]
 
-
-
-
-
-Miller & Saint-Andre     Expires August 27, 2015               [Page 11]
-
-Internet-Draft                    POSH                     February 2015
-
-
-9.  Security Considerations
+10.  Security Considerations
 
    This document supplements but does not supersede the security
    considerations provided in specifications for application protocols
@@ -633,6 +610,14 @@ Internet-Draft                    POSH                     February 2015
 
    Note well that POSH is used by a POSH client to obtain the public key
    of a POSH server to which it might connect for a particular
+
+
+
+Miller & Saint-Andre     Expires August 27, 2015               [Page 11]
+
+Internet-Draft                    POSH                     February 2015
+
+
    application protocol such as IMAP or XMPP.  POSH does not enable a
    hosted domain to transfer private keys to a hosting service via
    HTTPS.  POSH also does not enable a POSH server to engage in
@@ -658,21 +643,14 @@ Internet-Draft                    POSH                     February 2015
    entities that deploy POSH are advised to swap out POSH files if the
    hash functions in use are found to be subject to realistic attacks.
 
-10.  References
+11.  References
 
-10.1.  Normative References
+11.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
 
    [RFC2818]  Rescorla, E., "HTTP Over TLS", RFC 2818, May 2000.
-
-
-
-Miller & Saint-Andre     Expires August 27, 2015               [Page 12]
-
-Internet-Draft                    POSH                     February 2015
-
 
    [RFC4648]  Josefsson, S., "The Base16, Base32, and Base64 Data
               Encodings", RFC 4648, October 2006.
@@ -689,6 +667,13 @@ Internet-Draft                    POSH                     February 2015
               Uniform Resource Identifiers (URIs)", RFC 5785, April
               2010.
 
+
+
+Miller & Saint-Andre     Expires August 27, 2015               [Page 12]
+
+Internet-Draft                    POSH                     February 2015
+
+
    [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
               Verification of Domain-Based Application Service Identity
               within Internet Public Key Infrastructure Using X.509
@@ -702,33 +687,24 @@ Internet-Draft                    POSH                     February 2015
               (HTTP/1.1): Message Syntax and Routing", RFC 7230, June
               2014.
 
-10.2.  Informative References
+11.2.  Informative References
 
    [I-D.ietf-dane-srv]
               Finch, T., Miller, M., and P. Saint-Andre, "Using DNS-
               Based Authentication of Named Entities (DANE) TLSA Records
-              with SRV Records", draft-ietf-dane-srv-11 (work in
-              progress), February 2015.
+              with SRV Records", draft-ietf-dane-srv-06 (work in
+              progress), June 2014.
 
    [I-D.ietf-websec-key-pinning]
               Evans, C., Palmer, C., and R. Sleevi, "Public Key Pinning
-              Extension for HTTP", draft-ietf-websec-key-pinning-21
-              (work in progress), October 2014.
+              Extension for HTTP", draft-ietf-websec-key-pinning-15
+              (work in progress), June 2014.
 
    [I-D.ietf-xmpp-dna]
-              Saint-Andre, P., Miller, M., and P. Hancke, "Domain Name
-              Associations (DNA) in the Extensible Messaging and
-              Presence Protocol (XMPP)", draft-ietf-xmpp-dna-09 (work in
-              progress), February 2015.
-
-
-
-
-
-Miller & Saint-Andre     Expires August 27, 2015               [Page 13]
-
-Internet-Draft                    POSH                     February 2015
-
+              Saint-Andre, P. and M. Miller, "Domain Name Associations
+              (DNA) in the Extensible Messaging and Presence Protocol
+              (XMPP)", draft-ietf-xmpp-dna-05 (work in progress),
+              February 2014.
 
    [RFC2782]  Gulbrandsen, A., Vixie, P., and L. Esibov, "A DNS RR for
               specifying the location of services (DNS SRV)", RFC 2782,
@@ -744,6 +720,15 @@ Internet-Draft                    POSH                     February 2015
 
    [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
               Protocol (XMPP): Core", RFC 6120, March 2011.
+
+
+
+
+
+Miller & Saint-Andre     Expires August 27, 2015               [Page 13]
+
+Internet-Draft                    POSH                     February 2015
+
 
    [RFC6335]  Cotton, M., Eggert, L., Touch, J., Westerlund, M., and S.
               Cheshire, "Internet Assigned Numbers Authority (IANA)
@@ -771,20 +756,9 @@ Internet-Draft                    POSH                     February 2015
               308 (Permanent Redirect)", RFC 7238, June 2014.
 
    [HASH-NAMES]
-              "Hash Function Textual Names",
-              <http://www.iana.org/assignments/hash-function-text-names/
+              "Hash Function Textual Names", <http://www.iana.org/
+              assignments/hash-function-text-names/
               hash-function-text-names.xhtml>.
-
-
-
-
-
-
-
-Miller & Saint-Andre     Expires August 27, 2015               [Page 14]
-
-Internet-Draft                    POSH                     February 2015
-
 
 Appendix A.  Acknowledgements
 
@@ -804,11 +778,37 @@ Authors' Addresses
    Email: mamille2@cisco.com
 
 
+
+
+
+Miller & Saint-Andre     Expires August 27, 2015               [Page 14]
+
+Internet-Draft                    POSH                     February 2015
+
+
    Peter Saint-Andre
    &yet
 
    Email: peter@andyet.com
    URI:   https://andyet.com/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -89,8 +89,8 @@
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target="RFC2119"/>.</t>
       <t>Additionally, this document uses the following terms:
         <list style="hanging">
-          <t hangText="POSH client:">The client utilizing the application service.  It uses the protocol defined herein to verify the POSH server's certificate.</t>
-          <t hangText="POSH server:">The server hosting the application service.  It relies on the protocol defined herein for POSH clients to verify its certificate.</t>
+          <t hangText="POSH client:">The client utilizing the application service (e.g., an XMPP client).  It relies on the protocol defined herein to verify the POSH server's identity.</t>
+          <t hangText="POSH server:">The server hosting the application service (e.g., an XMPP server).  It expects clients to rely on the protocol defined herein to verify its identity.</t>
         </list>
       </t>
     </section>
@@ -279,24 +279,15 @@ Client                     Domain                     Server
       <t>Rolling over from one hosting provider to another is best handled by updating the relevant SRV records, not primarily by updating the POSH files themselves.</t>
     </section>
 
+    <section title="Guidelines for Protocols that Use POSH" anchor="guidelines">
+      <t>Protocols that use POSH will need to register well-known URIs wth the IANA in accordance with <xref target='RFC5785'/> (the IANA registration policy <xref target='RFC5226'/> for well-known URIs is Specification Required).</t>
+      <t>For the sake of consistency, it would be best if the URIs registered by such protocols match the URI template <xref target="RFC6570"/> path "/.well-known/posh.{servicedesc}.json"; that is, begin with "posh." and end with ".json" (indicating a media type of application/json <xref target='RFC7159'/>).</t>
+      <t>For POSH-using protocols that rely on DNS SRV records <xref target='RFC2782'/>, it would be best if the "{servicedesc}" part of the well-known URI is "{service}.{proto}", where the "{service}" is the DNS SRV "Service" prepended by the underscore character "_" and the "{proto}" is the DNS SRV "Proto" also prepended by the underscore character "_".  As an example, the well-known URI for XMPP server-to-server connections would be "posh._xmpp-server._tcp.json" since XMPP <xref target='RFC6120'/> registers a service name of "xmpp-server" and uses TCP as the underlying transport protocol.</t>  
+      <t>For other POSH-using protocols, the "{servicedesc}" part of the well-known URI can be any unique string or identifier for the protocol, which might be a service name registered with the IANA in accordance with <xref target='RFC6335'/> or which might be an unregistered name.  As an example, the well-known URI for a hypothetical "SPICE" application could be "posh.spice.json".</t>
+    </section>
+
     <section title="IANA Considerations" anchor="iana">
-      <t>This document registers a well-known URI <xref target='RFC5785'/> for protocols that use POSH.  The completed template follows.</t>
-      <t>
-        <list style='empty'>
-          <t>
-            <list style='hanging'>
-              <t hangText='URI suffix:'>posh.</t>
-              <t hangText='Change controller:'>IETF</t>
-              <t hangText='Specification document:'>[[ this document ]]</t>
-              <t hangText='Related information:'>Because the "posh." string is merely a prefix, protocols that use POSH need to register particular URIs that are prefixed with the "posh." string.</t>
-            </list>
-          </t>
-        </list>
-      </t>
-      <t>Note that the registered URI is "posh." (with a trailing dot).  This is merely a prefix to be placed at the front of well-known URIs <xref target='RFC5785'/> registered by protocols that use POSH, which themselves are responsible for the relevant registrations with the IANA.  The URIs registered by such protocols SHOULD match the URI template <xref target="RFC6570"/> path "/.well-known/posh.{servicedesc}.json"; that is, begin with "posh." and end with ".json" (indicating a media type of application/json <xref target='RFC7159'/>).</t>
-      <t>For POSH-using protocols that rely on DNS SRV records <xref target='RFC2782'/>, the "{servicedesc}" part of the well-known URI SHOULD be "{service}.{proto}", where the "{service}" is the DNS SRV "Service" prepended by the underscore character "_" and the "{proto}" is the DNS SRV "Proto" also prepended by the underscore character "_".  As an example, the well-known URI for XMPP server-to-server connections would be "posh._xmpp-server._tcp.json" since XMPP <xref target='RFC6120'/> registers a service name of "xmpp-server" and uses TCP as the underlying transport protocol.</t>  
-      <t>For other POSH-using protocols, the "{servicedesc}" part of the well-known URI can be any unique string or identifier for the protocol, which might be a service name registered with the IANA in accordance with <xref target='RFC6335'/> or which might be an unregistered name.  As an example, the well-known URI for the mythical "foo" service could be "posh.foo.json".</t>
-      <t>Note: As explained in <xref target='RFC5785'/>, the IANA registration policy <xref target='RFC5226'/> for well-known URIs is Specification Required.</t>  
+      <t>This document requests no actions of IANA. [Note to RFC Editor: please remove this section before publication.]</t>
     </section>
 
     <section title="Security Considerations" anchor="security">
