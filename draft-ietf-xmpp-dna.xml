@@ -20,6 +20,7 @@
   <!ENTITY xep0045 PUBLIC "" "http://xmpp.org/extensions/refs/reference.XSF.XEP-0045.xml">
   <!ENTITY xep0220 PUBLIC "" "http://xmpp.org/extensions/refs/reference.XSF.XEP-0220.xml">
   <!ENTITY xep0288 PUBLIC "" "http://xmpp.org/extensions/refs/reference.XSF.XEP-0288.xml">
+  <!ENTITY xep0344 PUBLIC "" "http://xmpp.org/extensions/refs/reference.XSF.XEP-0344.xml">
   <!ENTITY I-D.ietf-dane-srv PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-dane-srv.xml">
   <!ENTITY I-D.ietf-uta-xmpp PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-uta-xmpp.xml">
   <!ENTITY I-D.ietf-xmpp-posh PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-xmpp-posh.xml">
@@ -155,7 +156,7 @@
     </section>
 
     <section title="Server-to-Server (S2S) DNA" anchor="s2s">
-      <t>The server-to-server case is significantly more complex than the client-to-server case, and involves checking of domain name associations in both directions along with other "wrinkles" described in the following sections.</t>
+      <t>The server-to-server case is significantly more complex than the client-to-server case, and involves checking of domain name associations in both directions along with other "wrinkles" described in the following sections. The Server Dialback protocol defined in <xref target='XEP-0220'/>. See <xref target='XEP-0344'/> for considerations when using it together with TLS and DNSSEC. Also, <xref target='XEP-0288'/> provides a way to use the server-to-server connections for bidirectional exchange of XML stanzas which reduces the complexity of some of the processes involved.</t>
 
       <section title="S2S Flow" anchor="s2s-flow">
         <t>The following flow chart illustrates the protocol flow for establishing domain name associations between Server A (the initiating entity) and Server B (the receiving entity), as described in the remaining sections of this document.</t>
@@ -209,7 +210,7 @@
 |                                               |
 +-----------------------------------------------+
                     |
-        (Section 4.3: One-Way Authentication)
+        (Section 4.3: No Mutual PKIX authentication)
                     |
              DNS RESOLUTION ETC.
                     |
@@ -337,7 +338,7 @@
         <t>Let's consider each of these "wrinkles" in turn. Since Server A is acting as a S2S client the behaviour is same as in the C2S case described in <xref target='c2s-description'/>.</t>
       </section>
 
-      <section title="One-Way Authentication" anchor="s2s-oneway">
+      <section title="No Mutual PKIX Authentication" anchor="s2s-notsimple">
         <t>If the PKIX certificate presented by Server A during TLS negotiation is not trusted by Server B, Server B is unable to mutually authenticate Server A. Therefore, Server B needs to verify the asserted identity of Server A by other means.</t>
         <t>
           <list style='numbers'>
@@ -359,9 +360,9 @@
               &lt;stream:stream from='a.example' to='b.example'&gt;
             </t>
             <t>The servers attempt TLS negotiation, during which Server A (acting as a TLS server) presents a PKIX certificate proving that it is a.example.</t>
-            <t>Server B checks the PKIX certificate that Server A provided. This might be the same certificate presented by Server A as a client certificate in the initial connection. Even if this certificate is not signed by a trusted CA (for example it could be self-signed) Server B can verify that there is an association between the incoming connection and the domain name a.example. Note that this may be insecure unless DNSSEC <xref target='RFC4033'/> is used.</t>
+            <t>Server B checks the PKIX certificate that Server A provided. This might be the same certificate presented by Server A as a client certificate in the initial connection. See <xref target='XEP-0344'/> for further discussion about skipping the subsequent steps.</t>
             <t>
-              If the certificate provided by Server A is different from the one presented in the initial connection, Server B proceeds with Server Dialback in order to establish the domain name association. In order to do this it sends a request for verification as described in <xref target='XEP-0220'/>:
+              Server B proceeds with Server Dialback in order to establish the domain name association. In order to do this it sends a request for verification as described in <xref target='XEP-0220'/>:
               <vspace blankLines='1'/>
               &lt;db:verify from='b.example' to='a.example' id='...'&gt;some-dialback-key&lt;/db:verify&gt;
             </t>
@@ -374,7 +375,6 @@
             </t>
           </list>
         </t>
-        <t>At this point the servers are using two TCP connections instead of one, which is somewhat wasteful.  However, there are ways to tie the authentication achieved on the second TCP connection to the first TCP connection; see <xref target='XEP-0288'/> for further discussion.</t>
       </section>
 
       <section title="Piggybacking" anchor="s2s-piggybacking">
@@ -587,6 +587,7 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
       &rfc6749;
       &xep0045;
       &xep0288;
+      &xep0344;
     </references>
 
     <section title="Acknowledgements" anchor="acks">
