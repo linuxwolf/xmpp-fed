@@ -156,7 +156,7 @@
     </section>
 
     <section title="Server-to-Server (S2S) DNA" anchor="s2s">
-      <t>The server-to-server case is significantly more complex than the client-to-server case, and involves checking of domain name associations in both directions along with other "wrinkles" described in the following sections. The Server Dialback protocol defined in <xref target='XEP-0220'/>. See <xref target='XEP-0344'/> for considerations when using it together with TLS and DNSSEC. Also, <xref target='XEP-0288'/> provides a way to use the server-to-server connections for bidirectional exchange of XML stanzas which reduces the complexity of some of the processes involved.</t>
+      <t>The server-to-server case is significantly more complex than the client-to-server case, and involves checking of domain name associations in both directions along with other "wrinkles" described in the following sections. The Server Dialback protocol is defined in <xref target='XEP-0220'/>. See <xref target='XEP-0344'/> for considerations when using it together with TLS and DNSSEC. Also, <xref target='XEP-0288'/> provides a way to use the server-to-server connections for bidirectional exchange of XML stanzas which reduces the complexity of some of the processes involved.</t>
 
       <section title="S2S Flow" anchor="s2s-flow">
         <t>The following flow chart illustrates the protocol flow for establishing domain name associations between Server A (the initiating entity) and Server B (the receiving entity), as described in the remaining sections of this document.</t>
