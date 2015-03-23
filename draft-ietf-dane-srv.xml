@@ -29,7 +29,7 @@
 <?rfc symrefs="yes" ?>
 <?rfc toc="yes" ?>
 
-<rfc ipr="trust200902" category="std" docName="draft-ietf-dane-srv-11">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-dane-srv-12">
   <front>
     <title abbrev="TLSA and SRV"> Using DNS-Based Authentication of Named Entities (DANE) TLSA Records with SRV Records </title>
     <author initials="T." surname="Finch" fullname="Tony Finch">
@@ -137,7 +137,7 @@
         </t>
       </section>
       <section title="Impact on TLS Usage">
-        <t>The client SHALL determine if the TLSA records returned in the previous step are usable according to Section 4.1 of <xref target="RFC6698" />. This affects the use TLS as follows:</t>
+        <t>The client SHALL determine if the TLSA records returned in the previous step are usable according to Section 4.1 of <xref target="RFC6698" />. This affects the use of TLS as follows:</t>
         <t>
           <list style='symbols'>
             <t>If the TLSA response is "secure" and usable, then the client MUST use TLS when connecting to the target server. The TLSA records are used when validating the server's certificate as described in <xref target="tls" />.</t>
@@ -268,8 +268,8 @@ _9143._tcp.imap.example.net.  RRSIG  TLSA ...
             <artwork>
               <![CDATA[
 ; XMPP domain
-_xmpp-client.example.com. SRV     1 0 5222 im.example.net.
-_xmpp-client.example.com. RRSIG   SRV ...
+_xmpp-client._tcp.example.com. SRV     1 0 5222 im.example.net.
+_xmpp-client._tcp.example.com. RRSIG   SRV ...
 
 ; target server host name
 im.example.net.           A      192.0.2.3
