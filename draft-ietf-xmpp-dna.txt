@@ -5,10 +5,10 @@
 Network Working Group                                     P. Saint-Andre
 Internet-Draft                                                      &yet
 Intended status: Standards Track                               M. Miller
-Expires: September 24, 2015                          Cisco Systems, Inc.
+Expires: September 25, 2015                          Cisco Systems, Inc.
                                                                P. Hancke
                                                                     &yet
-                                                          March 23, 2015
+                                                          March 24, 2015
 
 
 Domain Name Associations (DNA) in the Extensible Messaging and Presence
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on September 24, 2015.
+   This Internet-Draft will expire on September 25, 2015.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Saint-Andre, et al.    Expires September 24, 2015               [Page 1]
+Saint-Andre, et al.    Expires September 25, 2015               [Page 1]
 
 Internet-Draft                  XMPP DNA                      March 2015
 
@@ -92,7 +92,7 @@ Table of Contents
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  17
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  17
      10.2.  Informative References . . . . . . . . . . . . . . . . .  19
-   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  20
+   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  19
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  20
 
 1.  Introduction
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Saint-Andre, et al.    Expires September 24, 2015               [Page 2]
+Saint-Andre, et al.    Expires September 25, 2015               [Page 2]
 
 Internet-Draft                  XMPP DNA                      March 2015
 
@@ -165,7 +165,7 @@ Internet-Draft                  XMPP DNA                      March 2015
 
 
 
-Saint-Andre, et al.    Expires September 24, 2015               [Page 3]
+Saint-Andre, et al.    Expires September 25, 2015               [Page 3]
 
 Internet-Draft                  XMPP DNA                      March 2015
 
@@ -221,7 +221,7 @@ Internet-Draft                  XMPP DNA                      March 2015
 
 
 
-Saint-Andre, et al.    Expires September 24, 2015               [Page 4]
+Saint-Andre, et al.    Expires September 25, 2015               [Page 4]
 
 Internet-Draft                  XMPP DNA                      March 2015
 
@@ -277,7 +277,7 @@ Internet-Draft                  XMPP DNA                      March 2015
 
 
 
-Saint-Andre, et al.    Expires September 24, 2015               [Page 5]
+Saint-Andre, et al.    Expires September 25, 2015               [Page 5]
 
 Internet-Draft                  XMPP DNA                      March 2015
 
@@ -333,7 +333,7 @@ Internet-Draft                  XMPP DNA                      March 2015
 
 
 
-Saint-Andre, et al.    Expires September 24, 2015               [Page 6]
+Saint-Andre, et al.    Expires September 25, 2015               [Page 6]
 
 Internet-Draft                  XMPP DNA                      March 2015
 
@@ -389,7 +389,7 @@ Internet-Draft                  XMPP DNA                      March 2015
 
 
 
-Saint-Andre, et al.    Expires September 24, 2015               [Page 7]
+Saint-Andre, et al.    Expires September 25, 2015               [Page 7]
 
 Internet-Draft                  XMPP DNA                      March 2015
 
@@ -445,7 +445,7 @@ Internet-Draft                  XMPP DNA                      March 2015
 
 
 
-Saint-Andre, et al.    Expires September 24, 2015               [Page 8]
+Saint-Andre, et al.    Expires September 25, 2015               [Page 8]
 
 Internet-Draft                  XMPP DNA                      March 2015
 
@@ -501,7 +501,7 @@ Internet-Draft                  XMPP DNA                      March 2015
 
 
 
-Saint-Andre, et al.    Expires September 24, 2015               [Page 9]
+Saint-Andre, et al.    Expires September 25, 2015               [Page 9]
 
 Internet-Draft                  XMPP DNA                      March 2015
 
@@ -557,7 +557,7 @@ Internet-Draft                  XMPP DNA                      March 2015
 
 
 
-Saint-Andre, et al.    Expires September 24, 2015              [Page 10]
+Saint-Andre, et al.    Expires September 25, 2015              [Page 10]
 
 Internet-Draft                  XMPP DNA                      March 2015
 
@@ -613,7 +613,7 @@ Internet-Draft                  XMPP DNA                      March 2015
 
 
 
-Saint-Andre, et al.    Expires September 24, 2015              [Page 11]
+Saint-Andre, et al.    Expires September 25, 2015              [Page 11]
 
 Internet-Draft                  XMPP DNA                      March 2015
 
@@ -669,7 +669,7 @@ Internet-Draft                  XMPP DNA                      March 2015
 
 
 
-Saint-Andre, et al.    Expires September 24, 2015              [Page 12]
+Saint-Andre, et al.    Expires September 25, 2015              [Page 12]
 
 Internet-Draft                  XMPP DNA                      March 2015
 
@@ -725,7 +725,7 @@ Internet-Draft                  XMPP DNA                      March 2015
 
 
 
-Saint-Andre, et al.    Expires September 24, 2015              [Page 13]
+Saint-Andre, et al.    Expires September 25, 2015              [Page 13]
 
 Internet-Draft                  XMPP DNA                      March 2015
 
@@ -746,8 +746,8 @@ Internet-Draft                  XMPP DNA                      March 2015
    2.  The proof is checked by verifying an exact match or a hash of
        either the SubjectPublicKeyInfo or the full certificate.
 
-   3.  The client's verification material is obtained via secure DNS as
-       described in [I-D.ietf-dane-srv].
+   3.  The client's verification material is obtained via secure DNS
+       [RFC4033] as described in [I-D.ietf-dane-srv].
 
    4.  Secure DNS is necessary in order to effectively establish an
        alternative chain of trust from the service certificate or
@@ -781,7 +781,7 @@ Internet-Draft                  XMPP DNA                      March 2015
 
 
 
-Saint-Andre, et al.    Expires September 24, 2015              [Page 14]
+Saint-Andre, et al.    Expires September 25, 2015              [Page 14]
 
 Internet-Draft                  XMPP DNA                      March 2015
 
@@ -825,28 +825,23 @@ Internet-Draft                  XMPP DNA                      March 2015
    jabber-ch.example).  However, in practice the security of multi-
    tenancy has been found to be unwieldy when the provider hosts large
    numbers of XMPP services on behalf of multiple tenants (see
-   [I-D.ietf-xmpp-posh] for a detailed description).  Typically there
-   are two main reasons for this state of affairs: the service provider
-   (say, hosting.example.net) wishes to limit its liability and
-   therefore does not wish to hold the certificate and private key for
-   the tenant (say, example.com) and the tenant wishes to improve the
-   security of the service and therefore does not wish to share its
-   certificate and private key with the service provider.  As a result,
+   [I-D.ietf-xmpp-posh] for a detailed description).  As a result,
    server-to-server communications to example.com go unencrypted or the
    communications are TLS-encrypted but the certificates are not checked
-
-
-
-Saint-Andre, et al.    Expires September 24, 2015              [Page 15]
-
-Internet-Draft                  XMPP DNA                      March 2015
-
-
    (which is functionally equivalent to a connection using an anonymous
    key exchange).  This is also true of client-to-server communications,
    forcing end users to override certificate warnings or configure their
    clients to accept or "pin" certificates for hosting.example.net
    instead of example.com.  The fundamental problem here is that if
+
+
+
+
+Saint-Andre, et al.    Expires September 25, 2015              [Page 15]
+
+Internet-Draft                  XMPP DNA                      March 2015
+
+
    DNSSEC is not used then the act of delegation via DNS SRV records is
    inherently insecure.
 
@@ -869,8 +864,8 @@ Internet-Draft                  XMPP DNA                      March 2015
       mechanism depends on secure DNS.
 
    The PKIX, DANE, and POSH prooftypes adhere to this model.  (Some
-   prooftypes depend on, or are enhanced by, secure DNS and thus also
-   need to describe how they ensure secure delegation.)
+   prooftypes depend on, or are enhanced by, secure DNS [RFC4033] and
+   thus also need to describe how they ensure secure delegation.)
 
    Other prooftypes are possible; examples might include TLS with PGP
    keys [RFC6091], a token mechanism such as Kerberos [RFC4120] or OAuth
@@ -889,17 +884,19 @@ Internet-Draft                  XMPP DNA                      March 2015
 
    The POSH specification [I-D.ietf-xmpp-posh] provides guidelines for
    registering the well-known URIs [RFC5785] of protocols that make use
+   of POSH.  This specification registers two such URIs, for which the
+   completed registration templates follow.
 
 
 
 
-Saint-Andre, et al.    Expires September 24, 2015              [Page 16]
+
+
+
+Saint-Andre, et al.    Expires September 25, 2015              [Page 16]
 
 Internet-Draft                  XMPP DNA                      March 2015
 
-
-   of POSH.  This specification registers two such URIs, for which the
-   completed registration templates follow.
 
 8.1.  Well-Known URI for xmpp-client Service
 
@@ -944,20 +941,18 @@ Internet-Draft                  XMPP DNA                      March 2015
               with SRV Records", draft-ietf-dane-srv-11 (work in
               progress), February 2015.
 
-
-
-
-
-
-Saint-Andre, et al.    Expires September 24, 2015              [Page 17]
-
-Internet-Draft                  XMPP DNA                      March 2015
-
-
    [I-D.ietf-xmpp-posh]
               Miller, M. and P. Saint-Andre, "PKIX over Secure HTTP
               (POSH)", draft-ietf-xmpp-posh-04 (work in progress),
               February 2015.
+
+
+
+
+Saint-Andre, et al.    Expires September 25, 2015              [Page 17]
+
+Internet-Draft                  XMPP DNA                      March 2015
+
 
    [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
               STD 13, RFC 1034, November 1987.
@@ -1002,17 +997,18 @@ Internet-Draft                  XMPP DNA                      March 2015
               Conversations about DNS-Based Authentication of Named
               Entities (DANE)", RFC 7218, April 2014.
 
-
-
-
-Saint-Andre, et al.    Expires September 24, 2015              [Page 18]
-
-Internet-Draft                  XMPP DNA                      March 2015
-
-
    [XEP-0220]
               Miller, J., Saint-Andre, P., and P. Hancke, "Server
               Dialback", XSF XEP 0220, August 2014.
+
+
+
+
+
+Saint-Andre, et al.    Expires September 25, 2015              [Page 18]
+
+Internet-Draft                  XMPP DNA                      March 2015
+
 
 10.2.  Informative References
 
@@ -1054,22 +1050,21 @@ Internet-Draft                  XMPP DNA                      March 2015
               Hancke, P. and D. Cridland, "Impact of TLS and DNSSEC on
               Dialback", XSF XEP 0344, March 2014.
 
-
-
-
-
-
-
-
-Saint-Andre, et al.    Expires September 24, 2015              [Page 19]
-
-Internet-Draft                  XMPP DNA                      March 2015
-
-
 Appendix A.  Acknowledgements
 
    Thanks to Richard Barnes, Stephen Farrell, and Jonas Lindberg for
    contributing to earlier versions of this document.
+
+
+
+
+
+
+
+Saint-Andre, et al.    Expires September 25, 2015              [Page 19]
+
+Internet-Draft                  XMPP DNA                      March 2015
+
 
 Authors' Addresses
 
@@ -1117,4 +1112,9 @@ Authors' Addresses
 
 
 
-Saint-Andre, et al.    Expires September 24, 2015              [Page 20]
+
+
+
+
+
+Saint-Andre, et al.    Expires September 25, 2015              [Page 20]
