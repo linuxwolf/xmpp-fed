@@ -13,7 +13,7 @@ Expires: September 25, 2015                          Cisco Systems, Inc.
 
 Domain Name Associations (DNA) in the Extensible Messaging and Presence
                             Protocol (XMPP)
-                         draft-ietf-xmpp-dna-09
+                         draft-ietf-xmpp-dna-10
 
 Abstract
 
@@ -938,8 +938,8 @@ Internet-Draft                  XMPP DNA                      March 2015
    [I-D.ietf-dane-srv]
               Finch, T., Miller, M., and P. Saint-Andre, "Using DNS-
               Based Authentication of Named Entities (DANE) TLSA Records
-              with SRV Records", draft-ietf-dane-srv-11 (work in
-              progress), February 2015.
+              with SRV Records", draft-ietf-dane-srv-12 (work in
+              progress), March 2015.
 
    [I-D.ietf-xmpp-posh]
               Miller, M. and P. Saint-Andre, "PKIX over Secure HTTP
@@ -1048,7 +1048,7 @@ Internet-Draft                  XMPP DNA                      March 2015
 
    [XEP-0344]
               Hancke, P. and D. Cridland, "Impact of TLS and DNSSEC on
-              Dialback", XSF XEP 0344, March 2014.
+              Dialback", XSF XEP 0344, March 2015.
 
 Appendix A.  Acknowledgements
 

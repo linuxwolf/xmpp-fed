@@ -30,7 +30,7 @@
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="3"?>
-<rfc category="std" docName="draft-ietf-xmpp-dna-09" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-xmpp-dna-10" ipr="trust200902">
 
   <front>
     <title abbrev="XMPP DNA">Domain Name Associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP)</title>
