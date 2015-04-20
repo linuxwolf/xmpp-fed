@@ -103,7 +103,7 @@
     <section anchor="dns" title="DNS Checks">
       <section title="SRV Query">
         <t>When the client makes an SRV query, a successful result will typically be a list of one or more SRV records (or possibly a chain of CNAME / DNAME aliases leading to such a list).</t>
-        <t><list style='empty'><t>NOTE: Implementers need to be aware that unsuccessful results can occur because of various DNS-related errors; guidance on avoiding downgrade attacks can be found in Section 4 of <xref target="I-D.ietf-dane-smtp-with-dane" />.</t></list></t>
+        <t><list style='empty'><t>NOTE: Implementers need to be aware that unsuccessful results can occur because of various DNS-related errors; guidance on avoiding downgrade attacks can be found in Section 2.1 of <xref target="I-D.ietf-dane-smtp-with-dane" />.</t></list></t>
         <t>For this specification to apply, the entire chain of DNS RRset(s) returned MUST be "secure" according to DNSSEC validation (Section 5 of <xref target="RFC4035" />). In the case where the answer is obtained via a chain of CNAME and/or DNAME aliases, the whole chain of CNAME and DNAME RRsets MUST also be secure.</t>
         <t>If the SRV lookup fails because the RRset is "bogus" (or the lookup fails for reasons other than no records), the client MUST abort its attempt to connect to the desired service. If the lookup result is "insecure" (or no SRV records exist), this protocol does not apply and the client SHOULD fall back to its non-DNSSEC, non-DANE (and possibly non-SRV) behavior.</t>
         <t>When the lookup returns a "secure" RRset (possibly via a chain of "secure" CNAME/DNAME records), the client now has an authentic list of target server connection endpoints with weight and priority values. It performs server ordering and selection using the weight and priority values without regard to the presence or absence of DNSSEC or TLSA records. It also takes note of the DNSSEC validation status of the SRV response for use when checking certificate names (see <xref target="tls"/>). The client can then proceed to making address queries on the target server host names as described in the following section.</t>
@@ -111,8 +111,8 @@
       <section title="Address Queries">
         <t>For each SRV target server connnection endpoint, the client makes A and/or AAAA queries, performs DNSSEC validation on the address (A or AAAA) response, and continues as follows based on the results:
           <list style="symbols">
-            <t>If either the A or AAAA RRSets are "secure", the client MUST perform a TLSA query for that target server connection endpoint as described in the next section.</t>
-            <t>If both RRsets are "insecure", the client MUST NOT perform a TLSA query for that target server connection endpoint; the TLSA query will most likely fail or produce spurious results.</t>
+            <t>If a returned RRSet is "secure", the client MUST perform a TLSA query for that target server connection endpoint as described in the next section.</t>
+            <t>If no returned RRsets are "secure", the client MUST NOT perform a TLSA query for that target server connection endpoint; the TLSA query will most likely fail or produce spurious results.</t>
             <t>If the address record lookup fails (this a validation status of either "bogus" or "indeterminate"), the client MUST NOT connect to this connection endpoint; instead it uses the next most appropriate SRV target. This mitigates against downgrade attacks.</t>
           </list>
         </t>
@@ -308,6 +308,7 @@ _5222._tcp.im.example.net.  RRSIG  TLSA ...
     <section title="Acknowledgements">
       <t>Thanks to Mark Andrews for arguing that authenticating the target server host name is the right thing, and that we ought to rely on DNSSEC to secure the SRV lookup. Thanks to Stephane Bortzmeyer, James Cloos, Viktor Dukhovni, Ned Freed, Olafur Gudmundsson, Paul Hoffman, Phil Pennock, Hector Santos, Jonas Schneider, and Alessandro Vesely for helpful suggestions.</t>
       <t>Carl Wallace provided an insightful review on behalf of the Security Directorate.</t>
+      <t>Brian Haberman provided helpful feedback during IESG review.</t>
       <t>The authors gratefully acknowledge the assistance of Olafur Gudmundsson and Warren Kumari as the working group chairs and Stephen Farrell as the sponsoring Area Director.</t>
       <t>Peter Saint-Andre wishes to acknowledge Cisco Systems, Inc., for employing him during his work on earlier versions of this document.</t>
     </section>
