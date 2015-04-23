@@ -218,6 +218,7 @@
   <back>
     <references title="Normative References">
       &I-D.ietf-dane-ops;
+      &I-D.ietf-dane-smtp-with-dane;
       &rfc2119;
       &rfc2782;
       &rfc4033;
@@ -230,7 +231,6 @@
       &rfc7218;
     </references>
     <references title="Informative References">
-      &I-D.ietf-dane-smtp-with-dane;
       &I-D.ietf-xmpp-dna;
       &rfc3403;
       &rfc5321;

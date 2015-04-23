@@ -529,6 +529,11 @@ Internet-Draft                TLSA and SRV                    April 2015
               Guidance for the DANE Protocol", draft-ietf-dane-ops-07
               (work in progress), October 2014.
 
+   [I-D.ietf-dane-smtp-with-dane]
+              Dukhovni, V. and W. Hardaker, "SMTP security via
+              opportunistic DANE TLS", draft-ietf-dane-smtp-with-dane-15
+              (work in progress), March 2015.
+
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
 
@@ -549,11 +554,6 @@ Internet-Draft                TLSA and SRV                    April 2015
               Infrastructure Certificate and Certificate Revocation List
               (CRL) Profile", RFC 5280, May 2008.
 
-   [RFC5890]  Klensin, J., "Internationalized Domain Names for
-              Applications (IDNA): Definitions and Document Framework",
-              RFC 5890, August 2010.
-
-
 
 
 
@@ -561,6 +561,10 @@ Finch, et al.           Expires October 25, 2015               [Page 10]
 
 Internet-Draft                TLSA and SRV                    April 2015
 
+
+   [RFC5890]  Klensin, J., "Internationalized Domain Names for
+              Applications (IDNA): Definitions and Document Framework",
+              RFC 5890, August 2010.
 
    [RFC6066]  Eastlake, D., "Transport Layer Security (TLS) Extensions:
               Extension Definitions", RFC 6066, January 2011.
@@ -581,16 +585,11 @@ Internet-Draft                TLSA and SRV                    April 2015
 
 11.2.  Informative References
 
-   [I-D.ietf-dane-smtp-with-dane]
-              Dukhovni, V. and W. Hardaker, "SMTP security via
-              opportunistic DANE TLS", draft-ietf-dane-smtp-with-dane-10
-              (work in progress), May 2014.
-
    [I-D.ietf-xmpp-dna]
-              Saint-Andre, P. and M. Miller, "Domain Name Associations
-              (DNA) in the Extensible Messaging and Presence Protocol
-              (XMPP)", draft-ietf-xmpp-dna-05 (work in progress),
-              February 2014.
+              Saint-Andre, P., Miller, M., and P. Hancke, "Domain Name
+              Associations (DNA) in the Extensible Messaging and
+              Presence Protocol (XMPP)", draft-ietf-xmpp-dna-10 (work in
+              progress), March 2015.
 
    [RFC3403]  Mealling, M., "Dynamic Delegation Discovery System (DDDS)
               Part Three: The Domain Name System (DNS) Database", RFC
@@ -609,6 +608,7 @@ Appendix A.  Examples
 
    In the following, most of the DNS resource data is elided for
    simplicity.
+
 
 
 
