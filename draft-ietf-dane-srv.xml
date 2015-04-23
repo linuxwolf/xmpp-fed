@@ -29,7 +29,7 @@
 <?rfc symrefs="yes" ?>
 <?rfc toc="yes" ?>
 
-<rfc ipr="trust200902" category="std" docName="draft-ietf-dane-srv-13">
+<rfc ipr="trust200902" category="std" docName="draft-ietf-dane-srv-14">
   <front>
     <title abbrev="TLSA and SRV"> Using DNS-Based Authentication of Named Entities (DANE) TLSA Records with SRV Records </title>
     <author initials="T." surname="Finch" fullname="Tony Finch">
@@ -71,12 +71,12 @@
     <area>Security</area>
     <workgroup>DNS-Based Authentication of Named Entities (DANE)</workgroup>
     <abstract>
-      <t>The DANE specification (RFC 6698) describes how to use TLSA resource records secured by DNSSEC (RFC 4033) to associate a server's connection endpoint with its TLS certificate. However, application protocols that use SRV records (RFC 2782) to indirectly name the target server connection endpoints for a service domain cannot apply the rules from RFC 6698. Therefore this document provides guidelines that enable such protocols to locate and use TLSA records.</t>
+      <t>The DANE specification (RFC 6698) describes how to use TLSA resource records secured by DNSSEC (RFC 4033) to associate a server's connection endpoint with its TLS certificate (thus enabling administrators of domain names to specify the keys used in that domain's TLS servers). However, application protocols that use SRV records (RFC 2782) to indirectly name the target server connection endpoints for a service domain cannot apply the rules from RFC 6698. Therefore this document provides guidelines that enable such protocols to locate and use TLSA records.</t>
     </abstract>
   </front>
   <middle>
     <section anchor="intro" title="Introduction">
-      <t>The base DANE specification <xref target="RFC6698" /> describes how to use TLSA resource records secured by DNSSEC <xref target="RFC4033"/> to associate a target server's connection endpoint with its TLS certificate. Some application protocols locate connection endpoints indirectly via SRV records <xref target="RFC2782"/>. As a result of this indirection, the rules specified in <xref target="RFC6698"/> cannot be directly applied to such application protocols. (Rules for SMTP <xref target="RFC5321"/>, which uses MX resource records instead of SRV records, are described in <xref target="I-D.ietf-dane-smtp-with-dane"/>.)</t>
+      <t>The base DANE specification <xref target="RFC6698" /> describes how to use TLSA resource records secured by DNSSEC <xref target="RFC4033"/> to associate a target server's connection endpoint with its TLS certificate (thus enabling administrators of domain names to specify the keys used in that domain's TLS servers). Some application protocols locate connection endpoints indirectly via SRV records <xref target="RFC2782"/>. As a result of this indirection, the rules specified in <xref target="RFC6698"/> cannot be directly applied to such application protocols. (Rules for SMTP <xref target="RFC5321"/>, which uses MX resource records instead of SRV records, are described in <xref target="I-D.ietf-dane-smtp-with-dane"/>.)</t>
       <t>This document describes how to use DANE TLSA records with SRV records. To summarize:
         <list style="symbols">
           <t>We rely on DNSSEC to secure SRV records that map the desired service, transport protocol, and service domain to the corresponding target server connection endpoints (i.e., the target server host names and port numbers returned in the SRV records for that service type).</t>
@@ -307,8 +307,8 @@ _5222._tcp.im.example.net.  RRSIG  TLSA ...
     </section>
     <section title="Acknowledgements">
       <t>Thanks to Mark Andrews for arguing that authenticating the target server host name is the right thing, and that we ought to rely on DNSSEC to secure the SRV lookup. Thanks to Stephane Bortzmeyer, James Cloos, Viktor Dukhovni, Ned Freed, Olafur Gudmundsson, Paul Hoffman, Phil Pennock, Hector Santos, Jonas Schneider, and Alessandro Vesely for helpful suggestions.</t>
-      <t>Carl Wallace provided an insightful review on behalf of the Security Directorate.</t>
-      <t>Brian Haberman provided helpful feedback during IESG review.</t>
+      <t>Carl Wallace completed an insightful review on behalf of the Security Directorate.</t>
+      <t>Ben Campbell, Brian Haberman, and Alvaro Retana provided helpful feedback during IESG review.</t>
       <t>The authors gratefully acknowledge the assistance of Olafur Gudmundsson and Warren Kumari as the working group chairs and Stephen Farrell as the sponsoring Area Director.</t>
       <t>Peter Saint-Andre wishes to acknowledge Cisco Systems, Inc., for employing him during his work on earlier versions of this document.</t>
     </section>
