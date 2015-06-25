@@ -17,12 +17,12 @@
   <!ENTITY rfc6698 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6698.xml">
   <!ENTITY rfc6749 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6749.xml">
   <!ENTITY rfc7218 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7218.xml">
+  <!ENTITY rfc7590 PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.7590.xml">
   <!ENTITY xep0045 PUBLIC "" "http://xmpp.org/extensions/refs/reference.XSF.XEP-0045.xml">
   <!ENTITY xep0220 PUBLIC "" "http://xmpp.org/extensions/refs/reference.XSF.XEP-0220.xml">
   <!ENTITY xep0288 PUBLIC "" "http://xmpp.org/extensions/refs/reference.XSF.XEP-0288.xml">
   <!ENTITY xep0344 PUBLIC "" "http://xmpp.org/extensions/refs/reference.XSF.XEP-0344.xml">
   <!ENTITY I-D.ietf-dane-srv PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-dane-srv.xml">
-  <!ENTITY I-D.ietf-uta-xmpp PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-uta-xmpp.xml">
   <!ENTITY I-D.ietf-xmpp-posh PUBLIC "" "http://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-xmpp-posh.xml">
 ]>
 <?rfc compact="yes"?>
@@ -30,7 +30,7 @@
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="3"?>
-<rfc category="std" docName="draft-ietf-xmpp-dna-10" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-xmpp-dna-11" ipr="trust200902">
 
   <front>
     <title abbrev="XMPP DNA">Domain Name Associations (DNA) in the Extensible Messaging and Presence Protocol (XMPP)</title>
@@ -151,19 +151,19 @@
             <t>The client checks the PKIX certificate that the server provided; if the proof is consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/> and the certificate is otherwise valid according to <xref target='RFC5280'/>, the client accepts that there is a strong domain name association between its stream to the target server and the DNS domain name of the XMPP service.</t>
           </list>
         </t>
-        <t>The certificate that the server presents might not be trusted by the client. As one example, the server might be hosting multiple domains and secure delegation as described in <xref target='delegation'/> is necessary. As another example, the server might present a self-signed certificate, which requires the client to apply either the fallback process described in section 6.6.4 of <xref target='RFC6125'/> or prompt the user to accept an unauthenticated connection as described in <xref target='I-D.ietf-uta-xmpp'/>.</t>
+        <t>The certificate that the server presents might not be trusted by the client. As one example, the server might be hosting multiple domains and secure delegation as described in <xref target='delegation'/> is necessary. As another example, the server might present a self-signed certificate, which requires the client to apply either the fallback process described in section 6.6.4 of <xref target='RFC6125'/> or prompt the user to accept an unauthenticated connection as described in <xref target='RFC7590'/>.</t>
       </section>
     </section>
 
     <section title="Server-to-Server (S2S) DNA" anchor="s2s">
-      <t>The server-to-server case is significantly more complex than the client-to-server case, and involves checking of domain name associations in both directions along with other "wrinkles" described in the following sections. The Server Dialback protocol is defined in <xref target='XEP-0220'/>. See <xref target='XEP-0344'/> for considerations when using it together with TLS and DNSSEC. Also, <xref target='XEP-0288'/> provides a way to use the server-to-server connections for bidirectional exchange of XML stanzas which reduces the complexity of some of the processes involved.</t>
+      <t>The server-to-server case is significantly more complex than the client-to-server case, and involves checking of domain name associations in both directions along with other "wrinkles" described in the following sections. The Server Dialback protocol is defined in <xref target='XEP-0220'/>.  See "Impact of TLS and DNSSEC on Dialback" <xref target='XEP-0344'/> for considerations when using it together with TLS and DNSSEC. Also, "Bidirectional Server-to-Server Connections" <xref target='XEP-0288'/> provides a way to use the server-to-server connections for bidirectional exchange of XML stanzas which reduces the complexity of some of the processes involved.</t>
 
       <section title="S2S Flow" anchor="s2s-flow">
-        <t>The following flow chart illustrates the protocol flow for establishing domain name associations between Server A (the initiating entity) and Server B (the receiving entity), as described in the remaining sections of this document.</t>
+        <t>The following flow chart illustrates the protocol flow for establishing domain name associations between Server 1 (the initiating entity) and Server 2 (the receiving entity), as described in the remaining sections of this document.</t>
         <figure>
           <artwork><![CDATA[
                     |
-        (A Simple S2S Scenario)
+         (A Simple S2S Scenario)
                     |
              DNS RESOLUTION ETC.
                     |
@@ -197,6 +197,9 @@
 +-------------------------------------|---------+
                                       |
                     +-----------------+
+                    |
+        (Section 4.3: No Mutual PKIX authentication)
+                    |
                     | B needs to establish DNA
                     | for this stream from a.example, 
                     | so A asserts its identity
@@ -209,8 +212,6 @@
 |     </db:result>                              |
 |                                               |
 +-----------------------------------------------+
-                    |
-        (Section 4.3: No Mutual PKIX authentication)
                     |
              DNS RESOLUTION ETC.
                     |
@@ -244,7 +245,6 @@
 +-----------------------------------------------+
                     |
     (B establishes DNA for a.example)
-                    |
                     |
       (Section 4.4.1: Piggybacking Assertion)
                     |
@@ -306,81 +306,82 @@
       </section>
 
       <section title="A Simple S2S Scenario" anchor="s2s-simple">
-        <t>To illustrate the problem, consider the simplified order of events (see <xref target='RFC6120'/> for details) in establishing an XML stream between Server A (a.example) and Server B (b.example):</t>
+        <t>To illustrate the problem, consider the simplified order of events (see <xref target='RFC6120'/> for details) in establishing an XML stream between Server 1 (a.example) and Server 2 (b.example):</t>
         <t>
           <list style='numbers'>
-            <t>Server A resolves via DNS the service  _xmpp-server._tcp.b.example.</t>
-            <t>Server A opens a TCP connection to the resolved IP address.</t>
+            <t>Server 1 resolves via DNS the service  _xmpp-server._tcp.b.example.</t>
+            <t>Server 1 opens a TCP connection to the resolved IP address.</t>
             <t>
-              Server A sends an initial stream header to Server B, asserting that it is a.example:
+              Server 1 sends an initial stream header to Server 2, asserting that it is a.example:
               <vspace blankLines='1'/>
               &lt;stream:stream from='a.example' to='b.example'&gt;
             </t>
             <t>
-              Server B sends a response stream header to Server A, asserting that it is b.example:
+              Server 2 sends a response stream header to Server 1, asserting that it is b.example:
               <vspace blankLines='1'/>
               &lt;stream:stream from='b.example' to='a.example'&gt;
             </t>
-            <t>The servers attempt TLS negotiation, during which Server B (acting as a TLS server) presents a PKIX certificate proving that it is b.example and Server A (acting as a TLS client) presents a PKIX certificate proving that it is a.example.</t>
-            <t>Server A checks the PKIX certificate that Server B provided and Server B checks the PKIX certificate that Server A provided; if these proofs are consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/> and is otherwise valid according to <xref target='RFC5280'/>, each server accepts that there is a strong domain name association between its stream to the other party and the DNS domain name of the other party.</t>
+            <t>The servers attempt TLS negotiation, during which Server 2 (acting as a TLS server) presents a PKIX certificate proving that it is b.example and Server 1 (acting as a TLS client) presents a PKIX certificate proving that it is a.example.</t>
+            <t>Server 1 checks the PKIX certificate that Server 2 provided and Server 2 checks the PKIX certificate that Server 1 provided; if these proofs are consistent with the XMPP profile of the matching rules from <xref target='RFC6125'/> and is otherwise valid according to <xref target='RFC5280'/>, each server accepts that there is a strong domain name association between its stream to the other party and the DNS domain name of the other party.</t>
           </list>
         </t>
         <t>Several simplifying assumptions underlie the happy scenario just outlined:</t>
         <t>
           <list style='symbols'>
-            <t>The PKIX certificate presented by Server B during TLS negotiation is trusted by Server A and matches the expected identity.</t>
-            <t>The PKIX certificate presented by Server A during TLS negotiation is trusted by Server B, which enables the parties to complete mutual authentication.</t>
-            <t>There are no additional domains associated with Server A and Server B (say, a subdomain rooms.a.example on Server A or a second domain c.example on Server B).</t>
+            <t>The PKIX certificate presented by Server 2 during TLS negotiation is trusted by Server 1 and matches the expected identity.</t>
+            <t>The PKIX certificate presented by Server 1 during TLS negotiation is trusted by Server 2, which enables the parties to complete mutual authentication.</t>
+            <t>There are no additional domains associated with Server 1 and Server 2 (say, a subdomain rooms.a.example on Server 1 or a second domain c.example on Server 2).</t>
             <t>The server administrators are able to obtain PKIX certificates issued by a widely-accepted certificate authority (CA) in the first place.</t>
             <t>The server administrators are running their own XMPP servers, rather than using hosting services.</t>
           </list>
         </t>
-        <t>Let's consider each of these "wrinkles" in turn. Since Server A is acting as a S2S client the behaviour is same as in the C2S case described in <xref target='c2s-description'/>.</t>
+        <t>Let's consider each of these "wrinkles" in turn. Since Server 1 is acting as a S2S client the behaviour is the same as in the C2S case described in <xref target='c2s-description'/>.</t>
       </section>
 
       <section title="No Mutual PKIX Authentication" anchor="s2s-notsimple">
-        <t>If the PKIX certificate presented by Server A during TLS negotiation is not trusted by Server B, Server B is unable to mutually authenticate Server A. Therefore, Server B needs to verify the asserted identity of Server A by other means.</t>
+        <t>If the PKIX certificate presented by Server 1 during TLS negotiation is not trusted by Server 2, Server 2 is unable to mutually authenticate Server 1. Therefore, Server 2 needs to verify the asserted identity of Server 1 by other means.</t>
         <t>
           <list style='numbers'>
             <t>
-              Server A asserts it is a.example using the Server Dialback protocol:
+              Server 1 asserts it is a.example using the Server Dialback protocol:
               <vspace blankLines='1'/>
               &lt;db:result from='a.example' to='b.example' id='...'&gt;some-dialback-key&lt;/db:result&gt;
             </t>
-            <t>Server B resolves via DNS the service _xmpp-server._tcp.a.example.</t>
-            <t>Server B opens a TCP connection to the resolved IP address.</t>
+            <t>Server 2 resolves via DNS the service _xmpp-server._tcp.a.example.</t>
+            <t>Server 2 opens a TCP connection to the resolved IP address.</t>
             <t>
-              Server B sends an initial stream header to Server A, asserting that it is b.example:
+              Server 2 sends an initial stream header to Server 1, asserting that it is b.example:
               <vspace blankLines='1'/>
               &lt;stream:stream from='b.example' to='a.example'&gt;
             </t>
             <t>
-              Server A sends a response stream header to Server B, asserting that it is a.example:
+              Server 1 sends a response stream header to Server 2, asserting that it is a.example:
               <vspace blankLines='1'/>
               &lt;stream:stream from='a.example' to='b.example'&gt;
             </t>
-            <t>The servers attempt TLS negotiation, during which Server A (acting as a TLS server) presents a PKIX certificate proving that it is a.example.</t>
-            <t>Server B checks the PKIX certificate that Server A provided. This might be the same certificate presented by Server A as a client certificate in the initial connection. See <xref target='XEP-0344'/> for further discussion about skipping the subsequent steps.</t>
+            <t>The servers attempt TLS negotiation, during which Server 1 (acting as a TLS server) presents a PKIX certificate.</t>
+            <t>Server 2 checks the PKIX certificate that Server 1 provided (this might be the same certificate presented by Server 1 as a client certificate in the initial connection).  However, Server B does not accept this certificate as proving that Server A is authorized as a.example and therefore uses another method (here, the Server Dialback protocol) to establish the domain name association.</t>
             <t>
-              Server B proceeds with Server Dialback in order to establish the domain name association. In order to do this it sends a request for verification as described in <xref target='XEP-0220'/>:
+              Server 2 proceeds with Server Dialback in order to establish the domain name association. In order to do this it sends a request for verification as described in <xref target='XEP-0220'/>:
               <vspace blankLines='1'/>
               &lt;db:verify from='b.example' to='a.example' id='...'&gt;some-dialback-key&lt;/db:verify&gt;
             </t>
             <t>
-              Server A responds to this:
+              Server 1 responds to this:
               <vspace blankLines='1'/>
               &lt;db:verify from='a.example' to='b.example' id='...' type='valid/&gt;
               <vspace blankLines='1'/>
-              allowing Server B to establish the domain name association.
+              allowing Server 2 to establish the domain name association.
             </t>
           </list>
         </t>
+        <t>In some situations (e.g., if the Authoritative Server in Server Dialback presents the same certificate as the Originating Server), it is the practice of some XMPP server implementations to skip steps 8 and 9. These situations are discussed in "Impact of TLS and DNSSEC on Dialback" <xref target='XEP-0344'/>.</t>
       </section>
 
       <section title="Piggybacking" anchor="s2s-piggybacking">
         <section title="Assertion" anchor="s2s-piggybacking-assertion">
-          <t>Consider the common scenario in which Server B hosts not only b.example but also a second domain c.example (often called a "multi-tenanted" environment).  If a user of Server B associated with c.example wishes to communicate with a friend at a.example, Server B needs to send XMPP stanzas from the domain c.example rather than b.example.  Although Server B could open a new TCP connection and negotiate new XML streams for the domain pair of c.example and a.example, that too is wasteful (especially if Server B hosts a large number of domains).  Server B already has a connection to a.example, so how can it assert that it would like to add a new domain pair to the existing connection?</t>
-          <t>The traditional method for doing so is the Server Dialback protocol, first specified in (the now obsolete) <xref target='RFC3920'/> and since moved to <xref target='XEP-0220'/>.  Here, Server B can send a &lt;db:result/&gt; element for the new domain pair over the existing stream.</t>
+          <t>Consider the common scenario in which Server 2 hosts not only b.example but also a second domain c.example (often called a "multi-tenanted" environment).  If a user of Server 2 associated with c.example wishes to communicate with a friend at a.example, Server 2 needs to send XMPP stanzas from the domain c.example rather than b.example.  Although Server 2 could open a new TCP connection and negotiate new XML streams for the domain pair of c.example and a.example, that too is wasteful (especially if Server 2 hosts a large number of domains).  Server 2 already has a connection to a.example, so how can it assert that it would like to add a new domain pair to the existing connection?</t>
+          <t>The traditional method for doing so is the Server Dialback protocol, first specified in (the now obsolete) <xref target='RFC3920'/> and since moved to <xref target='XEP-0220'/>.  Here, Server 2 can send a &lt;db:result/&gt; element for the new domain pair over the existing stream.</t>
           <figure>
             <artwork><![CDATA[
     <db:result from='c.example' to='a.example'>
@@ -388,55 +389,55 @@
     </db:result>
             ]]></artwork>
           </figure>
-          <t>This element functions as Server B's assertion that it is (also) c.example, and thus is functionally equivalent to the 'from' address of an initial stream header as previously described.</t>
-          <t>In response to this assertion, Server A needs to obtain some kind of proof that Server B really is also c.example. If the certificate presented by Server B is also valid for c.example then no further action is necessary.  However, if not then Server A needs to do a bit more work.  Specifically, Server A can pursue the same strategy it used before:</t>
+          <t>This element functions as Server 2's assertion that it is (also) c.example, and thus is functionally equivalent to the 'from' address of an initial stream header as previously described.</t>
+          <t>In response to this assertion, Server 1 needs to obtain some kind of proof that Server 2 really is also c.example. If the certificate presented by Server 2 is also valid for c.example then no further action is necessary.  However, if not then Server 1 needs to do a bit more work.  Specifically, Server 1 can pursue the same strategy it used before:</t>
           <t>
             <list style='numbers'>
-              <t>Server A resolves via DNS the service _xmpp-server._tcp.c.example.</t>
-              <t>Server A opens a TCP connection to the resolved IP address (which might be the same IP address as for b.example).</t>
+              <t>Server 1 resolves via DNS the service _xmpp-server._tcp.c.example.</t>
+              <t>Server 1 opens a TCP connection to the resolved IP address (which might be the same IP address as for b.example).</t>
               <t>
-                Server A sends an initial stream header to Server B, asserting that it is a.example:
+                Server 1 sends an initial stream header to Server 2, asserting that it is a.example:
                 <vspace blankLines='1'/>
                 &lt;stream:stream from='a.example' to='c.example'&gt;
               </t>
               <t>
-                Server B sends a response stream header to Server A, asserting that it is c.example:
+                Server 2 sends a response stream header to Server 1, asserting that it is c.example:
                 <vspace blankLines='1'/>
                 &lt;stream:stream from='c.example' to='a.example'&gt;
               </t>
-              <t>The servers attempt TLS negotiation, during which Server B (acting as a TLS server) presents a PKIX certificate proving that it is c.example.</t>
+              <t>The servers attempt TLS negotiation, during which Server 2 (acting as a TLS server) presents a PKIX certificate proving that it is c.example.</t>
               <t>
-                At this point, Server A needs to establish that, despite different certificates, c.example is associated with the origin of the request. This is done using Server Dialback <xref target='XEP-0220'/>:
+                At this point, Server 1 needs to establish that, despite different certificates, c.example is associated with the origin of the request. This is done using Server Dialback <xref target='XEP-0220'/>:
                 <vspace blankLines='1'/>
                 &lt;db:verify from='a.example' to='c.example' id='...'&gt;some-dialback-key&lt;/db:verify&gt;
               </t>
               <t>
-                Server B responds to this:
+                Server 2 responds to this:
                 <vspace blankLines='1'/>
                 &lt;db:verify from='c.example' to='a.example' id='...' type='valid/&gt;
                 <vspace blankLines='1'/>
-                allowing Server A to establish the domain name association.
+                allowing Server 1 to establish the domain name association.
               </t>
             </list>
           </t>
-          <t>Now that Server A accepts the domain name association, it informs Server B of that fact:</t>
+          <t>Now that Server 1 accepts the domain name association, it informs Server 2 of that fact:</t>
           <figure>
             <artwork><![CDATA[
     <db:result from='a.example' to='c.example' type='valid'/>
             ]]></artwork>
           </figure>
-          <t>The parties can then terminate the second connection, since it was used only for Server A to associate a stream with the domain name c.example (the dialback key links the original stream to the new association).</t>
+          <t>The parties can then terminate the second connection, since it was used only for Server 1 to associate a stream with the domain name c.example (the dialback key links the original stream to the new association).</t>
         </section>
         <section title="Supposition" anchor="s2s-piggybacking-supposition">
-          <t>Piggybacking can also occur in the other direction.  Consider the common scenario in which Server A provides XMPP services not only for a.example but also for a subdomain such as a groupchat service (e.g., Multi-User Chat <xref target='XEP-0045'/>) at rooms.a.example.  If a user from c.example at Server B wishes to join a room on the groupchat sevice, Server B needs to send XMPP stanzas from the domain c.example to the domain rooms.a.example rather than a.example. First, Server B needs to determine whether it can piggyback the domain rooms.a.example on the connection to a.example:</t>
+          <t>Piggybacking can also occur in the other direction.  Consider the common scenario in which Server 1 provides XMPP services not only for a.example but also for a subdomain such as a groupchat service (e.g., Multi-User Chat <xref target='XEP-0045'/>) at rooms.a.example.  If a user from c.example at Server 2 wishes to join a room on the groupchat sevice, Server 2 needs to send XMPP stanzas from the domain c.example to the domain rooms.a.example rather than a.example. First, Server 2 needs to determine whether it can piggyback the domain rooms.a.example on the connection to a.example:</t>
           <t>
             <list style='numbers'>
-              <t>Server B resolves vua DNS the service _xmpp-server._tcp.rooms.a.example.</t>
-              <t>Server B determines this resolves to an IP address and port that it is already connected to.</t>
-              <t>Server B determines that the PKIX certificate for that active connection would also be valid for the rooms.a.example domain and that Server A has announced support for dialback errors.</t>
+              <t>Server 2 resolves vua DNS the service _xmpp-server._tcp.rooms.a.example.</t>
+              <t>Server 2 determines this resolves to an IP address and port that it is already connected to.</t>
+              <t>Server 2 determines that the PKIX certificate for that active connection would also be valid for the rooms.a.example domain and that Server 1 has announced support for dialback errors.</t>
             </list>
           </t>
-          <t>Server B sends a dialback key to Server A over the existing connection.</t>
+          <t>Server 2 sends a dialback key to Server 1 over the existing connection.</t>
           <figure>
             <artwork><![CDATA[
     <db:result from='c.example' to='rooms.a.example'>
@@ -444,7 +445,7 @@
     </db:result>
             ]]></artwork>
           </figure>
-          <t>Server A then informs Server B that it accepts the domain name association:</t>
+          <t>Server 1 then informs Server 2 that it accepts the domain name association:</t>
           <figure>
             <artwork><![CDATA[
     <db:result from='rooms.a.example' to='c.example' type='valid'/>
@@ -561,8 +562,45 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
   <back>
 
     <references title="Normative References">
-      &I-D.ietf-dane-srv;
-      &I-D.ietf-xmpp-posh;
+
+<reference anchor='I-D.ietf-dane-srv'>
+<front>
+<title>Using DNS-Based Authentication of Named Entities (DANE) TLSA Records with SRV Records</title>
+<author initials='T' surname='Finch' fullname='Tony Finch'>
+    <organization />
+</author>
+<author initials='M' surname='Miller' fullname='Matthew Miller'>
+    <organization />
+</author>
+<author initials='P' surname='Saint-Andre' fullname='Peter Saint-Andre'>
+    <organization />
+</author>
+<date month='April' day='23' year='2015' />
+<abstract><t>The DANE specification (RFC 6698) describes how to use TLSA resource records secured by DNSSEC (RFC 4033) to associate a server's connection endpoint with its TLS certificate.  However, application protocols that use SRV records (RFC 2782) to indirectly name the target server connection endpoints for a service domain cannot apply the rules from RFC 6698.  Therefore this document provides guidelines that enable such protocols to locate and use TLSA records.</t></abstract>
+</front>
+<seriesInfo name='Internet-Draft' value='draft-ietf-dane-srv-14' />
+<format type='TXT'
+        target='http://www.ietf.org/internet-drafts/draft-ietf-dane-srv-14.txt' />
+</reference>
+
+<reference anchor='I-D.ietf-xmpp-posh'>
+<front>
+<title>PKIX over Secure HTTP (POSH)</title>
+<author initials='M' surname='Miller' fullname='Matthew Miller'>
+    <organization />
+</author>
+<author initials='P' surname='Saint-Andre' fullname='Peter Saint-Andre'>
+    <organization />
+</author>
+<date month='February' day='23' year='2015' />
+<abstract><t>Experience has shown that it is extremely difficult to deploy proper PKIX certificates for TLS in multi-tenanted environments.  As a result, domains hosted in such environments often deploy applications using certificates that identify the hosting service, not the hosted domain.  Such deployments force end users and peer services to accept a certificate with an improper identifier, resulting in obvious security implications.  This document defines two methods that make it easier to deploy certificates for proper server identity checking in non-HTTP application protocols.  While these methods developed for use in the Extensible Messaging and Presence Protocol (XMPP) as a Domain Name Association (DNA) prooftype, they might also be usable in other non-HTTP application protocols.</t></abstract>
+
+</front>
+<seriesInfo name='Internet-Draft' value='draft-ietf-xmpp-posh-04' />
+<format type='TXT'
+        target='http://www.ietf.org/internet-drafts/draft-ietf-xmpp-posh-04.txt' />
+</reference>
+
       &rfc1034;
       &rfc1035;
       &rfc2782;
@@ -578,13 +616,13 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
     </references>
 
     <references title="Informative References">
-      &I-D.ietf-uta-xmpp;
       &rfc2142;
       &rfc3920;
       &rfc4120;
       &rfc6066;
       &rfc6091;
       &rfc6749;
+      &rfc7590;
       &xep0045;
       &xep0288;
       &xep0344;
