@@ -5,12 +5,12 @@
 XMPP Working Group                                             M. Miller
 Internet-Draft                                       Cisco Systems, Inc.
 Intended status: Standards Track                          P. Saint-Andre
-Expires: August 27, 2015                                            &yet
-                                                       February 23, 2015
+Expires: December 26, 2015                                          &yet
+                                                           June 24, 2015
 
 
                       PKIX over Secure HTTP (POSH)
-                        draft-ietf-xmpp-posh-04
+                        draft-ietf-xmpp-posh-05
 
 Abstract
 
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on August 27, 2015.
+   This Internet-Draft will expire on December 26, 2015.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Miller & Saint-Andre     Expires August 27, 2015                [Page 1]
+Miller & Saint-Andre    Expires December 26, 2015               [Page 1]
 
-Internet-Draft                    POSH                     February 2015
+Internet-Draft                    POSH                         June 2015
 
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -94,13 +94,13 @@ Table of Contents
    We begin with a thought experiment.
 
    Imagine that you work on the operations team of a hosting company
-   that provides the "SPICE" service (or email or instant messaging or
-   social networking service) for ten thousand different customer
-   organizations.  Each customer wants their service to be identified by
-   the customer's domain name (e.g., bar.example.com), not the hosting
-   company's domain name (e.g., hosting.example.net).
+   that provides instances of the hypothetical "Secure Protocol for
+   Internet Content Exchange" (SPICE) service for ten thousand different
+   customer organizations.  Each customer wants their instance to be
+   identified by the customer's domain name (e.g., bar.example.com), not
+   the hosting company's domain name (e.g., hosting.example.net).
 
-   In order to properly secure each customer's "SPICE" service via
+   In order to properly secure each customer's SPICE instance via
    Transport Layer Security (TLS) [RFC5246], you need to obtain PKIX
    certificates [RFC5280] containing identifiers such as
    bar.example.com, as explained in the "CertID" specification
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Miller & Saint-Andre     Expires August 27, 2015                [Page 2]
+Miller & Saint-Andre    Expires December 26, 2015               [Page 2]
 
-Internet-Draft                    POSH                     February 2015
+Internet-Draft                    POSH                         June 2015
 
 
    o  Certification authorities won't issue such certificates to you
@@ -151,23 +151,23 @@ Internet-Draft                    POSH                     February 2015
    server identity checking for your hosted customers.
 
    One possible approach that your team has investigated is to ask each
-   customer to provide the public key / certificate for the "SPICE"
-   service at a special HTTPS URL on their website
-   ("https://bar.example.com/.well-known/posh.spice.json" is one
-   possibility).  This could be a public key that you generate for the
-   customer, but because the customer hosts it via HTTPS, any user agent
-   can find that public key and check it against the public key you
-   provide during TLS negotiation for the "SPICE" service (as one added
-   benefit, the customer never needs to hand you a private key).
-   Alternatively, the customer can redirect requests for that special
-   HTTPS URL to an HTTPS URL at your own website, thus making it
-   explicit that they have delegated the "SPICE" service to you.
+   customer to provide the public key / certificate for its SPICE
+   service at a special HTTPS URL on their website ("https://
+   bar.example.com/.well-known/posh.spice.json" is one possibility).
+   This could be a public key that you generate for the customer, but
+   because the customer hosts it via HTTPS, any user agent can find that
+   public key and check it against the public key you provide during TLS
+   negotiation for the SPICE service (as one added benefit, the customer
+   never needs to hand you a private key).  Alternatively, the customer
+   can redirect requests for that special HTTPS URL to an HTTPS URL at
+   your own website, thus making it explicit that they have delegated
+   the SPICE service to you.
 
 
 
-Miller & Saint-Andre     Expires August 27, 2015                [Page 3]
+Miller & Saint-Andre    Expires December 26, 2015               [Page 3]
 
-Internet-Draft                    POSH                     February 2015
+Internet-Draft                    POSH                         June 2015
 
 
    The approach sketched out above, called POSH ("PKIX Over Secure
@@ -221,13 +221,13 @@ Internet-Draft                    POSH                     February 2015
 
 
 
-Miller & Saint-Andre     Expires August 27, 2015                [Page 4]
+Miller & Saint-Andre    Expires December 26, 2015               [Page 4]
 
-Internet-Draft                    POSH                     February 2015
+Internet-Draft                    POSH                         June 2015
 
 
    When POSH is used, the first two aspects remain the same: the POSH
-   server proves it identity by presenting a PKIX certificate [RFC5280]
+   server proves its identity by presenting a PKIX certificate [RFC5280]
    and the certificate is checked according to the rules defined in the
    appropriate application protocol specification (such as [RFC6120] for
    XMPP).  However, the POSH client obtains the materials it will use to
@@ -247,7 +247,7 @@ Internet-Draft                    POSH                     February 2015
        Domain to the path "/.well-known/posh.{servicedesc}.json".  The
        value of "{servicedesc}" is application-specific; see Section 9
        of this document for more details.  For example, if the
-       application protocol is some hypothetical "SPICE" service, then
+       application protocol is the hypothetical SPICE service, then
        "{servicedesc}" could be "spice"; thus if an application client
        were to use POSH to verify an application server for the Source
        Domain "bar.example.com", the HTTPS GET request would be as
@@ -277,9 +277,9 @@ Internet-Draft                    POSH                     February 2015
 
 
 
-Miller & Saint-Andre     Expires August 27, 2015                [Page 5]
+Miller & Saint-Andre    Expires December 26, 2015               [Page 5]
 
-Internet-Draft                    POSH                     February 2015
+Internet-Draft                    POSH                         June 2015
 
 
    status code and the message body set to a JSON document [RFC7159];
@@ -333,9 +333,9 @@ Internet-Draft                    POSH                     February 2015
 
 
 
-Miller & Saint-Andre     Expires August 27, 2015                [Page 6]
+Miller & Saint-Andre    Expires December 26, 2015               [Page 6]
 
-Internet-Draft                    POSH                     February 2015
+Internet-Draft                    POSH                         June 2015
 
 
    The "expires" value is a hint regarding the expiration of the keying
@@ -389,9 +389,9 @@ Internet-Draft                    POSH                     February 2015
 
 
 
-Miller & Saint-Andre     Expires August 27, 2015                [Page 7]
+Miller & Saint-Andre    Expires December 26, 2015               [Page 7]
 
-Internet-Draft                    POSH                     February 2015
+Internet-Draft                    POSH                         June 2015
 
 
 3.3.  Performing Verification
@@ -445,9 +445,9 @@ Internet-Draft                    POSH                     February 2015
 
 
 
-Miller & Saint-Andre     Expires August 27, 2015                [Page 8]
+Miller & Saint-Andre    Expires December 26, 2015               [Page 8]
 
-Internet-Draft                    POSH                     February 2015
+Internet-Draft                    POSH                         June 2015
 
 
    Client                     Domain                     Server
@@ -501,9 +501,9 @@ Internet-Draft                    POSH                     February 2015
 
 
 
-Miller & Saint-Andre     Expires August 27, 2015                [Page 9]
+Miller & Saint-Andre    Expires December 26, 2015               [Page 9]
 
-Internet-Draft                    POSH                     February 2015
+Internet-Draft                    POSH                         June 2015
 
 
 6.  Caching Results
@@ -557,9 +557,9 @@ Internet-Draft                    POSH                     February 2015
 
 
 
-Miller & Saint-Andre     Expires August 27, 2015               [Page 10]
+Miller & Saint-Andre    Expires December 26, 2015              [Page 10]
 
-Internet-Draft                    POSH                     February 2015
+Internet-Draft                    POSH                         June 2015
 
 
 8.  Guidelines for Protocols that Use POSH
@@ -569,9 +569,9 @@ Internet-Draft                    POSH                     February 2015
    [RFC5226] for well-known URIs is Specification Required).
 
    For the sake of consistency, it would be best if the URIs registered
-   by such protocols match the URI template [RFC6570] path "/.well-
-   known/posh.{servicedesc}.json"; that is, begin with "posh." and end
-   with ".json" (indicating a media type of application/json [RFC7159]).
+   by such protocols match the URI template [RFC6570] path "/.well-known
+   /posh.{servicedesc}.json"; that is, begin with "posh." and end with
+   ".json" (indicating a media type of application/json [RFC7159]).
 
    For POSH-using protocols that rely on DNS SRV records [RFC2782], it
    would be best if the "{servicedesc}" part of the well-known URI is
@@ -587,7 +587,7 @@ Internet-Draft                    POSH                     February 2015
    known URI can be any unique string or identifier for the protocol,
    which might be a service name registered with the IANA in accordance
    with [RFC6335] or which might be an unregistered name.  As an
-   example, the well-known URI for a hypothetical "SPICE" application
+   example, the well-known URI for the hypothetical SPICE application
    could be "posh.spice.json".
 
 9.  IANA Considerations
@@ -604,18 +604,18 @@ Internet-Draft                    POSH                     February 2015
    depends on checking the identity of the HTTP server in accordance
    with [RFC2818].  Additionally, the security of POSH can benefit from
    other HTTP hardening protocols, such as HSTS [RFC6797] and key
-   pinning [I-D.ietf-websec-key-pinning], especially if the POSH client
-   shares some information with a common HTTPS implementation (e.g.,
-   platform-default web browser).
+   pinning [RFC7469], especially if the POSH client shares some
+   information with a common HTTPS implementation (e.g., platform-
+   default web browser).
 
    Note well that POSH is used by a POSH client to obtain the public key
    of a POSH server to which it might connect for a particular
 
 
 
-Miller & Saint-Andre     Expires August 27, 2015               [Page 11]
+Miller & Saint-Andre    Expires December 26, 2015              [Page 11]
 
-Internet-Draft                    POSH                     February 2015
+Internet-Draft                    POSH                         June 2015
 
 
    application protocol such as IMAP or XMPP.  POSH does not enable a
@@ -630,7 +630,7 @@ Internet-Draft                    POSH                     February 2015
    redirect mechanisms, such as HTTP status codes 302 (Found) and 307
    (Temporary Redirect).  Clients MAY treat any redirect as temporary,
    ignoring the specific semantics for 301 (Moved Permanently) and 308
-   (Permanent Redirect) [RFC7238].  To protect against circular
+   (Permanent Redirect) [RFC7538].  To protect against circular
    references, it is RECOMMENDED that POSH clients follow no more than
    10 redirects, although applications or implementations can require
    that fewer redirects be followed.
@@ -669,9 +669,9 @@ Internet-Draft                    POSH                     February 2015
 
 
 
-Miller & Saint-Andre     Expires August 27, 2015               [Page 12]
+Miller & Saint-Andre    Expires December 26, 2015              [Page 12]
 
-Internet-Draft                    POSH                     February 2015
+Internet-Draft                    POSH                         June 2015
 
 
    [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
@@ -692,19 +692,14 @@ Internet-Draft                    POSH                     February 2015
    [I-D.ietf-dane-srv]
               Finch, T., Miller, M., and P. Saint-Andre, "Using DNS-
               Based Authentication of Named Entities (DANE) TLSA Records
-              with SRV Records", draft-ietf-dane-srv-11 (work in
-              progress), February 2015.
-
-   [I-D.ietf-websec-key-pinning]
-              Evans, C., Palmer, C., and R. Sleevi, "Public Key Pinning
-              Extension for HTTP", draft-ietf-websec-key-pinning-21
-              (work in progress), October 2014.
+              with SRV Records", draft-ietf-dane-srv-14 (work in
+              progress), April 2015.
 
    [I-D.ietf-xmpp-dna]
               Saint-Andre, P., Miller, M., and P. Hancke, "Domain Name
               Associations (DNA) in the Extensible Messaging and
-              Presence Protocol (XMPP)", draft-ietf-xmpp-dna-09 (work in
-              progress), February 2015.
+              Presence Protocol (XMPP)", draft-ietf-xmpp-dna-10 (work in
+              progress), March 2015.
 
    [RFC2782]  Gulbrandsen, A., Vixie, P., and L. Esibov, "A DNS RR for
               specifying the location of services (DNS SRV)", RFC 2782,
@@ -721,20 +716,19 @@ Internet-Draft                    POSH                     February 2015
    [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
               Protocol (XMPP): Core", RFC 6120, March 2011.
 
-
-
-
-
-Miller & Saint-Andre     Expires August 27, 2015               [Page 13]
-
-Internet-Draft                    POSH                     February 2015
-
-
    [RFC6335]  Cotton, M., Eggert, L., Touch, J., Westerlund, M., and S.
               Cheshire, "Internet Assigned Numbers Authority (IANA)
               Procedures for the Management of the Service Name and
               Transport Protocol Port Number Registry", BCP 165, RFC
               6335, August 2011.
+
+
+
+
+Miller & Saint-Andre    Expires December 26, 2015              [Page 13]
+
+Internet-Draft                    POSH                         June 2015
+
 
    [RFC6555]  Wing, D. and A. Yourtchenko, "Happy Eyeballs: Success with
               Dual-Stack Hosts", RFC 6555, April 2012.
@@ -752,12 +746,15 @@ Internet-Draft                    POSH                     February 2015
    [RFC7030]  Pritikin, M., Yee, P., and D. Harkins, "Enrollment over
               Secure Transport", RFC 7030, October 2013.
 
-   [RFC7238]  Reschke, J., "The Hypertext Transfer Protocol Status Code
-              308 (Permanent Redirect)", RFC 7238, June 2014.
+   [RFC7469]  Evans, C., Palmer, C., and R. Sleevi, "Public Key Pinning
+              Extension for HTTP", RFC 7469, April 2015.
+
+   [RFC7538]  Reschke, J., "The Hypertext Transfer Protocol Status Code
+              308 (Permanent Redirect)", RFC 7538, April 2015.
 
    [HASH-NAMES]
-              "Hash Function Textual Names",
-              <http://www.iana.org/assignments/hash-function-text-names/
+              "Hash Function Textual Names", <http://www.iana.org/
+              assignments/hash-function-text-names/
               hash-function-text-names.xhtml>.
 
 Appendix A.  Acknowledgements
@@ -781,9 +778,12 @@ Authors' Addresses
 
 
 
-Miller & Saint-Andre     Expires August 27, 2015               [Page 14]
+
+
+
+Miller & Saint-Andre    Expires December 26, 2015              [Page 14]
 
-Internet-Draft                    POSH                     February 2015
+Internet-Draft                    POSH                         June 2015
 
 
    Peter Saint-Andre
@@ -837,4 +837,4 @@ Internet-Draft                    POSH                     February 2015
 
 
 
-Miller & Saint-Andre     Expires August 27, 2015               [Page 15]
+Miller & Saint-Andre    Expires December 26, 2015              [Page 15]
