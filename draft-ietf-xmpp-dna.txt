@@ -5,10 +5,10 @@
 Network Working Group                                     P. Saint-Andre
 Internet-Draft                                                      &yet
 Intended status: Standards Track                               M. Miller
-Expires: December 26, 2015                           Cisco Systems, Inc.
+Expires: January 9, 2016                             Cisco Systems, Inc.
                                                                P. Hancke
                                                                     &yet
-                                                           June 24, 2015
+                                                            July 8, 2015
 
 
 Domain Name Associations (DNA) in the Extensible Messaging and Presence
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 26, 2015.
+   This Internet-Draft will expire on January 9, 2016.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Saint-Andre, et al.     Expires December 26, 2015               [Page 1]
+Saint-Andre, et al.      Expires January 9, 2016                [Page 1]
 
-Internet-Draft                  XMPP DNA                       June 2015
+Internet-Draft                  XMPP DNA                       July 2015
 
 
    (http://trustee.ietf.org/license-info) in effect on the date of
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Saint-Andre, et al.     Expires December 26, 2015               [Page 2]
+Saint-Andre, et al.      Expires January 9, 2016                [Page 2]
 
-Internet-Draft                  XMPP DNA                       June 2015
+Internet-Draft                  XMPP DNA                       July 2015
 
 
    To date, such verification has been established based on information
@@ -165,9 +165,9 @@ Internet-Draft                  XMPP DNA                       June 2015
 
 
 
-Saint-Andre, et al.     Expires December 26, 2015               [Page 3]
+Saint-Andre, et al.      Expires January 9, 2016                [Page 3]
 
-Internet-Draft                  XMPP DNA                       June 2015
+Internet-Draft                  XMPP DNA                       July 2015
 
 
 3.1.  C2S Flow
@@ -221,9 +221,9 @@ Internet-Draft                  XMPP DNA                       June 2015
 
 
 
-Saint-Andre, et al.     Expires December 26, 2015               [Page 4]
+Saint-Andre, et al.      Expires January 9, 2016                [Page 4]
 
-Internet-Draft                  XMPP DNA                       June 2015
+Internet-Draft                  XMPP DNA                       July 2015
 
 
    5.  The parties attempt TLS negotiation, during which the XMPP server
@@ -277,9 +277,9 @@ Internet-Draft                  XMPP DNA                       June 2015
 
 
 
-Saint-Andre, et al.     Expires December 26, 2015               [Page 5]
+Saint-Andre, et al.      Expires January 9, 2016                [Page 5]
 
-Internet-Draft                  XMPP DNA                       June 2015
+Internet-Draft                  XMPP DNA                       July 2015
 
 
    |  B: <stream from='b.example' to='a.example'>  |
@@ -333,9 +333,9 @@ Internet-Draft                  XMPP DNA                       June 2015
 
 
 
-Saint-Andre, et al.     Expires December 26, 2015               [Page 6]
+Saint-Andre, et al.      Expires January 9, 2016                [Page 6]
 
-Internet-Draft                  XMPP DNA                       June 2015
+Internet-Draft                  XMPP DNA                       July 2015
 
 
    |  A: <stream from='a.example' to='b.example'>  |
@@ -389,9 +389,9 @@ Internet-Draft                  XMPP DNA                       June 2015
 
 
 
-Saint-Andre, et al.     Expires December 26, 2015               [Page 7]
+Saint-Andre, et al.      Expires January 9, 2016                [Page 7]
 
-Internet-Draft                  XMPP DNA                       June 2015
+Internet-Draft                  XMPP DNA                       July 2015
 
 
    |                                               |
@@ -445,9 +445,9 @@ Internet-Draft                  XMPP DNA                       June 2015
 
 
 
-Saint-Andre, et al.     Expires December 26, 2015               [Page 8]
+Saint-Andre, et al.      Expires January 9, 2016                [Page 8]
 
-Internet-Draft                  XMPP DNA                       June 2015
+Internet-Draft                  XMPP DNA                       July 2015
 
 
        <stream:stream from='a.example' to='b.example'>
@@ -501,9 +501,9 @@ Internet-Draft                  XMPP DNA                       June 2015
 
 
 
-Saint-Andre, et al.     Expires December 26, 2015               [Page 9]
+Saint-Andre, et al.      Expires January 9, 2016                [Page 9]
 
-Internet-Draft                  XMPP DNA                       June 2015
+Internet-Draft                  XMPP DNA                       July 2015
 
 
 4.3.  No Mutual PKIX Authentication
@@ -557,9 +557,9 @@ Internet-Draft                  XMPP DNA                       June 2015
 
 
 
-Saint-Andre, et al.     Expires December 26, 2015              [Page 10]
+Saint-Andre, et al.      Expires January 9, 2016               [Page 10]
 
-Internet-Draft                  XMPP DNA                       June 2015
+Internet-Draft                  XMPP DNA                       July 2015
 
 
        <db:verify from='a.example' to='b.example' id='...' type='valid/>
@@ -613,9 +613,9 @@ Internet-Draft                  XMPP DNA                       June 2015
 
 
 
-Saint-Andre, et al.     Expires December 26, 2015              [Page 11]
+Saint-Andre, et al.      Expires January 9, 2016               [Page 11]
 
-Internet-Draft                  XMPP DNA                       June 2015
+Internet-Draft                  XMPP DNA                       July 2015
 
 
    2.  Server 1 opens a TCP connection to the resolved IP address (which
@@ -669,9 +669,9 @@ Internet-Draft                  XMPP DNA                       June 2015
 
 
 
-Saint-Andre, et al.     Expires December 26, 2015              [Page 12]
+Saint-Andre, et al.      Expires January 9, 2016               [Page 12]
 
-Internet-Draft                  XMPP DNA                       June 2015
+Internet-Draft                  XMPP DNA                       July 2015
 
 
    domain rooms.a.example rather than a.example.  First, Server 2 needs
@@ -725,9 +725,9 @@ Internet-Draft                  XMPP DNA                       June 2015
 
 
 
-Saint-Andre, et al.     Expires December 26, 2015              [Page 13]
+Saint-Andre, et al.      Expires January 9, 2016               [Page 13]
 
-Internet-Draft                  XMPP DNA                       June 2015
+Internet-Draft                  XMPP DNA                       July 2015
 
 
       for a tenant such as example.com (or the tenant might not want the
@@ -781,9 +781,9 @@ Internet-Draft                  XMPP DNA                       June 2015
 
 
 
-Saint-Andre, et al.     Expires December 26, 2015              [Page 14]
+Saint-Andre, et al.      Expires January 9, 2016               [Page 14]
 
-Internet-Draft                  XMPP DNA                       June 2015
+Internet-Draft                  XMPP DNA                       July 2015
 
 
 5.2.  POSH
@@ -837,9 +837,9 @@ Internet-Draft                  XMPP DNA                       June 2015
 
 
 
-Saint-Andre, et al.     Expires December 26, 2015              [Page 15]
+Saint-Andre, et al.      Expires January 9, 2016               [Page 15]
 
-Internet-Draft                  XMPP DNA                       June 2015
+Internet-Draft                  XMPP DNA                       July 2015
 
 
    several domains (e.g., related domains such as jabber-de.example and
@@ -893,9 +893,9 @@ Internet-Draft                  XMPP DNA                       June 2015
 
 
 
-Saint-Andre, et al.     Expires December 26, 2015              [Page 16]
+Saint-Andre, et al.      Expires January 9, 2016               [Page 16]
 
-Internet-Draft                  XMPP DNA                       June 2015
+Internet-Draft                  XMPP DNA                       July 2015
 
 
    an updated version of [XEP-0220]) might define a DNA prooftype for
@@ -949,9 +949,9 @@ Internet-Draft                  XMPP DNA                       June 2015
 
 
 
-Saint-Andre, et al.     Expires December 26, 2015              [Page 17]
+Saint-Andre, et al.      Expires January 9, 2016               [Page 17]
 
-Internet-Draft                  XMPP DNA                       June 2015
+Internet-Draft                  XMPP DNA                       July 2015
 
 
 10.1.  Normative References
@@ -1005,9 +1005,9 @@ Internet-Draft                  XMPP DNA                       June 2015
 
 
 
-Saint-Andre, et al.     Expires December 26, 2015              [Page 18]
+Saint-Andre, et al.      Expires January 9, 2016               [Page 18]
 
-Internet-Draft                  XMPP DNA                       June 2015
+Internet-Draft                  XMPP DNA                       July 2015
 
 
    [RFC6698]  Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
@@ -1061,9 +1061,9 @@ Internet-Draft                  XMPP DNA                       June 2015
 
 
 
-Saint-Andre, et al.     Expires December 26, 2015              [Page 19]
+Saint-Andre, et al.      Expires January 9, 2016               [Page 19]
 
-Internet-Draft                  XMPP DNA                       June 2015
+Internet-Draft                  XMPP DNA                       July 2015
 
 
    [XEP-0344]
@@ -1072,8 +1072,18 @@ Internet-Draft                  XMPP DNA                       June 2015
 
 Appendix A.  Acknowledgements
 
-   Thanks to Richard Barnes, Stephen Farrell, and Jonas Lindberg for
-   contributing to earlier versions of this document.
+   Richard Barnes, Stephen Farrell, and Jonas Lindberg contributed as
+   co-authors to earlier draft versions of this document.
+
+   Derek Atkins and Dan Romascanu reviewed the document on behalf of the
+   Security Directorate and the General Area Review Team, respectively.
+
+   Thanks to Dave Cridland as document shepherd, Joe Hildebrand as
+   working group chair, and Ben Campbell as area director.
+
+   Peter Saint-Andre wishes to acknowledge Cisco Systems, Inc., for
+   employing him during his work on earlier draft versions of this
+   document.
 
 Authors' Addresses
 
@@ -1107,14 +1117,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-
-
-Saint-Andre, et al.     Expires December 26, 2015              [Page 20]
+Saint-Andre, et al.      Expires January 9, 2016               [Page 20]

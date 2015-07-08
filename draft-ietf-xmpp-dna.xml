@@ -629,7 +629,10 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
     </references>
 
     <section title="Acknowledgements" anchor="acks">
-      <t>Thanks to Richard Barnes, Stephen Farrell, and Jonas Lindberg for contributing to earlier versions of this document.</t>
+      <t>Richard Barnes, Stephen Farrell, and Jonas Lindberg contributed as co-authors to earlier draft versions of this document.</t>
+      <t>Derek Atkins and Dan Romascanu reviewed the document on behalf of the Security Directorate and the General Area Review Team, respectively.</t>
+      <t>Thanks to Dave Cridland as document shepherd, Joe Hildebrand as working group chair, and Ben Campbell as area director.</t>
+      <t>Peter Saint-Andre wishes to acknowledge Cisco Systems, Inc., for employing him during his work on earlier draft versions of this document.</t>
     </section>
 
   </back>
