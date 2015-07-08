@@ -376,7 +376,9 @@ Client                     Domain                     Server
     </references>
 
     <section title="Acknowledgements" anchor="acks">
-      <t>Many thanks to Thijs Alkemade, Philipp Hancke, Joe Hildebrand, and Tobias Markmann for their implementation feedback.  Thanks also to Dave Cridland, Chris Newton, Max Pritikin, and Joe Salowey for their input on the specification.</t>
+      <t>Thanks to Thijs Alkemade, Philipp Hancke, Joe Hildebrand, and Tobias Markmann for their implementation feedback, and to Dave Cridland, Chris Newton, Max Pritikin, and Joe Salowey for their input on the specification.</t>
+      <t>Thanks also to Dave Cridland as document shepherd, Joe Hildebrand as working group chair, and Ben Campbell as area director.</t>
+      <t>Peter Saint-Andre wishes to acknowledge Cisco Systems, Inc., for employing him during his work on earlier draft versions of this document.</t>
     </section>
 
   </back>

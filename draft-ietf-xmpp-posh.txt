@@ -5,8 +5,8 @@
 XMPP Working Group                                             M. Miller
 Internet-Draft                                       Cisco Systems, Inc.
 Intended status: Standards Track                          P. Saint-Andre
-Expires: December 26, 2015                                          &yet
-                                                           June 24, 2015
+Expires: January 9, 2016                                            &yet
+                                                            July 8, 2015
 
 
                       PKIX over Secure HTTP (POSH)
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on December 26, 2015.
+   This Internet-Draft will expire on January 9, 2016.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Miller & Saint-Andre    Expires December 26, 2015               [Page 1]
+Miller & Saint-Andre     Expires January 9, 2016                [Page 1]
 
-Internet-Draft                    POSH                         June 2015
+Internet-Draft                    POSH                         July 2015
 
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Miller & Saint-Andre    Expires December 26, 2015               [Page 2]
+Miller & Saint-Andre     Expires January 9, 2016                [Page 2]
 
-Internet-Draft                    POSH                         June 2015
+Internet-Draft                    POSH                         July 2015
 
 
    o  Certification authorities won't issue such certificates to you
@@ -165,9 +165,9 @@ Internet-Draft                    POSH                         June 2015
 
 
 
-Miller & Saint-Andre    Expires December 26, 2015               [Page 3]
+Miller & Saint-Andre     Expires January 9, 2016                [Page 3]
 
-Internet-Draft                    POSH                         June 2015
+Internet-Draft                    POSH                         July 2015
 
 
    The approach sketched out above, called POSH ("PKIX Over Secure
@@ -221,9 +221,9 @@ Internet-Draft                    POSH                         June 2015
 
 
 
-Miller & Saint-Andre    Expires December 26, 2015               [Page 4]
+Miller & Saint-Andre     Expires January 9, 2016                [Page 4]
 
-Internet-Draft                    POSH                         June 2015
+Internet-Draft                    POSH                         July 2015
 
 
    When POSH is used, the first two aspects remain the same: the POSH
@@ -277,9 +277,9 @@ Internet-Draft                    POSH                         June 2015
 
 
 
-Miller & Saint-Andre    Expires December 26, 2015               [Page 5]
+Miller & Saint-Andre     Expires January 9, 2016                [Page 5]
 
-Internet-Draft                    POSH                         June 2015
+Internet-Draft                    POSH                         July 2015
 
 
    status code and the message body set to a JSON document [RFC7159];
@@ -333,9 +333,9 @@ Internet-Draft                    POSH                         June 2015
 
 
 
-Miller & Saint-Andre    Expires December 26, 2015               [Page 6]
+Miller & Saint-Andre     Expires January 9, 2016                [Page 6]
 
-Internet-Draft                    POSH                         June 2015
+Internet-Draft                    POSH                         July 2015
 
 
    The "expires" value is a hint regarding the expiration of the keying
@@ -389,9 +389,9 @@ Internet-Draft                    POSH                         June 2015
 
 
 
-Miller & Saint-Andre    Expires December 26, 2015               [Page 7]
+Miller & Saint-Andre     Expires January 9, 2016                [Page 7]
 
-Internet-Draft                    POSH                         June 2015
+Internet-Draft                    POSH                         July 2015
 
 
 3.3.  Performing Verification
@@ -445,9 +445,9 @@ Internet-Draft                    POSH                         June 2015
 
 
 
-Miller & Saint-Andre    Expires December 26, 2015               [Page 8]
+Miller & Saint-Andre     Expires January 9, 2016                [Page 8]
 
-Internet-Draft                    POSH                         June 2015
+Internet-Draft                    POSH                         July 2015
 
 
    Client                     Domain                     Server
@@ -501,9 +501,9 @@ Internet-Draft                    POSH                         June 2015
 
 
 
-Miller & Saint-Andre    Expires December 26, 2015               [Page 9]
+Miller & Saint-Andre     Expires January 9, 2016                [Page 9]
 
-Internet-Draft                    POSH                         June 2015
+Internet-Draft                    POSH                         July 2015
 
 
 6.  Caching Results
@@ -557,9 +557,9 @@ Internet-Draft                    POSH                         June 2015
 
 
 
-Miller & Saint-Andre    Expires December 26, 2015              [Page 10]
+Miller & Saint-Andre     Expires January 9, 2016               [Page 10]
 
-Internet-Draft                    POSH                         June 2015
+Internet-Draft                    POSH                         July 2015
 
 
 8.  Guidelines for Protocols that Use POSH
@@ -613,9 +613,9 @@ Internet-Draft                    POSH                         June 2015
 
 
 
-Miller & Saint-Andre    Expires December 26, 2015              [Page 11]
+Miller & Saint-Andre     Expires January 9, 2016               [Page 11]
 
-Internet-Draft                    POSH                         June 2015
+Internet-Draft                    POSH                         July 2015
 
 
    application protocol such as IMAP or XMPP.  POSH does not enable a
@@ -669,9 +669,9 @@ Internet-Draft                    POSH                         June 2015
 
 
 
-Miller & Saint-Andre    Expires December 26, 2015              [Page 12]
+Miller & Saint-Andre     Expires January 9, 2016               [Page 12]
 
-Internet-Draft                    POSH                         June 2015
+Internet-Draft                    POSH                         July 2015
 
 
    [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
@@ -725,9 +725,9 @@ Internet-Draft                    POSH                         June 2015
 
 
 
-Miller & Saint-Andre    Expires December 26, 2015              [Page 13]
+Miller & Saint-Andre     Expires January 9, 2016               [Page 13]
 
-Internet-Draft                    POSH                         June 2015
+Internet-Draft                    POSH                         July 2015
 
 
    [RFC6555]  Wing, D. and A. Yourtchenko, "Happy Eyeballs: Success with
@@ -759,12 +759,32 @@ Internet-Draft                    POSH                         June 2015
 
 Appendix A.  Acknowledgements
 
-   Many thanks to Thijs Alkemade, Philipp Hancke, Joe Hildebrand, and
-   Tobias Markmann for their implementation feedback.  Thanks also to
-   Dave Cridland, Chris Newton, Max Pritikin, and Joe Salowey for their
-   input on the specification.
+   Thanks to Thijs Alkemade, Philipp Hancke, Joe Hildebrand, and Tobias
+   Markmann for their implementation feedback, and to Dave Cridland,
+   Chris Newton, Max Pritikin, and Joe Salowey for their input on the
+   specification.
+
+   Thanks also to Dave Cridland as document shepherd, Joe Hildebrand as
+   working group chair, and Ben Campbell as area director.
+
+   Peter Saint-Andre wishes to acknowledge Cisco Systems, Inc., for
+   employing him during his work on earlier draft versions of this
+   document.
 
 Authors' Addresses
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre     Expires January 9, 2016               [Page 14]
+
+Internet-Draft                    POSH                         July 2015
+
 
    Matthew Miller
    Cisco Systems, Inc.
@@ -773,17 +793,6 @@ Authors' Addresses
    USA
 
    Email: mamille2@cisco.com
-
-
-
-
-
-
-
-
-Miller & Saint-Andre    Expires December 26, 2015              [Page 14]
-
-Internet-Draft                    POSH                         June 2015
 
 
    Peter Saint-Andre
@@ -828,13 +837,4 @@ Internet-Draft                    POSH                         June 2015
 
 
 
-
-
-
-
-
-
-
-
-
-Miller & Saint-Andre    Expires December 26, 2015              [Page 15]
+Miller & Saint-Andre     Expires January 9, 2016               [Page 15]
