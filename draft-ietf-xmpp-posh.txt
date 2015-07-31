@@ -5,8 +5,8 @@
 XMPP Working Group                                             M. Miller
 Internet-Draft                                       Cisco Systems, Inc.
 Intended status: Standards Track                          P. Saint-Andre
-Expires: January 9, 2016                                            &yet
-                                                            July 8, 2015
+Expires: January 31, 2016                                           &yet
+                                                           July 30, 2015
 
 
                       PKIX over Secure HTTP (POSH)
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on January 9, 2016.
+   This Internet-Draft will expire on January 31, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Miller & Saint-Andre     Expires January 9, 2016                [Page 1]
+Miller & Saint-Andre    Expires January 31, 2016                [Page 1]
 
 Internet-Draft                    POSH                         July 2015
 
@@ -87,7 +87,7 @@ Table of Contents
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  12
      11.2.  Informative References . . . . . . . . . . . . . . . . .  13
    Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  14
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
 
 1.  Introduction
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Miller & Saint-Andre     Expires January 9, 2016                [Page 2]
+Miller & Saint-Andre    Expires January 31, 2016                [Page 2]
 
 Internet-Draft                    POSH                         July 2015
 
@@ -165,7 +165,7 @@ Internet-Draft                    POSH                         July 2015
 
 
 
-Miller & Saint-Andre     Expires January 9, 2016                [Page 3]
+Miller & Saint-Andre    Expires January 31, 2016                [Page 3]
 
 Internet-Draft                    POSH                         July 2015
 
@@ -221,7 +221,7 @@ Internet-Draft                    POSH                         July 2015
 
 
 
-Miller & Saint-Andre     Expires January 9, 2016                [Page 4]
+Miller & Saint-Andre    Expires January 31, 2016                [Page 4]
 
 Internet-Draft                    POSH                         July 2015
 
@@ -267,7 +267,7 @@ Internet-Draft                    POSH                         July 2015
 
        *  If it does not have any PKIX certificate information or a
           reference to such information for the requested path, it
-          responds with an HTTP client error status code (e.g., 404).
+          responds with an HTTP 404 Not Found status code [RFC7231].
 
 3.1.  Source Domain Possesses PKIX Certificate Information
 
@@ -277,7 +277,7 @@ Internet-Draft                    POSH                         July 2015
 
 
 
-Miller & Saint-Andre     Expires January 9, 2016                [Page 5]
+Miller & Saint-Andre    Expires January 31, 2016                [Page 5]
 
 Internet-Draft                    POSH                         July 2015
 
@@ -285,15 +285,15 @@ Internet-Draft                    POSH                         July 2015
    status code and the message body set to a JSON document [RFC7159];
    the document is a JSON object which MUST have the following:
 
-   o  A "fingerprints" field whose value is a JSON array of fingerprint
+   o  A "fingerprints" member whose value is a JSON array of fingerprint
       descriptors.
 
-   o  An "expires" field whose value is a JSON number specifying the
+   o  An "expires" member whose value is a JSON number specifying the
       number of seconds after which the POSH client ought to consider
       the key information to be stale (further explained under
       Section 6).
 
-   The JSON document returned MUST NOT contain a "url" field as
+   The JSON document returned MUST NOT contain a "url" member as
    described in Section 3.2.
 
    Each included fingerprint descriptor is a JSON object, where each
@@ -316,7 +316,7 @@ Internet-Draft                    POSH                         July 2015
 
    HTTP/1.1 200 OK
    Content-Type: application/json
-   Content-Length: 134
+   Content-Length: 135
 
    {
      "fingerprints": [
@@ -333,16 +333,16 @@ Internet-Draft                    POSH                         July 2015
 
 
 
-Miller & Saint-Andre     Expires January 9, 2016                [Page 6]
+Miller & Saint-Andre    Expires January 31, 2016                [Page 6]
 
 Internet-Draft                    POSH                         July 2015
 
 
    The "expires" value is a hint regarding the expiration of the keying
-   materials.  It MUST be a non-negative integer.  If no "expires" field
-   is included or its value is equal to 0, a POSH client SHOULD consider
-   these verification materials invalid.  See Section 6 for how to
-   reconcile this "expires" field with the reference's "expires" field.
+   materials.  It MUST be a non-negative integer.  If the "expires"
+   member has value of 0 (zero), a POSH client MUST consider these
+   verification materials invalid.  See Section 6 for how to reconcile
+   this "expires" field with the reference's "expires" field.
 
 3.2.  Source Domain References PKIX Certificate
 
@@ -353,7 +353,8 @@ Internet-Draft                    POSH                         July 2015
 
    o  A "url" field whose value is a JSON string specifying the HTTPS
       URL where POSH clients can obtain the actual certificate
-      information.
+      information.  The URL can be a well-known POSH URL (see Section 8,
+      but it need not be.
 
    o  An "expires" field whose value is a JSON number specifying the
       number of seconds after which the POSH client ought to consider
@@ -363,7 +364,7 @@ Internet-Draft                    POSH                         July 2015
 
    HTTP/1.1 200 Ok
    Content-Type: application/json
-   Content-Length: 79
+   Content-Length: 82
 
    {
      "url":"https://hosting.example.net/.well-known/posh.spice.json",
@@ -382,17 +383,19 @@ Internet-Draft                    POSH                         July 2015
 
    The "expires" value is a hint regarding the expiration of the Source
    Domain's delegation of service to the Delegated Domain.  It MUST be a
-   non-negative integer.  If no "expires" field is included or its value
-   is equal to 0, a POSH client SHOULD consider the delegation invalid.
-   See Section 6 for guidelines about reconciling this "expires" field
-   with the "expires" field of the fingerprints document.
+   non-negative integer.  If the "expires" field has a value of 0
+   (zero), a POSH client MUST consider the delegation invalid.  See
 
 
 
-Miller & Saint-Andre     Expires January 9, 2016                [Page 7]
+
+Miller & Saint-Andre    Expires January 31, 2016                [Page 7]
 
 Internet-Draft                    POSH                         July 2015
 
+
+   Section 6 for guidelines about reconciling this "expires" field with
+   the "expires" field of the fingerprints document.
 
 3.3.  Performing Verification
 
@@ -442,10 +445,7 @@ Internet-Draft                    POSH                         July 2015
 
 
 
-
-
-
-Miller & Saint-Andre     Expires January 9, 2016                [Page 8]
+Miller & Saint-Andre    Expires January 31, 2016                [Page 8]
 
 Internet-Draft                    POSH                         July 2015
 
@@ -501,7 +501,7 @@ Internet-Draft                    POSH                         July 2015
 
 
 
-Miller & Saint-Andre     Expires January 9, 2016                [Page 9]
+Miller & Saint-Andre    Expires January 31, 2016                [Page 9]
 
 Internet-Draft                    POSH                         July 2015
 
@@ -557,7 +557,7 @@ Internet-Draft                    POSH                         July 2015
 
 
 
-Miller & Saint-Andre     Expires January 9, 2016               [Page 10]
+Miller & Saint-Andre    Expires January 31, 2016               [Page 10]
 
 Internet-Draft                    POSH                         July 2015
 
@@ -613,7 +613,7 @@ Internet-Draft                    POSH                         July 2015
 
 
 
-Miller & Saint-Andre     Expires January 9, 2016               [Page 11]
+Miller & Saint-Andre    Expires January 31, 2016               [Page 11]
 
 Internet-Draft                    POSH                         July 2015
 
@@ -669,7 +669,7 @@ Internet-Draft                    POSH                         July 2015
 
 
 
-Miller & Saint-Andre     Expires January 9, 2016               [Page 12]
+Miller & Saint-Andre    Expires January 31, 2016               [Page 12]
 
 Internet-Draft                    POSH                         July 2015
 
@@ -686,6 +686,11 @@ Internet-Draft                    POSH                         July 2015
    [RFC7230]  Fielding, R. and J. Reschke, "Hypertext Transfer Protocol
               (HTTP/1.1): Message Syntax and Routing", RFC 7230, June
               2014.
+
+   [RFC7231]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
+              Protocol (HTTP/1.1): Semantics and Content", RFC 7231, DOI
+              10.17487/RFC7231, June 2014,
+              <http://www.rfc-editor.org/info/rfc7231>.
 
 11.2.  Informative References
 
@@ -716,19 +721,20 @@ Internet-Draft                    POSH                         July 2015
    [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
               Protocol (XMPP): Core", RFC 6120, March 2011.
 
+
+
+
+
+Miller & Saint-Andre    Expires January 31, 2016               [Page 13]
+
+Internet-Draft                    POSH                         July 2015
+
+
    [RFC6335]  Cotton, M., Eggert, L., Touch, J., Westerlund, M., and S.
               Cheshire, "Internet Assigned Numbers Authority (IANA)
               Procedures for the Management of the Service Name and
               Transport Protocol Port Number Registry", BCP 165, RFC
               6335, August 2011.
-
-
-
-
-Miller & Saint-Andre     Expires January 9, 2016               [Page 13]
-
-Internet-Draft                    POSH                         July 2015
-
 
    [RFC6555]  Wing, D. and A. Yourtchenko, "Happy Eyeballs: Success with
               Dual-Stack Hosts", RFC 6555, April 2012.
@@ -764,27 +770,27 @@ Appendix A.  Acknowledgements
    Chris Newton, Max Pritikin, and Joe Salowey for their input on the
    specification.
 
+   During IESG review, Barry Leiba provided helpful input that resulted
+   in improvements in the documet.
+
    Thanks also to Dave Cridland as document shepherd, Joe Hildebrand as
    working group chair, and Ben Campbell as area director.
+
+
+
+
+
+
+Miller & Saint-Andre    Expires January 31, 2016               [Page 14]
+
+Internet-Draft                    POSH                         July 2015
+
 
    Peter Saint-Andre wishes to acknowledge Cisco Systems, Inc., for
    employing him during his work on earlier draft versions of this
    document.
 
 Authors' Addresses
-
-
-
-
-
-
-
-
-
-Miller & Saint-Andre     Expires January 9, 2016               [Page 14]
-
-Internet-Draft                    POSH                         July 2015
-
 
    Matthew Miller
    Cisco Systems, Inc.
@@ -831,10 +837,4 @@ Internet-Draft                    POSH                         July 2015
 
 
 
-
-
-
-
-
-
-Miller & Saint-Andre     Expires January 9, 2016               [Page 15]
+Miller & Saint-Andre    Expires January 31, 2016               [Page 15]

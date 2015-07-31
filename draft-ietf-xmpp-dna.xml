@@ -92,7 +92,7 @@
           <t>Describes the flow of operations for establishing a domain name association (DNA).</t>
         </list>
       </t>
-      <t>This document also provides guidelines for secure delegation of a service domain name (e.g., example.com) to a target server host name (e.g., hosting.example.net).  The need for secure delegation arises because the process for resolving the domain name of an XMPP service into the IP address at which an XML stream will be negotiated (see <xref target='RFC6120'/>) can involve delegation of a service domain name to a target server host name using technologies such as DNS SRV records <xref target='RFC2782'/>.  A more detailed description of the delegation problem can be found in <xref target='I-D.ietf-xmpp-posh'/>.  If such delegation is not done in a secure manner, then the domain name association cannot be verified.</t>
+      <t>This document also provides guidelines for secure delegation of a service domain name (e.g., example.com) to a target server host name (e.g., hosting.example.net).  The need for secure delegation arises because the process for resolving the domain name of an XMPP service into the IP address at which an XML stream will be negotiated (see <xref target='RFC6120'/>) can involve delegation of a service domain name to a target server host name using technologies such as DNS SRV records <xref target='RFC2782'/>.  A more detailed description of the delegation problem can be found in <xref target='I-D.ietf-xmpp-posh'/>.  The domain name association can be verified only if the delegation is done in a secure manner.</t>
     </section>
 
     <section title="Terminology" anchor="terms">
@@ -631,6 +631,7 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
     <section title="Acknowledgements" anchor="acks">
       <t>Richard Barnes, Stephen Farrell, and Jonas Lindberg contributed as co-authors to earlier draft versions of this document.</t>
       <t>Derek Atkins and Dan Romascanu reviewed the document on behalf of the Security Directorate and the General Area Review Team, respectively.</t>
+      <t>During IESG review, Barry Leiba provided helpful input.</t>
       <t>Thanks to Dave Cridland as document shepherd, Joe Hildebrand as working group chair, and Ben Campbell as area director.</t>
       <t>Peter Saint-Andre wishes to acknowledge Cisco Systems, Inc., for employing him during his work on earlier draft versions of this document.</t>
     </section>
