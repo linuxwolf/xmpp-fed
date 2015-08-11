@@ -5,8 +5,8 @@
 XMPP Working Group                                             M. Miller
 Internet-Draft                                       Cisco Systems, Inc.
 Intended status: Standards Track                          P. Saint-Andre
-Expires: February 11, 2016                                          &yet
-                                                         August 10, 2015
+Expires: February 12, 2016                                          &yet
+                                                         August 11, 2015
 
 
                       PKIX over Secure HTTP (POSH)
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on February 11, 2016.
+   This Internet-Draft will expire on February 12, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Miller & Saint-Andre    Expires February 11, 2016               [Page 1]
+Miller & Saint-Andre    Expires February 12, 2016               [Page 1]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -79,12 +79,13 @@ Table of Contents
    4.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . .   8
    5.  Order of Operations . . . . . . . . . . . . . . . . . . . . .   9
    6.  Caching Results . . . . . . . . . . . . . . . . . . . . . . .  10
-   7.  Guidelines for Protocols that Use POSH  . . . . . . . . . . .  11
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
-   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  11
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  12
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  13
+   7.  Guidance for Protocol Authors . . . . . . . . . . . . . . . .  11
+   8.  Guidance for Server Operators . . . . . . . . . . . . . . . .  11
+   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  12
+   10. Security Considerations . . . . . . . . . . . . . . . . . . .  12
+   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  13
+     11.1.  Normative References . . . . . . . . . . . . . . . . . .  13
+     11.2.  Informative References . . . . . . . . . . . . . . . . .  14
    Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  15
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
 
@@ -108,8 +109,7 @@ Table of Contents
 
 
 
-
-Miller & Saint-Andre    Expires February 11, 2016               [Page 2]
+Miller & Saint-Andre    Expires February 12, 2016               [Page 2]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -165,7 +165,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 11, 2016               [Page 3]
+Miller & Saint-Andre    Expires February 12, 2016               [Page 3]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -221,7 +221,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 11, 2016               [Page 4]
+Miller & Saint-Andre    Expires February 12, 2016               [Page 4]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -245,7 +245,7 @@ Internet-Draft                    POSH                       August 2015
 
    1.  The POSH client performs an HTTPS GET request at the Source
        Domain to the path "/.well-known/posh.{servicedesc}.json".  The
-       value of "{servicedesc}" is application-specific; see Section 8
+       value of "{servicedesc}" is application-specific; see Section 9
        of this document for more details.  For example, if the
        application protocol is the hypothetical SPICE service, then
        "{servicedesc}" could be "spice"; thus if an application client
@@ -277,7 +277,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 11, 2016               [Page 5]
+Miller & Saint-Andre    Expires February 12, 2016               [Page 5]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -333,7 +333,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 11, 2016               [Page 6]
+Miller & Saint-Andre    Expires February 12, 2016               [Page 6]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -389,7 +389,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 11, 2016               [Page 7]
+Miller & Saint-Andre    Expires February 12, 2016               [Page 7]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -413,7 +413,7 @@ Internet-Draft                    POSH                       August 2015
    (i.e., containing a "url" member instead of a "fingerprints" field),
    in order to prevent circular delegations.
 
-      Note: See Section 9 for discussion about HTTPS redirects.
+      Note: See Section 10 for discussion about HTTPS redirects.
 
    The "expires" value is a hint regarding the expiration of the Source
    Domain's delegation of service to the Delegated Domain.  It MUST be a
@@ -445,7 +445,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 11, 2016               [Page 8]
+Miller & Saint-Andre    Expires February 12, 2016               [Page 8]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -501,7 +501,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 11, 2016               [Page 9]
+Miller & Saint-Andre    Expires February 12, 2016               [Page 9]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -557,12 +557,12 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 11, 2016              [Page 10]
+Miller & Saint-Andre    Expires February 12, 2016              [Page 10]
 
 Internet-Draft                    POSH                       August 2015
 
 
-7.  Guidelines for Protocols that Use POSH
+7.  Guidance for Protocol Authors
 
    Protocols that use POSH will need to register well-known URIs wth the
    IANA in accordance with [RFC5785] (the IANA registration policy
@@ -590,12 +590,46 @@ Internet-Draft                    POSH                       August 2015
    example, the well-known URI for the hypothetical SPICE application
    could be "posh.spice.json".
 
-8.  IANA Considerations
+8.  Guidance for Server Operators
+
+   POSH is intended to ease the operational burden of securing
+   application services, especially in multi-tenanted environments.  It
+   does so by obviating the need to obtain certificates for hosted
+   domains, so that an operator can obtain a certificate only for its
+   hosting service (naturally, this certificate needs to be valid
+   according to [RFC5280] and contain the proper identifier(s) in
+   accordance with [RFC6125] and the relevant application protocol
+   specification).
+
+   However, in order to use POSH, an operator does need to coordinate
+   with its customers so that the appropriate POSH files are provided
+   via HTTPS at a well-known URI at each customer's domain (i.e., at the
+   Source Domain), thus ensuring delegation to the operator's hosting
+   service (i.e., the Delegated Domain).  Because correct hosting of the
+   POSH file at the Source Domain is essential for successful
+   functioning of the POSH "chain", errors at the Source Domain will
+   result in authentication problems, certificate warnings, and other
+   operational issues.
+
+
+
+Miller & Saint-Andre    Expires February 12, 2016              [Page 11]
+
+Internet-Draft                    POSH                       August 2015
+
+
+   Furthermore, if the POSH file performs reference rather than
+   possession as described in this document, the operational burden is
+   further decreased since the operator does not need to provision its
+   customers with updated POSH files when the certificate for the
+   Delegated Domain expires or is replaced.
+
+9.  IANA Considerations
 
    This document requests no actions of IANA.  [Note to RFC Editor:
    please remove this section before publication.]
 
-9.  Security Considerations
+10.  Security Considerations
 
    This document supplements but does not supersede the security
    considerations provided in specifications for application protocols
@@ -608,15 +642,6 @@ Internet-Draft                    POSH                       August 2015
    [RFC6797] and key pinning [RFC7469], especially if the POSH client
    shares some information with a common HTTPS implementation (e.g.,
    platform-default web browser).
-
-
-
-
-
-Miller & Saint-Andre    Expires February 11, 2016              [Page 11]
-
-Internet-Draft                    POSH                       August 2015
-
 
    Note well that POSH is used by a POSH client to obtain the public key
    of a POSH server to which it might connect for a particular
@@ -641,13 +666,21 @@ Internet-Draft                    POSH                       August 2015
    operations in the face of attacks against the fingerprints obtained
    within verification materials.  Because POSH verification materials
    are relatively short-lived compared to long-lived credentials such as
+
+
+
+Miller & Saint-Andre    Expires February 12, 2016              [Page 12]
+
+Internet-Draft                    POSH                       August 2015
+
+
    PKIX end-entity certificates (at least as typically deployed),
    entities that deploy POSH are advised to swap out POSH files if the
    hash functions in use are found to be subject to realistic attacks.
 
-10.  References
+11.  References
 
-10.1.  Normative References
+11.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
@@ -664,15 +697,6 @@ Internet-Draft                    POSH                       August 2015
               Housley, R., and W. Polk, "Internet X.509 Public Key
               Infrastructure Certificate and Certificate Revocation List
               (CRL) Profile", RFC 5280, May 2008.
-
-
-
-
-
-Miller & Saint-Andre    Expires February 11, 2016              [Page 12]
-
-Internet-Draft                    POSH                       August 2015
-
 
    [RFC5785]  Nottingham, M. and E. Hammer-Lahav, "Defining Well-Known
               Uniform Resource Identifiers (URIs)", RFC 5785, April
@@ -696,13 +720,23 @@ Internet-Draft                    POSH                       August 2015
               10.17487/RFC7231, June 2014,
               <http://www.rfc-editor.org/info/rfc7231>.
 
+
+
+
+
+
+Miller & Saint-Andre    Expires February 12, 2016              [Page 13]
+
+Internet-Draft                    POSH                       August 2015
+
+
    [RFC7525]  Sheffer, Y., Holz, R., and P. Saint-Andre,
               "Recommendations for Secure Use of Transport Layer
               Security (TLS) and Datagram Transport Layer Security
               (DTLS)", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May
               2015, <http://www.rfc-editor.org/info/rfc7525>.
 
-10.2.  Informative References
+11.2.  Informative References
 
    [I-D.ietf-dane-srv]
               Finch, T., Miller, M., and P. Saint-Andre, "Using DNS-
@@ -719,16 +753,6 @@ Internet-Draft                    POSH                       August 2015
    [RFC2782]  Gulbrandsen, A., Vixie, P., and L. Esibov, "A DNS RR for
               specifying the location of services (DNS SRV)", RFC 2782,
               February 2000.
-
-
-
-
-
-
-Miller & Saint-Andre    Expires February 11, 2016              [Page 13]
-
-Internet-Draft                    POSH                       August 2015
-
 
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "DNS Security Introduction and Requirements", RFC
@@ -753,6 +777,15 @@ Internet-Draft                    POSH                       August 2015
    [RFC6570]  Gregorio, J., Fielding, R., Hadley, M., Nottingham, M.,
               and D. Orchard, "URI Template", RFC 6570, March 2012.
 
+
+
+
+
+Miller & Saint-Andre    Expires February 12, 2016              [Page 14]
+
+Internet-Draft                    POSH                       August 2015
+
+
    [RFC6698]  Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
               of Named Entities (DANE) Transport Layer Security (TLS)
               Protocol: TLSA", RFC 6698, August 2012.
@@ -773,18 +806,6 @@ Internet-Draft                    POSH                       August 2015
               "Hash Function Textual Names", <http://www.iana.org/
               assignments/hash-function-text-names/
               hash-function-text-names.xhtml>.
-
-
-
-
-
-
-
-
-Miller & Saint-Andre    Expires February 11, 2016              [Page 14]
-
-Internet-Draft                    POSH                       August 2015
-
 
 Appendix A.  Acknowledgements
 
@@ -815,6 +836,12 @@ Authors' Addresses
    Email: mamille2@cisco.com
 
 
+
+Miller & Saint-Andre    Expires February 12, 2016              [Page 15]
+
+Internet-Draft                    POSH                       August 2015
+
+
    Peter Saint-Andre
    &yet
 
@@ -837,4 +864,33 @@ Authors' Addresses
 
 
 
-Miller & Saint-Andre    Expires February 11, 2016              [Page 15]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre    Expires February 12, 2016              [Page 16]
