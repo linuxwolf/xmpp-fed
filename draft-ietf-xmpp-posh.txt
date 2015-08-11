@@ -5,8 +5,8 @@
 XMPP Working Group                                             M. Miller
 Internet-Draft                                       Cisco Systems, Inc.
 Intended status: Standards Track                          P. Saint-Andre
-Expires: January 31, 2016                                           &yet
-                                                           July 30, 2015
+Expires: February 11, 2016                                          &yet
+                                                         August 10, 2015
 
 
                       PKIX over Secure HTTP (POSH)
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on January 31, 2016.
+   This Internet-Draft will expire on February 11, 2016.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Miller & Saint-Andre    Expires January 31, 2016                [Page 1]
+Miller & Saint-Andre    Expires February 11, 2016               [Page 1]
 
-Internet-Draft                    POSH                         July 2015
+Internet-Draft                    POSH                       August 2015
 
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -77,16 +77,15 @@ Table of Contents
      3.2.  Source Domain References PKIX Certificate . . . . . . . .   7
      3.3.  Performing Verification . . . . . . . . . . . . . . . . .   8
    4.  Secure Delegation . . . . . . . . . . . . . . . . . . . . . .   8
-   5.  Order of Operations . . . . . . . . . . . . . . . . . . . . .   8
+   5.  Order of Operations . . . . . . . . . . . . . . . . . . . . .   9
    6.  Caching Results . . . . . . . . . . . . . . . . . . . . . . .  10
-   7.  Alternates and Roll-over  . . . . . . . . . . . . . . . . . .  10
-   8.  Guidelines for Protocols that Use POSH  . . . . . . . . . . .  11
-   9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
-   10. Security Considerations . . . . . . . . . . . . . . . . . . .  11
-   11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
-     11.1.  Normative References . . . . . . . . . . . . . . . . . .  12
-     11.2.  Informative References . . . . . . . . . . . . . . . . .  13
-   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  14
+   7.  Guidelines for Protocols that Use POSH  . . . . . . . . . . .  11
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  11
+   9.  Security Considerations . . . . . . . . . . . . . . . . . . .  11
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  12
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  12
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  13
+   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  15
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
 
 1.  Introduction
@@ -109,9 +108,10 @@ Table of Contents
 
 
 
-Miller & Saint-Andre    Expires January 31, 2016                [Page 2]
+
+Miller & Saint-Andre    Expires February 11, 2016               [Page 2]
 
-Internet-Draft                    POSH                         July 2015
+Internet-Draft                    POSH                       August 2015
 
 
    o  Certification authorities won't issue such certificates to you
@@ -165,9 +165,9 @@ Internet-Draft                    POSH                         July 2015
 
 
 
-Miller & Saint-Andre    Expires January 31, 2016                [Page 3]
+Miller & Saint-Andre    Expires February 11, 2016               [Page 3]
 
-Internet-Draft                    POSH                         July 2015
+Internet-Draft                    POSH                       August 2015
 
 
    The approach sketched out above, called POSH ("PKIX Over Secure
@@ -221,9 +221,9 @@ Internet-Draft                    POSH                         July 2015
 
 
 
-Miller & Saint-Andre    Expires January 31, 2016                [Page 4]
+Miller & Saint-Andre    Expires February 11, 2016               [Page 4]
 
-Internet-Draft                    POSH                         July 2015
+Internet-Draft                    POSH                       August 2015
 
 
    When POSH is used, the first two aspects remain the same: the POSH
@@ -234,18 +234,18 @@ Internet-Draft                    POSH                         July 2015
    verify the server's proof by retrieving a JSON document [RFC7159]
    containing hashes of the PKIX certificate over HTTPS ([RFC7230] and
    [RFC2818]) from a well-known URI [RFC5785] at the Source Domain.
-   (This means that the POSH client needs to verify the certificate of
-   the HTTPS service at the Source Domain in order to securely
-   "bootstrap" into the use of POSH; specifically, the rules of
-   [RFC2818] apply to this "bootstrapping" step to provide a secure
-   basis for all subsequent POSH processing.)
+   POSH servers MUST use HTTPS.  This means that the POSH client MUST
+   verify the certificate of the HTTPS service at the Source Domain in
+   order to securely "bootstrap" into the use of POSH; specifically, the
+   rules of [RFC2818] apply to this "bootstrapping" step to provide a
+   secure basis for all subsequent POSH processing.
 
    The process for retrieving a PKIX certificate over secure HTTP is as
    follows.
 
    1.  The POSH client performs an HTTPS GET request at the Source
        Domain to the path "/.well-known/posh.{servicedesc}.json".  The
-       value of "{servicedesc}" is application-specific; see Section 9
+       value of "{servicedesc}" is application-specific; see Section 8
        of this document for more details.  For example, if the
        application protocol is the hypothetical SPICE service, then
        "{servicedesc}" could be "spice"; thus if an application client
@@ -277,9 +277,9 @@ Internet-Draft                    POSH                         July 2015
 
 
 
-Miller & Saint-Andre    Expires January 31, 2016                [Page 5]
+Miller & Saint-Andre    Expires February 11, 2016               [Page 5]
 
-Internet-Draft                    POSH                         July 2015
+Internet-Draft                    POSH                       August 2015
 
 
    status code and the message body set to a JSON document [RFC7159];
@@ -306,11 +306,12 @@ Internet-Draft                    POSH                         July 2015
 
    The fingerprint hash for a given hash algorithm is generated by
    performing the named hash function over the DER encoding of the PKIX
-   X.509 certifiate; for example, a "sha-1" fingerprint is generated by
-   performing the SHA-1 hash function over the DER encoding of the PKIX
-   certificate.
+   X.509 certifiate.  This implies that if the certificate expires or is
+   revoked, the fingerprint value will be out of date.
 
-   The following example illustrates the usage described above.
+   As an example of the fingerprint format, a "sha-256" fingerprint is
+   generated by performing the SHA-256 hash function over the DER
+   encoding of the PKIX certificate, as illustrated below.
 
    Example Content Response
 
@@ -321,28 +322,51 @@ Internet-Draft                    POSH                         July 2015
    {
      "fingerprints": [
        {
-         "sha-1":"UpjRI/A3afKE8/AIeTZ5o1dECTY=",
          "sha-256":"4/mggdlVx8A3pvHAWW5sD+qJyMtUHgiRuPjVC48N0XQ="
        }
      ],
      "expires": 604800
    }
 
-
-
-
-
-
-Miller & Saint-Andre    Expires January 31, 2016                [Page 6]
-
-Internet-Draft                    POSH                         July 2015
-
-
    The "expires" value is a hint regarding the expiration of the keying
    materials.  It MUST be a non-negative integer.  If the "expires"
+
+
+
+Miller & Saint-Andre    Expires February 11, 2016               [Page 6]
+
+Internet-Draft                    POSH                       August 2015
+
+
    member has value of 0 (zero), a POSH client MUST consider these
    verification materials invalid.  See Section 6 for how to reconcile
-   this "expires" field with the reference's "expires" field.
+   this "expires" member with the reference's "expires" field.
+
+   To indicate alternate PKIX certificates (such as when an existing
+   certificate will soon expire), the returned fingerprints document MAY
+   contain multiple fingerprint descriptors.  The fingerprints SHOULD be
+   ordered with the most relevant certificate first as determined by the
+   application service operator (e.g., the renewed certificate),
+   followed by the next most relevant certificate (e.g., the certificate
+   soonest to expire).  Here is an example:
+
+   {
+     "fingerprints": [
+       {
+         "sha-256":"4/mggdlVx8A3pvHAWW5sD+qJyMtUHgiRuPjVC48N0XQ"
+       },
+       {
+         "sha-256":"otyLADSKjRDjVpj8X7/hmCAD5C7Qe+PedcmYV7cUncE="
+       }
+     ],
+     "expires": 806400
+   }
+
+   Matching on any of these fingerprints is acceptable.
+
+   Rolling over from one hosting provider to another is best handled by
+   updating the relevant SRV records, not primarily by updating the POSH
+   files themselves.
 
 3.2.  Source Domain References PKIX Certificate
 
@@ -351,14 +375,24 @@ Internet-Draft                    POSH                         July 2015
    status code and message body set to a JSON document.  The document is
    a JSON object which MUST contain the following:
 
-   o  A "url" field whose value is a JSON string specifying the HTTPS
+   o  A "url" member whose value is a JSON string specifying the HTTPS
       URL where POSH clients can obtain the actual certificate
-      information.  The URL can be a well-known POSH URL (see Section 8,
+      information.  The URL can be a well-known POSH URL (see Section 7,
       but it need not be.
 
-   o  An "expires" field whose value is a JSON number specifying the
+   o  An "expires" member whose value is a JSON number specifying the
       number of seconds after which the POSH client ought to consider
       the delegation to be stale (further explained under Section 6).
+
+
+
+
+
+
+Miller & Saint-Andre    Expires February 11, 2016               [Page 7]
+
+Internet-Draft                    POSH                       August 2015
+
 
    Example Reference Response
 
@@ -372,30 +406,21 @@ Internet-Draft                    POSH                         July 2015
    }
 
    The client performs an HTTPS GET request for the URL specified in the
-   "url" field value.  The HTTPS server for the URL to which the client
+   "url" member value.  The HTTPS server for the URL to which the client
    has been redirected responds to the request with a JSON document
    containing fingerprints as described in Section 3.1.  The content
    retrieved from the "url" location MUST NOT itself be a reference
-   (i.e., containing a "url" field instead of a "fingerprints" field),
+   (i.e., containing a "url" member instead of a "fingerprints" field),
    in order to prevent circular delegations.
 
-      Note: See Section 10 for discussion about HTTPS redirects.
+      Note: See Section 9 for discussion about HTTPS redirects.
 
    The "expires" value is a hint regarding the expiration of the Source
    Domain's delegation of service to the Delegated Domain.  It MUST be a
-   non-negative integer.  If the "expires" field has a value of 0
+   non-negative integer.  If the "expires" member has a value of 0
    (zero), a POSH client MUST consider the delegation invalid.  See
-
-
-
-
-Miller & Saint-Andre    Expires January 31, 2016                [Page 7]
-
-Internet-Draft                    POSH                         July 2015
-
-
-   Section 6 for guidelines about reconciling this "expires" field with
-   the "expires" field of the fingerprints document.
+   Section 6 for guidelines about reconciling this "expires" member with
+   the "expires" member of the fingerprints document.
 
 3.3.  Performing Verification
 
@@ -415,6 +440,16 @@ Internet-Draft                    POSH                         July 2015
    the verification materials possessed by the client, regardless of how
    those materials are obtained.
 
+
+
+
+
+
+Miller & Saint-Andre    Expires February 11, 2016               [Page 8]
+
+Internet-Draft                    POSH                       August 2015
+
+
 5.  Order of Operations
 
    In order for the POSH client to perform verification of Reference
@@ -432,23 +467,6 @@ Internet-Draft                    POSH                         July 2015
    [RFC6555].
 
    The following diagram illustrates the possession flow:
-
-
-
-
-
-
-
-
-
-
-
-
-
-Miller & Saint-Andre    Expires January 31, 2016                [Page 8]
-
-Internet-Draft                    POSH                         July 2015
-
 
    Client                     Domain                     Server
    ------                     ------                     ------
@@ -469,6 +487,24 @@ Internet-Draft                    POSH                         July 2015
                Figure 1: Order of Events for Possession Flow
 
    While the following diagram illustrates the reference flow:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre    Expires February 11, 2016               [Page 9]
+
+Internet-Draft                    POSH                       August 2015
+
 
    Client                     Domain                     Server
    ------                     ------                     ------
@@ -494,18 +530,6 @@ Internet-Draft                    POSH                         July 2015
 
                Figure 2: Order of Events for Reference Flow
 
-
-
-
-
-
-
-
-Miller & Saint-Andre    Expires January 31, 2016                [Page 9]
-
-Internet-Draft                    POSH                         July 2015
-
-
 6.  Caching Results
 
    The POSH client MUST NOT cache results (reference or fingerprints)
@@ -519,6 +543,10 @@ Internet-Draft                    POSH                         July 2015
    client MAY use a lower value than any provided in the "expires"
    field(s), or not cache results at all.
 
+   The foregoing considerations apply to handling of the "expires"
+   values in POSH files; naturally a POSH client MUST NOT consider an
+   expired PKIX certificate to be valid, in accordance with [RFC5280].
+
    The POSH client SHOULD NOT rely on HTTP caching mechanisms, instead
    using the expiration hints provided in the POSH reference document or
    fingerprints documents.  To that end, the HTTPS servers for Source
@@ -527,42 +555,14 @@ Internet-Draft                    POSH                         July 2015
    indicate that the response (redirect, reference, or content) is not
    appropriate to cache at the HTTP layer.
 
-7.  Alternates and Roll-over
-
-   To indicate alternate PKIX certificates (such as when an existing
-   certificate will soon expire), the returned fingerprints document MAY
-   contain multiple fingerprint descriptors.  The fingerprints SHOULD be
-   ordered with the most relevant certificate first as determined by the
-   application service operator (e.g., the renewed certificate),
-   followed by the next most relevant certificate (e.g., the certificate
-   soonest to expire).  Here is an example:
-
-   {
-     "fingerprints": [
-       {
-         "sha-1":"UpjRI/A3afKE8/AIeTZ5o1dECTY=",
-         "sha-256":"4/mggdlVx8A3pvHAWW5sD+qJyMtUHgiRuPjVC48N0XQ"
-       },
-       {
-         "sha-1":"T29tGO9d7kxbfWnUaac8+5+ICLM=",
-         "sha-256":"otyLADSKjRDjVpj8X7/hmCAD5C7Qe+PedcmYV7cUncE="
-       }
-     ],
-     "expires": 806400
-   }
-
-   Rolling over from one hosting provider to another is best handled by
-   updating the relevant SRV records, not primarily by updating the POSH
-   files themselves.
 
 
-
-Miller & Saint-Andre    Expires January 31, 2016               [Page 10]
+Miller & Saint-Andre    Expires February 11, 2016              [Page 10]
 
-Internet-Draft                    POSH                         July 2015
+Internet-Draft                    POSH                       August 2015
 
 
-8.  Guidelines for Protocols that Use POSH
+7.  Guidelines for Protocols that Use POSH
 
    Protocols that use POSH will need to register well-known URIs wth the
    IANA in accordance with [RFC5785] (the IANA registration policy
@@ -590,34 +590,36 @@ Internet-Draft                    POSH                         July 2015
    example, the well-known URI for the hypothetical SPICE application
    could be "posh.spice.json".
 
-9.  IANA Considerations
+8.  IANA Considerations
 
    This document requests no actions of IANA.  [Note to RFC Editor:
    please remove this section before publication.]
 
-10.  Security Considerations
+9.  Security Considerations
 
    This document supplements but does not supersede the security
    considerations provided in specifications for application protocols
    that decide to use POSH (e.g., [RFC6120] and [RFC6125] for XMPP).
    Specifically, the security of requests and responses sent via HTTPS
    depends on checking the identity of the HTTP server in accordance
-   with [RFC2818].  Additionally, the security of POSH can benefit from
-   other HTTP hardening protocols, such as HSTS [RFC6797] and key
-   pinning [RFC7469], especially if the POSH client shares some
-   information with a common HTTPS implementation (e.g., platform-
-   default web browser).
+   with [RFC2818] as well as following the most modern best practices
+   for TLS as specified in [RFC7525].  Additionally, the security of
+   POSH can benefit from other HTTP hardening protocols, such as HSTS
+   [RFC6797] and key pinning [RFC7469], especially if the POSH client
+   shares some information with a common HTTPS implementation (e.g.,
+   platform-default web browser).
+
+
+
+
+
+Miller & Saint-Andre    Expires February 11, 2016              [Page 11]
+
+Internet-Draft                    POSH                       August 2015
+
 
    Note well that POSH is used by a POSH client to obtain the public key
    of a POSH server to which it might connect for a particular
-
-
-
-Miller & Saint-Andre    Expires January 31, 2016               [Page 11]
-
-Internet-Draft                    POSH                         July 2015
-
-
    application protocol such as IMAP or XMPP.  POSH does not enable a
    hosted domain to transfer private keys to a hosting service via
    HTTPS.  POSH also does not enable a POSH server to engage in
@@ -625,8 +627,8 @@ Internet-Draft                    POSH                         July 2015
    is done in Enrollment over Secure Transport [RFC7030].
 
    A web server at the Source Domain might redirect an HTTPS request to
-   another URL.  The location provided in the redirect response MUST
-   specify an HTTPS URL.  Source domains SHOULD use only temporary
+   another HTTPS URL.  The location provided in the redirect response
+   MUST specify an HTTPS URL.  Source domains SHOULD use only temporary
    redirect mechanisms, such as HTTP status codes 302 (Found) and 307
    (Temporary Redirect).  Clients MAY treat any redirect as temporary,
    ignoring the specific semantics for 301 (Moved Permanently) and 308
@@ -643,9 +645,9 @@ Internet-Draft                    POSH                         July 2015
    entities that deploy POSH are advised to swap out POSH files if the
    hash functions in use are found to be subject to realistic attacks.
 
-11.  References
+10.  References
 
-11.1.  Normative References
+10.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119, March 1997.
@@ -663,16 +665,18 @@ Internet-Draft                    POSH                         July 2015
               Infrastructure Certificate and Certificate Revocation List
               (CRL) Profile", RFC 5280, May 2008.
 
+
+
+
+
+Miller & Saint-Andre    Expires February 11, 2016              [Page 12]
+
+Internet-Draft                    POSH                       August 2015
+
+
    [RFC5785]  Nottingham, M. and E. Hammer-Lahav, "Defining Well-Known
               Uniform Resource Identifiers (URIs)", RFC 5785, April
               2010.
-
-
-
-Miller & Saint-Andre    Expires January 31, 2016               [Page 12]
-
-Internet-Draft                    POSH                         July 2015
-
 
    [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
               Verification of Domain-Based Application Service Identity
@@ -692,7 +696,13 @@ Internet-Draft                    POSH                         July 2015
               10.17487/RFC7231, June 2014,
               <http://www.rfc-editor.org/info/rfc7231>.
 
-11.2.  Informative References
+   [RFC7525]  Sheffer, Y., Holz, R., and P. Saint-Andre,
+              "Recommendations for Secure Use of Transport Layer
+              Security (TLS) and Datagram Transport Layer Security
+              (DTLS)", BCP 195, RFC 7525, DOI 10.17487/RFC7525, May
+              2015, <http://www.rfc-editor.org/info/rfc7525>.
+
+10.2.  Informative References
 
    [I-D.ietf-dane-srv]
               Finch, T., Miller, M., and P. Saint-Andre, "Using DNS-
@@ -710,6 +720,16 @@ Internet-Draft                    POSH                         July 2015
               specifying the location of services (DNS SRV)", RFC 2782,
               February 2000.
 
+
+
+
+
+
+Miller & Saint-Andre    Expires February 11, 2016              [Page 13]
+
+Internet-Draft                    POSH                       August 2015
+
+
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "DNS Security Introduction and Requirements", RFC
               4033, March 2005.
@@ -720,15 +740,6 @@ Internet-Draft                    POSH                         July 2015
 
    [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
               Protocol (XMPP): Core", RFC 6120, March 2011.
-
-
-
-
-
-Miller & Saint-Andre    Expires January 31, 2016               [Page 13]
-
-Internet-Draft                    POSH                         July 2015
-
 
    [RFC6335]  Cotton, M., Eggert, L., Touch, J., Westerlund, M., and S.
               Cheshire, "Internet Assigned Numbers Authority (IANA)
@@ -763,6 +774,18 @@ Internet-Draft                    POSH                         July 2015
               assignments/hash-function-text-names/
               hash-function-text-names.xhtml>.
 
+
+
+
+
+
+
+
+Miller & Saint-Andre    Expires February 11, 2016              [Page 14]
+
+Internet-Draft                    POSH                       August 2015
+
+
 Appendix A.  Acknowledgements
 
    Thanks to Thijs Alkemade, Philipp Hancke, Joe Hildebrand, and Tobias
@@ -770,21 +793,12 @@ Appendix A.  Acknowledgements
    Chris Newton, Max Pritikin, and Joe Salowey for their input on the
    specification.
 
-   During IESG review, Barry Leiba provided helpful input that resulted
-   in improvements in the documet.
+   During IESG review, Stephen Farrell, Barry Leiba, and Kathleen
+   Moriarty provided helpful input that resulted in improvements in the
+   document.
 
    Thanks also to Dave Cridland as document shepherd, Joe Hildebrand as
    working group chair, and Ben Campbell as area director.
-
-
-
-
-
-
-Miller & Saint-Andre    Expires January 31, 2016               [Page 14]
-
-Internet-Draft                    POSH                         July 2015
-
 
    Peter Saint-Andre wishes to acknowledge Cisco Systems, Inc., for
    employing him during his work on earlier draft versions of this
@@ -823,18 +837,4 @@ Authors' Addresses
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Miller & Saint-Andre    Expires January 31, 2016               [Page 15]
+Miller & Saint-Andre    Expires February 11, 2016              [Page 15]
