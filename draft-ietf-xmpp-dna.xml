@@ -568,7 +568,7 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
           <t>To support the POSH prooftype <xref target='I-D.ietf-xmpp-posh'/>, an operator can generate its own certificates or obtain them from a certification authority but does not need to deploy DNS security.</t>
         </list>
       </t>
-      <t>Considerations for use of the foregoing prooftypes are explained in the relevant specifications.  See in particular Section 13.7 of <xref target='RFC6120'/>, Section 6 of <xref target='I-D.ietf-dane-srv'/>, and Section FIXME of <xref target='I-D.ietf-xmpp-posh'/>.</t>
+      <t>Considerations for use of the foregoing prooftypes are explained in the relevant specifications.  See in particular Section 13.7 of <xref target='RFC6120'/>, Section 6 of <xref target='I-D.ietf-dane-srv'/>, and Section 8 of <xref target='I-D.ietf-xmpp-posh'/>.</t>
       <t>Naturally, these operations and management considerations are additive: if an operator wishes to use multiple prooftypes, the complexity of deployment increases (e.g., the operator might want to obtain a PKIX certificate from a certification authority for use in the PKIX prooftype and generate its own certificate for use in the DANE prooftype).  This is an unavoidable aspect of supporting as many prooftypes as needed in order to ensure that domain name associations can be established in the largest possible percentage of cases.</t>
     </section>
 

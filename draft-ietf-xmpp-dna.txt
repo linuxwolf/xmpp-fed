@@ -5,10 +5,10 @@
 Network Working Group                                     P. Saint-Andre
 Internet-Draft                                                      &yet
 Intended status: Standards Track                               M. Miller
-Expires: February 11, 2016                           Cisco Systems, Inc.
+Expires: February 14, 2016                           Cisco Systems, Inc.
                                                                P. Hancke
                                                                     &yet
-                                                         August 10, 2015
+                                                         August 13, 2015
 
 
 Domain Name Associations (DNA) in the Extensible Messaging and Presence
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on February 11, 2016.
+   This Internet-Draft will expire on February 14, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016               [Page 1]
+Saint-Andre, et al.     Expires February 14, 2016               [Page 1]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016               [Page 2]
+Saint-Andre, et al.     Expires February 14, 2016               [Page 2]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -165,7 +165,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016               [Page 3]
+Saint-Andre, et al.     Expires February 14, 2016               [Page 3]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -221,7 +221,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016               [Page 4]
+Saint-Andre, et al.     Expires February 14, 2016               [Page 4]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -277,7 +277,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016               [Page 5]
+Saint-Andre, et al.     Expires February 14, 2016               [Page 5]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -333,7 +333,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016               [Page 6]
+Saint-Andre, et al.     Expires February 14, 2016               [Page 6]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -389,7 +389,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016               [Page 7]
+Saint-Andre, et al.     Expires February 14, 2016               [Page 7]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -445,7 +445,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016               [Page 8]
+Saint-Andre, et al.     Expires February 14, 2016               [Page 8]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -501,7 +501,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016               [Page 9]
+Saint-Andre, et al.     Expires February 14, 2016               [Page 9]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -557,7 +557,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016              [Page 10]
+Saint-Andre, et al.     Expires February 14, 2016              [Page 10]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -613,7 +613,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016              [Page 11]
+Saint-Andre, et al.     Expires February 14, 2016              [Page 11]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -669,7 +669,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016              [Page 12]
+Saint-Andre, et al.     Expires February 14, 2016              [Page 12]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -725,7 +725,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016              [Page 13]
+Saint-Andre, et al.     Expires February 14, 2016              [Page 13]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -781,7 +781,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016              [Page 14]
+Saint-Andre, et al.     Expires February 14, 2016              [Page 14]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -837,7 +837,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016              [Page 15]
+Saint-Andre, et al.     Expires February 14, 2016              [Page 15]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -893,7 +893,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016              [Page 16]
+Saint-Andre, et al.     Expires February 14, 2016              [Page 16]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -949,7 +949,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016              [Page 17]
+Saint-Andre, et al.     Expires February 14, 2016              [Page 17]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -968,7 +968,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
    Considerations for use of the foregoing prooftypes are explained in
    the relevant specifications.  See in particular Section 13.7 of
-   [RFC6120], Section 6 of [I-D.ietf-dane-srv], and Section FIXME of
+   [RFC6120], Section 6 of [I-D.ietf-dane-srv], and Section 8 of
    [I-D.ietf-xmpp-posh].
 
    Naturally, these operations and management considerations are
@@ -1005,7 +1005,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016              [Page 18]
+Saint-Andre, et al.     Expires February 14, 2016              [Page 18]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -1061,7 +1061,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016              [Page 19]
+Saint-Andre, et al.     Expires February 14, 2016              [Page 19]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -1117,7 +1117,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016              [Page 20]
+Saint-Andre, et al.     Expires February 14, 2016              [Page 20]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -1173,7 +1173,7 @@ Appendix A.  Acknowledgements
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016              [Page 21]
+Saint-Andre, et al.     Expires February 14, 2016              [Page 21]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -1229,4 +1229,4 @@ Authors' Addresses
 
 
 
-Saint-Andre, et al.     Expires February 11, 2016              [Page 22]
+Saint-Andre, et al.     Expires February 14, 2016              [Page 22]
