@@ -245,7 +245,7 @@ Internet-Draft                    POSH                       August 2015
 
    1.  The POSH client performs an HTTPS GET request at the Source
        Domain to the path "/.well-known/posh.{servicedesc}.json".  The
-       value of "{servicedesc}" is application-specific; see Section 9
+       value of "{servicedesc}" is application-specific; see Section 7
        of this document for more details.  For example, if the
        application protocol is the hypothetical SPICE service, then
        "{servicedesc}" could be "spice"; thus if an application client

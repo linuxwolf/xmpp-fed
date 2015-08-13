@@ -108,7 +108,7 @@
       <t>The process for retrieving a PKIX certificate over secure HTTP is as follows.</t>
       <t>
         <list style="numbers">
-          <t>The POSH client performs an HTTPS GET request at the Source Domain to the path "/.well-known/posh.{servicedesc}.json".  The value of "{servicedesc}" is application-specific; see <xref target="iana"/> of this document for more details.  For example, if the application protocol is the hypothetical SPICE service, then "{servicedesc}" could be "spice"; thus if an application client were to use POSH to verify an application server for the Source Domain "bar.example.com", the HTTPS GET request would be as follows:
+          <t>The POSH client performs an HTTPS GET request at the Source Domain to the path "/.well-known/posh.{servicedesc}.json".  The value of "{servicedesc}" is application-specific; see <xref target="authors"/> of this document for more details.  For example, if the application protocol is the hypothetical SPICE service, then "{servicedesc}" could be "spice"; thus if an application client were to use POSH to verify an application server for the Source Domain "bar.example.com", the HTTPS GET request would be as follows:
           <figure>
             <artwork><![CDATA[
     GET /.well-known/posh.spice.json HTTP/1.1
