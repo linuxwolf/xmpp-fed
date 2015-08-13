@@ -5,8 +5,8 @@
 XMPP Working Group                                             M. Miller
 Internet-Draft                                       Cisco Systems, Inc.
 Intended status: Standards Track                          P. Saint-Andre
-Expires: February 12, 2016                                          &yet
-                                                         August 11, 2015
+Expires: February 13, 2016                                          &yet
+                                                         August 12, 2015
 
 
                       PKIX over Secure HTTP (POSH)
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on February 12, 2016.
+   This Internet-Draft will expire on February 13, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Miller & Saint-Andre    Expires February 12, 2016               [Page 1]
+Miller & Saint-Andre    Expires February 13, 2016               [Page 1]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Miller & Saint-Andre    Expires February 12, 2016               [Page 2]
+Miller & Saint-Andre    Expires February 13, 2016               [Page 2]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -152,20 +152,20 @@ Internet-Draft                    POSH                       August 2015
 
    One possible approach that your team has investigated is to ask each
    customer to provide the public key / certificate for its SPICE
-   service at a special HTTPS URL on their website ("https://
+   service at a special HTTPS URI on their website ("https://
    bar.example.com/.well-known/posh.spice.json" is one possibility).
    This could be a public key that you generate for the customer, but
    because the customer hosts it via HTTPS, any user agent can find that
    public key and check it against the public key you provide during TLS
    negotiation for the SPICE service (as one added benefit, the customer
    never needs to hand you a private key).  Alternatively, the customer
-   can redirect requests for that special HTTPS URL to an HTTPS URL at
+   can redirect requests for that special HTTPS URI to an HTTPS URI at
    your own website, thus making it explicit that they have delegated
    the SPICE service to you.
 
 
 
-Miller & Saint-Andre    Expires February 12, 2016               [Page 3]
+Miller & Saint-Andre    Expires February 13, 2016               [Page 3]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -221,7 +221,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 12, 2016               [Page 4]
+Miller & Saint-Andre    Expires February 13, 2016               [Page 4]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -277,7 +277,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 12, 2016               [Page 5]
+Miller & Saint-Andre    Expires February 13, 2016               [Page 5]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -333,7 +333,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 12, 2016               [Page 6]
+Miller & Saint-Andre    Expires February 13, 2016               [Page 6]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -376,9 +376,10 @@ Internet-Draft                    POSH                       August 2015
    a JSON object which MUST contain the following:
 
    o  A "url" member whose value is a JSON string specifying the HTTPS
-      URL where POSH clients can obtain the actual certificate
-      information.  The URL can be a well-known POSH URL (see Section 7,
-      but it need not be.
+      URI where POSH clients can obtain the actual certificate
+      information.  The URI can be a well-known POSH URI (see Section 7,
+      but it need not be.  (For historical reasons, the member name is
+      "url", not "uri".)
 
    o  An "expires" member whose value is a JSON number specifying the
       number of seconds after which the POSH client ought to consider
@@ -388,8 +389,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-
-Miller & Saint-Andre    Expires February 12, 2016               [Page 7]
+Miller & Saint-Andre    Expires February 13, 2016               [Page 7]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -405,13 +405,13 @@ Internet-Draft                    POSH                       August 2015
      "expires":86400
    }
 
-   The client performs an HTTPS GET request for the URL specified in the
-   "url" member value.  The HTTPS server for the URL to which the client
+   The client performs an HTTPS GET request for the URI specified in the
+   "url" member value.  The HTTPS server for the URI to which the client
    has been redirected responds to the request with a JSON document
    containing fingerprints as described in Section 3.1.  The content
-   retrieved from the "url" location MUST NOT itself be a reference
-   (i.e., containing a "url" member instead of a "fingerprints" field),
-   in order to prevent circular delegations.
+   retrieved from the location specified by the "url" member MUST NOT
+   itself be a reference (i.e., containing a "url" member instead of a
+   "fingerprints" field), in order to prevent circular delegations.
 
       Note: See Section 10 for discussion about HTTPS redirects.
 
@@ -445,7 +445,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 12, 2016               [Page 8]
+Miller & Saint-Andre    Expires February 13, 2016               [Page 8]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -501,7 +501,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 12, 2016               [Page 9]
+Miller & Saint-Andre    Expires February 13, 2016               [Page 9]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -557,7 +557,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 12, 2016              [Page 10]
+Miller & Saint-Andre    Expires February 13, 2016              [Page 10]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -613,7 +613,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 12, 2016              [Page 11]
+Miller & Saint-Andre    Expires February 13, 2016              [Page 11]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -652,8 +652,8 @@ Internet-Draft                    POSH                       August 2015
    is done in Enrollment over Secure Transport [RFC7030].
 
    A web server at the Source Domain might redirect an HTTPS request to
-   another HTTPS URL.  The location provided in the redirect response
-   MUST specify an HTTPS URL.  Source domains SHOULD use only temporary
+   another HTTPS URI.  The location provided in the redirect response
+   MUST specify an HTTPS URI.  Source domains SHOULD use only temporary
    redirect mechanisms, such as HTTP status codes 302 (Found) and 307
    (Temporary Redirect).  Clients MAY treat any redirect as temporary,
    ignoring the specific semantics for 301 (Moved Permanently) and 308
@@ -669,7 +669,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 12, 2016              [Page 12]
+Miller & Saint-Andre    Expires February 13, 2016              [Page 12]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -725,7 +725,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 12, 2016              [Page 13]
+Miller & Saint-Andre    Expires February 13, 2016              [Page 13]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -781,7 +781,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 12, 2016              [Page 14]
+Miller & Saint-Andre    Expires February 13, 2016              [Page 14]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -837,7 +837,7 @@ Authors' Addresses
 
 
 
-Miller & Saint-Andre    Expires February 12, 2016              [Page 15]
+Miller & Saint-Andre    Expires February 13, 2016              [Page 15]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -893,4 +893,4 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 12, 2016              [Page 16]
+Miller & Saint-Andre    Expires February 13, 2016              [Page 16]
