@@ -355,7 +355,7 @@
             <t>The PKIX certificate presented by Server 2 during TLS negotiation is acceptable to Server 1 and matches the expected identity.</t>
             <t>The PKIX certificate presented by Server 1 during TLS negotiation is acceptable to Server 2, which enables the parties to complete mutual authentication.</t>
             <t>There are no additional domains associated with Server 1 and Server 2 (say, a subdomain rooms.a.example on Server 1 or a second domain c.example on Server 2).</t>
-            <t>The server administrators are able to obtain PKIX certificates issued by a widely-accepted certificate authority (CA) in the first place.</t>
+            <t>The server administrators are able to obtain PKIX certificates issued by a widely-accepted certification authority (CA) in the first place.</t>
             <t>The server administrators are running their own XMPP servers, rather than using hosting services.</t>
           </list>
         </t>

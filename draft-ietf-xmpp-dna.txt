@@ -539,7 +539,7 @@ Internet-Draft                  XMPP DNA                     August 2015
       domain c.example on Server 2).
 
    o  The server administrators are able to obtain PKIX certificates
-      issued by a widely-accepted certificate authority (CA) in the
+      issued by a widely-accepted certification authority (CA) in the
       first place.
 
    o  The server administrators are running their own XMPP servers,
