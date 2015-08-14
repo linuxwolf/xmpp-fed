@@ -565,7 +565,7 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
         <list style='symbols'>
           <t>To support the PKIX prooftype <xref target='RFC6120'/>, an operator needs to interact with a certification authority but does not need to deploy DNS security.</t>
           <t>To support the DANE prooftype <xref target='I-D.ietf-dane-srv'/>, an operator can generate its own certificates or obtain them from a certification authority but needs to deploy DNS security.</t>
-          <t>To support the POSH prooftype <xref target='I-D.ietf-xmpp-posh'/>, an operator can generate its own certificates or obtain them from a certification authority but does not need to deploy DNS security.</t>
+          <t>To support the POSH prooftype <xref target='I-D.ietf-xmpp-posh'/>, an operator can generate its own certificates or obtain them from a certificate authority for the XMPP server, but needs to have HTTPS deployed with certificates obtained from a certification authority. DNS security is not required.</t>
         </list>
       </t>
       <t>Considerations for use of the foregoing prooftypes are explained in the relevant specifications.  See in particular Section 13.7 of <xref target='RFC6120'/>, Section 6 of <xref target='I-D.ietf-dane-srv'/>, and Section 8 of <xref target='I-D.ietf-xmpp-posh'/>.</t>
