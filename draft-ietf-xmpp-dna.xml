@@ -85,7 +85,7 @@
 
     <section title="Introduction" anchor="intro">
       <t>In systems that use the Extensible Messaging and Presence Protocol (XMPP) <xref target='RFC6120'/>, it is important to establish a strong association between the DNS domain name of an XMPP service (e.g., example.com) and the XML stream that a client or peer server initiates with that service. In other words, the client or peer server needs to verify the identity of the server to which it connects. Additionally, servers need to verify incoming connections from other servers.</t>
-      <t>To date, such verification has been established based on information obtained from the Domain Name System (DNS), the Public Key Infrastructure (PKI), or similar sources.  In particular, XMPP as defined in <xref target='RFC6120'/> assumed that domain name associations are to be proved using the "PKI prooftype"; that is, the server's proof consists of a PKIX certificate that is checked according to the XMPP profile of the matching rules from <xref target='RFC6125'/> (and the overall validation rules from <xref target='RFC5280'/>), the client's verification material is obtained out of band in the form of a trusted root, and secure DNS is not necessary.</t>
+      <t>To date, such verification has been established based on information obtained from the Domain Name System (DNS), the Public Key Infrastructure (PKI), or similar sources.  In particular, XMPP as defined in <xref target='RFC6120'/> assumed that domain name associations are to be proved using the "PKIX prooftype"; that is, the server's proof consists of a PKIX certificate that is checked according to the XMPP profile of the matching rules from <xref target='RFC6125'/> (and the overall validation rules from <xref target='RFC5280'/>), the client's verification material is obtained out of band in the form of a trusted root, and secure DNS is not necessary.</t>
       <t>By extending the concept of a domain name association within XMPP, this document does the following:</t>
       <t>
         <list style='numbers'>
@@ -480,7 +480,7 @@
     </section>
 
     <section title="Alternative Prooftypes" anchor="alternatives">
-      <t>The foregoing protocol flows assumed that domain name associations were proved using the PKI prooftype.  However, sometimes XMPP server administrators are unable or unwilling to obtain valid PKIX certificates for all of the domains they host at their servers.  For example:</t>
+      <t>The foregoing protocol flows assumed that domain name associations were proved using the PKIX prooftype.  However, sometimes XMPP server administrators are unable or unwilling to obtain valid PKIX certificates for all of the domains they host at their servers.  For example:</t>
       <t>
         <list style='symbols'>
           <t>In order to issue a PKIX certificate, a CA might try to send email messages to authoritative mailbox names <xref target='RFC2142'/>, but the administrator of a subsidiary service such as im.cs.podunk.example cannot receive email sent to mailto:hostmaster@podunk.example.</t>

@@ -118,7 +118,7 @@ Internet-Draft                  XMPP DNA                     August 2015
    obtained from the Domain Name System (DNS), the Public Key
    Infrastructure (PKI), or similar sources.  In particular, XMPP as
    defined in [RFC6120] assumed that domain name associations are to be
-   proved using the "PKI prooftype"; that is, the server's proof
+   proved using the "PKIX prooftype"; that is, the server's proof
    consists of a PKIX certificate that is checked according to the XMPP
    profile of the matching rules from [RFC6125] (and the overall
    validation rules from [RFC5280]), the client's verification material
@@ -755,7 +755,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 5.  Alternative Prooftypes
 
    The foregoing protocol flows assumed that domain name associations
-   were proved using the PKI prooftype.  However, sometimes XMPP server
+   were proved using the PKIX prooftype.  However, sometimes XMPP server
    administrators are unable or unwilling to obtain valid PKIX
    certificates for all of the domains they host at their servers.  For
    example:
