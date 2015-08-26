@@ -5,10 +5,10 @@
 Network Working Group                                     P. Saint-Andre
 Internet-Draft                                                      &yet
 Intended status: Standards Track                               M. Miller
-Expires: February 16, 2016                           Cisco Systems, Inc.
+Expires: February 26, 2016                           Cisco Systems, Inc.
                                                                P. Hancke
                                                                     &yet
-                                                         August 15, 2015
+                                                         August 25, 2015
 
 
 Domain Name Associations (DNA) in the Extensible Messaging and Presence
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on February 16, 2016.
+   This Internet-Draft will expire on February 26, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Saint-Andre, et al.     Expires February 16, 2016               [Page 1]
+Saint-Andre, et al.     Expires February 26, 2016               [Page 1]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -87,14 +87,14 @@ Table of Contents
    7.  Prooftype Model . . . . . . . . . . . . . . . . . . . . . . .  17
    8.  Guidance for Server Operators . . . . . . . . . . . . . . . .  17
    9.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  18
-     9.1.  Well-Known URI for xmpp-client Service  . . . . . . . . .  18
-     9.2.  Well-Known URI for xmpp-server Service  . . . . . . . . .  18
+     9.1.  POSH Service Name for xmpp-client Service . . . . . . . .  18
+     9.2.  POSH Service Name for xmpp-server Service . . . . . . . .  18
    10. Security Considerations . . . . . . . . . . . . . . . . . . .  19
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  19
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  19
      11.2.  Informative References . . . . . . . . . . . . . . . . .  20
    Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  21
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  21
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  22
 
 1.  Introduction
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Saint-Andre, et al.     Expires February 16, 2016               [Page 2]
+Saint-Andre, et al.     Expires February 26, 2016               [Page 2]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -165,7 +165,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 16, 2016               [Page 3]
+Saint-Andre, et al.     Expires February 26, 2016               [Page 3]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -221,7 +221,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 16, 2016               [Page 4]
+Saint-Andre, et al.     Expires February 26, 2016               [Page 4]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -277,7 +277,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 16, 2016               [Page 5]
+Saint-Andre, et al.     Expires February 26, 2016               [Page 5]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -333,7 +333,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 16, 2016               [Page 6]
+Saint-Andre, et al.     Expires February 26, 2016               [Page 6]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -389,7 +389,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 16, 2016               [Page 7]
+Saint-Andre, et al.     Expires February 26, 2016               [Page 7]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -445,7 +445,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 16, 2016               [Page 8]
+Saint-Andre, et al.     Expires February 26, 2016               [Page 8]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -501,7 +501,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 16, 2016               [Page 9]
+Saint-Andre, et al.     Expires February 26, 2016               [Page 9]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -557,7 +557,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 16, 2016              [Page 10]
+Saint-Andre, et al.     Expires February 26, 2016              [Page 10]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -613,7 +613,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 16, 2016              [Page 11]
+Saint-Andre, et al.     Expires February 26, 2016              [Page 11]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -669,7 +669,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 16, 2016              [Page 12]
+Saint-Andre, et al.     Expires February 26, 2016              [Page 12]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -725,7 +725,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 16, 2016              [Page 13]
+Saint-Andre, et al.     Expires February 26, 2016              [Page 13]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -781,7 +781,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 16, 2016              [Page 14]
+Saint-Andre, et al.     Expires February 26, 2016              [Page 14]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -837,7 +837,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 16, 2016              [Page 15]
+Saint-Andre, et al.     Expires February 26, 2016              [Page 15]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -852,10 +852,10 @@ Internet-Draft                  XMPP DNA                     August 2015
 
    The well-known URIs [RFC5785] to be used for POSH are:
 
-   o  "/.well-known/posh._xmpp-client._tcp.json" for client-to-server
+   o  "/.well-known/posh/xmpp-client.json" for client-to-server
       connections
 
-   o  "/.well-known/posh._xmpp-server._tcp.json" for server-to-server
+   o  "/.well-known/posh/xmpp-server.json" for server-to-server
       connections
 
 6.  Secure Delegation and Multi-Tenancy
@@ -893,7 +893,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 16, 2016              [Page 16]
+Saint-Andre, et al.     Expires February 26, 2016              [Page 16]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -949,7 +949,7 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.     Expires February 16, 2016              [Page 17]
+Saint-Andre, et al.     Expires February 26, 2016              [Page 17]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
@@ -980,39 +980,41 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 9.  IANA Considerations
 
-   The POSH specification [I-D.ietf-xmpp-posh] provides guidelines for
-   registering the well-known URIs [RFC5785] of protocols that make use
-   of POSH.  This specification registers two such URIs for use in XMPP.
-   The completed registration templates follow.
+   The POSH specification [I-D.ietf-xmpp-posh] establishes a registry
+   for POSH service names to be used in well-known URIs [RFC5785].  This
+   specification registers two such URIs for use in XMPP: "xmpp-client"
+   and "xmpp-server".  The completed registration templates follow.
 
-9.1.  Well-Known URI for xmpp-client Service
+9.1.  POSH Service Name for xmpp-client Service
 
-   This specification registers "posh._xmpp-client._tcp.json" in the
-   Well-Known URI Registry as defined by [RFC5785].
-
-   URI suffix: posh._xmpp-client._tcp.json
+   POSH service name: xmpp-client
 
    Change controller: IETF
 
-   Specification document(s): [[ this document ]]
+   Definition and usage: POSH files containing verification material or
+   references thereto that enable verification of server identity for
+   XMPP client-to-server streams
 
-9.2.  Well-Known URI for xmpp-server Service
+   Specification: [[ this document ]]
 
-   This specification registers "posh._xmpp-server._tcp.json" in the
-   Well-Known URI Registry as defined by [RFC5785].
+9.2.  POSH Service Name for xmpp-server Service
 
-   URI suffix: posh._xmpp-server._tcp.json
+   POSH service name: xmpp-server
+
+   Change controller: IETF
 
 
 
-Saint-Andre, et al.     Expires February 16, 2016              [Page 18]
+Saint-Andre, et al.     Expires February 26, 2016              [Page 18]
 
 Internet-Draft                  XMPP DNA                     August 2015
 
 
-   Change controller: IETF
+   Definition and usage: POSH files containing verification material or
+   references thereto that enable verification of server identity for
+   XMPP server-to-server streams
 
-   Specification document(s): [[ this document ]]
+   Specification: [[ this document ]]
 
 10.  Security Considerations
 
@@ -1054,17 +1056,20 @@ Internet-Draft                  XMPP DNA                     August 2015
               Rose, "DNS Security Introduction and Requirements", RFC
               4033, March 2005.
 
+
+
+
+
+
+Saint-Andre, et al.     Expires February 26, 2016              [Page 19]
+
+Internet-Draft                  XMPP DNA                     August 2015
+
+
    [RFC4422]  Melnikov, A., Ed. and K. Zeilenga, Ed., "Simple
               Authentication and Security Layer (SASL)", RFC 4422, DOI
               10.17487/RFC4422, June 2006,
               <http://www.rfc-editor.org/info/rfc4422>.
-
-
-
-Saint-Andre, et al.     Expires February 16, 2016              [Page 19]
-
-Internet-Draft                  XMPP DNA                     August 2015
-
 
    [RFC4949]  Shirey, R., "Internet Security Glossary, Version 2", RFC
               4949, August 2007.
@@ -1107,20 +1112,22 @@ Internet-Draft                  XMPP DNA                     August 2015
    [RFC3920]  Saint-Andre, P., Ed., "Extensible Messaging and Presence
               Protocol (XMPP): Core", RFC 3920, October 2004.
 
+
+
+
+
+
+Saint-Andre, et al.     Expires February 26, 2016              [Page 20]
+
+Internet-Draft                  XMPP DNA                     August 2015
+
+
    [RFC4120]  Neuman, C., Yu, T., Hartman, S., and K. Raeburn, "The
               Kerberos Network Authentication Service (V5)", RFC 4120,
               July 2005.
 
    [RFC6066]  Eastlake, D., "Transport Layer Security (TLS) Extensions:
               Extension Definitions", RFC 6066, January 2011.
-
-
-
-
-Saint-Andre, et al.     Expires February 16, 2016              [Page 20]
-
-Internet-Draft                  XMPP DNA                     August 2015
-
 
    [RFC6091]  Mavrogiannopoulos, N. and D. Gillmor, "Using OpenPGP Keys
               for Transport Layer Security (TLS) Authentication", RFC
@@ -1161,22 +1168,21 @@ Appendix A.  Acknowledgements
    Thanks to Dave Cridland as document shepherd, Joe Hildebrand as
    working group chair, and Ben Campbell as area director.
 
+
+
+
+
+
+Saint-Andre, et al.     Expires February 26, 2016              [Page 21]
+
+Internet-Draft                  XMPP DNA                     August 2015
+
+
    Peter Saint-Andre wishes to acknowledge Cisco Systems, Inc., for
    employing him during his work on earlier draft versions of this
    document.
 
 Authors' Addresses
-
-
-
-
-
-
-
-Saint-Andre, et al.     Expires February 16, 2016              [Page 21]
-
-Internet-Draft                  XMPP DNA                     August 2015
-
 
    Peter Saint-Andre
    &yet
@@ -1223,10 +1229,4 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-
-
-
-
-
-
-Saint-Andre, et al.     Expires February 16, 2016              [Page 22]
+Saint-Andre, et al.     Expires February 26, 2016              [Page 22]

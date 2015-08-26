@@ -528,8 +528,8 @@
         <t>The well-known URIs <xref target='RFC5785'/> to be used for POSH are:</t>
         <t>
           <list style='symbols'>
-            <t>"/.well-known/posh._xmpp-client._tcp.json" for client-to-server connections</t>
-            <t>"/.well-known/posh._xmpp-server._tcp.json" for server-to-server connections</t>
+            <t>"/.well-known/posh/xmpp-client.json" for client-to-server connections</t>
+            <t>"/.well-known/posh/xmpp-server.json" for server-to-server connections</t>
           </list>
         </t>
       </section>
@@ -573,18 +573,18 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
     </section>
 
     <section title="IANA Considerations" anchor="iana">
-      <t>The POSH specification <xref target='I-D.ietf-xmpp-posh'/> provides guidelines for registering the well-known URIs <xref target='RFC5785'/> of protocols that make use of POSH. This specification registers two such URIs for use in XMPP.  The completed registration templates follow.</t>
-      <section title="Well-Known URI for xmpp-client Service" anchor="iana-client">
-        <t>This specification registers "posh._xmpp-client._tcp.json" in the Well-Known URI Registry as defined by <xref target='RFC5785'/>.</t>
-        <t>URI suffix: posh._xmpp-client._tcp.json</t>
+      <t>The POSH specification <xref target='I-D.ietf-xmpp-posh'/> establishes a registry for POSH service names to be used in well-known URIs <xref target='RFC5785'/>.  This specification registers two such URIs for use in XMPP: "xmpp-client" and "xmpp-server".  The completed registration templates follow.</t>
+      <section title="POSH Service Name for xmpp-client Service" anchor="iana-client">
+        <t>POSH service name: xmpp-client</t>
         <t>Change controller: IETF</t>
-        <t>Specification document(s): [[ this document ]]</t>
+        <t>Definition and usage: POSH files containing verification material or references thereto that enable verification of server identity for XMPP client-to-server streams</t>
+        <t>Specification: [[ this document ]]</t>
       </section>
-      <section title="Well-Known URI for xmpp-server Service" anchor="iana-server">
-        <t>This specification registers "posh._xmpp-server._tcp.json" in the Well-Known URI Registry as defined by <xref target='RFC5785'/>.</t>
-        <t>URI suffix: posh._xmpp-server._tcp.json</t>
+      <section title="POSH Service Name for xmpp-server Service" anchor="iana-server">
+        <t>POSH service name: xmpp-server</t>
         <t>Change controller: IETF</t>
-        <t>Specification document(s): [[ this document ]]</t>
+        <t>Definition and usage: POSH files containing verification material or references thereto that enable verification of server identity for XMPP server-to-server streams</t>
+        <t>Specification: [[ this document ]]</t>
       </section>
     </section>
 
