@@ -302,7 +302,7 @@ Client             Domain         Domain              Server
       </section>
       <section title="POSH Service Names" anchor="iana-posh">
         <t>This document establishes a registry for POSH service names.</t>
-        <t>POSH service names are registered on the advice of one or more Designated Experts (appointed by the IESG or their delegate).  An IANA registration policy <xref target='RFC5226'/> of Expert Review was chosen instead of the more liberal First Come First Served to help prevent the use of POSH when other technologies such as DNS SRV would be more appropriate.</t>
+        <t>POSH service names are registered on the advice of one or more Designated Experts (appointed by the IESG or their delegate).  An IANA registration policy <xref target='RFC5226'/> of Expert Review was chosen instead of the more liberal First Come First Served to help ensure that POSH is used in appropriate ways within applications.</t>
         <t>Registration requests are to be sent to the posh@ietf.org mailing list for review and comment, with an appropriate subject (e.g., "Request for POSH service name: example").</t>
         <t>Before a period of 14 days has passed, the Designated Expert(s) will either approve or deny the registration request, communicating this decision both to the review list and to IANA.  Denials should include an explanation and, if applicable, suggestions as to how to make the request successful.  Registration requests that are undetermined for a period longer than 21 days can be brought to the IESG's attention (using the iesg@iesg.org mailing list) for resolution.</t>
         <section title="Registration Template" anchor="iana-posh-template">
