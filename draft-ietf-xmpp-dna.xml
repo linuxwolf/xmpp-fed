@@ -577,13 +577,13 @@ _xmpp-server._tcp.example.com. 0 IN SRV 0 0 5269 hosting.example.net
       <section title="POSH Service Name for xmpp-client Service" anchor="iana-client">
         <t>POSH service name: xmpp-client</t>
         <t>Change controller: IETF</t>
-        <t>Definition and usage: POSH files containing verification material or references thereto that enable verification of server identity for XMPP client-to-server streams</t>
+        <t>Definition and usage: Specifies the location of a POSH file containing verification material or a reference thereto that enables a client to verify the identity of a server for a client-to-server stream in XMPP</t>
         <t>Specification: [[ this document ]]</t>
       </section>
       <section title="POSH Service Name for xmpp-server Service" anchor="iana-server">
         <t>POSH service name: xmpp-server</t>
         <t>Change controller: IETF</t>
-        <t>Definition and usage: POSH files containing verification material or references thereto that enable verification of server identity for XMPP server-to-server streams</t>
+        <t>Definition and usage: Specifies the location of a POSH file containing verification material or a reference thereto that enables a server to verify the identity of a peer server for a server-to-server stream in XMPP</t>
         <t>Specification: [[ this document ]]</t>
       </section>
     </section>
