@@ -5,8 +5,8 @@
 XMPP Working Group                                             M. Miller
 Internet-Draft                                       Cisco Systems, Inc.
 Intended status: Standards Track                          P. Saint-Andre
-Expires: February 28, 2016                                          &yet
-                                                         August 27, 2015
+Expires: March 2, 2016                                              &yet
+                                                         August 30, 2015
 
 
                       PKIX over Secure HTTP (POSH)
@@ -42,7 +42,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on February 28, 2016.
+   This Internet-Draft will expire on March 2, 2016.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Miller & Saint-Andre    Expires February 28, 2016               [Page 1]
+Miller & Saint-Andre      Expires March 2, 2016                 [Page 1]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Miller & Saint-Andre    Expires February 28, 2016               [Page 2]
+Miller & Saint-Andre      Expires March 2, 2016                 [Page 2]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -155,24 +155,24 @@ Internet-Draft                    POSH                       August 2015
 
    One possible approach that your team has investigated is to ask each
    customer to provide the public key / certificate for its SPICE
-   service at a special HTTPS URI on their website
-   ("https://bar.example.com/.well-known/posh/spice.json" is one
-   possibility).  This could be a public key that you generate for the
-   customer, but because the customer hosts it via HTTPS, any user agent
-   can find that public key and check it against the public key you
-   provide during TLS negotiation for the SPICE service (as one added
-   benefit, the customer never needs to hand you a private key).
+   service at a special HTTPS URI on their website ("https://
+   bar.example.com/.well-known/posh/spice.json" is one possibility).
+   This could be a public key that you generate for the customer, but
+   because the customer hosts it via HTTPS, any user agent can find that
+   public key and check it against the public key you provide during TLS
+   negotiation for the SPICE service (as one added benefit, the customer
+   never needs to hand you a private key).  Alternatively, the customer
 
 
 
-Miller & Saint-Andre    Expires February 28, 2016               [Page 3]
+Miller & Saint-Andre      Expires March 2, 2016                 [Page 3]
 
 Internet-Draft                    POSH                       August 2015
 
 
-   Alternatively, the customer can redirect requests for that special
-   HTTPS URI to an HTTPS URI at your own website, thus making it
-   explicit that they have delegated the SPICE service to you.
+   can redirect requests for that special HTTPS URI to an HTTPS URI at
+   your own website, thus making it explicit that they have delegated
+   the SPICE service to you.
 
    The approach sketched out above, called POSH ("PKIX Over Secure
    HTTP"), is explained in the remainder of this document.  While this
@@ -221,7 +221,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 28, 2016               [Page 4]
+Miller & Saint-Andre      Expires March 2, 2016                 [Page 4]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -277,7 +277,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 28, 2016               [Page 5]
+Miller & Saint-Andre      Expires March 2, 2016                 [Page 5]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -333,7 +333,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 28, 2016               [Page 6]
+Miller & Saint-Andre      Expires March 2, 2016                 [Page 6]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -389,7 +389,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 28, 2016               [Page 7]
+Miller & Saint-Andre      Expires March 2, 2016                 [Page 7]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -445,7 +445,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 28, 2016               [Page 8]
+Miller & Saint-Andre      Expires March 2, 2016                 [Page 8]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -501,7 +501,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 28, 2016               [Page 9]
+Miller & Saint-Andre      Expires March 2, 2016                 [Page 9]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -557,7 +557,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 28, 2016              [Page 10]
+Miller & Saint-Andre      Expires March 2, 2016                [Page 10]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -613,7 +613,7 @@ Internet-Draft                    POSH                       August 2015
 
 
 
-Miller & Saint-Andre    Expires February 28, 2016              [Page 11]
+Miller & Saint-Andre      Expires March 2, 2016                [Page 11]
 
 Internet-Draft                    POSH                       August 2015
 
@@ -622,8 +622,8 @@ Internet-Draft                    POSH                       August 2015
 
 9.1.  Well-Known URI
 
-   This specification registers "posh" in the Well-Known URI Registry as
-   defined by [RFC5785].  The completed template follows.
+   The IANA is requested to register "posh" in the Well-Known URI
+   Registry as defined by [RFC5785].  The completed template follows.
 
    URI suffix:  posh
 
@@ -640,13 +640,15 @@ Internet-Draft                    POSH                       August 2015
 
 9.2.  POSH Service Names
 
-   This document establishes a registry for POSH service names.
+   The IANA is requested to establish a registry for POSH service names
+   within the Uniform Resource Identifier (URI) Schemes group of
+   registries.
 
-   POSH service names are registered on the advice of one or more
-   Designated Experts (appointed by the IESG or their delegate).  An
-   IANA registration policy [RFC5226] of Expert Review was chosen
-   instead of the more liberal First Come First Served to help ensure
-   that POSH is used in appropriate ways within applications.
+   The IANA registration policy [RFC5226] is Expert Review or IETF
+   Review (this was chosen instead of the more liberal policy of First
+   Come First Served to help ensure that POSH serices are defined in
+   ways that are consistent with this specification).  One or more
+   Designated Experts are to be appointed by the IESG or their delegate.
 
    Registration requests are to be sent to the posh@ietf.org mailing
    list for review and comment, with an appropriate subject (e.g.,
@@ -660,23 +662,27 @@ Internet-Draft                    POSH                       August 2015
    a period longer than 21 days can be brought to the IESG's attention
    (using the iesg@iesg.org mailing list) for resolution.
 
-9.2.1.  Registration Template
-
-   Service name:  The name requested, relative to "/.well-known/posh/";
-      e.g., a service name of "example" would result in a well-known URI
-      of "https://example.com/.well-known/posh/example.json".
 
 
 
 
-Miller & Saint-Andre    Expires February 28, 2016              [Page 12]
+
+
+
+Miller & Saint-Andre      Expires March 2, 2016                [Page 12]
 
 Internet-Draft                    POSH                       August 2015
 
 
+9.2.1.  Registration Template
+
+   Service name:  The name requested, relative to "/.well-known/posh/";
+      e.g., a service name of "example" would result in a well-known URI
+      such as "https://example.com/.well-known/posh/example.json".
+
    Change controller:  For Standards-Track RFCs, state "IETF".  In all
-      other cases, give the name of the responsible party.  Other
-      details (e.g., postal address, e-mail address, home page URI) may
+      other cases, provide the name and email address of the responsible
+      party.  Other details (e.g., postal address or website URI) may
       also be included.
 
    Definition and usage:  A brief description that defines the service
@@ -716,19 +722,19 @@ Internet-Draft                    POSH                       August 2015
    MUST specify an HTTPS URI.  Source domains SHOULD use only temporary
    redirect mechanisms, such as HTTP status codes 302 (Found) and 307
    (Temporary Redirect) [RFC7231].  Clients MAY treat any redirect as
+
+
+
+Miller & Saint-Andre      Expires March 2, 2016                [Page 13]
+
+Internet-Draft                    POSH                       August 2015
+
+
    temporary, ignoring the specific semantics for 301 (Moved
    Permanently) [RFC7231] and 308 (Permanent Redirect) [RFC7538].  To
    protect against circular references, it is RECOMMENDED that POSH
    clients follow no more than 10 redirects, although applications or
    implementations can require that fewer redirects be followed.
-
-
-
-
-Miller & Saint-Andre    Expires February 28, 2016              [Page 13]
-
-Internet-Draft                    POSH                       August 2015
-
 
    Hash function agility is an important quality to ensure secure
    operations in the face of attacks against the fingerprints obtained
@@ -743,57 +749,46 @@ Internet-Draft                    POSH                       August 2015
 11.1.  Normative References
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119, DOI 10.17487/
-              RFC2119, March 1997,
-              <http://www.rfc-editor.org/info/rfc2119>.
+              Requirement Levels", BCP 14, RFC 2119, March 1997.
 
-   [RFC2818]  Rescorla, E., "HTTP Over TLS", RFC 2818, DOI 10.17487/
-              RFC2818, May 2000,
-              <http://www.rfc-editor.org/info/rfc2818>.
+   [RFC2818]  Rescorla, E., "HTTP Over TLS", RFC 2818, May 2000.
 
    [RFC4648]  Josefsson, S., "The Base16, Base32, and Base64 Data
-              Encodings", RFC 4648, DOI 10.17487/RFC4648, October 2006,
-              <http://www.rfc-editor.org/info/rfc4648>.
+              Encodings", RFC 4648, October 2006.
 
    [RFC5246]  Dierks, T. and E. Rescorla, "The Transport Layer Security
-              (TLS) Protocol Version 1.2", RFC 5246, DOI 10.17487/
-              RFC5246, August 2008,
-              <http://www.rfc-editor.org/info/rfc5246>.
+              (TLS) Protocol Version 1.2", RFC 5246, August 2008.
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
               Infrastructure Certificate and Certificate Revocation List
-              (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
-              <http://www.rfc-editor.org/info/rfc5280>.
+              (CRL) Profile", RFC 5280, May 2008.
 
    [RFC5785]  Nottingham, M. and E. Hammer-Lahav, "Defining Well-Known
-              Uniform Resource Identifiers (URIs)", RFC 5785, DOI
-              10.17487/RFC5785, April 2010,
-              <http://www.rfc-editor.org/info/rfc5785>.
+              Uniform Resource Identifiers (URIs)", RFC 5785, April
+              2010.
 
    [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
               Verification of Domain-Based Application Service Identity
               within Internet Public Key Infrastructure Using X.509
               (PKIX) Certificates in the Context of Transport Layer
-              Security (TLS)", RFC 6125, DOI 10.17487/RFC6125, March
-              2011, <http://www.rfc-editor.org/info/rfc6125>.
+              Security (TLS)", RFC 6125, March 2011.
+
+   [RFC7159]  Bray, T., "The JavaScript Object Notation (JSON) Data
+              Interchange Format", RFC 7159, March 2014.
 
 
 
 
-Miller & Saint-Andre    Expires February 28, 2016              [Page 14]
+
+Miller & Saint-Andre      Expires March 2, 2016                [Page 14]
 
 Internet-Draft                    POSH                       August 2015
 
 
-   [RFC7159]  Bray, T., Ed., "The JavaScript Object Notation (JSON) Data
-              Interchange Format", RFC 7159, DOI 10.17487/RFC7159, March
-              2014, <http://www.rfc-editor.org/info/rfc7159>.
-
-   [RFC7230]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
-              Protocol (HTTP/1.1): Message Syntax and Routing", RFC
-              7230, DOI 10.17487/RFC7230, June 2014,
-              <http://www.rfc-editor.org/info/rfc7230>.
+   [RFC7230]  Fielding, R. and J. Reschke, "Hypertext Transfer Protocol
+              (HTTP/1.1): Message Syntax and Routing", RFC 7230, June
+              2014.
 
    [RFC7231]  Fielding, R., Ed. and J. Reschke, Ed., "Hypertext Transfer
               Protocol (HTTP/1.1): Semantics and Content", RFC 7231, DOI
@@ -822,82 +817,65 @@ Internet-Draft                    POSH                       August 2015
 
    [RFC2782]  Gulbrandsen, A., Vixie, P., and L. Esibov, "A DNS RR for
               specifying the location of services (DNS SRV)", RFC 2782,
-              DOI 10.17487/RFC2782, February 2000,
-              <http://www.rfc-editor.org/info/rfc2782>.
+              February 2000.
 
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "DNS Security Introduction and Requirements", RFC
-              4033, DOI 10.17487/RFC4033, March 2005,
-              <http://www.rfc-editor.org/info/rfc4033>.
+              4033, March 2005.
 
    [RFC5226]  Narten, T. and H. Alvestrand, "Guidelines for Writing an
               IANA Considerations Section in RFCs", BCP 26, RFC 5226,
-              DOI 10.17487/RFC5226, May 2008,
-              <http://www.rfc-editor.org/info/rfc5226>.
+              May 2008.
+
+   [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
+              Protocol (XMPP): Core", RFC 6120, March 2011.
 
 
 
-Miller & Saint-Andre    Expires February 28, 2016              [Page 15]
+
+
+
+
+
+Miller & Saint-Andre      Expires March 2, 2016                [Page 15]
 
 Internet-Draft                    POSH                       August 2015
 
-
-   [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
-              Protocol (XMPP): Core", RFC 6120, DOI 10.17487/RFC6120,
-              March 2011, <http://www.rfc-editor.org/info/rfc6120>.
 
    [RFC6335]  Cotton, M., Eggert, L., Touch, J., Westerlund, M., and S.
               Cheshire, "Internet Assigned Numbers Authority (IANA)
               Procedures for the Management of the Service Name and
               Transport Protocol Port Number Registry", BCP 165, RFC
-              6335, DOI 10.17487/RFC6335, August 2011,
-              <http://www.rfc-editor.org/info/rfc6335>.
+              6335, August 2011.
 
    [RFC6555]  Wing, D. and A. Yourtchenko, "Happy Eyeballs: Success with
-              Dual-Stack Hosts", RFC 6555, DOI 10.17487/RFC6555, April
-              2012, <http://www.rfc-editor.org/info/rfc6555>.
+              Dual-Stack Hosts", RFC 6555, April 2012.
 
    [RFC6698]  Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
               of Named Entities (DANE) Transport Layer Security (TLS)
-              Protocol: TLSA", RFC 6698, DOI 10.17487/RFC6698, August
-              2012, <http://www.rfc-editor.org/info/rfc6698>.
+              Protocol: TLSA", RFC 6698, August 2012.
 
    [RFC6797]  Hodges, J., Jackson, C., and A. Barth, "HTTP Strict
-              Transport Security (HSTS)", RFC 6797, DOI 10.17487/
-              RFC6797, November 2012,
-              <http://www.rfc-editor.org/info/rfc6797>.
+              Transport Security (HSTS)", RFC 6797, November 2012.
 
-   [RFC7030]  Pritikin, M., Ed., Yee, P., Ed., and D. Harkins, Ed.,
-              "Enrollment over Secure Transport", RFC 7030, DOI
-              10.17487/RFC7030, October 2013,
-              <http://www.rfc-editor.org/info/rfc7030>.
+   [RFC7030]  Pritikin, M., Yee, P., and D. Harkins, "Enrollment over
+              Secure Transport", RFC 7030, October 2013.
 
    [RFC7469]  Evans, C., Palmer, C., and R. Sleevi, "Public Key Pinning
-              Extension for HTTP", RFC 7469, DOI 10.17487/RFC7469, April
-              2015, <http://www.rfc-editor.org/info/rfc7469>.
+              Extension for HTTP", RFC 7469, April 2015.
 
    [RFC7538]  Reschke, J., "The Hypertext Transfer Protocol Status Code
-              308 (Permanent Redirect)", RFC 7538, DOI 10.17487/RFC7538,
-              April 2015, <http://www.rfc-editor.org/info/rfc7538>.
+              308 (Permanent Redirect)", RFC 7538, April 2015.
 
    [HASH-NAMES]
-              "Hash Function Textual Names",
-              <http://www.iana.org/assignments/hash-function-text-names/
+              "Hash Function Textual Names", <http://www.iana.org/
+              assignments/hash-function-text-names/
               hash-function-text-names.xhtml>.
 
 Appendix A.  Acknowledgements
 
    Thanks to Thijs Alkemade, Philipp Hancke, Joe Hildebrand, and Tobias
    Markmann for their implementation feedback, and to Dave Cridland,
-
-
-
-
-Miller & Saint-Andre    Expires February 28, 2016              [Page 16]
-
-Internet-Draft                    POSH                       August 2015
-
-
    Chris Newton, Max Pritikin, and Joe Salowey for their input on the
    specification.
 
@@ -911,6 +889,14 @@ Internet-Draft                    POSH                       August 2015
    Peter Saint-Andre wishes to acknowledge Cisco Systems, Inc., for
    employing him during his work on earlier draft versions of this
    document.
+
+
+
+
+Miller & Saint-Andre      Expires March 2, 2016                [Page 16]
+
+Internet-Draft                    POSH                       August 2015
+
 
 Authors' Addresses
 
@@ -949,4 +935,18 @@ Authors' Addresses
 
 
 
-Miller & Saint-Andre    Expires February 28, 2016              [Page 17]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Miller & Saint-Andre      Expires March 2, 2016                [Page 17]

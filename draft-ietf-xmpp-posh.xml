@@ -290,7 +290,7 @@ Client             Domain         Domain              Server
 
     <section title="IANA Considerations" anchor="iana">
       <section title="Well-Known URI" anchor="iana-wellknown">
-        <t>This specification registers "posh" in the Well-Known URI Registry as defined by <xref target='RFC5785'/>.  The completed template follows.</t>
+        <t>The IANA is requested to register "posh" in the Well-Known URI Registry as defined by <xref target='RFC5785'/>.  The completed template follows.</t>
         <t>
           <list style='hanging'>
             <t hangText='URI suffix:'>posh</t>
@@ -301,15 +301,15 @@ Client             Domain         Domain              Server
         </t>
       </section>
       <section title="POSH Service Names" anchor="iana-posh">
-        <t>This document establishes a registry for POSH service names.</t>
-        <t>POSH service names are registered on the advice of one or more Designated Experts (appointed by the IESG or their delegate).  An IANA registration policy <xref target='RFC5226'/> of Expert Review was chosen instead of the more liberal First Come First Served to help ensure that POSH is used in appropriate ways within applications.</t>
+        <t>The IANA is requested to establish a registry for POSH service names within the Uniform Resource Identifier (URI) Schemes group of registries.</t>
+        <t>The IANA registration policy <xref target='RFC5226'/> is Expert Review or IETF Review (this was chosen instead of the more liberal policy of First Come First Served to help ensure that POSH serices are defined in ways that are consistent with this specification).  One or more Designated Experts  are to be appointed by the IESG or their delegate.</t>
         <t>Registration requests are to be sent to the posh@ietf.org mailing list for review and comment, with an appropriate subject (e.g., "Request for POSH service name: example").</t>
         <t>Before a period of 14 days has passed, the Designated Expert(s) will either approve or deny the registration request, communicating this decision both to the review list and to IANA.  Denials should include an explanation and, if applicable, suggestions as to how to make the request successful.  Registration requests that are undetermined for a period longer than 21 days can be brought to the IESG's attention (using the iesg@iesg.org mailing list) for resolution.</t>
         <section title="Registration Template" anchor="iana-posh-template">
           <t>
             <list style='hanging'>
-              <t hangText='Service name:'>The name requested, relative to "/.well-known/posh/"; e.g., a service name of "example" would result in a well-known URI of "https://example.com/.well-known/posh/example.json".</t>
-              <t hangText='Change controller:'>For Standards-Track RFCs, state "IETF".  In all other cases, give the name of the responsible party.  Other details (e.g., postal address, e-mail address, home page URI) may also be included.</t>
+              <t hangText='Service name:'>The name requested, relative to "/.well-known/posh/"; e.g., a service name of "example" would result in a well-known URI such as "https://example.com/.well-known/posh/example.json".</t>
+              <t hangText='Change controller:'>For Standards-Track RFCs, state "IETF".  In all other cases, provide the name and email address of the responsible party.  Other details (e.g., postal address or website URI) may also be included.</t>
               <t hangText='Definition and usage:'>A brief description that defines the service name and mentions where and how it is used (e.g., in the context of a particular application protocol).</t>
               <t hangText='Specification:'>Optionally, reference to a document that specifies the service or application protocol that uses the service name, preferably including a URI that can be used to retrieve a copy of the document.  An indication of the relevant sections may also be included, but is not required.</t>
             </list>
