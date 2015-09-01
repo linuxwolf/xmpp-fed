@@ -5,10 +5,10 @@
 Network Working Group                                     P. Saint-Andre
 Internet-Draft                                                      &yet
 Intended status: Standards Track                               M. Miller
-Expires: March 2, 2016                               Cisco Systems, Inc.
+Expires: March 4, 2016                               Cisco Systems, Inc.
                                                                P. Hancke
                                                                     &yet
-                                                         August 30, 2015
+                                                       September 1, 2015
 
 
 Domain Name Associations (DNA) in the Extensible Messaging and Presence
@@ -41,7 +41,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on March 2, 2016.
+   This Internet-Draft will expire on March 4, 2016.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Saint-Andre, et al.       Expires March 2, 2016                 [Page 1]
+Saint-Andre, et al.       Expires March 4, 2016                 [Page 1]
 
-Internet-Draft                  XMPP DNA                     August 2015
+Internet-Draft                  XMPP DNA                  September 2015
 
 
    (http://trustee.ietf.org/license-info) in effect on the date of
@@ -92,8 +92,8 @@ Table of Contents
    10. Security Considerations . . . . . . . . . . . . . . . . . . .  19
    11. References  . . . . . . . . . . . . . . . . . . . . . . . . .  19
      11.1.  Normative References . . . . . . . . . . . . . . . . . .  19
-     11.2.  Informative References . . . . . . . . . . . . . . . . .  20
-   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  21
+     11.2.  Informative References . . . . . . . . . . . . . . . . .  21
+   Appendix A.  Acknowledgements . . . . . . . . . . . . . . . . . .  22
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  22
 
 1.  Introduction
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Saint-Andre, et al.       Expires March 2, 2016                 [Page 2]
+Saint-Andre, et al.       Expires March 4, 2016                 [Page 2]
 
-Internet-Draft                  XMPP DNA                     August 2015
+Internet-Draft                  XMPP DNA                  September 2015
 
 
    To date, such verification has been established based on information
@@ -165,9 +165,9 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.       Expires March 2, 2016                 [Page 3]
+Saint-Andre, et al.       Expires March 4, 2016                 [Page 3]
 
-Internet-Draft                  XMPP DNA                     August 2015
+Internet-Draft                  XMPP DNA                  September 2015
 
 
 3.  Client-to-Server (C2S) DNA
@@ -221,9 +221,9 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.       Expires March 2, 2016                 [Page 4]
+Saint-Andre, et al.       Expires March 4, 2016                 [Page 4]
 
-Internet-Draft                  XMPP DNA                     August 2015
+Internet-Draft                  XMPP DNA                  September 2015
 
 
        <stream:stream to='a.example'>
@@ -277,9 +277,9 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.       Expires March 2, 2016                 [Page 5]
+Saint-Andre, et al.       Expires March 4, 2016                 [Page 5]
 
-Internet-Draft                  XMPP DNA                     August 2015
+Internet-Draft                  XMPP DNA                  September 2015
 
 
    A simple S2S scenario would be as follows.
@@ -333,9 +333,9 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.       Expires March 2, 2016                 [Page 6]
+Saint-Andre, et al.       Expires March 4, 2016                 [Page 6]
 
-Internet-Draft                  XMPP DNA                     August 2015
+Internet-Draft                  XMPP DNA                  September 2015
 
 
                        |
@@ -389,9 +389,9 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.       Expires March 2, 2016                 [Page 7]
+Saint-Andre, et al.       Expires March 4, 2016                 [Page 7]
 
-Internet-Draft                  XMPP DNA                     August 2015
+Internet-Draft                  XMPP DNA                  September 2015
 
 
                        |
@@ -445,9 +445,9 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.       Expires March 2, 2016                 [Page 8]
+Saint-Andre, et al.       Expires March 4, 2016                 [Page 8]
 
-Internet-Draft                  XMPP DNA                     August 2015
+Internet-Draft                  XMPP DNA                  September 2015
 
 
                        |
@@ -501,9 +501,9 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.       Expires March 2, 2016                 [Page 9]
+Saint-Andre, et al.       Expires March 4, 2016                 [Page 9]
 
-Internet-Draft                  XMPP DNA                     August 2015
+Internet-Draft                  XMPP DNA                  September 2015
 
 
    4.  Server 2 sends a response stream header to Server 1, asserting
@@ -557,9 +557,9 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.       Expires March 2, 2016                [Page 10]
+Saint-Andre, et al.       Expires March 4, 2016                [Page 10]
 
-Internet-Draft                  XMPP DNA                     August 2015
+Internet-Draft                  XMPP DNA                  September 2015
 
 
    1.  Server 1 asserts it is a.example using the Server Dialback
@@ -588,8 +588,8 @@ Internet-Draft                  XMPP DNA                     August 2015
 
    7.  Server 2 checks the PKIX certificate that Server 1 provided (this
        might be the same certificate presented by Server 1 as a client
-       certificate in the initial connection).  However, Server B does
-       not accept this certificate as proving that Server A is
+       certificate in the initial connection).  However, Server 2 does
+       not accept this certificate as proving that Server 1 is
        authorized as a.example and therefore uses another method (here,
        the Server Dialback protocol) to establish the domain name
        association.
@@ -613,9 +613,9 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.       Expires March 2, 2016                [Page 11]
+Saint-Andre, et al.       Expires March 4, 2016                [Page 11]
 
-Internet-Draft                  XMPP DNA                     August 2015
+Internet-Draft                  XMPP DNA                  September 2015
 
 
    and 9.  These situations are discussed in "Impact of TLS and DNSSEC
@@ -669,9 +669,9 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.       Expires March 2, 2016                [Page 12]
+Saint-Andre, et al.       Expires March 4, 2016                [Page 12]
 
-Internet-Draft                  XMPP DNA                     August 2015
+Internet-Draft                  XMPP DNA                  September 2015
 
 
    4.  Server 2 sends a response stream header to Server 1, asserting
@@ -725,9 +725,9 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.       Expires March 2, 2016                [Page 13]
+Saint-Andre, et al.       Expires March 4, 2016                [Page 13]
 
-Internet-Draft                  XMPP DNA                     August 2015
+Internet-Draft                  XMPP DNA                  September 2015
 
 
    2.  Server 2 determines this resolves to an IP address and port that
@@ -781,9 +781,9 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.       Expires March 2, 2016                [Page 14]
+Saint-Andre, et al.       Expires March 4, 2016                [Page 14]
 
-Internet-Draft                  XMPP DNA                     August 2015
+Internet-Draft                  XMPP DNA                  September 2015
 
 
 5.1.  DANE
@@ -837,9 +837,9 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.       Expires March 2, 2016                [Page 15]
+Saint-Andre, et al.       Expires March 4, 2016                [Page 15]
 
-Internet-Draft                  XMPP DNA                     August 2015
+Internet-Draft                  XMPP DNA                  September 2015
 
 
    o  If no verification material is found via POSH, pursue the fallback
@@ -893,9 +893,9 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.       Expires March 2, 2016                [Page 16]
+Saint-Andre, et al.       Expires March 4, 2016                [Page 16]
 
-Internet-Draft                  XMPP DNA                     August 2015
+Internet-Draft                  XMPP DNA                  September 2015
 
 
    [I-D.ietf-xmpp-posh] explains how to use HTTPS redirects for secure
@@ -949,9 +949,9 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.       Expires March 2, 2016                [Page 17]
+Saint-Andre, et al.       Expires March 4, 2016                [Page 17]
 
-Internet-Draft                  XMPP DNA                     August 2015
+Internet-Draft                  XMPP DNA                  September 2015
 
 
    o  To support the DANE prooftype [I-D.ietf-dane-srv], an operator can
@@ -1005,9 +1005,9 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 
 
-Saint-Andre, et al.       Expires March 2, 2016                [Page 18]
+Saint-Andre, et al.       Expires March 4, 2016                [Page 18]
 
-Internet-Draft                  XMPP DNA                     August 2015
+Internet-Draft                  XMPP DNA                  September 2015
 
 
 9.2.  POSH Service Name for xmpp-server Service
@@ -1050,59 +1050,82 @@ Internet-Draft                  XMPP DNA                     August 2015
               February 2015.
 
    [RFC1034]  Mockapetris, P., "Domain names - concepts and facilities",
-              STD 13, RFC 1034, November 1987.
+              STD 13, RFC 1034, DOI 10.17487/RFC1034, November 1987,
+              <http://www.rfc-editor.org/info/rfc1034>.
 
    [RFC1035]  Mockapetris, P., "Domain names - implementation and
-              specification", STD 13, RFC 1035, November 1987.
+              specification", STD 13, RFC 1035, DOI 10.17487/RFC1035,
+              November 1987, <http://www.rfc-editor.org/info/rfc1035>.
+
+
+
+
+
+Saint-Andre, et al.       Expires March 4, 2016                [Page 19]
+
+Internet-Draft                  XMPP DNA                  September 2015
+
 
    [RFC2782]  Gulbrandsen, A., Vixie, P., and L. Esibov, "A DNS RR for
               specifying the location of services (DNS SRV)", RFC 2782,
-              February 2000.
-
-
-
-Saint-Andre, et al.       Expires March 2, 2016                [Page 19]
-
-Internet-Draft                  XMPP DNA                     August 2015
-
+              DOI 10.17487/RFC2782, February 2000,
+              <http://www.rfc-editor.org/info/rfc2782>.
 
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "DNS Security Introduction and Requirements", RFC
-              4033, March 2005.
+              4033, DOI 10.17487/RFC4033, March 2005,
+              <http://www.rfc-editor.org/info/rfc4033>.
 
    [RFC4422]  Melnikov, A., Ed. and K. Zeilenga, Ed., "Simple
               Authentication and Security Layer (SASL)", RFC 4422, DOI
               10.17487/RFC4422, June 2006,
               <http://www.rfc-editor.org/info/rfc4422>.
 
-   [RFC4949]  Shirey, R., "Internet Security Glossary, Version 2", RFC
-              4949, August 2007.
+   [RFC4949]  Shirey, R., "Internet Security Glossary, Version 2", FYI
+              36, RFC 4949, DOI 10.17487/RFC4949, August 2007,
+              <http://www.rfc-editor.org/info/rfc4949>.
 
    [RFC5280]  Cooper, D., Santesson, S., Farrell, S., Boeyen, S.,
               Housley, R., and W. Polk, "Internet X.509 Public Key
               Infrastructure Certificate and Certificate Revocation List
-              (CRL) Profile", RFC 5280, May 2008.
+              (CRL) Profile", RFC 5280, DOI 10.17487/RFC5280, May 2008,
+              <http://www.rfc-editor.org/info/rfc5280>.
 
    [RFC5785]  Nottingham, M. and E. Hammer-Lahav, "Defining Well-Known
-              Uniform Resource Identifiers (URIs)", RFC 5785, April
-              2010.
+              Uniform Resource Identifiers (URIs)", RFC 5785, DOI
+              10.17487/RFC5785, April 2010,
+              <http://www.rfc-editor.org/info/rfc5785>.
 
    [RFC6120]  Saint-Andre, P., "Extensible Messaging and Presence
-              Protocol (XMPP): Core", RFC 6120, March 2011.
+              Protocol (XMPP): Core", RFC 6120, DOI 10.17487/RFC6120,
+              March 2011, <http://www.rfc-editor.org/info/rfc6120>.
 
    [RFC6125]  Saint-Andre, P. and J. Hodges, "Representation and
               Verification of Domain-Based Application Service Identity
               within Internet Public Key Infrastructure Using X.509
               (PKIX) Certificates in the Context of Transport Layer
-              Security (TLS)", RFC 6125, March 2011.
+              Security (TLS)", RFC 6125, DOI 10.17487/RFC6125, March
+              2011, <http://www.rfc-editor.org/info/rfc6125>.
 
    [RFC6698]  Hoffman, P. and J. Schlyter, "The DNS-Based Authentication
               of Named Entities (DANE) Transport Layer Security (TLS)
-              Protocol: TLSA", RFC 6698, August 2012.
+              Protocol: TLSA", RFC 6698, DOI 10.17487/RFC6698, August
+              2012, <http://www.rfc-editor.org/info/rfc6698>.
+
+
+
+
+
+
+Saint-Andre, et al.       Expires March 4, 2016                [Page 20]
+
+Internet-Draft                  XMPP DNA                  September 2015
+
 
    [RFC7218]  Gudmundsson, O., "Adding Acronyms to Simplify
               Conversations about DNS-Based Authentication of Named
-              Entities (DANE)", RFC 7218, April 2014.
+              Entities (DANE)", RFC 7218, DOI 10.17487/RFC7218, April
+              2014, <http://www.rfc-editor.org/info/rfc7218>.
 
    [XEP-0220]
               Miller, J., Saint-Andre, P., and P. Hancke, "Server
@@ -1110,42 +1133,50 @@ Internet-Draft                  XMPP DNA                     August 2015
 
 11.2.  Informative References
 
-   [RFC2142]  Crocker, D., "MAILBOX NAMES FOR COMMON SERVICES, ROLES AND
-              FUNCTIONS", RFC 2142, May 1997.
-
-
-
-
-
-Saint-Andre, et al.       Expires March 2, 2016                [Page 20]
-
-Internet-Draft                  XMPP DNA                     August 2015
-
+   [RFC2142]  Crocker, D., "Mailbox Names for Common Services, Roles and
+              Functions", RFC 2142, DOI 10.17487/RFC2142, May 1997,
+              <http://www.rfc-editor.org/info/rfc2142>.
 
    [RFC3920]  Saint-Andre, P., Ed., "Extensible Messaging and Presence
-              Protocol (XMPP): Core", RFC 3920, October 2004.
+              Protocol (XMPP): Core", RFC 3920, DOI 10.17487/RFC3920,
+              October 2004, <http://www.rfc-editor.org/info/rfc3920>.
 
    [RFC4120]  Neuman, C., Yu, T., Hartman, S., and K. Raeburn, "The
               Kerberos Network Authentication Service (V5)", RFC 4120,
-              July 2005.
+              DOI 10.17487/RFC4120, July 2005,
+              <http://www.rfc-editor.org/info/rfc4120>.
 
-   [RFC6066]  Eastlake, D., "Transport Layer Security (TLS) Extensions:
-              Extension Definitions", RFC 6066, January 2011.
+   [RFC6066]  Eastlake 3rd, D., "Transport Layer Security (TLS)
+              Extensions: Extension Definitions", RFC 6066, DOI
+              10.17487/RFC6066, January 2011,
+              <http://www.rfc-editor.org/info/rfc6066>.
 
    [RFC6091]  Mavrogiannopoulos, N. and D. Gillmor, "Using OpenPGP Keys
               for Transport Layer Security (TLS) Authentication", RFC
-              6091, February 2011.
+              6091, DOI 10.17487/RFC6091, February 2011,
+              <http://www.rfc-editor.org/info/rfc6091>.
 
-   [RFC6749]  Hardt, D., "The OAuth 2.0 Authorization Framework", RFC
-              6749, October 2012.
+   [RFC6749]  Hardt, D., Ed., "The OAuth 2.0 Authorization Framework",
+              RFC 6749, DOI 10.17487/RFC6749, October 2012,
+              <http://www.rfc-editor.org/info/rfc6749>.
 
    [RFC7590]  Saint-Andre, P. and T. Alkemade, "Use of Transport Layer
               Security (TLS) in the Extensible Messaging and Presence
-              Protocol (XMPP)", RFC 7590, June 2015.
+              Protocol (XMPP)", RFC 7590, DOI 10.17487/RFC7590, June
+              2015, <http://www.rfc-editor.org/info/rfc7590>.
 
    [XEP-0045]
               Saint-Andre, P., "Multi-User Chat", XSF XEP 0045, February
               2012.
+
+
+
+
+
+Saint-Andre, et al.       Expires March 4, 2016                [Page 21]
+
+Internet-Draft                  XMPP DNA                  September 2015
+
 
    [XEP-0288]
               Hancke, P. and D. Cridland, "Bidirectional Server-to-
@@ -1171,13 +1202,6 @@ Appendix A.  Acknowledgements
    Thanks to Dave Cridland as document shepherd, Joe Hildebrand as
    working group chair, and Ben Campbell as area director.
 
-
-
-Saint-Andre, et al.       Expires March 2, 2016                [Page 21]
-
-Internet-Draft                  XMPP DNA                     August 2015
-
-
    Peter Saint-Andre wishes to acknowledge Cisco Systems, Inc., for
    employing him during his work on earlier draft versions of this
    document.
@@ -1198,6 +1222,16 @@ Authors' Addresses
    USA
 
    Email: mamille2@cisco.com
+
+
+
+
+
+
+
+Saint-Andre, et al.       Expires March 4, 2016                [Page 22]
+
+Internet-Draft                  XMPP DNA                  September 2015
 
 
    Philipp Hancke
@@ -1229,4 +1263,26 @@ Authors' Addresses
 
 
 
-Saint-Andre, et al.       Expires March 2, 2016                [Page 22]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Saint-Andre, et al.       Expires March 4, 2016                [Page 23]

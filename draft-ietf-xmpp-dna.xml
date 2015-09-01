@@ -383,7 +383,7 @@
               &lt;stream:stream from='a.example' to='b.example'&gt;
             </t>
             <t>The servers attempt TLS negotiation, during which Server 1 (acting as a TLS server) presents a PKIX certificate.</t>
-            <t>Server 2 checks the PKIX certificate that Server 1 provided (this might be the same certificate presented by Server 1 as a client certificate in the initial connection).  However, Server B does not accept this certificate as proving that Server A is authorized as a.example and therefore uses another method (here, the Server Dialback protocol) to establish the domain name association.</t>
+            <t>Server 2 checks the PKIX certificate that Server 1 provided (this might be the same certificate presented by Server 1 as a client certificate in the initial connection).  However, Server 2 does not accept this certificate as proving that Server 1 is authorized as a.example and therefore uses another method (here, the Server Dialback protocol) to establish the domain name association.</t>
             <t>
               Server 2 proceeds with Server Dialback in order to establish the domain name association. In order to do this it sends a request for verification as described in <xref target='XEP-0220'/>:
               <vspace blankLines='1'/>
