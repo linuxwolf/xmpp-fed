@@ -28,7 +28,7 @@
 <?rfc symrefs="yes"?>
 <?rfc toc="yes"?>
 <?rfc tocdepth="2"?>
-<rfc category="std" docName="draft-ietf-xmpp-posh-05" ipr="trust200902">
+<rfc category="std" docName="draft-ietf-xmpp-posh-06" ipr="trust200902">
   <front>
     <title abbrev="POSH">PKIX over Secure HTTP (POSH)</title>
     <author initials="M." surname="Miller" fullname="Matthew Miller">
